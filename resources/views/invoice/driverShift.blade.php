@@ -152,17 +152,17 @@
                                                                         <div class="driver-shift__calender-shift__day__info__row__data --project">
                                                                             @if ($spv->project)
                                                                                 <p class="--project-name">{{$spv->project->name}}</p>
-                                                                                @if (isset($projectCount[$spv->project->name]))
-                                                                                    <?php $projectCount[$spv->project->name]++; ?>
+                                                                                @if (isset($projectCount[$spv->project->name][$spv->retail_price]))
+                                                                                    <?php $projectCount[$spv->project->name][$spv->retail_price]++; ?>
                                                                                 @else
-                                                                                    <?php $projectCount[$spv->project->name] = 1; ?>
+                                                                                    <?php $projectCount[$spv->project->name][$spv->retail_price] = 1; ?>
                                                                                 @endif
-                                                                            @elseif($spv->unregistered_project)
+                                                                            @elseif(!empty($spv->unregistered_project))
                                                                                 <p style="color:red;" class="--project-name">{{$spv->unregistered_project}}</p>
-                                                                                @if (isset($projectCount[$spv->unregistered_project]))
-                                                                                    <?php $projectCount[$spv->unregistered_project]++ ?>
+                                                                                @if (isset($projectCount[$spv->unregistered_project][$spv->retail_price]))
+                                                                                    <?php $projectCount[$spv->unregistered_project][$spv->retail_price]++; ?>
                                                                                 @else
-                                                                                    <?php $projectCount[$spv->unregistered_project] = 1 ?>
+                                                                                    <?php $projectCount[$spv->unregistered_project][$spv->retail_price] = 1; ?>
                                                                                 @endif
                                                                             @endif
                                                                         </div>
@@ -195,14 +195,15 @@
                                                                                             @endif
                                                                                             <?php $vehicle_second_count++?>
                                                                                         @endif
-                                                                                    @elseif($spv->unregistered_vehicle)
-                                                                                        <p style="color:red;">No.{{$spv->unregistered_vehicle}}</p>
-                                                                                        @if (!in_array($spv->unregistered_vehicle, $vehicle_use))
-                                                                                            <?php $vehicle_use[] = $spv->unregistered_vehicle; ?>
-                                                                                        @endif
-                                                                                        <?php $vehicle_second_count++?>
                                                                                     @endif
                                                                                 @endif
+                                                                            @endif
+                                                                            @if ($spv->unregistered_vehicle)
+                                                                                <p style="color:red;">No.{{$spv->unregistered_vehicle}}</p>
+                                                                                @if (!in_array($spv->unregistered_vehicle, $vehicle_use))
+                                                                                    <?php $vehicle_use[] = $spv->unregistered_vehicle; ?>
+                                                                                @endif
+                                                                                <?php $vehicle_second_count++?>
                                                                             @endif
                                                                         </div>
                                                                     </div>
@@ -334,14 +335,15 @@
                                                                                             @endif
                                                                                             <?php $vehicle_second_count++?>
                                                                                         @endif
-                                                                                    @elseif($spv->unregistered_vehicle)
-                                                                                        <p style="color:red;">No.{{$spv->unregistered_vehicle}}</p>
-                                                                                        @if (!in_array($spv->unregistered_vehicle, $vehicle_use))
-                                                                                            <?php $vehicle_use[] = $spv->unregistered_vehicle; ?>
-                                                                                        @endif
-                                                                                        <?php $vehicle_second_count++?>
                                                                                     @endif
                                                                                 @endif
+                                                                            @endif
+                                                                            @if ($spv->unregistered_vehicle)
+                                                                                <p style="color:red;">No.{{$spv->unregistered_vehicle}}</p>
+                                                                                @if (!in_array($spv->unregistered_vehicle, $vehicle_use))
+                                                                                    <?php $vehicle_use[] = $spv->unregistered_vehicle; ?>
+                                                                                @endif
+                                                                                <?php $vehicle_second_count++?>
                                                                             @endif
                                                                         </div>
                                                                     </div>
@@ -405,7 +407,6 @@
                                             @endif
                                         @endforeach
                                     </div>
-
                                     {{-- 案件集計表 --}}
                                     <?php $total_project_count = 0; ?>
                                     <div class="flex">
