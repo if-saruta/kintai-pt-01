@@ -140,6 +140,7 @@ class InvoiceController extends Controller
 
         // クライアント名取得
         $projectNames = [];
+        $projectClientNameByPdf = '';
         foreach($ShiftProjectVehicles as $shift){
             if($shift->project){
                 $projectClientNameByPdf = $shift->project->clientNameByPDF;
@@ -195,6 +196,7 @@ class InvoiceController extends Controller
 
         // クライアント名取得
         $projectNames = [];
+        $projectClientNameByPdf = '';
         foreach($ShiftProjectVehicles as $shift){
             if($shift->project){
                 $projectClientNameByPdf = $shift->project->clientNameByPDF;

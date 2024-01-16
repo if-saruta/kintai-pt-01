@@ -178,20 +178,22 @@
                                             @endforeach
                                             @if ($is_retail_check)
                                                 <p>{{$tmp_retail}}</p>
+                                                <?php $tmp_retail = 0?>
                                             @endif
                                         </div>
-                                        {{-- 所属先ごとのシフトの情報 --}}
-                                        <?php
-                                            $tmp_salary = 0;
-                                            $is_salary_check = false;
-                                        ?>
                                         @foreach ($getCompanies as $getCompany)
+                                            {{-- 所属先ごとのシフトの情報 --}}
+                                            <?php
+                                                $tmp_salary = 0;
+                                                $is_salary_check = false;
+                                            ?>
                                             {{-- 給与 --}}
                                             <div class="project-shift-calender__data__row__item">
                                                 @foreach ( $ShiftProjectVehicles as $spv )
                                                     @if ($spv->shift->date == $date->format('Y-m-d'))
-                                                        @if ($spv->shift->employee->company->id == $getComapny->id)
-                                                            <?php $tmp_retail += $spv->driver_price?>
+                                                        @if ($spv->shift->employee->company->id == $getCompany->id)
+                                                            <?php $is_salary_check = true; ?>
+                                                            <?php $tmp_salary += $spv->driver_price?>
                                                             @if (isset($company_total_salary[$getCompany->id]))
                                                                 <?php $company_total_salary[$getCompany->id] += $spv->driver_price?>
                                                             @else
@@ -208,7 +210,7 @@
                                             <div class="project-shift-calender__data__row__item">
                                                 @foreach ( $ShiftProjectVehicles as $spv )
                                                     @if ($spv->shift->date == $date->format('Y-m-d'))
-                                                        @if ($spv->shift->employee->company->id == $getComapny->id)
+                                                        @if ($spv->shift->employee->company->id == $getCompany->id)
                                                             <input type="text" name="expressway_fee[{{$spv->id}}]" value="{{$spv->expressway_fee}}">
                                                             @if (isset($company_total_expressway[$getCompany->id]))
                                                                 <?php $company_total_expressway[$getCompany->id] += $spv->expressway_fee?>
@@ -223,7 +225,7 @@
                                             <div class="project-shift-calender__data__row__item">
                                                 @foreach ( $ShiftProjectVehicles as $spv )
                                                     @if ($spv->shift->date == $date->format('Y-m-d'))
-                                                        @if ($spv->shift->employee->company->id == $getComapny->id)
+                                                        @if ($spv->shift->employee->company->id == $getCompany->id)
                                                         <input type="text" name="parking_fee[{{$spv->id}}]" value="{{$spv->parking_fee}}">
                                                             @if (isset($company_total_parking[$getCompany->id]))
                                                                 <?php $company_total_parking[$getCompany->id] += $spv->parking_fee?>
