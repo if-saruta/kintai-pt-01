@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Client;
 use App\Models\Project;
 use App\Models\Employee;
 use App\Models\ProjectEmployeePayment;
@@ -16,8 +17,9 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = Project::all();
+        $clients = Client::all();
 
-        return view('project.index', compact('projects'));
+        return view('project.index', compact('clients'));
     }
 
     public function create()
@@ -29,52 +31,63 @@ class ProjectController extends Controller
 
     public function store(Request $request)
     {
-
-        $project = Project::create([
-            'clientName' => $request->clientName,
-            'clientNameByPDF' => $request->clientNameByPDF,
-            'name' => $request->name,
-            'payment_type' => $request->type,
-            'retail_price' => $request->retail_price,
-            'driver_price' => $request->driver_price,
-            'estimated_overtime_hours' => $request->overtime,
-            'overtime_hourly_wage' => $request->overtime_hourly_wage,
+        // クライアント情報の保存
+        $client = Client::create([
+            'name' => $request->input('clientName'),
+            'pdfName' => $request->input('clientNameByPDF')
         ]);
 
-        // 日給の場合に実行
-        $employeePrices = $request->input('employeePrice');
-        if($request->type == 1){
-            foreach ($employeePrices as $employeeId => $price) {
+        // 各案件と休日情報の保存
+        foreach ($request->input('projects', []) as $projectData) {
+            //チャーター情報の初期化
+            $is_charter = false;
+            if($projectData['is_charter'] ?? null == 1){
+                $is_charter = true;
+            }
+
+            // 案件情報の保存
+            $project = Project::create([
+                'client_id' => $client->id,
+                'name' => $projectData['name'],
+                'is_charter' => $is_charter,
+                'payment_type' => $projectData['payment_type'],
+                'retail_price' => $projectData['retail_price'],
+                'driver_price' => $projectData['driver_price'],
+                'estimated_overtime_hours' => $projectData['estimated_overtime_hours'],
+                'overtime_hourly_wage' => $projectData['overtime_hourly_wage']
+            ]);
+
+             // 休日情報の初期化
+            $holidaysData = [
+                'project_id' => $project->id,
+                'sunday' => false,
+                'monday' => false,
+                'tuesday' => false,
+                'wednesday' => false,
+                'thursday' => false,
+                'friday' => false,
+                'saturday' => false
+            ];
+
+            // 選択された休日を true に設定
+            foreach ($projectData['holidays'] ?? [] as $day => $value) {
+                if ($value == '1') {
+                    $holidaysData[$day] = true;
+                }
+            }
+
+            // 休日情報の保存
+            ProjectHoliday::create($holidaysData);
+
+            // 従業員別日給情報の保存
+            foreach ($projectData['employeePayments'] as $employeeId => $amount) {
                 ProjectEmployeePayment::create([
                     'employee_id' => $employeeId,
                     'project_id' => $project->id,
-                    'amount' => $price,
+                    'amount' => $amount
                 ]);
             }
         }
-
-        // 休日を保存
-        $validatedData = $request->validate([
-            'sunday' => 'nullable|boolean',
-            'monday' => 'nullable|boolean',
-            'tuesday' => 'nullable|boolean',
-            'wednesday' => 'nullable|boolean',
-            'thursday' => 'nullable|boolean',
-            'friday' => 'nullable|boolean',
-            'saturday' => 'nullable|boolean',
-        ]);
-
-        ProjectHoliday::create([
-            'project_id' => $project->id,
-            'sunday' => $request->has('sunday'),
-            'monday' => $request->has('monday'),
-            'tuesday' => $request->has('tuesday'),
-            'wednesday' => $request->has('wednesday'),
-            'thursday' => $request->has('thursday'),
-            'friday' => $request->has('friday'),
-            'saturday' => $request->has('saturday'),
-        ]);
-
 
 
         return redirect()->route('project.');
@@ -82,112 +95,137 @@ class ProjectController extends Controller
 
     public function edit($id)
     {
-        $project = Project::find($id);
+        $client = Client::find($id);
+        $projects = Project::where('client_id', $id)->get();
         $projectHolidays = ProjectHoliday::where('project_id', $id)->first();
         $employees = Employee::all();
         $payments = ProjectEmployeePayment::where('project_id', $id)->get();
 
-        return view('project.edit', compact('project', 'projectHolidays', 'payments', 'employees'));
+        return view('project.edit', compact('projects', 'client', 'projectHolidays', 'payments', 'employees'));
     }
 
     public function update(Request $request, $id)
     {
-        $project = Project::find($id);
-        $payments = ProjectEmployeePayment::where('project_id', $id)->get();
-        $projectHolidays = ProjectHoliday::where('project_id', $id)->first();
+        $client = Client::find($id);
 
-        $project->clientName = $request->clientName;
-        $project->clientNameByPDF = $request->clientNameByPDF;
-        $project->name = $request->name;
-        $project->payment_type = $request->type;
-        $project->retail_price = $request->retail_price;
-        $project->driver_price = $request->driver_price;
-        $project->estimated_overtime_hours = $request->overtime;
-        $project->overtime_hourly_wage = $request->overtime_hourly_wage;
-        $project->save();
+        // クライアント更新
+        $client->name = $request->clientName;
+        $client->pdfName = $request->clientNameByPDF;
+        $client->save();
 
-        // 従業員別日給の作成||変更
-        // 日給が選択されていれば実行
-        if($request->type == 1){
-            if($payments->isEmpty()){
-                // 従業員の支払い情報を新規作成
-                $employeePrices = $request->input('employeePrice');
-                foreach ($employeePrices as $employeeId => $price) {
-                    ProjectEmployeePayment::create([
-                        'employee_id' => $employeeId,
-                        'project_id' => $project->id,
-                        'amount' => $price,
-                    ]);
-                }
-            }else{
-                // 従業員の支払い情報の更新
-                $employeePrices = $request->input('employeePrice');
-                foreach ($employeePrices as $employeeId => $amount) {
-                    $payment = ProjectEmployeePayment::where('project_id', $project->id)
-                        ->where('employee_id', $employeeId)
-                        ->first();
-                    if ($payment) {
-                        $payment->amount = $amount;
-                        $payment->save();
-                    }else{
-                        ProjectEmployeePayment::create([
-                            'employee_id' => $employeeId,
-                            'project_id' => $project->id,
-                            'amount' => $amount,
-                        ]);
-                    }
+
+        // プロジェクト情報の更新
+        foreach ($request->input('editProjects', []) as $projectId => $projectData) {
+            $project = Project::findOrFail($projectId); // プロジェクトの存在確認
+
+            //チャーター情報の初期化
+            $is_charter = false;
+            if($projectData['is_charter'] ?? null == 1){
+                $is_charter = true;
+            }
+
+            $project->update([
+                'is_charter' => $is_charter,
+                'name' => $projectData['name'],
+                'payment_type' => $projectData['payment_type'],
+                'retail_price' => $projectData['retail_price'],
+                'driver_price' => $projectData['driver_price'],
+                'estimated_overtime_hours' => $projectData['estimated_overtime_hours'],
+                'overtime_hourly_wage' => $projectData['overtime_hourly_wage']
+            ]);
+
+            // 休日情報の更新
+            // 休日情報の初期化
+            $holidaysData = [
+                'sunday' => false,
+                'monday' => false,
+                'tuesday' => false,
+                'wednesday' => false,
+                'thursday' => false,
+                'friday' => false,
+                'saturday' => false
+            ];
+            // 選択された休日を true に設定
+            foreach ($projectData['holidays'] ?? [] as $day => $value) {
+                if ($value == '1') {
+                    $holidaysData[$day] = true;
                 }
             }
-        }else{ //歩合が選択された場合登録済みのデータは削除
-            ProjectEmployeePayment::where('project_id', $id)->delete();
+            $project->holiday->update($holidaysData);
+
+            // 従業員別日給の更新
+            foreach ($projectData['employeePayments'] as $employeeId => $amount) {
+                ProjectEmployeePayment::updateOrCreate(
+                    ['project_id' => $projectId, 'employee_id' => $employeeId],
+                    ['amount' => $amount]
+                );
+            }
         }
 
-        // 休日を保存
-        $validatedData = $request->validate([
-            'sunday' => 'nullable|boolean',
-            'monday' => 'nullable|boolean',
-            'tuesday' => 'nullable|boolean',
-            'wednesday' => 'nullable|boolean',
-            'thursday' => 'nullable|boolean',
-            'friday' => 'nullable|boolean',
-            'saturday' => 'nullable|boolean',
-        ]);
-        if($projectHolidays){
-            $projectHolidays->sunday = $request->has('sunday');
-            $projectHolidays->monday = $request->has('monday');
-            $projectHolidays->tuesday = $request->has('tuesday');
-            $projectHolidays->wednesday = $request->has('wednesday');
-            $projectHolidays->thursday = $request->has('thursday');
-            $projectHolidays->friday = $request->has('friday');
-            $projectHolidays->saturday = $request->has('saturday');
-            $projectHolidays->save();
-        }else{
-            ProjectHoliday::create([
-                'project_id' => $project->id,
-                'sunday' => $request->has('sunday'),
-                'monday' => $request->has('monday'),
-                'tuesday' => $request->has('tuesday'),
-                'wednesday' => $request->has('wednesday'),
-                'thursday' => $request->has('thursday'),
-                'friday' => $request->has('friday'),
-                'saturday' => $request->has('saturday'),
+        // 新規プロジェクトの作成
+        foreach ($request->input('projects', []) as $projectData) {
+            //チャーター情報の初期化
+            $is_charter = false;
+            if($projectData['is_charter'] == 1){
+                $is_charter = true;
+            }
+
+            // 案件情報の保存
+            $project = Project::create([
+                'client_id' => $client->id,
+                'name' => $projectData['name'],
+                'is_charter' => $is_charter,
+                'payment_type' => $projectData['payment_type'],
+                'retail_price' => $projectData['retail_price'],
+                'driver_price' => $projectData['driver_price'],
+                'estimated_overtime_hours' => $projectData['estimated_overtime_hours'],
+                'overtime_hourly_wage' => $projectData['overtime_hourly_wage']
             ]);
+
+             // 休日情報の初期化
+            $holidaysData = [
+                'project_id' => $project->id,
+                'sunday' => false,
+                'monday' => false,
+                'tuesday' => false,
+                'wednesday' => false,
+                'thursday' => false,
+                'friday' => false,
+                'saturday' => false
+            ];
+
+            // 選択された休日を true に設定
+            foreach ($projectData['holidays'] ?? [] as $day => $value) {
+                if ($value == '1') {
+                    $holidaysData[$day] = true;
+                }
+            }
+
+            // 休日情報の保存
+            ProjectHoliday::create($holidaysData);
+
+            // 従業員別日給情報の保存
+            foreach ($projectData['employeePayments'] as $employeeId => $amount) {
+                ProjectEmployeePayment::create([
+                    'employee_id' => $employeeId,
+                    'project_id' => $project->id,
+                    'amount' => $amount
+                ]);
+            }
         }
 
         return redirect()->route('project.');
     }
 
-    public function delete($id)
+    public function projectDelete($test)
     {
-        try{
-            $project = Project::find($id);
+        $project = Project::find($test);
 
-            $project->delete();
+        $clientId = $project->client->id;
 
-            return redirect()->route('project.');
-        }catch (\Exception $e){
-            return redirect()->route('project.')->with('alert', 'シフトに登録されている案件は、現在削除できない仕様にしてあります。ご了承ください。');
-        }
+        $project->delete();
+
+        return redirect()->route('project.edit', ['id' => $clientId]);
     }
 
     public function csvImport(Request $request)
@@ -196,12 +234,46 @@ class ProjectController extends Controller
         $csv = Reader::createFromPath($path, 'r');
         $csv->setHeaderOffset(0);
 
+        $employees = Employee::all();
+
         foreach ($csv as $row){
-            Project::create([
+            $client = Client::where('name', $row['clientName'])->first();
+            if(!$client){
+                $client = Client::create([
+                    'name' => $row['clientName'],
+                    'pdfName' => $row['pdfName']
+                ]);
+            }
+
+            $project = Project::create([
+                'client_id' => $client->id,
+                'is_charter' => $row['is_charter'],
                 'name' => $row['name'],
+                'payment_type' => $row['payment_type'],
                 'retail_price' => $row['retail_rpice'],
                 'driver_price' => $row['driver_price'],
+                'estimated_overtime_hours' => $row['estimated_overtime_hours'],
+                'overtime_hourly_wage' => $row['overtime_hourly_wage']
             ]);
+
+            ProjectHoliday::create([
+                'project_id' => $project->id,
+                'sunday' => $row['sunday'],
+                'monday' => $row['monday'],
+                'tuesday' => $row['tuesday'],
+                'wednesday' => $row['wednesday'],
+                'thursday' => $row['thursday'],
+                'friday' => $row['friday'],
+                'saturday' => $row['saturday']
+            ]);
+
+            foreach($employees as $employee){
+                ProjectEmployeePayment::create([
+                    'employee_id' => $employee->id,
+                    'project_id' => $project->id,
+                    'amount' => null
+                ]);
+            }
         }
 
         return redirect()->route('project.');

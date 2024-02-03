@@ -13,6 +13,9 @@
             <a href="{{ route('invoice.projectShift') }}" class="invoice-nav__button">
                 <p class="">案件</p>
             </a>
+            <a href="{{ route('invoice.charterShift') }}" class="invoice-nav__button">
+                <p class="">チャーター</p>
+            </a>
         </div>
     </div>
 

@@ -66,6 +66,33 @@
             border-collapse:collapse;
             font-size: 13px;
         }
+        .tax-table{
+            width: 450px;
+            margin-top: 30px;
+            margin-left: auto;
+            border-bottom: 1px solid black;
+            border-right: 1px solid black;
+            border-collapse: collapse;
+        }
+        .tax-table__row{
+            width: 100%;
+            border-top: 1px solid black;
+        }
+        .tax-table__row__data{
+            width: 100px;
+            border-left: 1px solid black;
+        }
+        .tax-table__row__data:nth-child(even){
+            width: 100px;
+            border-left: 1px dashed black;
+        }
+        .tax-table__row__data input{
+            width: 100%;
+            padding: 0;
+            text-align: center;
+            border: 0px;
+            font-size: 15px;
+        }
         .table-head{
             padding: 5px 0;
             text-align: center;
@@ -138,40 +165,33 @@
         .w-100{
             width: 100px;
         }
+        br {
+            display: block;
+            content: "";
+            padding: -5px 0;
+        }
 
     </style>
-    <?php
-        $tax = $total_retail * 0.1;
-        $total = $total_retail + $tax;
-    ?>
-    <div class="">
+
+    <div class="project-edit-pdf">
         <div class="date">
             <p class="">{{ $today->format('Y') }}年 {{ $today->format('m') }}月 {{ $today->format('d') }}日</p>
-            <p class="">請求書番号　：　DD{{ $today->format('Y') }}{{ $today->format('m') }}{{ $today->format('d') }}</p>
+            <p class="">請求書番号　：　{{$invoiceNumber}}</p>
         </div>
         <div class="title">
             <p class="">請求書</p>
         </div>
         <div class="driver">
-            <p class="">{{$projectClientNameByPdf}}　様</p>
+            <p class="">{{$name}}　様</p>
             <p class="f-s-13">
-                件名：{{ $today->format('m') }}月度の差引金額について<br>
-                下記の通りご請求申し上げます。
+                {!! $subjectWithBreaks !!}
             </p>
         </div>
         <div class="company">
-            <p class="">株式会社T.N.G</p>
-            <p class="">
-                〒124-0011<br>
-                東京都葛飾区四つ木2-3-11<br>
-                四つ木ハイム
-            </p>
-            <p class="">TEL:03-5875-7469</p>
-            <p class="">FAX:03-5875-7469</p>
-            <p class="">登録番号: T6011801035426</p>
+            {!! $companyInfoWithBreaks !!}
         </div>
         <div class="amount">
-            <p class="amount-txt"><span class="">ご請求金額</span><span class="amount-fee">¥{{$total}}</span></p>
+            <p class="amount-txt"><span class="">ご請求金額</span><span class="amount-fee">¥{{number_format($totalRetail)}}</span></p>
         </div>
         <table class="table">
             <tr>
@@ -180,52 +200,46 @@
                 <th class="table-head w-100">単価</th>
                 <th class="table-head w-110">金額</th>
             </tr>
-            <tr>
-                <td class="table-item w-400"><p class="table-item-txt">外注費</p></td>
-                <td class="table-data w-100"><p class="table-data-txt --center">{{$total_count}}</p></td>
-                <td class="table-data w-100"><p class="table-data-txt --right">{{$pdf_retail}}</p></td>
-                <td class="table-data w-110"><p class="table-data-txt --right">{{$total_retail}}</p></td>
-            </tr>
-            <tr>
-                <td class="table-item w-400"><p class="table-item-txt"></p></td>
-                <td class="table-data w-100"><p class="table-data-txt --center"></p></td>
-                <td class="table-data w-100"><p class="table-data-txt --right"></p></td>
-                <td class="table-data w-110"><p class="table-data-txt --right"></p></td>
-            </tr>
-            <tr>
-                <td class="table-item w-400"><p class="table-item-txt"></p></td>
-                <td class="table-data w-100"><p class="table-data-txt"></p></td>
-                <td class="table-data w-100"><p class="table-data-txt"></p></td>
-                <td class="table-data w-110"><p class="table-data-txt"></p></td>
-            </tr>
-            <tr>
-                <td class="table-item w-400"><p class="table-item-txt"></p></td>
-                <td class="table-data w-100"><p class="table-data-txt"></p></td>
-                <td class="table-data w-100"><p class="table-data-txt"></p></td>
-                <td class="table-data w-110"><p class="table-data-txt"></p></td>
-            </tr>
+            @foreach ($item as $index => $value)
+                <tr>
+                    <td class="table-item w-400"><p class="table-item-txt">{{$value}}</p></td>
+                    <td class="table-data w-100"><p class="table-data-txt --center">{{$number[$index]}}</p></td>
+                    <td class="table-data w-100"><p class="table-data-txt --right">{{number_format($until[$index])}}</p></td>
+                    <td class="table-data w-110"><p class="table-data-txt --right">{{number_format($amount[$index])}}</p></td>
+                </tr>
+            @endforeach
         </table>
         <table class="mini-table">
             <tr>
                 <td class="w-401"></td>
                 <td class="mini-table-data w-201"><p class="mini-table-data-txt --center">小計</p></td>
-                <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{$total_retail}}</p></td>
+                <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{number_format($subTotalRetail)}}</p></td>
             </tr>
             <tr>
                 <td class="w-401"></td>
                 <td class="mini-table-data w-201"><p class="mini-table-data-txt --center">消費税(10%)</p></td>
-                <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{$tax}}</p></td>
+                <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{number_format($tax)}}</p></td>
             </tr>
             <tr>
                 <td class="w-401"></td>
                 <td class="mini-table-data w-201"><p class="mini-table-data-txt --center"> 合計金額(内消費税)</p></td>
-                <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{$total}}</p></td>
+                <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{number_format($totalRetail)}}</p></td>
             </tr>
+        </table>
+        <table class="tax-table">
+            @foreach ($taxTable01 as $index => $value)
+            <tr class="tax-table__row">
+                <td class="tax-table__row__data"><input type="text" value="{{$taxTable01[$index]}}" class=""></td>
+                <td class="tax-table__row__data"><input type="text" value="{{number_format($taxTable02[$index])}}" class="targetAmount"></td>
+                <td class="tax-table__row__data"><input type="text" value="{{$taxTable03[$index]}}" class=""></td>
+                <td class="tax-table__row__data"><input type="text" value="{{number_format($taxTable04[$index])}}" class="targetAmountTax" readonly></td>
+            </tr>
+            @endforeach
         </table>
         <div class="bank">
             <p class="">お振込先</p>
             <div class="bank-txt-wrap">
-                <p class="">　〇〇銀行　〇〇支店　（普）　0000000　株式会社 T.N.G　代表取締役　木田　由佳里</p>
+                <p class="">{{$bankNameInfoWithBreaks}}</p>
             </div>
         </div>
     </div>

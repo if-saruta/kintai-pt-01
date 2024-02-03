@@ -1,0 +1,63 @@
+@use "../foundation/variables.scss" as *;
+@use "../foundation/mixin.scss" as *;
+@use "sass:math";
+
+.employee{
+    font-family: $ff-noto;
+
+    .employee-create{
+        .address-post{
+            width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            &__input{
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        .--post{
+            width: 200px;
+        }
+        .bank{
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            &__block{
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                &__input{
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                }
+            }
+        }
+    }
+    // create
+    &__create{
+        &__invoice{
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            letter-spacing: 0.1em;
+            .invoice-radio-wrap{
+                margin-left: 20px;
+                display: flex;
+                gap: 20px;
+                &__radio{
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    font-size: 15px;
+                }
+            }
+        }
+    }
+    .title{
+        font-weight: bold;
+    }
+}

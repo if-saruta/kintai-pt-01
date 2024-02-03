@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AllowanceByOther;
 use Illuminate\Http\Request;
 use App\Models\Employee;
+use App\Models\BankAccount;
 use App\Models\Company;
 use App\Models\Project;
 use App\Models\ProjectEmployeePayment;
@@ -41,32 +42,46 @@ class EmployeeController extends Controller
     {
 
         if($request->rental_type == 1){
-
             $employee = Employee::create([
+                'register_number' => $request->register_number,
                 'name' => $request->name,
+                'post_code' => $request->post_code,
+                'address' => $request->address,
                 'employment_status' => $request->status,
                 'company_id' => $request->company,
+                'is_invoice' => $request->invoice,
                 'vehicle_rental_type' => $request->rental_type,
                 'vehicle_id' => $request->vehicle,
             ]);
         }else{
-
             $employee = Employee::create([
+                'register_number' => $request->register_number,
                 'name' => $request->name,
+                'post_code' => $request->post_code,
+                'address' => $request->address,
                 'employment_status' => $request->status,
                 'company_id' => $request->company,
+                'is_invoice' => $request->invoice,
                 'vehicle_rental_type' => $request->rental_type,
             ]);
         }
 
+        BankAccount::create([
+            'employee_id' => $employee->id,
+            'bank_name' => $request->bank_name,
+            'account_holder_name' => $request->account_holder_name,
+        ]);
+
         // 案件別給与の登録
         $employeePrices = $request->input('employeePrice');
-        foreach ($employeePrices as $projectId => $price) {
-            ProjectEmployeePayment::create([
-                'employee_id' => $employee->id,
-                'project_id' => $projectId,
-                'amount' => $price,
-            ]);
+        if($employeePrices){
+            foreach ($employeePrices as $projectId => $price) {
+                ProjectEmployeePayment::create([
+                    'employee_id' => $employee->id,
+                    'project_id' => $projectId,
+                    'amount' => $price,
+                ]);
+            }
         }
 
         // 案件別手当の登録
@@ -128,10 +143,14 @@ class EmployeeController extends Controller
         $employee = Employee::find($id);
 
         // 従業員データを更新
+        $employee->register_number = $request->register_number;
         $employee->name = $request->name;
+        $employee->post_code = $request->post_code;
+        $employee->address = $request->address;
         $employee->employment_status = $request->status;
         $employee->company_id = $request->company;
         $employee->employment_status = $request->status;
+        $employee->is_invoice = $request->invoice;
         $employee->vehicle_rental_type = $request->rental_type;
         if($request->rental_type == 1){
             $employee->vehicle_id = $request->vehicle;
@@ -139,6 +158,12 @@ class EmployeeController extends Controller
             $employee->vehicle_id = null;
         }
         $employee->save();
+
+        $bank_account = BankAccount::where('employee_id', $employee->id)->first();
+        $bank_account->bank_name = $request->bank_name;
+        $bank_account->account_holder_name = $request->account_holder_name;
+        $bank_account->save();
+
 
         // 案件別給与データ更新
         $employeePrices = $request->input('employeePrice');
@@ -264,8 +289,21 @@ class EmployeeController extends Controller
         $csv->setHeaderOffset(0);
 
         foreach ($csv as $row){
-            Employee::create([
+            $employee = Employee::create([
+                'register_number' => $row['register_number'],
+                'company_id' => $row['company_id'],
                 'name' => $row['name'],
+                'post_code' => $row['post_code'],
+                'address' => $row['address'],
+                'employment_status' => $row['employment_status'],
+                'is_invoice' => $row['is_invoice'],
+                'vehicle_rental_type' => $row['vehicle_rental_type'],
+            ]);
+
+            BankAccount::create([
+                'employee_id' => $employee->id,
+                'bank_name' => $row['bank_name'],
+                'account_holder_name' => $row['account_holder_name'],
             ]);
         }
 

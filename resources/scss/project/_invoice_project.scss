@@ -1,0 +1,233 @@
+@use "../foundation/variables.scss" as *;
+@use "../foundation/mixin.scss" as *;
+@use "sass:math";
+
+.invoice{
+
+    &__project-shift{
+        position: relative;
+        margin-left: 80px;
+        .select-area{
+            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            .invoice-date{
+                display: flex;
+                gap: 10px;
+            }
+            &__block{
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                label{
+                    font-size: 14px;
+                }
+                select{
+                    width: 180px;
+                }
+            }
+        }
+        .project-shfit-wrap{
+            width: fit-content;
+            margin-top: 150px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: white;
+        }
+        .project-info-table{
+            width: fit-content;
+            display: flex;
+            flex-direction: column;
+            border-bottom: 1px solid #2D3748;
+            border-right: 1px solid #2D3748;
+            font-size: 14px;
+            font-weight: bold;
+            background-color: white;
+            &__row{
+                display: flex;
+                border-top: 1px solid #2D3748;
+                &__txt{
+                    padding: 6px 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-left: 1px solid #2D3748;
+                }
+                .--head{
+                    width: 160px;
+                }
+                .--data{
+                    min-width: 210px;
+                }
+                .--project{
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                }
+            }
+        }
+        .project-shift-calender{
+            position: relative;
+            margin-top: 30px;
+            &__head{
+                position: sticky;
+                top: 0;
+                left: 0;
+                display: flex;
+                border-top: 1px solid #2D3748;
+                border-bottom: 1px solid #2D3748;
+                border-right: 1px solid #2D3748;
+                font-size: 14px;
+                background-color: white;
+                &__item{
+                    min-width: 150px;
+                    min-height: 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                    border-left: 1px solid #2D3748;
+                    .project-txt{
+                        padding: 7px 0px;
+                    }
+                }
+                .--andCompany{
+                    display: flex;
+                    flex-direction: column;
+                    min-width: 150px;
+                    &__wrap{
+                        display: flex;
+                        border-top: 1px solid $cBlack;
+                        &__block{
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            min-width: 150px;
+                            padding: 7px 0;
+                            border-left: 1px solid $cBlack;
+                        }
+                        &__block:nth-child(1){
+                            border-left: 0px solid $cBlack;
+                        }
+                    }
+                }
+                .--column{
+                    flex-direction: column;
+                }
+
+                &__project{
+                    display: flex;
+                    .project-block{
+                        display: flex;
+                        flex-direction: column;
+                        // border-left: 1px solid $cBlack;
+                        &__project-name{
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border-left: 1px solid $cBlack;
+                            border-bottom: 1px solid $cBlack;
+                            p{
+                                padding: 5px 0;
+                            }
+                        }
+                        .company-block{
+                            display: flex;
+                            .company-item{
+                                display: flex;
+                                &__clm{
+                                    min-width: 150px;
+                                    padding: 5px 0;
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                    justify-content: center;
+                                    border-left: 1px solid $cBlack;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            &__data{
+                border-right: 1px solid #2D3748;
+                &__row{
+                    min-height: 40px;
+                    display: flex;
+                    border-bottom: 1px solid #2D3748;
+                    &__item{
+                        min-width: 150px;
+                        display: flex;
+                        // flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        text-align: center;
+                        border-left: 1px solid #2D3748;
+                        &__company{
+                            min-width: 150px;
+                            min-height: 50px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            // padding: 5px 10px;
+                            border-left: 1px solid $cBlack;
+                        }
+                        &__company:nth-child(1){
+                            border-left: 0px solid $cBlack;
+                        }
+                        input{
+                            width: 100%;
+                            height: 100%;
+                            padding: 0;
+                            border: 0px;
+                            font-size: 12px;
+                            background-color: rgba(0, 208, 255, 0.267);
+                        }
+                    }
+                    .--andCompany{
+                        // min-width: 150px;
+                    }
+                    .--employee-wrap{
+                        flex-direction: column;
+                        gap: 5px;
+                    }
+                    .--column{
+                        flex-direction: column;
+                        gap: 10px;
+                    }
+                    .--clm{
+                        flex-direction: column;
+                    }
+                    .--projectTotalCount{
+                        min-width: 301px;
+                    }
+                }
+                .total{
+                    padding: 5px;
+                    display: flex;
+                    align-items: center;
+                    gap: 100px;
+                    background-color: #4FD1C5;
+                    font-size: 25px;
+                    font-weight: bold;
+                }
+            }
+        }
+
+        .view-clm{
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            &__item{
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+        }
+        .--project-pdf{
+            display: flex;
+        }
+    }
+}

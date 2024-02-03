@@ -7,9 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Shift extends Model
 {
-    use HasFactory;
 
     protected $fillable = ['date','employee_id','unregistered_employee', 'time_of_day'];
+
+    // dateカラムをキャスト
+    // protected $casts = [
+    //     'date' => 'datetime',
+    // ];
 
     public function employee()
     {

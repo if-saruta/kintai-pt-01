@@ -23,6 +23,7 @@ return new class extends Migration
             $table->decimal('total_allowance', 10, 2)->nullable();//手当合計
             $table->decimal('parking_fee', 10, 2)->nullable();//パーキング代
             $table->decimal('expressway_fee', 10, 2)->nullable();//高速代
+            $table->decimal('overtime_fee', 10, 2)->nullable();//残業代
             $table->string('vehicle_rental_type')->nullable();// 0 : 自車 1 : 月リース 2 : なんでも月リース 3 : 日割り
             $table->unsignedBigInteger('rental_vehicle_id')->nullable();//車両
             $table->timestamps();

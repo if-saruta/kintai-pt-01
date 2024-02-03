@@ -26,7 +26,7 @@ class ShiftProjectVehicle extends Model
 
     public function shift()
     {
-        return $this->belongsTo(Shift::class);
+        return $this->belongsTo(Shift::class, 'shift_id');
     }
 
     public function project()

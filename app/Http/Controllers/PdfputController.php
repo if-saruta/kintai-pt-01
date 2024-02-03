@@ -18,61 +18,124 @@ class PdfputController extends Controller
 
     public function driver_issue_pdf(Request $request)
     {
-        $administrative_commission_fee = $request->administrative_commission_fee;
-        $total_lease = $request->total_lease;
-        $total_insurance = $request->total_insurance;
-        $administrative_fee = $request->administrative_fee;
-        $transfer_fee = $request->transfer_fee;
-        $total_salary = $request->total_salary;
-        $total_allowance = $request->total_allowance;
-        $etc = $request->etc;
-        $employee = $request->employee;
 
-        $employeeInfo = Employee::find($employee);
-        $employeeName = $employeeInfo->name;
+        // 給与項目
+        $employeeId = $request->employeeId;
+        $bankName = $request->bank_name;
+        $bankAccountHolder = $request->bank_account_holder;
+        $salaryNo = $request->input('salaryNo');
+        $salaryMonth = $request->input('salaryMonth');
+        $salaryProject = $request->input('salaryProject');
+        $salaryEtc = $request->input('salaryEtc');
+        $salaryCount = $request->input('salaryCount');
+        $salaryUntil = $request->input('salaryUntil');
+        $salaryAmount = $request->input('salaryAmount');
+        $salarySubTotal = $request->salarySubTotal;
+        $salaryTax = $request->salaryTax;
+        $etcTotal = $request->etcTotal;
+        $salaryTotal = $request->salaryTotal;
+        $color = $request->pdfColor;
+        $salaryCompanyInfo = $request->salaryCompanyInfo;
+        $textWithBreaks = nl2br(e($salaryCompanyInfo));
 
+        // 費用総裁項目
+        $getCostNum = $request->getCostNum;
+        $getCostUntil = $request->gtCostUntil;
+        $getCostAmount = $request->getCostAmount;
+        $salaryCostName = $request->input('salaryCostName');
+        $salaryCostNum = $request->input('salaryCostNum');
+        $salaryCostUntil = $request->input('salaryCostUntil');
+        $salaryCostAmount = $request->input('salaryCostAmount');
+        $salaryCostTotal = $request->salaryCostTotal;
+
+        // 共通項目
+        $invoiceNumber = $request->driver_invoice_number;
+        $employee = Employee::find($employeeId);
         $today = Carbon::now();
 
-        $pdf = PDF::loadView('issue-pdf.driver-issue-pdf', compact('administrative_commission_fee','total_lease','total_insurance','administrative_fee','transfer_fee','total_allowance','etc','total_salary','employeeInfo','today'));
+        // ファイル名指定
+        $name = $employee->name;
 
-        $fileName = "{$today->format('Y-m-d')}_{$employeeName}.pdf";
+        $pdf = PDF::loadView('issue-pdf.driver-issue-pdf', compact('today', 'employee', 'textWithBreaks', 'invoiceNumber', 'bankName', 'bankAccountHolder', 'salaryNo', 'salaryMonth','salaryProject', 'salaryEtc', 'salaryCount', 'salaryUntil', 'salaryAmount', 'salarySubTotal', 'salaryTax', 'etcTotal', 'salaryTotal', 'getCostNum', 'getCostUntil', 'getCostAmount', 'salaryCostName', 'salaryCostNum', 'salaryCostUntil', 'salaryCostAmount', 'salaryCostTotal', 'color'));
+
+        $fileName = "{$today->format('Y-m-d')}_{$name}.pdf";
+
         return $pdf->download($fileName); //生成されるファイル名
-        // return view('issue-pdf.driver-issue-pdf', compact('administrative_commission_fee','total_lease','total_insurance','administrative_fee','transfer_fee','total_allowance','etc','total_salary','employeeInfo','today'));
     }
 
     public function company_issue_pdf(Request $request)
     {
-        $administrative_commission_fee = $request->administrative_commission_fee;
-        $total_lease = $request->total_lease;
-        $total_insurance = $request->total_insurance;
-        $administrative_fee = $request->administrative_fee;
-        $transfer_fee = $request->transfer_fee;
-        $total_salary = $request->total_salary;
-        $total_allowance = $request->total_allowance;
-        $etc = $request->etc;
-        $employee = $request->employee;
+        // 費用項目
+        $employeeId = $request->employeeId;
+        $costItem = $request->input('costItem');
+        $costNum = $request->input('costNum');
+        $costUntil = $request->input('costUntil');
+        $costAmount = $request->input('costAmount');
+        $costSubTotal = $request->costSubTotal;
+        $costTax = $request->costTax;
+        $costTotal = $request->costTotal;
 
-        $employeeInfo = Employee::find($employee);
+        $CompanyInfo = $request->costCompanyInfo;
+        $textWithBreaks = nl2br(e($CompanyInfo));
 
+        $bankInfo = $request->bank_info;
+        $bankInfoWithBreaks = nl2br(e($bankInfo));
+
+
+        // 共通項目
+        $invoiceNumber = $request->invoice_number;
+        $employee = Employee::find($employeeId);
         $today = Carbon::now();
 
-        $pdf = PDF::loadView('issue-pdf.company-issue-pdf', compact('administrative_commission_fee','total_lease','total_insurance','administrative_fee','transfer_fee','employeeInfo','today'));
-        $employeeName = $employeeInfo->name;
-        $fileName = "{$today->format('Y-m-d')}_{$employeeName}_相殺.pdf";
+        // ファイル名指定
+        $name = $employee->name;
+
+        $pdf = PDF::loadView('issue-pdf.company-issue-pdf', compact('textWithBreaks', 'invoiceNumber', 'employee', 'today', 'costItem','costNum','costUntil','costAmount','costSubTotal','costTax','costTotal', 'bankInfoWithBreaks'));
+
+        $fileName = "{$today->format('Y-m-d')}_{$name}_相殺.pdf";
+
         return $pdf->download($fileName); //生成されるファイル名
     }
 
     public function project_issue_pdf(Request $request)
     {
-        $total_retail = $request->total_retail;
-        $total_count = $request->total_count;
-        $pdf_retail = $request->pdf_retail;
-        $projectClientNameByPdf = $request->projectClientNameByPdf;
+        $invoiceNumber = $request->invoice_number;
+        $name = $request->name;
+        $subject = $request->subject;
+        $companyInfo = $request->company_info;
+        $item = $request->input('item');
+        $number = $request->input('number');
+        $until = $request->input('until');
+        $amount = $request->input('amount');
+        $subTotalRetail = $request->sub_total_retail;
+        $tax = $request->tax;
+        $totalRetail = $request->total_retail;
+        $bankName = $request->bank_name;
+        $taxTable01 = $request->input('tax_table01');
+        $taxTable02 = $request->input('tax_table02');
+        $taxTable03 = $request->input('tax_table03');
+        $taxTable04 = $request->input('tax_table04');
+
+        $subjectWithBreaks = nl2br(e($subject));
+        $companyInfoWithBreaks = nl2br(e($companyInfo));
+        $bankNameInfoWithBreaks = nl2br(e($bankName));
 
         $today = Carbon::now();
 
-        $pdf = PDF::loadView('issue-pdf.project-issue-pdf', compact('total_retail','total_count','pdf_retail','projectClientNameByPdf','today'));
-        return $pdf->download($projectClientNameByPdf);
+        $pdf = PDF::loadView('issue-pdf.project-issue-pdf',
+        compact('invoiceNumber', 'name', 'subjectWithBreaks', 'companyInfoWithBreaks'
+                ,'item', 'number', 'until', 'amount', 'subTotalRetail'
+                ,'tax', 'totalRetail', 'bankNameInfoWithBreaks', 'today'
+                ,'taxTable01', 'taxTable02', 'taxTable03', 'taxTable04'));
+
+        // return view('issue-pdf.project-issue-pdf', compact('invoiceNumber', 'name', 'subjectWithBreaks', 'companyInfoWithBreaks'
+        // ,'item', 'number', 'until', 'amount', 'subTotalRetail'
+        // ,'tax', 'totalRetail', 'bankNameInfoWithBreaks', 'today'
+        // ,'taxTable01', 'taxTable02', 'taxTable03', 'taxTable04'));
+        
+        $fileName = "{$today->format('Y-m-d')}_{$invoiceNumber}.pdf";
+
+        return $pdf->download($fileName); //生成されるファイル名
     }
 
     public function pdf_sample(Request $request)

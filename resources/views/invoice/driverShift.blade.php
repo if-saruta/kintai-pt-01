@@ -54,12 +54,80 @@
                 </div>
             </form>
             @if ($shifts)
-                <div class="">
-                    <div class="when-invoice">
-                        <p class="">{{$employeeName->name}}</p>
-                        <div class="year-month">
-                            <p>{{$getYear}}年{{$getMonth}}月</p>
+                {{-- 手当モーダル --}}
+                <div class="allowance-modal-wrap" id="allowance-modal">
+                    <span class="allowance-modal-wrap__bg"></span>
+                    <div class="allowance-modal-wrap__modal">
+                        <div class="allowance-modal-wrap__modal__inner">
+                            <div class="radio-area">
+                                <div class="radio-area__item">
+                                    <input name="swichAllowance" class="allowanceRadio" type="radio" id="allowanceS" checked>
+                                    <label for="allowanceS">手当選択</label>
+                                </div>
+                                <div class="radio-area__item">
+                                    <input name="swichAllowance" class="allowanceRadio" type="radio" id="allowance">
+                                    <label for="allowance">手当入力</label>
+                                </div>
+                            </div>
+                            <div class="input-area">
+                                <select name="" id="allowanceSelect" class="input-area__select radioRalation">
+                                    <option value="">選択してください</option>
+                                </select>
+                                <input type="text" id="allowanceInput" class="input-area__input input radioRalation" placeholder="金額を入力">
+                            </div>
+                            <div class="allowance-modal-btn">
+                                <p class="">保存</p>
+                            </div>
                         </div>
+                    </div>
+                </div>
+                {{-- 車両モーダル --}}
+                <div class="vehicle-modal-wrap" id="vehicleModal">
+                    <span class="vehicle-modal-wrap__bg"></span>
+                    <div class="vehicle-modal-wrap__modal">
+                        <div class="vehicle-modal-wrap__modal__inner">
+                            <div class="radio-area">
+                                <div class="radio-area__item">
+                                    <input name="swichVehicle" class="vehicleRadio" type="radio" id="vehicle-01" checked>
+                                    <label for="vehicle-01">車両選択</label>
+                                </div>
+                                <div class="radio-area__item">
+                                    <input name="swichVehicle" class="vehicleRadio" type="radio" id="vehicle-02">
+                                    <label for="vehicle-02">車両入力</label>
+                                </div>
+                            </div>
+                            <div class="input-area">
+                                <select name="" id="vehicleSelect" class="input-area__select vehicleRadioRalation">
+                                    <option value="">選択してください</option>
+                                    @foreach ($vehicles as $vehicle)
+                                        <option value="{{$vehicle->number}}">{{$vehicle->number}}</option>
+                                    @endforeach
+                                </select>
+                                <input type="text" id="vehicleInput" class="input-area__input input vehicleRadioRalation" placeholder="金額を入力">
+                            </div>
+                            <div class="vehicle-modal-btn">
+                                <p class="">保存</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="">
+                    <div class="top-wrap">
+                        <div class="when-invoice">
+                            <p class="">{{$employeeName->name}}</p>
+                            <div class="year-month">
+                                <p>{{$getYear}}年{{$getMonth}}月</p>
+                            </div>
+                        </div>
+                        <form action="{{route('invoice.driver-calendar-pdf')}}" method="POST">
+                            @csrf
+                            <button class="PDF-dump-btn">
+                                <p>カレンダーPDF</p>
+                            </button>
+                            <input hidden type="text" name="employee" value="{{$employeeName->id}}">
+                            <input hidden type="text" name="year" value="{{$getYear}}">
+                            <input hidden type="text" name="month" value="{{$getMonth}}">
+                        </form>
                     </div>
                     <div class="scroll-x">
                         <form action="{{route('invoice.driverShiftUpdate')}}" method="POST">
@@ -78,20 +146,23 @@
                                     <div class="driver-shift__head__item --project">
                                         <p class="">案件名</p>
                                     </div>
-                                    <div class="driver-shift__head__item --common">
+                                    <div class="driver-shift__head__item --common amountRow">
                                         <p class="">金額</p>
                                     </div>
                                     <div class="driver-shift__head__item --common">
                                         <p class="">手当</p>
                                     </div>
-                                    <div class="driver-shift__head__item --common">
+                                    <div class="driver-shift__head__item --common expresswayRow">
                                         <p class="">高速代</p>
                                     </div>
-                                    <div class="driver-shift__head__item --common">
+                                    <div class="driver-shift__head__item --common parkingRow">
                                         <p class="">パーキング代</p>
                                     </div>
                                     <div class="driver-shift__head__item --common">
                                         <p class="">二代目</p>
+                                    </div>
+                                    <div class="driver-shift__head__item --common overtimeRow">
+                                        <p class="">残業代</p>
                                     </div>
                                     <div class="driver-shift__head__item --date">
                                         <p class="">日付</p>
@@ -99,35 +170,44 @@
                                     <div class="driver-shift__head__item --project">
                                         <p class="">案件名</p>
                                     </div>
-                                    <div class="driver-shift__head__item --common">
+                                    <div class="driver-shift__head__item --common amountRow">
                                         <p class="">金額</p>
                                     </div>
                                     <div class="driver-shift__head__item --common">
                                         <p class="">手当</p>
                                     </div>
-                                    <div class="driver-shift__head__item --common">
+                                    <div class="driver-shift__head__item --common expresswayRow">
                                         <p class="">高速代</p>
                                     </div>
-                                    <div class="driver-shift__head__item --common">
+                                    <div class="driver-shift__head__item --common parkingRow">
                                         <p class="">パーキング代</p>
                                     </div>
                                     <div class="driver-shift__head__item --common">
                                         <p class="">二代目</p>
                                     </div>
+                                    <div class="driver-shift__head__item --common overtimeRow">
+                                        <p class="">残業代</p>
+                                    </div>
                                 </div>
                                 <div class="flex">
                                     <div class="driver-shift__calender-shift">
                                         <?php
-                                            $total_salary = 0;//合計給与
-                                            $total_allowance = 0;//合計手当
-                                            $total_parking = 0;//合計パーキング代
-                                            $total_expressway = 0;//合計高速代
-                                            $projectCount = [];//合計案件数
-                                            $total_working_days = 0;//稼働日数
-                                            $vehicle_use = [];//二代目に使用した車両
-                                            $vehicle_second_count = 0;//二代目に使用した車両の数
-                                            $vehicle_rental_type = null;//その月の貸出形態
-                                            $rental_vehicle_number = null;//その月の貸出車両
+                                            $total_salary = 0; //合計給与
+                                            $total_allowance = 0; //合計手当
+                                            $total_parking = 0; //合計パーキング代
+                                            $total_expressway = 0; //合計高速代
+                                            $total_overtime = 0; //合計残業代
+                                            $projectCount = []; //合計案件数
+                                            $total_working_days = 0; //稼働日数
+                                            //   二代目・三代目の確認変数
+                                            $second_machine_check = true;
+                                            $second_vehicle_use = []; //二代目に使用した車両
+                                            $secound_vehicle_array = [];
+                                            $vehicle_second_count = 0; //二代目に使用した車両の数
+                                            $third_vehicle_array = [];
+                                            $third_machine_count = 0;
+                                            $vehicle_rental_type = null; //その月の貸出形態
+                                            $rental_vehicle_number = null; //その月の貸出車両
                                         ?>
                                         @foreach ($dates as $date)
                                             @if($date->format('d') < 16)
@@ -141,14 +221,32 @@
                                                         $count = 0;
                                                         $isCheck = false;
                                                     ?>
+                                                    @php
+                                                        $hasShift = true;
+                                                        //   二代目・三代目の確認変数
+                                                        $second_machine_check = true;
+                                                    @endphp
                                                     @foreach ($shifts as $shift)
                                                         @if($shift->date == $date->format('Y-m-d'))
                                                             <?php $isCheck = true; ?>
                                                             <div class="driver-shift__calender-shift__day__info">
-                                                                <?php $hasShift = false; ?>
+
                                                                 @foreach ( $shift->projectsVehicles as $spv )
-                                                                    <?php $hasShift = true; ?>
+                                                                    @php
+                                                                        if($hasShift){
+                                                                            if($spv->project){
+                                                                                if($spv->project->name !== '休み'){
+                                                                                    $total_working_days++;
+                                                                                    $hasShift = false;
+                                                                                }
+                                                                            }else{
+                                                                                $total_working_days++;
+                                                                                $hasShift = false;
+                                                                            }
+                                                                        }
+                                                                    @endphp
                                                                     <div class="driver-shift__calender-shift__day__info__row">
+                                                                        {{-- 案件 --}}
                                                                         <div class="driver-shift__calender-shift__day__info__row__data --project">
                                                                             @if ($spv->project)
                                                                                 <p class="--project-name">{{$spv->project->name}}</p>
@@ -157,6 +255,12 @@
                                                                                 @else
                                                                                     <?php $projectCount[$spv->project->name][$spv->retail_price] = 1; ?>
                                                                                 @endif
+                                                                                @foreach ($allowanceProject as $value)
+                                                                                    @if ($value == $project_id)
+                                                                                        <input hidden type="text" value="{{$value->allowanceName}}">
+                                                                                        <input hidden type="text" value="{{$value->amount}}">
+                                                                                    @endif
+                                                                                @endforeach
                                                                             @elseif(!empty($spv->unregistered_project))
                                                                                 <p style="color:red;" class="--project-name">{{$spv->unregistered_project}}</p>
                                                                                 @if (isset($projectCount[$spv->unregistered_project][$spv->retail_price]))
@@ -166,22 +270,27 @@
                                                                                 @endif
                                                                             @endif
                                                                         </div>
-                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common">
+                                                                        {{-- 給与 --}}
+                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common amountRow">
                                                                             <p>{{$spv->driver_price}}</p>
                                                                             <?php $total_salary += $spv->driver_price?>
                                                                         </div>
+                                                                        {{-- 手当 --}}
                                                                         <div class="driver-shift__calender-shift__day__info__row__data --common">
                                                                             <p>{{$spv->total_allowance}}</p>
                                                                             <?php $total_allowance += $spv->total_allowance?>
                                                                         </div>
-                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common">
+                                                                        {{-- 高速代 --}}
+                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common expresswayRow">
                                                                             <input type="text" name="expressway_fee[{{$spv->id}}]" value="{{$spv->expressway_fee}}">
                                                                             <?php $total_expressway += $spv->expressway_fee?>
                                                                         </div>
-                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common">
+                                                                        {{-- パーキング --}}
+                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common parkingRow">
                                                                             <input type="text" name="parking_fee[{{$spv->id}}]" value="{{$spv->parking_fee}}">
                                                                             <?php $total_parking += $spv->parking_fee?>
                                                                         </div>
+                                                                        {{-- 車両 --}}
                                                                         <div class="driver-shift__calender-shift__day__info__row__data --common">
                                                                             @if ($spv->vehicle_rental_type)
                                                                                 @if ($spv->vehicle_rental_type == 0 || $spv->vehicle_rental_type == 1)
@@ -189,47 +298,85 @@
                                                                                     <?php $rental_vehicle_number = $spv->rentalVehicle->number?>
                                                                                     @if($spv->vehicle_id)
                                                                                         @if($spv->vehicle_id != $spv->rental_vehicle_id)
-                                                                                            <p>No.{{$spv->vehicle->number}}</p>
-                                                                                            @if (!in_array($spv->vehicle->number, $vehicle_use))
-                                                                                                <?php $vehicle_use[] = $spv->vehicle->number; ?>
+                                                                                        <input type="text" class="mainVehicle" name="vehicle[{{$spv->id}}]" value="{{$spv->vehicle->number}}" readonly>
+                                                                                            @if (!in_array($spv->vehicle->number, $second_vehicle_use))
+                                                                                                <?php $second_vehicle_use[] = $spv->vehicle->number; ?>
                                                                                             @endif
-                                                                                            <?php $vehicle_second_count++?>
+
                                                                                         @endif
                                                                                     @endif
                                                                                 @endif
                                                                             @endif
                                                                             @if ($spv->unregistered_vehicle)
-                                                                                <p style="color:red;">No.{{$spv->unregistered_vehicle}}</p>
-                                                                                @if (!in_array($spv->unregistered_vehicle, $vehicle_use))
-                                                                                    <?php $vehicle_use[] = $spv->unregistered_vehicle; ?>
+                                                                            <input type="text" class="mainVehicle" name="vehicle[{{$spv->id}}]" value="{{$spv->unregistered_vehicle}}" readonly>
+                                                                                @if (!in_array($spv->unregistered_vehicle, $second_vehicle_use))
+                                                                                    <?php $second_vehicle_use[] = $spv->unregistered_vehicle; ?>
                                                                                 @endif
-                                                                                <?php $vehicle_second_count++?>
+
                                                                             @endif
+
+                                                                            @php
+                                                                                if($spv->vehicle_rental_type == 0 && $spv->vehicle_id){
+                                                                                    if($second_machine_check){
+                                                                                    $second_machine_check = false;
+                                                                                    $vehicle_second_count++;
+                                                                                        if(!in_array($spv->vehicle->number, $secound_vehicle_array)){
+                                                                                            $secound_vehicle_array[] = $spv->vehicle->number;
+                                                                                        }
+                                                                                    }else{
+                                                                                        $third_machine_count++;
+                                                                                        if(!in_array($spv->vehicle->number, $third_vehicle_array)){
+                                                                                            $third_vehicle_array[] = $spv->vehicle->number;
+                                                                                        }
+                                                                                    }
+                                                                                }
+
+                                                                            @endphp
+                                                                            {{-- 月リース --}}
+                                                                            @if ($spv->vehicle_rental_type == 1)
+                                                                                @if ($spv->vehicle_id != $spv->rental_vehicle_id)
+                                                                                    {{$spv->vehicle_id}}
+                                                                                    @php
+                                                                                    if($second_machine_check){
+                                                                                        $second_machine_count++;
+                                                                                        $second_machine_check = false;
+                                                                                    }else{
+                                                                                        $third_machine_count++;
+                                                                                    }
+                                                                                    @endphp
+                                                                                @endif
+                                                                            @endif
+                                                                        </div>
+                                                                        {{-- 残業代 --}}
+                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common overtimeRow">
+                                                                            <input type="text" name="overtime_fee[{{$spv->id}}]" value="{{$spv->overtime_fee}}">
+                                                                            <?php $total_overtime += $spv->overtime_fee?>
                                                                         </div>
                                                                     </div>
                                                                     <?php $count++; ?>
                                                                 @endforeach
-                                                                @if ($hasShift)
-                                                                    <?php $total_working_days++?>
-                                                                @endif
                                                                 @for ($i = 0; $i < ($mustCnt - $count); $i++)
                                                                     <div class="driver-shift__calender-shift__day__info__row">
                                                                         <div class="driver-shift__calender-shift__day__info__row__data --project">
 
                                                                         </div>
-                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common">
+                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common amountRow">
 
                                                                         </div>
                                                                         <div class="driver-shift__calender-shift__day__info__row__data --common">
 
                                                                         </div>
-                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common">
+                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common expresswayRow">
+
+                                                                        </div>
+                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common parkingRow">
 
                                                                         </div>
                                                                         <div class="driver-shift__calender-shift__day__info__row__data --common">
 
                                                                         </div>
-                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common">
+                                                                        {{-- 残業代 --}}
+                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common overtimeRow">
 
                                                                         </div>
                                                                     </div>
@@ -244,19 +391,23 @@
                                                                     <div class="driver-shift__calender-shift__day__info__row__data --project">
 
                                                                     </div>
-                                                                    <div class="driver-shift__calender-shift__day__info__row__data --common">
+                                                                    <div class="driver-shift__calender-shift__day__info__row__data --common amountRow">
 
                                                                     </div>
                                                                     <div class="driver-shift__calender-shift__day__info__row__data --common">
 
                                                                     </div>
-                                                                    <div class="driver-shift__calender-shift__day__info__row__data --common">
+                                                                    <div class="driver-shift__calender-shift__day__info__row__data --common expresswayRow">
+
+                                                                    </div>
+                                                                    <div class="driver-shift__calender-shift__day__info__row__data --common parkingRow">
 
                                                                     </div>
                                                                     <div class="driver-shift__calender-shift__day__info__row__data --common">
 
                                                                     </div>
-                                                                    <div class="driver-shift__calender-shift__day__info__row__data --common">
+                                                                    {{-- 残業代 --}}
+                                                                    <div class="driver-shift__calender-shift__day__info__row__data --common overtimeRow">
 
                                                                     </div>
                                                                 </div>
@@ -281,14 +432,31 @@
                                                         $count = 0;
                                                         $isCheck = false;
                                                     ?>
+                                                    @php
+                                                        $hasShift = true;
+                                                        $second_machine_check = true;
+                                                    @endphp
                                                     @foreach ($shifts as $shift)
                                                         @if($shift->date == $date->format('Y-m-d'))
                                                             <?php $isCheck = true; ?>
-                                                            <?php $hasShift = false; ?>
+
                                                             <div class="driver-shift__calender-shift__day__info">
                                                                 @foreach ( $shift->projectsVehicles as $spv )
-                                                                    <?php $hasShift = true; ?>
+                                                                    @php
+                                                                        if($hasShift){
+                                                                            if($spv->project){
+                                                                                if($spv->project->name !== '休み'){
+                                                                                    $total_working_days++;
+                                                                                    $hasShift = false;
+                                                                                }
+                                                                            }else{
+                                                                                $total_working_days++;
+                                                                                $hasShift = false;
+                                                                            }
+                                                                        }
+                                                                    @endphp
                                                                     <div class="driver-shift__calender-shift__day__info__row">
+                                                                        {{-- 案件表示 --}}
                                                                         <div class="driver-shift__calender-shift__day__info__row__data --project">
                                                                             @if ($spv->project)
                                                                                 <p class="--project-name">{{$spv->project->name}}</p>
@@ -306,70 +474,120 @@
                                                                                 @endif
                                                                             @endif
                                                                         </div>
-                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common">
-                                                                            <p>{{$spv->driver_price}}</p>
+                                                                        {{-- 給与 --}}
+                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common amountRow">
+                                                                            <input type="text" name="driver_price[{{$spv->id}}]" value="{{$spv->driver_price}}">
                                                                             <?php $total_salary += $spv->driver_price?>
                                                                         </div>
-                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common">
-                                                                            <p>{{$spv->total_allowance}}</p>
+                                                                        {{-- 手当 --}}
+                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common allowance-area">
+                                                                            <input type="text" name="allowance[{{$spv->id}}]" value="{{$spv->total_allowance}}" class="allowance-input">
                                                                             <?php $total_allowance += $spv->total_allowance?>
+                                                                            @if ($spv->project)
+                                                                                @foreach ($allowanceProject as $value)
+                                                                                    @if ($value->project_id == $spv->project->id)
+                                                                                        <input hidden class="allowanceName" type="text" value="{{$value->allowanceName}}">
+                                                                                        <input hidden class="amount" type="text" value="{{$value->amount}}">
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            @endif
                                                                         </div>
-                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common">
+                                                                        {{-- 高速代 --}}
+                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common expresswayRow">
                                                                             <input type="text" name="expressway_fee[{{$spv->id}}]" value="{{$spv->expressway_fee}}">
                                                                             <?php $total_expressway += $spv->expressway_fee?>
                                                                         </div>
-                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common">
+                                                                        {{-- パーキング --}}
+                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common parkingRow">
                                                                             <input type="text" name="parking_fee[{{$spv->id}}]" value="{{$spv->parking_fee}}">
                                                                             <?php $total_parking += $spv->parking_fee?>
                                                                         </div>
+                                                                        {{-- 二代目 --}}
                                                                         <div class="driver-shift__calender-shift__day__info__row__data --common">
-                                                                            @if ($spv->vehicle_rental_type)
+                                                                            @if ($spv->vehicle_rental_type != null)
                                                                                 @if ($spv->vehicle_rental_type == 0 || $spv->vehicle_rental_type == 1)
                                                                                     <?php $vehicle_rental_type = $spv->vehicle_rental_type;?>
-                                                                                    <?php $rental_vehicle_number = $spv->rentalVehicle->number?>
+                                                                                    @if ($spv->rentalVehicle)
+                                                                                        <?php $rental_vehicle_number = $spv->rentalVehicle->number?>
+                                                                                    @endif
                                                                                     @if($spv->vehicle_id)
                                                                                         @if($spv->vehicle_id != $spv->rental_vehicle_id)
-                                                                                            <p>No.{{$spv->vehicle->number}}</p>
-                                                                                            @if (!in_array($spv->vehicle->number, $vehicle_use))
-                                                                                                <?php $vehicle_use[] = $spv->vehicle->number; ?>
+                                                                                            <input type="text" class="mainVehicle" name="vehicle[{{$spv->id}}]" value="{{$spv->vehicle->number}}" readonly>
+                                                                                            @if (!in_array($spv->vehicle->number, $second_vehicle_use))
+                                                                                                <?php $second_vehicle_use[] = $spv->vehicle->number; ?>
                                                                                             @endif
-                                                                                            <?php $vehicle_second_count++?>
+
                                                                                         @endif
                                                                                     @endif
                                                                                 @endif
                                                                             @endif
                                                                             @if ($spv->unregistered_vehicle)
-                                                                                <p style="color:red;">No.{{$spv->unregistered_vehicle}}</p>
-                                                                                @if (!in_array($spv->unregistered_vehicle, $vehicle_use))
-                                                                                    <?php $vehicle_use[] = $spv->unregistered_vehicle; ?>
-                                                                                @endif
-                                                                                <?php $vehicle_second_count++?>
+                                                                                <input type="text" class="mainVehicle" name="vehicle[{{$spv->id}}]" value="{{$spv->unregistered_vehicle}}" readonly>
                                                                             @endif
+
+                                                                            @php
+                                                                                if($spv->vehicle_rental_type == 0 && $spv->vehicle_id){
+                                                                                    if($second_machine_check){
+                                                                                    $second_machine_check = false;
+                                                                                    $vehicle_second_count++;
+                                                                                        if(!in_array($spv->vehicle->number, $secound_vehicle_array)){
+                                                                                            $secound_vehicle_array[] = $spv->vehicle->number;
+                                                                                        }
+                                                                                    }else{
+                                                                                        $third_machine_count++;
+                                                                                        if(!in_array($spv->vehicle->number, $third_vehicle_array)){
+                                                                                            $third_vehicle_array[] = $spv->vehicle->number;
+                                                                                        }
+                                                                                    }
+                                                                                }
+
+                                                                            @endphp
+                                                                            {{-- 月リース --}}
+                                                                            @if ($spv->vehicle_rental_type == 1)
+                                                                                @if ($spv->vehicle_id != $spv->rental_vehicle_id)
+                                                                                    {{$spv->vehicle_id}}
+                                                                                    @php
+                                                                                    if($second_machine_check){
+                                                                                        $second_machine_count++;
+                                                                                        $second_machine_check = false;
+                                                                                    }else{
+                                                                                        $third_machine_count++;
+                                                                                    }
+                                                                                    @endphp
+                                                                                @endif
+                                                                            @endif
+                                                                        </div>
+                                                                        {{-- 残業代 --}}
+                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common overtimeRow">
+                                                                            <input type="text" name="overtime_fee[{{$spv->id}}]" value="{{$spv->overtime_fee}}">
+                                                                            <?php $total_overtime += $spv->overtime_fee?>
                                                                         </div>
                                                                     </div>
                                                                     <?php $count++; ?>
                                                                 @endforeach
-                                                                @if ($hasShift)
-                                                                    <?php $total_working_days++?>
-                                                                @endif
+
                                                                 @for ($i = 0; $i < ($mustCnt - $count); $i++)
                                                                     <div class="driver-shift__calender-shift__day__info__row">
                                                                         <div class="driver-shift__calender-shift__day__info__row__data --project">
 
                                                                         </div>
-                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common">
+                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common amountRow">
 
                                                                         </div>
                                                                         <div class="driver-shift__calender-shift__day__info__row__data --common">
 
                                                                         </div>
-                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common">
+                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common expresswayRow">
+
+                                                                        </div>
+                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common parkingRow">
 
                                                                         </div>
                                                                         <div class="driver-shift__calender-shift__day__info__row__data --common">
 
                                                                         </div>
-                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common">
+                                                                        {{-- 残業代 --}}
+                                                                        <div class="driver-shift__calender-shift__day__info__row__data --common overtimeRow">
 
                                                                         </div>
                                                                     </div>
@@ -384,19 +602,23 @@
                                                                     <div class="driver-shift__calender-shift__day__info__row__data --project">
 
                                                                     </div>
-                                                                    <div class="driver-shift__calender-shift__day__info__row__data --common">
+                                                                    <div class="driver-shift__calender-shift__day__info__row__data --common amountRow">
 
                                                                     </div>
                                                                     <div class="driver-shift__calender-shift__day__info__row__data --common">
 
                                                                     </div>
-                                                                    <div class="driver-shift__calender-shift__day__info__row__data --common">
+                                                                    <div class="driver-shift__calender-shift__day__info__row__data --common expresswayRow">
+
+                                                                    </div>
+                                                                    <div class="driver-shift__calender-shift__day__info__row__data --common parkingRow">
 
                                                                     </div>
                                                                     <div class="driver-shift__calender-shift__day__info__row__data --common">
 
                                                                     </div>
-                                                                    <div class="driver-shift__calender-shift__day__info__row__data --common">
+                                                                    {{-- 残業代 --}}
+                                                                    <div class="driver-shift__calender-shift__day__info__row__data --common overtimeRow">
 
                                                                     </div>
                                                                 </div>
@@ -442,7 +664,17 @@
                                             <div class="vehicle-use__head text-center">
                                                 <p class="">二代目車両</p>
                                             </div>
-                                            @foreach ($vehicle_use as $number)
+                                            @foreach ($secound_vehicle_array as $number)
+                                                <div class="vehicle-use__row text-center">
+                                                    {{$number}}
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <div class="vehicle-use">
+                                            <div class="vehicle-use__head text-center">
+                                                <p class="">三代目車両</p>
+                                            </div>
+                                            @foreach ($third_vehicle_array as $number)
                                                 <div class="vehicle-use__row text-center">
                                                     {{$number}}
                                                 </div>
@@ -464,34 +696,45 @@
                                     $lease_insurance = 9818;//月額リース保険料
                                     $month_lease_insurance = 410;//二代目以降保険料
                                     $daily_lease_rate = 1364;//日割りリース料
-                                    $daily_insurance_rate = 455;//日割り保険料
+                                    $daily_insurance_rate = 410.;//日割り保険料
+
+                                    $sent_total_lease = 0;
+                                    $sent_total_insurance = 0;
+
+                                    if($vehicle_rental_type == 0){
+                                        $second_lease = 1500;
+                                    }
                                 ?>
                                 <div class="total-amount-table">
-                                    <div class="total-amount-table__row">
+                                    <div class="total-amount-table__row amountRow">
                                         <div class="total-amount-table__row__item"><p class="">合計金額</p></div>
                                         <div class="total-amount-table__row__item --amount"><p class="">{{$total_salary}}</p></div>
                                     </div>
                                     <div class="total-amount-table__row">
-                                        <div class="total-amount-table__row__item"><p class="">手当</p></div>
+                                        <div class="total-amount-table__row__item"><p class="">案件別手当合計</p></div>
                                         <div class="total-amount-table__row__item --amount"><p class="">{{$total_allowance}}</p></div>
                                     </div>
                                     <div class="total-amount-table__row">
                                         <div class="total-amount-table__row__item"><p class="">消費税10%</p></div>
                                         <?php $tax = ($total_salary + $total_allowance) * $tax?>
-                                        <div class="total-amount-table__row__item --amount"><p class="">{{$tax}}</p></div>
+                                        <div class="total-amount-table__row__item --amount"><p class="">{{ceil($tax)}}</p></div>
                                     </div>
-                                    <div class="total-amount-table__row">
+                                    <div class="total-amount-table__row parkingRow">
                                         <div class="total-amount-table__row__item"><p class="">パーキング代</p></div>
                                         <div class="total-amount-table__row__item --amount"><p class="">{{$total_parking}}</p></div>
                                     </div>
-                                    <div class="total-amount-table__row">
+                                    <div class="total-amount-table__row expresswayRow">
                                         <div class="total-amount-table__row__item"><p class="">高速代</p></div>
                                         <div class="total-amount-table__row__item --amount"><p class="">{{$total_expressway}}</p></div>
+                                    </div>
+                                    <div class="total-amount-table__row overtimeRow">
+                                        <div class="total-amount-table__row__item"><p class="">残業代</p></div>
+                                        <div class="total-amount-table__row__item --amount"><p class="">{{$total_overtime}}</p></div>
                                     </div>
                                     <div class="total-amount-table__row">
                                         <div class="total-amount-table__row__item"><p class="">事務委託手数料(15%)</p></div>
                                         <?php $administrative_commission_fee = $total_salary * $administrative_rate?>
-                                        <div class="total-amount-table__row__item --amount"><p class="">{{$administrative_commission_fee}}</p></div>
+                                        <div class="total-amount-table__row__item --amount"><p class="">{{ceil($administrative_commission_fee)}}</p></div>
                                     </div>
                                     <div class="total-amount-table__row">
                                         <div class="total-amount-table__row__item"><p class="">事務手数料</p></div>
@@ -501,26 +744,56 @@
                                         <div class="total-amount-table__row__item"><p class="">振込手数料</p></div>
                                         <div class="total-amount-table__row__item --amount"><p class="">{{$transfer_fee}}</p></div>
                                     </div>
-                                    @if ($vehicle_rental_type == 1)
+                                    @if ($vehicle_rental_type == 1 || $vehicle_rental_type == 2)
                                         <div class="total-amount-table__row">
                                             <div class="total-amount-table__row__item"><p class="">リース代　月契約 No.{{$rental_vehicle_number}}</p></div>
                                             <div class="total-amount-table__row__item --amount"><p class="">{{$month_lease_fee}}</p></div>
                                         </div>
+                                        @php
+                                            $sent_total_lease += $month_lease_fee;
+                                        @endphp
                                     @endif
-                                    <div class="total-amount-table__row">
-                                        <div class="total-amount-table__row__item"><p class="">リース　二代目(日割り)</p></div>
-                                        <div class="total-amount-table__row__item --amount"><p class="">{{$second_lease * $vehicle_second_count}}</p></div>
-                                    </div>
-                                    @if ($vehicle_rental_type == 1)
-                                    <div class="total-amount-table__row">
-                                        <div class="total-amount-table__row__item"><p class="">保険料　月契約 No.{{$rental_vehicle_number}}</p></div>
-                                        <div class="total-amount-table__row__item --amount"><p class="">{{$lease_insurance}}</p></div>
-                                    </div>
+                                    @if ($vehicle_rental_type == 0 || $vehicle_rental_type == 1)
+                                        @if ($vehicle_second_count > 0)
+                                            <div class="total-amount-table__row">
+                                                <div class="total-amount-table__row__item"><p class="">リース　二代目(日割り)</p></div>
+                                                <div class="total-amount-table__row__item --amount"><p class="">{{$second_lease * $vehicle_second_count}}</p></div>
+                                            </div>
+                                            @php
+                                                $sent_total_lease += ($second_lease * $vehicle_second_count);
+                                            @endphp
+                                        @endif
                                     @endif
-                                    <div class="total-amount-table__row">
-                                        <div class="total-amount-table__row__item"><p class="">保険料　二代目(日割り)</p></div>
-                                        <div class="total-amount-table__row__item --amount"><p class="">{{$month_lease_insurance * $vehicle_second_count}}</p></div>
-                                    </div>
+                                    @if ($third_machine_count > 0)
+                                        <div class="total-amount-table__row">
+                                            <div class="total-amount-table__row__item"><p class="">リース　三代目(日割り)</p></div>
+                                            <div class="total-amount-table__row__item --amount"><p class="">{{$three_lease * $third_machine_count}}</p></div>
+                                        </div>
+                                        @php
+                                            $sent_total_lease += ($three_lease * $third_machine_count);
+                                        @endphp
+                                    @endif
+
+                                    @if ($vehicle_rental_type == 1 || $vehicle_rental_type == 2)
+                                        <div class="total-amount-table__row">
+                                            <div class="total-amount-table__row__item"><p class="">保険料　月契約 No.{{$rental_vehicle_number}}</p></div>
+                                            <div class="total-amount-table__row__item --amount"><p class="">{{$lease_insurance}}</p></div>
+                                        </div>
+                                        @php
+                                            $sent_total_insurance += $lease_insurance;
+                                        @endphp
+
+                                    @endif
+                                    @if ($vehicle_second_count > 0)
+                                        <div class="total-amount-table__row">
+                                            <div class="total-amount-table__row__item"><p class="">保険料　二代目(日割り)</p></div>
+                                            <div class="total-amount-table__row__item --amount"><p class="">{{$daily_insurance_rate * ($vehicle_second_count + $third_machine_count)}}</p></div>
+                                        </div>
+                                        @php
+                                            $sent_total_insurance += $daily_insurance_rate * ($vehicle_second_count + $third_machine_count);
+                                        @endphp
+                                    @endif
+
                                 </div>
                             </div>
                         </form>
@@ -530,14 +803,14 @@
 
             @if ($shifts)
             <div class="PDF-dump">
-                <form action="{{route('invoice.driver-issue-pdf')}}" method="POST">
+                <form action="{{route('invoice.driver-edit-pdf')}}" method="POST">
                     @csrf
                     {{-- 業務委託手数料 --}}
                     <input hidden type="text" name="administrative_commission_fee" value="{{$administrative_commission_fee}}">
                     {{-- 合計リース代 --}}
-                    <input hidden type="text" name="total_lease" value="{{$month_lease_fee + ($second_lease * $vehicle_second_count)}}">
+                    <input hidden type="text" name="total_lease" value="{{$sent_total_lease}}">
                     {{-- 合計保険代 --}}
-                    <input hidden type="text" name="total_insurance" value="{{$lease_insurance + ($month_lease_insurance * $vehicle_second_count)}}">
+                    <input hidden type="text" name="total_insurance" value="{{$sent_total_insurance}}">
                     {{-- 事務手数料 --}}
                     <input hidden type="text" name="administrative_fee" value="{{$administrative_fee}}">
                     {{-- 振込手数料 --}}
@@ -547,40 +820,34 @@
                     {{-- 手当 --}}
                     <input hidden type="text" name="total_allowance" value="{{$total_allowance}}">
                     {{-- 高速代・パーキング代 --}}
-                    <input hidden type="text" name="etc" value="{{$total_expressway + $total_parking}}">
+                    <input hidden type="text" name="total_expressway" value="{{$total_expressway}}">
+                    <input hidden type="text" name="total_parking" value="{{ $total_parking}}">
+                    <input hidden type="text" name="total_overtime" value="{{$total_overtime}}">
                     {{-- 従業員ID --}}
                     <input hidden type="text" name="employee" value="{{$employeeName->id}}">
                     {{-- <input hidden type="text" name="" value=""> --}}
                     <button class="PDF-dump-btn">
-                        <p>ドライバー発行PDF請求書</p>
+                        <p>請求書確認画面</p>
                     </button>
-                </form>
-            </div>
-            <div class="PDF-dump --to-company">
-                <form action="{{route('invoice.company-issue-pdf')}}" method="POST">
-                    @csrf
-                    {{-- 業務委託手数料 --}}
-                    <input hidden type="text" name="administrative_commission_fee" value="{{$administrative_commission_fee}}">
-                    {{-- 合計リース代 --}}
-                    <input hidden type="text" name="total_lease" value="{{$month_lease_fee + ($second_lease * $vehicle_second_count)}}">
-                    {{-- 合計保険代 --}}
-                    <input hidden type="text" name="total_insurance" value="{{$lease_insurance + ($month_lease_insurance * $vehicle_second_count)}}">
-                    {{-- 事務手数料 --}}
-                    <input hidden type="text" name="administrative_fee" value="{{$administrative_fee}}">
-                    {{-- 振込手数料 --}}
-                    <input hidden type="text" name="transfer_fee" value="{{$transfer_fee}}">
-                    {{-- 給与合計 --}}
-                    <input hidden type="text" name="total_salary" value="{{$total_salary}}">
-                    {{-- 手当 --}}
-                    <input hidden type="text" name="total_allowance" value="{{$total_allowance}}">
-                    {{-- 高速代・パーキング代 --}}
-                    <input hidden type="text" name="etc" value="{{$total_expressway + $total_parking}}">
-                    {{-- 従業員ID --}}
-                    <input hidden type="text" name="employee" value="{{$employeeName->id}}">
-                    {{-- <input hidden type="text" name="" value=""> --}}
-                    <button class="PDF-dump-btn">
-                        <p>所属先発行PDF請求書</p>
-                    </button>
+
+                    <div class="item-check-wrap">
+                        <div class="item-check-wrap__block">
+                            <label for="">金額</label>
+                            <input checked type="checkbox" name="amountCheck" value="1" id="amountCheck">
+                        </div>
+                        <div class="item-check-wrap__block">
+                            <label for="">高速代</label>
+                            <input checked type="checkbox" name="expresswayCheck" value="1" id="expresswayCheck">
+                        </div>
+                        <div class="item-check-wrap__block">
+                            <label for="">パーキング代</label>
+                            <input checked type="checkbox" name="parkingCheck" value="1" id="parkingCheck">
+                        </div>
+                        <div class="item-check-wrap__block">
+                            <label for="">残業代</label>
+                            <input checked type="checkbox" name="overtimeCheck" value="1" id="overtimeCheck">
+                        </div>
+                    </div>
                 </form>
             </div>
 
@@ -592,3 +859,6 @@
 
 
 </x-app-layout>
+
+{{-- script --}}
+<script src="{{asset('js/invoice-driver.js')}}"></script>

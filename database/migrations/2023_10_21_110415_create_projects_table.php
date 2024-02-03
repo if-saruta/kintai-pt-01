@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->string('clientName')->nullable();
-            $table->string('clientNameByPDF')->nullable();
+            $table->foreignId('client_id')->constrained('clients');
+            $table->boolean('is_charter')->default(false);
             $table->string('name')->nullable();
             $table->string('payment_type')->nullable();  //0 歩合 1 日給
             $table->decimal('retail_price', 10, 2)->nullable();

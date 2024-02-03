@@ -112,7 +112,7 @@
             right: 5px;
         }
         .--bg-green{
-            background-color: rgb(151, 255, 151);
+            background-color: {{$color}};
         }
         .no-border{
             border: 0px;
@@ -140,36 +140,31 @@
         }
 
 
-
     </style>
-    <?php
-        $subtotal = $administrative_commission_fee + $total_lease + $total_insurance + $administrative_fee + $transfer_fee;
-        $tax = $subtotal * 0.1;
-        $total = $subtotal + $tax;
-    ?>
+
     <div class="">
         <div class="pdf-number">
-            <p class="">NO.DD{{ $today->format('Y') }}{{ $today->format('m') }}{{ $today->format('d') }}</p>
+            <p class="">NO.DD{{$invoiceNumber}}</p>
         </div>
         <div class="title">
             <p class="">請求書</p>
         </div>
-        <div class="line"></div>
+        <div class="line" style="background-color:{{$color}};"></div>
         <div class="date"><p class="">{{ $today->format('Y') }}年 {{ $today->format('m') }}月 {{ $today->format('d') }}日</p></div>
         <div class="employee-info">
-            <p class="employee-name">{{$employeeInfo->name}}</p>
+            <p class="employee-name">{{$employee->name}}</p>
             <p class="">
-                〒000-0000 <br>
-                東京都〇〇区〇〇1-2-3 <br>
-                登録番号　T0000000000000 <br>
-                〇〇銀行 〇〇支店(0000)　普通0000000 <br>
-                振込先名
+                〒{{$employee->post_code}} <br>
+                {{$employee->address}} <br>
+                登録番号　{{$employee->register_number}} <br>
+                {{$bankName}} <br>
+                振込先名 {{$bankAccountHolder}}
             </p>
         </div>
         <div class="company">
-            <p class="company-txt">株式会社 T.N.G　御中</p>
-            <p class="">〒124-0011</p>
-            <p class="">東京都葛飾区四つ木2-3-11</p>
+            <div class="company">
+                <p class="">{!! $textWithBreaks !!}</p>
+            </div>
             <br>
             <br>
             <p class="">下記の通りご請求申し上げます。</p>
@@ -177,7 +172,7 @@
         <table class="request-table">
             <tr>
                 <td class="request-table-data --bg-green"><p class="request-table-data-txt">ご請求金額</p></td>
-                <td class="request-table-data"><p class="request-table-data-txt">¥{{((($total_salary + $total_allowance) * 1.1) + $etc) - $total}}</p></td>
+                <td class="request-table-data"><p class="request-table-data-txt">¥{{$salaryTotal - $salaryCostTotal}}</p></td>
             </tr>
         </table>
         <table class="top-table">
@@ -190,42 +185,17 @@
                 <th class="top-table-head w-70 --bg-green"><p class="top-table-head-txt">単価</p></th>
                 <th class="top-table-head w-100 --bg-green"><p class="top-table-head-txt">金額</p></th>
             </tr>
+            @foreach ($salaryNo as $index => $value)
             <tr>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center">{{ $today->format('m') }}月度</p></td>
-                <td class="top-table-data w-260"><p class="top-table-data-txt --center">外注費</p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center">{{$etc}}</p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center">1</p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --right">{{$total_salary}}</p></td>
-                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{$total_salary}}</p></td>
+                <td class="top-table-data w-70"><p class="top-table-data-txt --center">{{$salaryNo[$index]}}</p></td>
+                <td class="top-table-data w-70"><p class="top-table-data-txt --center">{{$salaryMonth[$index]}}</p></td>
+                <td class="top-table-data w-260"><p class="top-table-data-txt --center">{{$salaryProject[$index]}}</p></td>
+                <td class="top-table-data w-70"><p class="top-table-data-txt --center">{{$salaryEtc[$index]}}</p></td>
+                <td class="top-table-data w-70"><p class="top-table-data-txt --center">{{$salaryCount[$index]}}</p></td>
+                <td class="top-table-data w-70"><p class="top-table-data-txt --right">{{$salaryUntil[$index]}}</p></td>
+                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{$salaryAmount[$index]}}</p></td>
             </tr>
-            <tr>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-260"><p class="top-table-data-txt --center">手当</p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{$total_allowance}}</p></td>
-            </tr>
-            <tr>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-260"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                <td class="top-table-data w-100"><p class="top-table-data-txt --right"></p></td>
-            </tr>
-            <tr>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-260"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                <td class="top-table-data w-100"><p class="top-table-data-txt --right"></p></td>
-            </tr>
+            @endforeach
             <tr>
                 <td class="top-table-data w-70 --bg-green"><p class="top-table-data-txt --center"></p></td>
                 <td class="top-table-data w-70 --bg-green"><p class="top-table-data-txt --center"></p></td>
@@ -233,7 +203,7 @@
                 <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                 <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                 <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{$total_salary + $total_allowance}}</p></td>
+                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{$salarySubTotal}}</p></td>
             </tr>
             <tr>
                 <td class="top-table-data w-70 --bg-green"><p class="top-table-data-txt --center"></p></td>
@@ -242,7 +212,7 @@
                 <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                 <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                 <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{($total_salary + $total_allowance) * 0.1}}</p></td>
+                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{$salaryTax}}</p></td>
             </tr>
             <tr>
                 <td class="top-table-data w-70 --bg-green"><p class="top-table-data-txt --center"></p></td>
@@ -251,7 +221,7 @@
                 <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                 <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                 <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{$etc}}</p></td>
+                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{$etcTotal}}</p></td>
             </tr>
             <tr>
                 <td class="top-table-data w-70 --bg-green"><p class="top-table-data-txt --center"></p></td>
@@ -260,7 +230,7 @@
                 <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                 <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                 <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{(($total_salary + $total_allowance) * 1.1) + $etc}}</p></td>
+                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{$salaryTotal}}</p></td>
             </tr>
 
         </table>
@@ -277,35 +247,21 @@
             <tr>
                 <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
                 <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-330"><p class="top-table-data-txt --center f-s-10">㈱T.N.G 請求書NO.DD{{ $today->format('Y') }}{{ $today->format('m') }}{{ $today->format('d') }}({{ $today->format('Y') }}年 {{ $today->format('m') }}月 {{ $today->format('d') }}日発行)相殺</㈱T.N.G></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{$total}}</p></td>
+                <td class="top-table-data w-330"><p class="top-table-data-txt --center f-s-10">㈱T.N.G 請求書NO.DD{{$invoiceNumber}}({{ $today->format('Y') }}年 {{ $today->format('m') }}月 {{ $today->format('d') }}日発行)相殺</㈱T.N.G></p></td>
+                <td class="top-table-data w-70"><p class="top-table-data-txt --center">{{$getCostNum}}</p></td>
+                <td class="top-table-data w-70"><p class="top-table-data-txt --right">{{$getCostUntil}}</p></td>
+                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{$getCostAmount}}</p></td>
             </tr>
+            @foreach ($salaryCostName as $index => $value)
             <tr>
                 <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
                 <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-330"><p class="top-table-data-txt --center f-s-10"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                <td class="top-table-data w-100"><p class="top-table-data-txt --right"></p></td>
+                <td class="top-table-data w-330"><p class="top-table-data-txt --center f-s-10">{{$salaryCostName[$index]}}</p></td>
+                <td class="top-table-data w-70"><p class="top-table-data-txt --center">{{$salaryCostNum[$index]}}</p></td>
+                <td class="top-table-data w-70"><p class="top-table-data-txt --right">{{$salaryCostUntil[$index]}}</p></td>
+                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{$salaryCostAmount[$index]}}</p></td>
             </tr>
-            <tr>
-                <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-330"><p class="top-table-data-txt --center f-s-10"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                <td class="top-table-data w-100"><p class="top-table-data-txt --right"></p></td>
-            </tr>
-            <tr>
-                <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-330"><p class="top-table-data-txt --center f-s-10"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                <td class="top-table-data w-100"><p class="top-table-data-txt --right"></p></td>
-            </tr>
+            @endforeach
         </table>
         <table class="top-table --no-margin">
             <tr>
@@ -314,7 +270,7 @@
                 <th class="top-table-head w-330 --bg-green"><p class="top-table-data-txt --right">小計</p></th>
                 <th class="top-table-head w-70"><p class="top-table-head-txt"></p></th>
                 <th class="top-table-head w-70"><p class="top-table-head-txt"></p></th>
-                <th class="top-table-head w-100"><p class="top-table-data-txt --right">{{$total}}</p></th>
+                <th class="top-table-head w-100"><p class="top-table-data-txt --right">{{$salaryCostTotal}}</p></th>
             </tr>
             <tr>
                 <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
@@ -322,7 +278,7 @@
                 <td class="top-table-data w-330 --bg-green"><p class="top-table-data-txt --center f-s-10">差引合計金額</p></td>
                 <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                 <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{((($total_salary + $total_allowance) * 1.1) + $etc) - $total}}</p></td>
+                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{$salaryTotal - $salaryCostTotal}}</p></td>
             </tr>
         </table>
     </div>

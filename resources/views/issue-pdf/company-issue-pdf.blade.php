@@ -140,39 +140,31 @@
         }
 
     </style>
-    <?php
+    {{-- <?php
         $subtotal = $administrative_commission_fee + $total_lease + $total_insurance + $administrative_fee + $transfer_fee;
         $tax = $subtotal * 0.1;
         $total = $subtotal + $tax;
-    ?>
+    ?> --}}
     <div class="">
         <div class="date">
             <p class="">{{ $today->format('Y') }}年 {{ $today->format('m') }}月 {{ $today->format('d') }}日</p>
-            <p class="">請求書番号　：　DD{{ $today->format('Y') }}{{ $today->format('m') }}{{ $today->format('d') }}</p>
+            <p class="">請求書番号　：　DD{{$invoiceNumber}}</p>
         </div>
         <div class="title">
             <p class="">請求書</p>
         </div>
         <div class="driver">
-            <p class="">{{$employeeInfo->name}}　様</p>
+            <p class="">{{$employee->name}}　様</p>
             <p class="f-s-13">
                 件名：{{ $today->format('m') }}月度の差引金額について<br>
                 下記の通りご請求申し上げます。
             </p>
         </div>
         <div class="company">
-            <p class="">株式会社T.N.G</p>
-            <p class="">
-                〒124-0011<br>
-                東京都葛飾区四つ木2-3-11<br>
-                四つ木ハイム
-            </p>
-            <p class="">TEL:03-5875-7469</p>
-            <p class="">FAX:03-5875-7469</p>
-            <p class="">登録番号: T6011801035426</p>
+            <p>{!! $textWithBreaks !!}</p>
         </div>
         <div class="amount">
-            <p class="amount-txt"><span class="">ご請求金額</span><span class="amount-fee">¥{{$total}}</span></p>
+            <p class="amount-txt"><span class="">ご請求金額</span><span class="amount-fee">¥{{$costTotal}}</span></p>
         </div>
         <table class="table">
             <tr>
@@ -181,70 +173,36 @@
                 <th class="table-head w-100">単価</th>
                 <th class="table-head w-110">金額</th>
             </tr>
+            @foreach ($costItem as $index => $value)
             <tr>
-                <td class="table-item w-400"><p class="table-item-txt">業務委託手数料(15%)</p></td>
-                <td class="table-data w-100"><p class="table-data-txt --center">1</p></td>
-                <td class="table-data w-100"><p class="table-data-txt --right">{{$administrative_commission_fee}}</p></td>
-                <td class="table-data w-110"><p class="table-data-txt --right">{{$administrative_commission_fee}}</p></td>
+                <td class="table-item w-400"><p class="table-item-txt">{{$costItem[$index]}}</p></td>
+                <td class="table-data w-100"><p class="table-data-txt --center">{{$costNum[$index]}}</p></td>
+                <td class="table-data w-100"><p class="table-data-txt --right">{{$costUntil[$index]}}</p></td>
+                <td class="table-data w-110"><p class="table-data-txt --right">{{$costAmount[$index]}}</p></td>
             </tr>
-            <tr>
-                <td class="table-item w-400"><p class="table-item-txt">車両リース代</p></td>
-                <td class="table-data w-100"><p class="table-data-txt --center">1</p></td>
-                <td class="table-data w-100"><p class="table-data-txt --right">{{$total_lease}}</p></td>
-                <td class="table-data w-110"><p class="table-data-txt --right">{{$total_lease}}</p></td>
-            </tr>
-            <tr>
-                <td class="table-item w-400"><p class="table-item-txt">保険代</p></td>
-                <td class="table-data w-100"><p class="table-data-txt --center">1</p></td>
-                <td class="table-data w-100"><p class="table-data-txt --right">{{$total_insurance}}</p></td>
-                <td class="table-data w-110"><p class="table-data-txt --right">{{$total_insurance}}</p></td>
-            </tr>
-            <tr>
-                <td class="table-item w-400"><p class="table-item-txt">事務手数料</p></td>
-                <td class="table-data w-100"><p class="table-data-txt --center">1</p></td>
-                <td class="table-data w-100"><p class="table-data-txt --right">{{$administrative_fee}}</p></td>
-                <td class="table-data w-110"><p class="table-data-txt --right">{{$administrative_fee}}</p></td>
-            </tr>
-            <tr>
-                <td class="table-item w-400"><p class="table-item-txt">振込手数料</p></td>
-                <td class="table-data w-100"><p class="table-data-txt --center">1</p></td>
-                <td class="table-data w-100"><p class="table-data-txt --right">{{$transfer_fee}}</p></td>
-                <td class="table-data w-110"><p class="table-data-txt --right">{{$transfer_fee}}</p></td>
-            </tr>
-            <tr>
-                <td class="table-item w-400"><p class="table-item-txt"></p></td>
-                <td class="table-data w-100"><p class="table-data-txt"></p></td>
-                <td class="table-data w-100"><p class="table-data-txt"></p></td>
-                <td class="table-data w-110"><p class="table-data-txt"></p></td>
-            </tr>
-            <tr>
-                <td class="table-item w-400"><p class="table-item-txt"></p></td>
-                <td class="table-data w-100"><p class="table-data-txt"></p></td>
-                <td class="table-data w-100"><p class="table-data-txt"></p></td>
-                <td class="table-data w-110"><p class="table-data-txt"></p></td>
-            </tr>
+            @endforeach
         </table>
         <table class="mini-table">
             <tr>
                 <td class="w-401"></td>
                 <td class="mini-table-data w-201"><p class="mini-table-data-txt --center">小計</p></td>
-                <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{$subtotal}}</p></td>
+                <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{$costSubTotal}}</p></td>
             </tr>
             <tr>
                 <td class="w-401"></td>
                 <td class="mini-table-data w-201"><p class="mini-table-data-txt --center">消費税(10%)</p></td>
-                <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{$tax}}</p></td>
+                <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{$costTax}}</p></td>
             </tr>
             <tr>
                 <td class="w-401"></td>
                 <td class="mini-table-data w-201"><p class="mini-table-data-txt --center"> 合計金額(内消費税)</p></td>
-                <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{$total}}</p></td>
+                <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{$costTotal}}</p></td>
             </tr>
         </table>
         <div class="bank">
             <p class="">お振込先</p>
             <div class="bank-txt-wrap">
-                <p class="">　〇〇銀行　〇〇支店　（普）　0000000　株式会社 T.N.G　代表取締役　木田　由佳里</p>
+                <p class="">{!! $bankInfoWithBreaks !!}</p>
             </div>
         </div>
     </div>

@@ -8,6 +8,7 @@ use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\CsvIssueController;
+use App\Http\Controllers\PdfEditController;
 use App\Http\Controllers\PdfputController;
 use App\Http\Controllers\InvoiceController;
 use App\Models\Company;
@@ -55,6 +56,8 @@ Route::prefix('company')->name('company.')->group(function(){
     Route::get('/edit/{id}', [CompanyController::class, 'edit'])->name('edit');
     Route::post('/update/{id}', [CompanyController::class, 'update'])->name('update');
     Route::get('/delete/{id}', [CompanyController::class, 'delete'])->name('delete');
+
+    Route::post('/csv', [CompanyController::class, 'csvImport'])->name('csv');
 });
 
 Route::prefix('vehicle')->name('vehicle.')->group(function(){
@@ -73,7 +76,7 @@ Route::prefix('project')->name('project.')->group(function(){
     Route::post('/store', [ProjectController::class, 'store'])->name('store');
     Route::get('/edit/{id}', [ProjectController::class, 'edit'])->name('edit');
     Route::post('/update/{id}', [ProjectController::class, 'update'])->name('update');
-    Route::get('/delete/{id}', [ProjectController::class, 'delete'])->name('delete');
+    Route::get('/projectDelete/{id}', [ProjectController::class, 'projectDelete'])->name('projectDelete');
     Route::get('/employee_payment_show/{id}', [ProjectController::class, 'employeePaymentShow'])->name('employeePaymentShow');
     Route::post('/csv', [ProjectController::class, 'csvImport'])->name('csv');
 });
@@ -123,12 +126,30 @@ Route::prefix('csv-employee')->name('csv-employee.')->group(function(){
 
 Route::prefix('invoice')->name('invoice.')->group(function(){
     Route::get('/', [InvoiceController::class, 'index'])->name('');
+
+    // ドライバー関連
     Route::get('/driver', [InvoiceController::class, 'driverShift'])->name('driverShift');
     Route::post('/driver-update', [InvoiceController::class, 'driverShiftUpdate'])->name('driverShiftUpdate');
+    Route::post('/driver-calendar-pdf', [InvoiceController::class, 'driverCalendarPDF'])->name('driver-calendar-pdf');
+
+    // 案件関連
     Route::get('/project', [InvoiceController::class, 'projectShift'])->name('projectShift');
     Route::post('/project-update', [InvoiceController::class, 'projectShiftUpdate'])->name('projectShiftUpdate');
+    Route::post('/project-calendar-pdf', [InvoiceController::class, 'projectCalendarPDF'])->name('project-calendar-pdf');
+
+    // 検索機能関連
     Route::post('/search-shift', [InvoiceController::class, 'searchShift'])->name('searchShift');
     Route::post('/search-project-shift', [InvoiceController::class, 'searchProjectShift'])->name('searchProjectShift');
+    // チャーター関連
+    Route::get('/charter', [InvoiceController::class, 'charterShift'])->name('charterShift');
+    Route::post('/search-charter-shift', [InvoiceController::class, 'searchCharterShift'])->name('searchCharterShift');
+    Route::post('/charter-shift-update', [InvoiceController::class, 'charterShiftUpdate'])->name('charter-shift-update');
+    Route::post('/charter-client-update', [InvoiceController::class, 'charterClientUpdate'])->name('charter-client-update');
+
+    // pdf発行前編集画面
+    Route::post('/driver-edit-pdf', [PdfEditController::class, 'driver_edit_pdf'])->name('driver-edit-pdf');
+    Route::post('/project-edit-pdf', [PdfEditController::class, 'project_edit_pdf'])->name('project-edit-pdf');
+    // pdf発行
     Route::post('/driver-issue-pdf', [PdfputController::class, 'driver_issue_pdf'])->name('driver-issue-pdf');
     Route::post('/company-issue-pdf', [PdfputController::class, 'company_issue_pdf'])->name('company-issue-pdf');
     Route::post('/project-issue-pdf', [PdfputController::class, 'project_issue_pdf'])->name('project-issue-pdf');

@@ -30,12 +30,12 @@
                     <x-nav-link :href="route('shift.')" :active="request()->routeIs('shift.*')">
                         {{ __('シフト') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('csv-issue.')" :active="request()->routeIs('csv-issue.*')">
+                    {{-- <x-nav-link :href="route('csv-issue.')" :active="request()->routeIs('csv-issue.*')">
                         {{ __('案件別CSV発行') }}
                     </x-nav-link>
                     <x-nav-link :href="route('csv-employee.')" :active="request()->routeIs('csv-employee.*')">
                         {{ __('従業員別CSV発行') }}
-                    </x-nav-link>
+                    </x-nav-link> --}}
                     <x-nav-link :href="route('invoice.')" :active="request()->routeIs('invoice.*')">
                         {{ __('請求書') }}
                     </x-nav-link>
