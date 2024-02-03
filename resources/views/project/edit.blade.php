@@ -30,7 +30,7 @@
                             {{-- 案件情報 --}}
                             @foreach ($projects as $project)
                                 <div class="project-info-wrap sec-margin" id="project0">
-                                    <a href="{{ route('project.projectDelete', ['id'=>$project->id] )}}" class="delete-btn">削除</a>
+                                    <a href="{{ route('project.projectDelete', ['id'=>$project->id] )}}" class="delete-btn" onclick='return confirm("本当に削除しますか？")'>削除</a>
                                     {{-- 案件名 --}}
                                     <div class="project-info-wrap__project">
                                         <label class="">案件名</label>

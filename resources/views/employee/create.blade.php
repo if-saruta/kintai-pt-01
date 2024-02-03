@@ -39,21 +39,7 @@
                                 <label for="">銀行名</label>
                                 <input type="text" name="bank_name" class="input">
                             </div>
-                            {{-- <div class="bank__block__input">
-                                <label for="">支店名(支店コードも含む)</label>
-                                <input type="text" name="branch_name" class="input">
-                            </div> --}}
                         </div>
-                        {{-- <div class="bank__block">
-                            <div class="bank__block__input">
-                                <label for="">口座種類</label>
-                                <input type="text" name="account_type" class="input">
-                            </div>
-                            <div class="bank__block__input">
-                                <label for="">口座番号</label>
-                                <input type="text" name="account_number" class="input">
-                            </div>
-                        </div> --}}
                         <div class="bank__block">
                             <div class="bank__block__input">
                                 <label for="">口座名義人</label>
@@ -73,7 +59,7 @@
                     </div>
                     {{-- 雇用形態 --}}
                     <div class="flex items-center mb-4">
-                        <input id="default-radio-1" type="radio" value="正社員" name="status" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <input checked id="default-radio-1" type="radio" value="正社員" name="status" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         <label for="default-radio-1" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">正社員</label>
                     </div>
                     <div class="flex items-center mb-4">
@@ -89,7 +75,7 @@
                         <p class="title">インボイス登録</p>
                         <div class="invoice-radio-wrap">
                             <div class="invoice-radio-wrap__radio">
-                                <input type="radio" id="invoice-1" name="invoice" value="1">
+                                <input checked type="radio" id="invoice-1" name="invoice" value="1">
                                 <label for="invoice-1">登録</label>
                             </div>
                             <div class="invoice-radio-wrap__radio">

@@ -34,7 +34,7 @@
                             <a href="{{ route('vehicle.edit',['id'=>$vehicle->id]) }}">編集</a>
                         </div>
                         <div class="delete w-100">
-                            <a href="{{ route('vehicle.delete',['id'=>$vehicle->id])}}">削除</a>
+                            <a href="{{ route('vehicle.delete',['id'=>$vehicle->id])}}" onclick='return confirm("本当に削除しますか？")'>削除</a>
                         </div>
                     </div>
                 @endforeach

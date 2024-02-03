@@ -24,7 +24,7 @@
                         <a href="{{ route('company.edit',['id'=>$company->id]) }}">編集</a>
                     </div>
                     <div class="delete w-100">
-                        <a href="{{ route('company.delete',['id'=>$company->id])}}">削除</a>
+                        <a href="{{ route('company.delete',['id'=>$company->id])}}" onclick='return confirm("従業員と車両の所属先も削除されます")'>削除</a>
                     </div>
                   </div>
                 @endforeach

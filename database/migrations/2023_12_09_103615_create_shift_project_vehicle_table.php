@@ -29,9 +29,9 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('shift_id')->references('id')->on('shifts')->onDelete('cascade');
-            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
-            $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
-            $table->foreign('rental_vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
+            $table->foreign('project_id')->references('id')->on('projects');
+            $table->foreign('vehicle_id')->references('id')->on('vehicles');
+            $table->foreign('rental_vehicle_id')->references('id')->on('vehicles');
         });
     }
 

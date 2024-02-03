@@ -38,21 +38,7 @@
                                 <label for="">銀行名</label>
                                 <input type="text" name="bank_name" value="{{$employee->bankAccounts->first()->bank_name}}" class="input">
                             </div>
-                            {{-- <div class="bank__block__input">
-                                <label for="">支店名(支店コードも含む)</label>
-                                <input type="text" name="branch_name" value="{{$employee->bankAccounts->first()->branch_name}}" class="input">
-                            </div> --}}
                         </div>
-                        {{-- <div class="bank__block">
-                            <div class="bank__block__input">
-                                <label for="">口座種類</label>
-                                <input type="text" name="account_type" value="{{$employee->bankAccounts->first()->account_type}}" class="input">
-                            </div>
-                            <div class="bank__block__input">
-                                <label for="">口座番号</label>
-                                <input type="text" name="account_number" value="{{$employee->bankAccounts->first()->account_number}}" class="input">
-                            </div>
-                        </div> --}}
                         <div class="bank__block">
                             <div class="bank__block__input">
                                 <label for="">口座名義人</label>

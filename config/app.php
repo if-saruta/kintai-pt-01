@@ -70,7 +70,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Tokyo',
 
     /*
     |--------------------------------------------------------------------------
@@ -83,7 +83,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'ja',
 
     /*
     |--------------------------------------------------------------------------
@@ -109,7 +109,7 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'ja_JP',
 
     /*
     |--------------------------------------------------------------------------
@@ -170,8 +170,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Barryvdh\DomPDF\ServiceProvider::class,
-        // Mccarlosen\LaravelMpdf\LaravelMpdfServiceProvider::class,
-        // Barryvdh\Snappy\ServiceProvider::class,
+
 
     ])->toArray(),
 
@@ -190,9 +189,7 @@ return [
         // 'Example' => App\Facades\Example::class,
 
         'PDF' => Barryvdh\DomPDF\Facade::class,
-        // 'PDF' => Mccarlosen\LaravelMpdf\Facades\LaravelMpdf::class,
-        // 'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
-        // 'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
+
 
     ])->toArray(),
 

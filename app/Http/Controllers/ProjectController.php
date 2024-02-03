@@ -80,12 +80,14 @@ class ProjectController extends Controller
             ProjectHoliday::create($holidaysData);
 
             // 従業員別日給情報の保存
-            foreach ($projectData['employeePayments'] as $employeeId => $amount) {
-                ProjectEmployeePayment::create([
-                    'employee_id' => $employeeId,
-                    'project_id' => $project->id,
-                    'amount' => $amount
-                ]);
+            if(isset($projectData['employeePayments'])){
+                foreach ($projectData['employeePayments'] as $employeeId => $amount) {
+                    ProjectEmployeePayment::create([
+                        'employee_id' => $employeeId,
+                        'project_id' => $project->id,
+                        'amount' => $amount
+                    ]);
+                }
             }
         }
 
@@ -154,11 +156,13 @@ class ProjectController extends Controller
             $project->holiday->update($holidaysData);
 
             // 従業員別日給の更新
-            foreach ($projectData['employeePayments'] as $employeeId => $amount) {
-                ProjectEmployeePayment::updateOrCreate(
-                    ['project_id' => $projectId, 'employee_id' => $employeeId],
-                    ['amount' => $amount]
-                );
+            if(isset($projectData['employeePayments'])){
+                foreach ($projectData['employeePayments'] as $employeeId => $amount) {
+                    ProjectEmployeePayment::updateOrCreate(
+                        ['project_id' => $projectId, 'employee_id' => $employeeId],
+                        ['amount' => $amount]
+                    );
+                }
             }
         }
 
@@ -166,7 +170,7 @@ class ProjectController extends Controller
         foreach ($request->input('projects', []) as $projectData) {
             //チャーター情報の初期化
             $is_charter = false;
-            if($projectData['is_charter'] == 1){
+            if($projectData['is_charter'] ?? null == 1){
                 $is_charter = true;
             }
 
@@ -205,13 +209,28 @@ class ProjectController extends Controller
             ProjectHoliday::create($holidaysData);
 
             // 従業員別日給情報の保存
-            foreach ($projectData['employeePayments'] as $employeeId => $amount) {
-                ProjectEmployeePayment::create([
-                    'employee_id' => $employeeId,
-                    'project_id' => $project->id,
-                    'amount' => $amount
-                ]);
+            if(isset($projectData['employeePayments'])){
+                foreach ($projectData['employeePayments'] as $employeeId => $amount) {
+                    ProjectEmployeePayment::create([
+                        'employee_id' => $employeeId,
+                        'project_id' => $project->id,
+                        'amount' => $amount
+                    ]);
+                }
             }
+        }
+
+        return redirect()->route('project.');
+    }
+
+    public function delete($id)
+    {
+        $client = Client::find($id);
+        $projects = Project::where('client_id', $id)->get();
+
+        $client->delete();
+        foreach($projects as $project){
+            $project->delete();
         }
 
         return redirect()->route('project.');

@@ -34,7 +34,6 @@ class EmployeeController extends Controller
         // 日給登録してある案件を取得
         $projectPayments = Project::where('payment_type', 1)->get();
 
-
         return view('employee.create', compact('companies','projects','vehicles','projectPayments'));
     }
 

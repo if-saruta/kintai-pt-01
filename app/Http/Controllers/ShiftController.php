@@ -16,7 +16,7 @@ use League\Csv\Reader;
 use League\Csv\Writer;
 use League\Csv\Statement;
 use Carbon\Carbon;
-
+use Svg\Tag\Rect;
 use Symfony\Component\VarDumper\VarDumper;
 
 use function PHPUnit\Framework\isEmpty;
@@ -446,10 +446,25 @@ class ShiftController extends Controller
             return $shift->date;
         });
 
+        $unregistered_project = [];
+        foreach($shiftDataByDay as $date => $shiftData){
+            foreach($shiftData as $shift){
+                foreach($shift->projectsVehicles as $spv){
+                    if(!$spv->project){
+                        if($spv->unregistered_project){
+                            if(!in_array($spv->unregistered_project, $unregistered_project)){
+                                $unregistered_project[] = $spv->unregistered_project;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         $projects = Project::all();
 
 
-        return view('shift.projectCountShift',compact('shiftDataByDay','projects','startOfWeek','endOfWeek'));
+        return view('shift.projectCountShift',compact('shiftDataByDay','projects', 'unregistered_project','startOfWeek','endOfWeek'));
     }
 
 
@@ -465,6 +480,50 @@ class ShiftController extends Controller
     public function shiftImport()
     {
         return view('shiftImport.index');
+    }
+
+    public function shiftConfirmCsv(Request $request)
+    {
+        // CSVファイルのパスを取得
+        $path = $request->file('csv_file')->getRealPath();
+
+        // CSVファイルを読み込む
+        $csv = Reader::createFromPath($path, 'r');
+        // $headers = $csv->fetchOne();
+
+        $records = [];
+        foreach ($csv as $record) {
+            // 各レコードから0番目の要素を削除
+            array_shift($record);
+            $records[] = $record;
+        }
+
+        // 日付の行を整形・取得
+        $dateRow = $records[0];
+        $tmpDate = "";
+        foreach($dateRow as $index => &$date){ // 参照による代入を使用
+            // ０番目は空のためスキップ
+            if($index == 0) continue;
+            // 日付を格納
+            if(empty($date)){
+                $date = $tmpDate;
+            }else{
+                $tmpDate = $date;
+            }
+        }
+        unset($date);
+
+        $hasShift = Shift::whereIn('date', $dateRow)->get()->pluck('date');
+        if(!$hasShift->isEmpty()){
+            
+            $file = $request->file('csv_file');
+
+            // ファイルを一時的に保存
+            $filePath = $file->store('temp');
+            $request->session()->put('csv_file_path', $filePath);
+
+            return redirect()->back()->with('warning', '特定の条件を満たすデータが送信されました。保存してもよろしいですか？');
+        }
     }
 
     public function shiftImportCsv(Request $request)
@@ -502,6 +561,12 @@ class ShiftController extends Controller
             }
         }
         unset($date);
+
+        $hasShift = Shift::whereIn('date', $dateRow)->get()->pluck('date');
+        if(!$hasShift->isEmpty()){
+            return redirect()->back()->with('warning', '特定の条件を満たすデータが送信されました。保存してもよろしいですか？');
+        }
+        dd('stop');
 
         // シフトを格納する配列を初期化
         $organizedData = [];

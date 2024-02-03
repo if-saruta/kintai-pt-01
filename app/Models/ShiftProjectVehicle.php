@@ -31,17 +31,17 @@ class ShiftProjectVehicle extends Model
 
     public function project()
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(Project::class)->withTrashed();
     }
 
     public function vehicle()
     {
-        return $this->belongsTo(Vehicle::class);
+        return $this->belongsTo(Vehicle::class)->withTrashed();
     }
 
     // Vehicle モデルへのリレーション (レンタル車両)
     public function rentalVehicle()
     {
-        return $this->belongsTo(Vehicle::class, 'rental_vehicle_id');
+        return $this->belongsTo(Vehicle::class, 'rental_vehicle_id')->withTrashed();
     }
 }
