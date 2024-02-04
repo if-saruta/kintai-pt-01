@@ -14,6 +14,12 @@
 
 
 /**
+	layouts
+*/
+@use "./layouts/base";
+@use "./layouts/navigation";
+
+/**
 	project
 */
 @use "./project/tmp";

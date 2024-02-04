@@ -1,0 +1,23 @@
+@use "../foundation/variables.scss" as *;
+@use "../foundation/mixin.scss" as *;
+@use "sass:math";
+
+.nav{
+  width: 18rem;
+  height: 100vh;
+  &__top{
+    &__link{
+      .logo-block{
+        width: 6rem;
+        &__inner{
+          display: flex;
+          align-items: center;
+          &__txt{
+            font-family: $ff-roboto;
+            font-size: 6rem;
+          }
+        }
+      }
+    }
+  }
+}

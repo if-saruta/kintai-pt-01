@@ -13,7 +13,7 @@
                     <div class="invoice-date">
                         <div class="select-area__block">
                             <label for="">年</label>
-                            <select name="year" id="" class="select-style">
+                            <select name="year" id="" class="select-style" required>
                                 <option value="">選択してください</option>
                                 @for ($year = now()->year; $year >= now()->year - 10; $year--)
                                 <option value="{{ $year }}">{{ $year }}</option>
@@ -22,7 +22,7 @@
                         </div>
                         <div class="select-area__block">
                             <label for="">月</label>
-                            <select name="month" id="" class="select-style">
+                            <select name="month" id="" class="select-style" required>
                                 <option value="">選択してください</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -45,9 +45,22 @@
                 </div>
             </form>
 
-            @if($shiftArray)
+            <div class="x-scroll">
+                @if($shiftArray)
+                <form action="{{route('invoice.charter-calendar-pdf')}}" method="POST">
+                    @csrf
+                    <input hidden type="text" value="{{$getYear}}" name="year">
+                    <input hidden type="text" value="{{$getMonth}}" name="month">
+
+                    <button class="PDF-dump-btn">
+                        <p>カレンダーPDF</p>
+                    </button>
+                </form>
                 <form action="{{route('invoice.charter-shift-update')}}" method="POST">
                     @csrf
+                    <input hidden type="text" value="{{$getYear}}" name="year">
+                    <input hidden type="text" value="{{$getMonth}}" name="month">
+
                     <div class="charter-calender-wrap">
                         <button class="save-btn">
                             <p class="">保存</p>
@@ -104,7 +117,7 @@
                                             <input type="text" name="driver_price[{{$data['id']}}]" value="{{ ceil($data['driver_price']) }}" class="input charter-input">
                                         </div>
                                         <div class="data__row__clm --common">
-                                            <input type="text" name="" value="{{$data['project']['client']['name']}}" class="input charter-input" readonly>
+                                            <input type="text" value="{{$data['project']['client']['name']}}" class="input charter-input" readonly>
                                         </div>
                                     </div>
                                 @endforeach
@@ -128,7 +141,7 @@
                                         <input type="text" name="parking_fee[{{$spv->id}}]" value="{{ ceil($spv->parking_fee) }}" class="input charter-input">
                                     </div>
                                     <div class="data__row__clm --common">
-                                        <input type="text" name="" value="{{ $spv->shift->employee->name }}" class="input charter-input" readonly>
+                                        <input type="text" value="{{ $spv->shift->employee->name }}" class="input charter-input" readonly>
                                     </div>
                                     <div class="data__row__clm --common">
                                         <input type="text" name="driver_price[{{$spv->id}}]" value="{{ ceil($spv->driver_price) }}" class="input charter-input">
@@ -141,8 +154,6 @@
                             </div>
                         </div>
                     </div>
-                    <input hidden type="text" value="{{$getYear}}" name="year">
-                    <input hidden type="text" value="{{$getMonth}}" name="month">
                 </form>
 
                 {{-- モーダル --}}
@@ -191,6 +202,10 @@
                     </div>
                 </form>
             @endif
+            @if ($warning !== null)
+                <p class="warning-txt">{{$warning}}</p>
+            @endif
+            </div>
         </div>
     </div>
 

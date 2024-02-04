@@ -499,7 +499,7 @@
         @foreach ( $amountKey as $amount => $count )
           <tr>
             <td>{{$projectName}}</td>
-            <td>{{number_format(ceil($amount))}}</td>
+            <td>{{number_format(ceil((float)$amount))}}</td>
             <td>{{number_format(ceil($count))}}</td>
           </tr>
           @php

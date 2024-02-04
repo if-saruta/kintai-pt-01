@@ -4,6 +4,7 @@ window.addEventListener('load', () => {
         const targetArea = document.querySelectorAll('.allowance-area');
         const modal = document.getElementById('allowance-modal');
         const btn = document.querySelector('.allowance-modal-btn');
+        const bg = document.querySelector('.allowanceModalBg');
 
         // 最後の入力保存する
         var setInput = null;
@@ -68,6 +69,19 @@ window.addEventListener('load', () => {
             })
         })
 
+        bg.addEventListener('click', () => {
+            const select = document.getElementById('allowanceSelect');
+            const input = document.getElementById('allowanceInput');
+
+            // select・inputの値を初期化
+            input.value = null;
+            for(let k = 1; k < count; k++){
+                select.remove(1);
+            }
+            // モーダルを閉じる
+            modal.style.display = 'none';
+        })
+
     }
     allowanceModal();
 
@@ -75,6 +89,8 @@ window.addEventListener('load', () => {
         const mainVehicle = document.querySelectorAll('.mainVehicle');
         const modal = document.getElementById('vehicleModal');
         const btn = document.querySelector('.vehicle-modal-btn');
+        const bg = document.querySelector('.vehicleModalBg');
+
         // 最後の入力保存する
         var setInput = null;
 
@@ -120,6 +136,14 @@ window.addEventListener('load', () => {
             })
         })
 
+        bg.addEventListener('click', () => {
+            const select = document.getElementById('vehicleSelect');
+            const input = document.getElementById('vehicleInput');
+            // inputを初期化
+            input.value = null;
+            // モーダルを閉じる
+            modal.style.display = 'none';
+        })
     }
     vehicleModal();
 

@@ -13,7 +13,7 @@
                     <div class="invoice-date">
                         <div class="select-area__block">
                             <label for="">年</label>
-                            <select name="year" id="" class="select-style">
+                            <select name="year" id="" class="select-style" required>
                                 <option value="">選択してください</option>
                                 @for ($year = now()->year; $year >= now()->year - 10; $year--)
                                 <option value="{{ $year }}">{{ $year }}</option>
@@ -22,7 +22,7 @@
                         </div>
                         <div class="select-area__block">
                             <label for="">月</label>
-                            <select name="month" id="" class="select-style">
+                            <select name="month" id="" class="select-style" required>
                                 <option value="">選択してください</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -41,7 +41,7 @@
                     </div>
                     <div class="select-area__block">
                         <label for="">クライアント名</label>
-                        <select name="client" id="" class="select-style">
+                        <select name="client" id="" class="select-style" required>
                             <option value="">選択してください</option>
                             @foreach ($clients as $clientSearch)
                                 <option value="{{$clientSearch->id}}">{{$clientSearch->name}}</option>
@@ -65,7 +65,7 @@
             ?>
 
             @if ($ShiftProjectVehicles !== null && !$ShiftProjectVehicles->isEmpty())
-                <div class="project-shfit-wrap">
+                <div class="project-shfit-wrap x-scroll --x-scroll-project-shift">
                     {{-- クライアント・案件情報 --}}
                     <div class="project-info-table">
                         <div class="project-info-table__row">
@@ -105,7 +105,7 @@
                                             <p class="project-txt">{{$project->name}}</p>
                                             <div class="--andCompany__wrap">
                                                 @foreach ($getCompanies as $getCompany)
-                                                <div class="--andCompany__wrap__block project{{$getCompany->id}}">
+                                                <div class="--andCompany__wrap__block">
                                                     <p class="">{{$getCompany->name}}</p>
                                                 </div>
                                                 @endforeach
@@ -118,7 +118,7 @@
                                     <?php $which_part = 0?>
                                 @else                        {{-- 会社形式で表示 --}}
                                     @foreach ($getCompanies as $getCompany)
-                                        <div class="project-shift-calender__head__item project{{$getCompany->id}}"><p class="">{{$getCompany->name}}</p></div>
+                                        <div class="project-shift-calender__head__item"><p class="">{{$getCompany->name}}</p></div>
                                         @if ( !isset($part_count[$getCompany->name]) )
                                             <?php $part_count[$getCompany->name] = 0?>
                                         @endif
@@ -363,8 +363,9 @@
                     </form>
 
                 </div>
-            @else
-                <p class="">登録されていません</p>
+            @endif
+            @if ($warning !== null)
+                <p class="warning-txt">{{$warning}}</p>
             @endif
             @if ($ShiftProjectVehicles !== null && !$ShiftProjectVehicles->isEmpty())
                 <div class="PDF-dump --project-pdf">

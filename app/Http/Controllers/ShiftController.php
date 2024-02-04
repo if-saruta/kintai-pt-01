@@ -18,6 +18,7 @@ use League\Csv\Statement;
 use Carbon\Carbon;
 use Svg\Tag\Rect;
 use Symfony\Component\VarDumper\VarDumper;
+use Illuminate\Support\Facades\Storage;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -74,18 +75,24 @@ class ShiftController extends Controller
     public function store(Request $request,$id)
     {
         if($request->switch == 1){ //既存の案件を選択した場合
-            ShiftProjectVehicle::create([
+            $shiftPV = ShiftProjectVehicle::create([
                 'shift_id' => $id,
                 'project_id' => $request->selectProject,
                 'time_of_day' => $request->time_of_day,
             ]);
         }elseif($request->switch == 0){ //新案件を入力した場合
-            ShiftProjectVehicle::create([
+            $shiftPV = ShiftProjectVehicle::create([
                 'shift_id' => $id,
                 'unregistered_project' => $request->inputProject,
                 'time_of_day' => $request->time_of_day,
             ]);
         }
+
+        $shift = Shift::find($id);
+
+        $shiftPV->vehicle_rental_type = $shift->employee->vehicle_rental_type;
+        $shiftPV->rental_vehicle_id = $shift->employee->vehicle_id;
+        $shiftPV->save();
 
         $date = $request->date;
 
@@ -514,15 +521,19 @@ class ShiftController extends Controller
         unset($date);
 
         $hasShift = Shift::whereIn('date', $dateRow)->get()->pluck('date');
+        // すでに登録されている日付が含まれている場合
         if(!$hasShift->isEmpty()){
-            
-            $file = $request->file('csv_file');
+            // ファイルを一時的に保存し、そのパスを取得
+            $path = $request->file('csv_file')->store('temp');
 
-            // ファイルを一時的に保存
-            $filePath = $file->store('temp');
-            $request->session()->put('csv_file_path', $filePath);
+            // 一時保存したファイルのパスをセッションに保存
+            $request->session()->put('csv_file_path', $path);
 
-            return redirect()->back()->with('warning', '特定の条件を満たすデータが送信されました。保存してもよろしいですか？');
+            // 確認画面へリダイレクト
+            return view('shiftImport.confirm');
+
+        }else{
+            return $this->shiftImportCsv($request);
         }
     }
 
@@ -533,12 +544,20 @@ class ShiftController extends Controller
         $projects = Project::all();
         $vehicles = Vehicle::all();
 
-        // CSVファイルのパスを取得
+        // if($request->input('confirm') === 'ok'){
+        //     // セッションからCSVファイルのパスを取得
+        //     $path = $request->session()->get('csv_file_path');
+        //     $fullPath = Storage::path($path);
+        // }else if($request->input('confirm') === 'キャンセル'){
+        //     return view('shiftImport.index');
+        // }else{
+        //     // CSVファイルのパスを取得
+        //     $fullPath = $request->file('csv_file')->getRealPath();
+        // }
         $path = $request->file('csv_file')->getRealPath();
 
         // CSVファイルを読み込む
         $csv = Reader::createFromPath($path, 'r');
-        // $headers = $csv->fetchOne();
 
         $records = [];
         foreach ($csv as $record) {
@@ -562,11 +581,13 @@ class ShiftController extends Controller
         }
         unset($date);
 
-        $hasShift = Shift::whereIn('date', $dateRow)->get()->pluck('date');
+        // すでに登録してある日付のシフトを削除
+        $hasShift = Shift::whereIn('date', $dateRow)->get();
         if(!$hasShift->isEmpty()){
-            return redirect()->back()->with('warning', '特定の条件を満たすデータが送信されました。保存してもよろしいですか？');
+            foreach($hasShift as $shift){
+                $shift->delete();
+            }
         }
-        dd('stop');
 
         // シフトを格納する配列を初期化
         $organizedData = [];
@@ -833,6 +854,9 @@ class ShiftController extends Controller
             }
         }
 
+        Storage::delete($path);
+        $request->session()->forget('csv_file_path');
+
         // 現在の日付を取得
         // $date = Carbon::today();
 
@@ -896,30 +920,6 @@ class ShiftController extends Controller
                 $driver_price = $project->driver_price;
             }
         }
-
-        // 手当の情報を抽出
-            // その他手当
-            // $total_otherAllowance = 0;
-            // $getOtherAllowances = AllowanceByOther::where('employee_id', $employeeId)
-            // ->get();
-            // if($getOtherAllowances){
-            //     foreach($getOtherAllowances as $getOtherAllowance){
-            //         $total_otherAllowance += $getOtherAllowance->amount;
-            //     }
-            // }
-
-            // // 案件別手当
-            // $total_projectAllowance = 0;
-            // $getProjectAllowances = AllowanceByProject::where('employee_id', $employeeId)
-            // ->where('project_id', $projectId)
-            // ->get();
-            // if($getProjectAllowances){
-            //     foreach($getProjectAllowances as $getProjectAllowance){
-            //         $total_projectAllowance += $getProjectAllowance->amount;
-            //     }
-            // }
-
-            // $total_allowance = $total_otherAllowance + $total_projectAllowance;
 
         // 車両の情報を抽出
         if($employee){

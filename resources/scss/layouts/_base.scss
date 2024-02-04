@@ -1,0 +1,17 @@
+@use "../foundation/variables.scss" as *;
+@use "../foundation/mixin.scss" as *;
+@use "sass:math";
+
+html {
+	width: 100vw;
+	font-size: 62.5%;
+	scroll-behavior: smooth;
+	overflow-y: auto;
+	font-family: 'Noto Sans JP', sans-serif;
+	font-weight: 400;
+}
+body{
+    width: 100vw;
+	height: 100%;
+    background-color: $cBg!important;
+}
