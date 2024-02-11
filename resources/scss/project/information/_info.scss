@@ -1,0 +1,455 @@
+@use "../../foundation/variables.scss" as *;
+@use "../../foundation/mixin.scss" as *;
+@use "sass:math";
+
+.main{
+    .--info-link-block{
+        &__item:nth-child(1){
+            .link{
+                border: 2px solid $cSkyBlue;
+                color: $cSkyBlue;
+            }
+            .active{
+                border: 2px solid $cSkyBlue;
+                background-color: $cSkyBlue;
+                color: white;
+                &::after{
+                    content: "";
+                    position: absolute;
+                    z-index: 1000;
+                    left: -0.2rem;
+                    bottom: -1rem;
+                    width: 100%;
+                    height: 2rem;
+                    border: 2px solid $cSkyBlue;
+                    border-bottom-left-radius: 1rem;
+                    border-bottom-right-radius: 1rem;
+                    background-color: $cSkyBlue;
+                }
+            }
+        }
+        &__item:nth-child(2){
+            .link{
+                border: 2px solid $cGreen02;
+                color: $cGreen02;
+            }
+            .active{
+                border: 2px solid $cGreen02;
+                background-color: $cGreen02;
+                &::after{
+                    content: "";
+                    position: absolute;
+                    z-index: 1000;
+                    left: -0.2rem;
+                    bottom: -1rem;
+                    width: 100%;
+                    height: 2rem;
+                    border: 2px solid $cGreen02;
+                    border-bottom-left-radius: 1rem;
+                    border-bottom-right-radius: 1rem;
+                    background-color: $cGreen02;
+                }
+            }
+        }
+    }
+    &__white-board{
+        .info-wrap{
+            padding-top: 4rem;
+            padding-left: 2rem;
+            display: flex;
+            gap: 3rem;
+            &__create-btn{
+                width: 15rem;
+                height: 4rem;
+            }
+            &__register-item{
+                position: relative;
+                width: math.div(360,1280) * 100vw;
+                height: math.div(640,800) * 100vh;
+                border: 2px solid $cGreen;
+                border-radius: 1rem;
+                &__inner{
+                    position: relative;
+                    width: math.div(330,1280) * 100vw;
+                    height: math.div(620,800) * 100vh;
+                    margin: 0 auto;
+                    margin-top: 1.5rem;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1.5rem;
+                    .scroll-y{
+                        position: relative;
+                        overflow-y: scroll;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 1rem;
+                        height: math.div(600,800) * 100vh;
+                        margin-bottom: 5rem;
+                    }
+                    .client-scroll-y{
+                        height: math.div(800,800) * 100vh;
+                    }
+                    .info-row{
+                        &__head{
+                            font-size: 1.2rem;
+                            font-weight: $fw-bold;
+                            letter-spacing: 0.1rem;
+                            color: #7D8490;
+                        }
+                        &__data{
+                            padding-top: 0.8rem;
+                            padding-bottom: 0.8rem;
+                            padding-left: 1.5rem;
+                            border-bottom: 1px solid #BBC1CB;
+                            p{
+                                font-size: 1.2rem;
+                                font-weight: $fw-bold;
+                                letter-spacing: 0.1rem;
+                                color: $cBlack;
+                            }
+                        }
+                        .--top{
+                            padding-top: 1rem;
+                            padding-bottom: 1rem;
+                            border-bottom: 3px solid #BBC1CB;
+                            p{
+                                font-size: 1.6rem;
+                                font-weight: $fw-bold;
+                                letter-spacing: 0.1rem;
+                                color: $cBlack;
+                            }
+                        }
+                    }
+                    .--project-count-row{
+                        display: flex;
+                        align-items: center;
+                        gap: 1rem;
+                        .count-box{
+                            width: 6rem;
+                            height: 3.8rem;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border-radius: 0.5rem;
+                            border: 2px solid #BBC1CB;
+                            font-size: 1.4rem;
+                            font-weight: $fw-bold;
+                            letter-spacing: 0.1rem;
+                            color: $cBlack;
+                        }
+                    }
+                    .info-row-edit{
+                        &__head{
+                            color: $cBlack;
+                        }
+                        .--top-edit{
+                            padding-left: 0;
+                            padding-bottom: 0;
+                            border-bottom: 0;
+                            input{
+                                border: 0px;
+                                border-radius: 0px;
+                                border-bottom: 3px solid $cGreen;
+                            }
+                        }
+                        &__data{
+                            padding-bottom: 0;
+                            padding-left: 0;
+                            border-bottom: 0;
+                            input{
+                                height: 3.7rem;
+                            }
+                            textarea{
+                                height: 5.4rem;
+                            }
+                        }
+                    }
+                }
+                .client-inner{
+                    height: math.div(700,800) * 100vh;
+                }
+                .--vehicle-default-view{
+                    width: 100%;
+                    height: 100%;
+                    margin: 0;
+                    &::after{
+                        content: "";
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                        top: -0.1rem;
+                        left: -0.1rem;
+                        border: 1px solid black;
+                        border-radius: 1rem;
+                        background-color: black;
+                        opacity: 0.4;
+                    }
+                }
+                .--edit-inner{
+                    gap: 1rem;
+                    display: none;
+                    .btn-area{
+                        position: absolute;
+                        bottom: -2rem;
+                        display: flex;
+                        align-items: center;
+                        gap: 1.5rem;
+                        .btn{
+                            height: 4.5rem;
+                            border-radius: 1rem;
+                            font-size: 1.4rem;
+                            font-weight: $fw-bold;
+                            letter-spacing: 0.1rem;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            transition: 0.5s;
+                            color: white;
+                        }
+                        .btn:hover{
+                            opacity: 0.7;
+                        }
+                        .--save{
+                            width: 12.1rem;
+                            border: 2px solid $cBlue02;
+                            background-color: $cBlue02;
+                        }
+                        .--delete{
+                            width: 10.8rem;
+                            border: 2px solid $cRed;
+                            background-color: $cRed;
+                        }
+                        .--back{
+                            width: 6rem;
+                            border: 2px solid $cGray02;
+                            cursor: pointer;
+                            background-color: $cGray02;
+                        }
+                    }
+                    .edit-btn-area{
+                        position: initial;
+                        margin-top: 4rem;
+                        .btn{
+                            background-color: white;
+                        }
+                        .--save{
+                            width: 12.1rem;
+                            border: 2px solid $cBlue02;
+                            color: $cBlue02;
+                        }
+                        .--save:hover{
+                            background-color: $cBlue02;
+                        }
+                        .--delete{
+                            width: 10.8rem;
+                            border: 2px solid $cRed;
+                            color: $cRed;
+                        }
+                        .--delete:hover{
+                            background-color: $cRed;
+                        }
+                        .--back{
+                            width: 6rem;
+                            border: 2px solid $cGray02;
+                            color: $cGray02;
+                            cursor: pointer;
+                        }
+                        .--back:hover{
+                            background-color: $cGray02;
+                        }
+                        .btn:hover{
+                            opacity: 1;
+                            color: white;
+                        }
+                    }
+                }
+            }
+            .--client-register-item{
+                height: math.div(690,800) * 100vh;
+            }
+            &__register-list{
+                width: math.div(575,1280) * 100vw;
+                &__head{
+                    width: 100%;
+                    border-top-left-radius: 1rem;
+                    border-top-right-radius: 1rem;
+                    background-color: #B0B5BE;
+                    &__row{
+                        display: flex;
+                        gap: 11.3rem;
+                        padding: 1.6rem 0;
+                        margin-left: 3.2rem;
+                        font-size: 1rem;
+                        font-weight: $fw-bold;
+                        letter-spacing: 0.1rem;
+                        color: white;
+                        p{
+                            text-align: center;
+                        }
+                    }
+                    .--client-head-row{
+                        margin-left: 6rem;
+                    }
+                }
+                .--foot{
+                    position: relative;
+                    border-radius: 0rem;
+                    border-bottom-left-radius: 1rem;
+                    border-bottom-right-radius: 1rem;
+                    .add-btn{
+                        position: absolute;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        right: 4rem;
+                        width: 8rem;
+                        border: 2px solid $cGreen;
+                        border-radius: 1rem;
+                        background-color: white;
+                        cursor: pointer;
+                        &__inner{
+                            width: fit-content;
+                            margin: 0 auto;
+                            padding: 0.5rem 0;
+                            display: flex;
+                            align-items: center;
+                            gap: 1.5rem;
+                            color: $cGreen;
+                            p{
+                                font-size: 1.4rem;
+                                font-weight: $fw-bold;
+                                letter-spacing: 0.1rem;
+                            }
+                            i{
+                                font-size: 2rem;
+                            }
+                        }
+                    }
+                    .disabled::after{
+                        content: "";
+                        position: absolute;
+                        top: -0.2rem;
+                        left: -0.2rem;
+                        width: 100%;
+                        height: 100%;
+                        border: 2px solid black;
+                        border-radius: 1rem;
+                        background-color: black;
+                        opacity: 0.5;
+                    }
+                }
+                &__body{
+                    position: relative;
+                    overflow-y: scroll;
+                    width: 100%;
+                    height: math.div(555,800) * 100vh;
+                    margin: 0 auto;
+                    &__row{
+                        position: relative;
+                        display: flex;
+                        gap: 11.5rem;
+                        padding: 1.6rem 0;
+                        border-bottom: 1px solid #B9B9B9;
+                        font-size: 1.2rem;
+                        font-weight: $fw-bold;
+                        letter-spacing: 0.1rem;
+                        color: $cBlack;
+                        cursor: pointer;
+                        .number{
+                            min-width: 4.5rem;
+                            margin-left: 2rem;
+                            text-align: center;
+                        }
+                        .company{
+                            font-size: 1.4rem;
+                            min-width: 12rem;
+                            text-align: center;
+                        }
+                        .edit-btn{
+                            display: none;
+                            position: absolute;
+                            z-index: 10;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            right: 3rem;
+                            width: 8rem;
+                            background-color: white;
+                            &__inner{
+                                display: flex;
+                                align-items: center;
+                                gap: 1.3rem;
+                                padding: 0.7rem 0;
+                                p{
+                                    font-size: 1.4rem;
+                                }
+                                i{
+                                    font-size: 1.4rem;
+                                }
+                            }
+                        }
+                        .edit-btn-active{
+                            width: 12rem;
+                            background-color: $cGreen;
+                            color: white;
+                        }
+                    }
+                    .open{
+                        background-color: rgba(79, 209, 197, 0.12);
+                        .edit-btn{
+                            display: flex;
+                        }
+                    }
+                    .--client-row{
+                        padding-left: 6rem;
+                        p{
+                            text-align: start;
+                        }
+                    }
+                    .after-element::after{
+                        content: "";
+                        position: absolute;
+                        z-index: 20;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        opacity: 0.5;
+                        background-color: black;
+                    }
+                }
+                .--client-body{
+                    height: math.div(600,800) * 100vh;
+                }
+                &__foot{
+                    width: 100%;
+                    height: 3rem;
+                    border-bottom-left-radius: 1rem;
+                    border-bottom-right-radius: 1rem;
+                    background-color: #B0B5BE;
+                }
+            }
+            table{
+                border-collapse: collapse;
+              }
+              table td{
+                position: relative;
+                  text-align: center;
+                  vertical-align: middle;
+              }
+              table th{
+                position: relative;
+                text-align: center;
+                vertical-align: middle;
+                border-left: 0px;
+              }
+
+        }
+        .--clinet-info-wrap{
+            padding-top: 3rem;
+        }
+    }
+    .--client-white-board{
+        margin-top: 4rem;
+        height: math.div(745,800) * 100vh;
+    }
+
+}

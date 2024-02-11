@@ -1,0 +1,813 @@
+@use "../../foundation/variables.scss" as *;
+@use "../../foundation/mixin.scss" as *;
+@use "sass:math";
+
+.--shift-main{
+    .--shift-link-block{
+        position: relative;
+        gap: math.div(180,1280) * 100vw;
+        // justify-content: space-between;
+        &__item:nth-child(1){
+            .link{
+                border: 2px solid $cSkyBlue;
+                color: $cSkyBlue;
+            }
+            .active{
+                border: 2px solid $cSkyBlue;
+                background-color: $cSkyBlue;
+                color: white;
+                &::after{
+                    content: "";
+                    position: absolute;
+                    z-index: 1000;
+                    left: -0.2rem;
+                    bottom: -1rem;
+                    width: 100%;
+                    height: 2rem;
+                    border: 2px solid $cSkyBlue;
+                    border-bottom-left-radius: 1rem;
+                    border-bottom-right-radius: 1rem;
+                    background-color: $cSkyBlue;
+                }
+            }
+        }
+        &__item:nth-child(2){
+            .link{
+                border: 2px solid $cGreen02;
+                color: $cGreen02;
+            }
+            .active{
+                border: 2px solid $cGreen02;
+                background-color: $cGreen02;
+                &::after{
+                    content: "";
+                    position: absolute;
+                    z-index: 1000;
+                    left: -0.2rem;
+                    bottom: -1rem;
+                    width: 100%;
+                    height: 2rem;
+                    border: 2px solid $cGreen02;
+                    border-bottom-left-radius: 1rem;
+                    border-bottom-right-radius: 1rem;
+                    background-color: $cGreen02;
+                }
+            }
+        }
+        &__item:nth-child(3){
+            .link{
+                border: 2px solid $cBlue;
+                color: $cBlue;
+            }
+            .active{
+                border: 2px solid $cBlue;
+                background-color: $cBlue;
+                &::after{
+                    content: "";
+                    position: absolute;
+                    z-index: 1000;
+                    left: -0.2rem;
+                    bottom: -1rem;
+                    width: 100%;
+                    height: 2rem;
+                    border: 2px solid $cBlue;
+                    border-bottom-left-radius: 1rem;
+                    border-bottom-right-radius: 1rem;
+                    background-color: $cBlue;
+                }
+            }
+        }
+        &__item:nth-child(4){
+            .link{
+                border: 2px solid $cOrange;
+                color: $cOrange;
+            }
+            .active{
+                border: 2px solid $cOrange;
+                background-color: $cOrange;
+                &::after{
+                    content: "";
+                    position: absolute;
+                    z-index: 1000;
+                    left: -0.2rem;
+                    bottom: -1rem;
+                    width: 100%;
+                    height: 2rem;
+                    border: 2px solid $cOrange;
+                    border-bottom-left-radius: 1rem;
+                    border-bottom-right-radius: 1rem;
+                    background-color: $cOrange;
+                }
+            }
+        }
+        &__item:nth-child(5){
+            .link{
+                border: 2px solid $cPink;
+                color: $cPink;
+            }
+            .active{
+                border: 2px solid $cPink;
+                background-color: $cPink;
+                &::after{
+                    content: "";
+                    position: absolute;
+                    z-index: 1000;
+                    left: -0.2rem;
+                    bottom: -1rem;
+                    width: 100%;
+                    height: 2rem;
+                    border: 2px solid $cPink;
+                    border-bottom-left-radius: 1rem;
+                    border-bottom-right-radius: 1rem;
+                    background-color: $cPink;
+                }
+            }
+        }
+        &__btn-area{
+            display: flex;
+            gap: 1rem;
+            .icon-block{
+                position: relative;
+                width: 5.5rem;
+                height: 4.5rem;
+                &__button{
+                    width: 100%;
+                    height: 100%;
+                    border-top-left-radius: 1.5rem;
+                    border-top-right-radius: 1.5rem;
+                    box-sizing: border-box;
+                    opacity: 0.6;
+                }
+                i{
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%,-50%);
+                    font-size: 2rem;
+                    color: white;
+                }
+            }
+            .icon-block:nth-child(1){
+                .icon-block__button{
+                    border: 2px solid $cPurple;
+                    i{
+                        color: $cPurple;
+                    }
+                }
+                .active{
+                    background-color: $cPurple;
+                    opacity: 1;
+                    i{
+                        color: white;
+                    }
+                    &::after{
+                        content: "";
+                        position: absolute;
+                        z-index: 1000;
+                        left: 0rem;
+                        bottom: -0.8rem;
+                        width: 100%;
+                        height: 2rem;
+                        border-bottom-left-radius: 1rem;
+                        border-bottom-right-radius: 1rem;
+                        background-color: $cPurple;
+                    }
+                }
+            }
+            .icon-block:nth-child(2){
+                .icon-block__button{
+                    border: 2px solid $cPink02;
+                    i{
+                        color: $cPink02;
+                    }
+                }
+                .active{
+                    background-color: $cPink02;
+                    opacity: 1;
+                    i{
+                        color: white;
+                    }
+                    &::after{
+                        content: "";
+                        position: absolute;
+                        z-index: 1000;
+                        left: 0rem;
+                        bottom: -0.8rem;
+                        width: 100%;
+                        height: 2rem;
+                        border-bottom-left-radius: 1rem;
+                        border-bottom-right-radius: 1rem;
+                        background-color: $cPink02;
+                    }
+                }
+            }
+        }
+    }
+
+    // シフトカレンダー
+    .shift-calendar{
+        position: relative;
+        &__date{
+            width: 30.5rem;
+            padding-top: 2.1rem;
+            display: flex;
+            align-items: center;
+            margin: 0 auto;
+            &__show{
+                width: 20rem;
+                margin: 0 auto;
+                display: flex;
+                justify-content: space-between;
+                .date{
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 0.5rem;
+                    &__txt{
+                        display: flex;
+                        letter-spacing: 0.1rem;
+                        .fs-10{
+                            font-size: 1rem;
+                            font-weight: $fw-bold;
+                        }
+                        .fs-14{
+                            font-size: 1.4rem;
+                            font-weight: $fw-bold;
+                        }
+                        .fs-16{
+                            font-size: 1.4rem;
+                            font-weight: $fw-bold;
+                        }
+                    }
+                }
+            }
+            .date-angle{
+                font-size: 2.3rem;
+            }
+        }
+        .datepicker{
+            position: absolute;
+            top: 3rem;
+            right: 1.3rem;
+            z-index: 1;
+            width: 20.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            &__input{
+                border: 1px solid $cGreen;
+                border-radius: 0.5rem;
+                font-weight: $fw-bold;
+            }
+            &__button{
+                width: 7.2rem;
+                height: 3rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid $cGreen;
+                border-radius: 1rem;
+                font-size: 1rem;
+                font-weight: $fw-bold;
+                letter-spacing: 0.1rem;
+                color: $cGreen;
+            }
+            .date01 input[type=date] {
+                position: relative;
+              }
+              .date01 input[type=date]::-webkit-inner-spin-button {
+                // -webkit-appearance: none;
+              }
+              .date01 input[type=date]::-webkit-clear-button {
+                // -webkit-appearance: none;
+              }
+              .date01 input[type=date]::-webkit-calendar-picker-indicator {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+                cursor: pointer;
+              }
+        }
+
+        &__main{
+            position: relative;
+            overflow: scroll;
+            height: math.div(580,800) * 100vh;
+            margin-top: 15px;
+            margin-left: 1.55rem;
+            padding-right: 5rem;
+            padding-bottom: 5rem;
+            display: flex;
+            flex-direction: column;
+            .shift-calendar-table{
+                position: relative;
+                &__head{
+                    &__day{
+                        position: sticky;
+                        z-index: 1000;
+                        top: 0;
+                        font-size: 1.6rem;
+                        font-weight: $fw-bold;
+                        letter-spacing: 0.1rem;
+                        background-color: white;
+                        .txt{
+                            padding: 0.8rem 0;
+                        }
+                    }
+                    .empty-block{
+                        position: sticky;
+                        top: 0;
+                        left: 0;
+                        z-index: 1000;
+                        background-color: white;
+                    }
+                    &__part{
+                        position: sticky;
+                        top: 3.5rem;
+                        font-size: 1.4rem;
+                        letter-spacing: 0.1rem;
+                        background-color: white;
+                        z-index: 1000;
+                        .txt{
+                            padding: 0.5rem 0;
+                        }
+                    }
+                }
+                &__body{
+                    &__row{
+                        margin-bottom: 1rem;
+                        .table-employee-name{
+                            position: sticky;
+                            left: 0;
+                            font-size: 1.6rem;
+                            font-weight: $fw-bold;
+                            letter-spacing: 0.1rem;
+                            background-color: white;
+                            z-index: 1000;
+                            &__block{
+                                position: relative;
+                                min-width: 15rem;
+                                height: 100%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            }
+                        }
+                        .table-cell{
+                            width: fit-content;
+                            &__item{
+                                position: relative;
+                                font-size: 1.3rem;
+                                font-weight: $fw-regular;
+                                letter-spacing: 0.1rem;
+                                cursor: pointer;
+                                &__row{
+                                    min-height: 2.5rem;
+                                    padding: 0.5rem;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    flex-shrink: 0;
+                                    white-space: nowrap;
+                                    border-bottom: 1px dashed $cGray;
+                                }
+                                &__row:last-child{
+                                    border-bottom: 1px solid $cBlack;
+                                }
+                            }
+                            &__item:last-child{
+                                .table-cell__item__row:last-child{
+                                    border-bottom: 0px;
+                                }
+                            }
+                            .hover-item:hover{
+                                &::after{
+                                    content: "";
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    width: 100%;
+                                    height: 100%;
+                                    border: 1px solid blue;
+                                    box-sizing: border-box;
+                                }
+                            }
+                            .--empty-item{
+                                position: relative;
+                                .create-project{
+                                    position: absolute;
+                                    z-index: 100;
+                                    top: 50%;
+                                    left: 50%;
+                                    transform: translate(-50%,-50%);
+                                }
+                                &__row{
+                                    border-bottom: 1px solid transparent;
+                                }
+                                .--empty-item__row:last-child{
+                                    border-bottom: 1px solid $cBlack;
+                                }
+                            }
+                            .--empty-item:last-child{
+                                .--empty-item__row:last-child{
+                                    border: 0px;
+                                }
+                            }
+                            .create-project{
+                                width: 100%;
+                                height: 2.5rem;
+                                &__button{
+                                    display: block;
+                                    width: 100%;
+                                    height: 100%;
+                                    border-radius: 1rem;
+                                    border: 2px solid $cGreen;
+                                    box-sizing: border-box;
+
+                                    font-size: 1.4rem;
+                                    font-weight: $fw-bold;
+                                    letter-spacing: 0.1rem;
+                                    color: $cGreen;
+                                    transition: 0.5s;
+                                }
+                                &__button:hover{
+                                    background-color: $cGreen;
+                                    color: white;
+                                    transition: 0.5s;
+                                }
+                            }
+                            .create-project:last-child{
+                                border-bottom: 0px;
+                            }
+                        }
+                        .total-salary{
+                            padding: 0px 3rem;
+                            font-size: 1.3rem;
+                            letter-spacing: 0.1rem;
+                        }
+                    }
+                    .--count-row{
+                        font-size: 1.3rem;
+                        font-weight: $fw-bold;
+                        letter-spacing: 0.1rem;
+                        &__project{
+                            width: 15rem;
+                        }
+                        &__count{
+                            width: 8rem;
+                        }
+                        td{
+                            // width: fit-content;
+                            height: 50px;
+                        }
+                    }
+                }
+            }
+            .shift-calendar-table th::before{
+                content: '';
+                position : absolute ;
+                top : 0;
+                left : 0;
+                width : 100%;
+                height : 100%;
+                border-top: 0.5px solid $cBlack;
+                border-bottom: 0.5px solid $cBlack;
+            }
+            .table-employee-name::before{
+                content: '';
+                position : absolute ;
+                top : 0;
+                left : 0;
+                width : 100%;
+                height : 100%;
+                background-color: white;
+                border: 0.5px solid $cBlack;
+                border-left: 0px;
+            }
+            .empty-block{
+                content: '';
+                position : absolute ;
+                top : 0;
+                left : 0;
+                width : 100%;
+                height : 100%;
+                background-color: white;
+                border-top: 0.5px solid $cBlack;
+                border-bottom: 0.5px solid $cBlack;
+            }
+        }
+    }
+
+    // csv
+    .csv-wrap{
+        width: 60rem;
+        margin: 0 auto;
+        padding-top: 16rem;
+        input[type="file"]{
+            display: none;
+        }
+        label {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 19.5rem;
+            color: #ffffff;
+            background-color: white;
+            border: 3px solid $cGreen;
+            border-radius: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.192);
+            .csv-icon{
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                left: 6rem;
+                width: 4rem;
+                height: 4rem;
+                border-radius: 1.5em;
+                background-color: $cGreen;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                i{
+                    font-size: 2rem;
+                }
+                .check-csv{
+                    display: none;
+                }
+                .warning-csv{
+                    display: none;
+                }
+            }
+            .file-txt{
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                font-size: 1.6rem;
+                font-weight: $fw-bold;
+                letter-spacing: 0.1rem;
+                color: $cBlack02;
+            }
+        }
+        .active-file-name-wrap{
+            width: 100%;
+            padding: 1.5rem 0;
+            margin-top: 4rem;
+            border: 2px solid $cGray03;
+            border-radius: 1.5rem;
+            opacity: 0.6;
+            &__inner{
+                margin-left: 6rem;
+                padding-right: 3rem;
+                display: flex;
+                align-items: center;
+                .head{
+                    display: flex;
+                    align-items: center;
+                    gap: 1.5rem;
+                    &__icon-wrap{
+                        width: 4rem;
+                        height: 4rem;
+                        border-radius: 1.5rem;
+                        background-color: $cGray03;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        i{
+                            font-size: 2rem;
+                            color: white;
+                        }
+                    }
+                    &__txt{
+                        white-space: nowrap;
+                        font-size: 1.4rem;
+                        font-weight: $fw-bold;
+                        letter-spacing: 0.1rem;
+                        color: $cBlack02;
+                    }
+                }
+                .active-file-txt{
+                    margin-left: 0.5rem;
+                    font-size: 1.4rem;
+                    font-weight: $fw-bold;
+                    letter-spacing: 0.1rem;
+                    color: $cBlack02;
+                }
+            }
+        }
+        .import-btn{
+            display: block;
+            width: 18rem;
+            margin: 0 auto;
+            margin-top: 8rem;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            background-color: $cGray03;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: $fw-bold;
+            color: white;
+            opacity: 0.6;
+        }
+    }
+
+    table{
+        width: 100%;
+        border-collapse: collapse;
+      }
+      table td{
+        position: relative;
+          border: 0.5px solid black;
+          border-left: 0px;
+          text-align: center;
+          vertical-align: middle;
+      }
+      table th{
+        position: relative;
+        border-left: 0.5px solid black;
+        border-right: 0.5px solid black;
+        text-align: center;
+        vertical-align: middle;
+        border-left: 0px;
+      }
+}
+
+
+
+.shift-edit-modal{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+    width: 100vw;
+    height: 100vh;
+    &__bg{
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        opacity: 0.6;
+    }
+    &__white-board{
+        position: relative;
+        z-index: 2;
+        width: math.div(700,1280) * 100vw;
+        height: math.div(650,800) * 100vh;
+        margin: 0 auto;
+        margin-top: 10rem;
+        border-radius: 1.5rem;
+        background-color: white;
+
+        .name-block{
+            position: absolute;
+            width: fit-content;
+            padding: 1.5rem;
+            border-top-left-radius: 1.5rem;
+            border-bottom-right-radius: 1.5rem;
+            background-color: $cGreen;
+            p{
+                font-size: 1.8rem;
+                font-weight: $fw-bold;
+                letter-spacing: 0.1rem;
+                color: white;
+            }
+        }
+        .title{
+            width: fit-content;
+            margin: 0 auto;
+            padding-top: 2.5rem;
+            p{
+                font-size: 2.6rem;
+                font-weight: $fw-bold;
+                letter-spacing: 0.1rem;
+                color: $cBlack;
+            }
+        }
+        .date-block{
+            position: absolute;
+            top: 2.5rem;
+            right: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: center;
+            &__year{
+                font-size: 1.4rem;
+                font-weight: $fw-bold;
+                letter-spacing: 0.1rem;
+                color: $cBlack;
+                .txt{
+                    font-size: 1rem;
+                }
+            }
+            &__month{
+                font-size: 1.8rem;
+                font-weight: $fw-bold;
+                letter-spacing: 0.1rem;
+                color: $cBlack;
+                .txt{
+                    font-size: 1.2rem;
+                    font-weight: $fw-bold;
+                }
+            }
+            &__part{
+                font-size: 1.6rem;
+                font-weight: $fw-bold;
+                color: $cBlack;
+                letter-spacing: 0.1rem;
+            }
+        }
+        .form-block{
+            width: 44rem;
+            margin: 0 auto;
+            margin-top: 5rem;
+            &__input-area{
+                display: flex;
+                flex-direction: column;
+                gap: 2.5rem;
+            }
+            &__item{
+                display: flex;
+                flex-direction: column;
+                gap: 0.7rem;
+                align-items: flex-start;
+                font-weight: $fw-bold;
+                color: $cBlack;
+                letter-spacing: 0.1rem;
+                .item-title{
+                    font-size: 1.6rem;
+                }
+                .check-area{
+                    display: flex;
+                    align-items: center;
+                    gap: 3rem;
+                    &__item{
+                        display: flex;
+                        align-items: center;
+                        gap: 1rem;
+                        font-size: 1.4rem;
+                    }
+                }
+            }
+            .modal-input{
+                display: none;
+            }
+
+            &__btn-area{
+                margin-top: 5rem;
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+                .btn{
+                    height: 4.5rem;
+                    border-radius: 1rem;
+                    font-size: 1.4rem;
+                    font-weight: $fw-bold;
+                    letter-spacing: 0.1rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: 0.5s;
+                }
+                .btn:hover{
+                    color: white;
+                }
+                .--save{
+                    width: 18.3rem;
+                    border: 2px solid $cBlue02;
+                    color: $cBlue02;
+                }
+                .--save:hover{
+                    background-color: $cBlue02;
+                }
+                .--delete{
+                    width: 16.7rem;
+                    border: 2px solid $cRed;
+                    color: $cRed;
+                }
+                .--delete:hover{
+                    background-color: $cRed;
+                }
+                .--back{
+                    width: 6rem;
+                    border: 2px solid $cGray02;
+                    color: $cGray02;
+                    cursor: pointer;
+                }
+                .--back:hover{
+                    background-color: $cGray02;
+                }
+            }
+        }
+    }
+}
+

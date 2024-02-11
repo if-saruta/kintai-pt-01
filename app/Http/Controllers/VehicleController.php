@@ -13,8 +13,9 @@ class VehicleController extends Controller
     public function index()
     {
         $vehicles = Vehicle::all();
+        $companies = Company::all();
 
-        return view('vehicle.index', compact('vehicles'));
+        return view('vehicle.index', compact('vehicles', 'companies'));
     }
 
     public function create()
@@ -35,21 +36,18 @@ class VehicleController extends Controller
         return redirect()->route('vehicle.');
     }
 
-    public function edit($id)
+    public function update(Request $request)
     {
-        $vehicle = Vehicle::find($id);
-        $companies = Company::all();
-
-        return view('vehicle.edit', compact('vehicle','companies'));
-    }
-
-    public function update(Request $request, $id)
-    {
+        $id = $request->id;
         $vehicle = Vehicle::find($id);
 
-        $vehicle->number = $request->number;
-        $vehicle->company_id = $request->company;
-        $vehicle->save();
+        if($request->input('action') == 'save'){
+            $vehicle->number = $request->number;
+            $vehicle->company_id = $request->company;
+            $vehicle->save();
+        }elseif($request->input('action') == 'delete'){
+            $vehicle->delete();
+        }
 
         return redirect()->route('vehicle.');
     }

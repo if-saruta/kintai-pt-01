@@ -18,11 +18,6 @@ class CompanyController extends Controller
         return view('company.index', compact('companies'));
     }
 
-    public function create()
-    {
-        return view('company.create');
-    }
-
     public function store(Request $request)
     {
         Company::create([
@@ -39,26 +34,24 @@ class CompanyController extends Controller
         return redirect()->route('company.');
     }
 
-    public function edit($id)
+    public function update(Request $request)
     {
+        $id = $request->id;
         $company = Company::find($id);
 
-        return view('company.edit', compact('company'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $company = Company::find($id);
-
-        $company->register_number = $request->register_number;
-        $company->name = $request->name;
-        $company->post_code = $request->post_code;
-        $company->address = $request->address;
-        $company->phone = $request->phone;
-        $company->fax = $request->fax;
-        $company->bank_name = $request->bank_name;
-        $company->account_holder_name = $request->account_holder_name;
-        $company->save();
+        if($request->input('action') == 'save'){
+            $company->register_number = $request->register_number;
+            $company->name = $request->name;
+            $company->post_code = $request->post_code;
+            $company->address = $request->address;
+            $company->phone = $request->phone;
+            $company->fax = $request->fax;
+            $company->bank_name = $request->bank_name;
+            $company->account_holder_name = $request->account_holder_name;
+            $company->save();
+        } elseif($request->input('action') == 'delete'){
+            $company->delete();
+        }
 
         return redirect()->route('company.');
     }

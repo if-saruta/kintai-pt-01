@@ -1,0 +1,438 @@
+@use "../../foundation/variables.scss" as *;
+@use "../../foundation/mixin.scss" as *;
+@use "sass:math";
+
+.--client-white-board{
+    margin-top: 4rem;
+    padding-top: 0.5rem;
+    padding-bottom: 4.5rem;
+    height: auto!important;
+    .client-main{
+        position: relative;
+        width: math.div(990,1280) * 100vw;
+        margin: 0 auto;
+        .client-head-box{
+            position: sticky;
+            z-index: 1000;
+            top: 2rem;
+            width: 100%;
+            border: 3px solid $cGreen;
+            border-radius: 1rem;
+            box-sizing: border-box;
+            box-shadow: 0px 10px 10px -6px rgba(0, 0, 0, 0.2);
+            background-color: white;
+            &__inner{
+                width: math.div(880,1280) * 100vw;
+                margin: 0 auto;
+                padding: 1.5rem 0;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                .client-name-area{
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1rem;
+                    &__head-title{
+                        font-size: 1.2rem;
+                        font-weight: $fw-bold;
+                        letter-spacing: 0.1rem;
+                        color: $cBlack;
+                    }
+                    .client-name-input{
+                        width: 40rem;
+                        border: 0px;
+                        border-radius: 0;
+                        border-bottom: 3px solid $cGreen;
+                        font-size: 1.6rem;
+                    }
+                }
+            }
+        }
+        &__body{
+            width: math.div(920,1280) * 100vw;
+            margin: 0 auto;
+            .client-pdf-box{
+                width: 33rem;
+                margin-top: 3rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                &__txt{
+                    font-size: 1.2rem;
+                    font-weight: $fw-bold;
+                    letter-spacing: 0.1rem;
+                    color: $cBlack;
+                }
+                input{
+                    font-size: 1.2rem;
+                }
+            }
+            .project-list{
+                width: 100%;
+                margin-top: 2.5rem;
+                &__head{
+                    padding-bottom: 0.5rem;
+                    border-bottom: 1px solid #B0B5BE;
+                    &__inner{
+                        width: math.div(880,1280) * 100vw;
+                        margin: 0 auto;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        .txt{
+                            font-size: 1.6rem;
+                            font-weight: $fw-bold;
+                            letter-spacing: 0.1rem;
+                            color: $cBlack;
+                        }
+                        .add-btn{
+                            width: 8rem;
+                            border: 2px solid $cGreen;
+                            border-radius: 1rem;
+                            &__inner{
+                                width: fit-content;
+                                margin: 0 auto;
+                                padding: 1rem 0;
+                                display: flex;
+                                align-items: center;
+                                gap: 1.5rem;
+                                i{
+                                    font-size: 1.5rem;
+                                    color: $cGreen;
+                                }
+                                p{
+                                    font-size: 1.4rem;
+                                    font-weight: $fw-bold;
+                                    letter-spacing: 0.1rem;
+                                    color: $cGreen;
+                                }
+                            }
+                        }
+                    }
+                }
+                &__body{
+                    width: 100%;
+                    margin-top: 1.5rem;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1.5rem;
+                    .list-item{
+                        width: math.div(880,1280) * 100vw;
+                        margin: 0 auto;
+                        padding: 1rem 0;
+                        border: 2px solid $cGreen;
+                        border-radius: 1rem;
+                        &__inner{
+                            width: math.div(820,1280) * 100vw;
+                            margin: 0 auto;
+                        }
+                        &__head{
+                            width: 100%;
+                            cursor: pointer;
+                            &__inner{
+                                width: math.div(780,1280) * 100vw;
+                                // margin: 0 auto;
+                                display: flex;
+                                align-items: center;
+                                justify-content: space-between;
+                                .project-input{
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 1.7rem;
+                                    p{
+                                        font-size: 1.2rem;
+                                        font-weight: $fw-bold;
+                                        letter-spacing: 0.1rem;
+                                        color: $cBlack;
+                                    }
+                                    input{
+                                        width: 22.3rem;
+                                    }
+                                }
+                                i{
+                                    font-size: 2.5rem;
+                                    color: $cGreen;
+                                    transition: 0.5s;
+                                }
+                                .js-cross-active{
+                                    transform: rotate(180deg);
+                                    color: $cBlack;
+                                }
+                            }
+                        }
+                        &__content{
+                            position: relative;
+                            overflow: hidden;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 3rem;
+                            transition: 0.5s;
+                            .input-head{
+                                font-size: 1.4rem;
+                                font-weight: $fw-bold;
+                                letter-spacing: 0.1rem;
+                                color: $cBlack;
+                            }
+                            .label-txt{
+                                font-size: 1.2rem;
+                                font-weight: $fw-bold;
+                                letter-spacing: 0.1rem;
+                                color: $cBlack;
+                            }
+                            .head{
+                                display: flex;
+                                align-items: center;
+                                gap: 2rem;
+                                .item-type{
+                                    padding: 0.25rem 0.95rem;
+                                    font-size: 1rem;
+                                    font-weight: $fw-bold;
+                                    letter-spacing: 0.1rem;
+                                    line-height: math.div(15,10);
+                                    color: white;
+                                    background-color: $cGreen;
+                                    border-radius: 0.5rem;
+                                }
+                                .any{
+                                    color: $cGreen;
+                                    border: 1px solid $cGreen;
+                                    background-color: white;
+                                }
+                            }
+                            .flex-10{
+                                display: flex;
+                                align-items: center;
+                                gap: 1rem;
+                            }
+                            .charter-box{
+                                margin-top: 1rem;
+                                padding-top: 2.5rem;
+                                border-top: 1px solid #707070;
+                                display: flex;
+                                align-items: center;
+                                gap: 2rem;
+                            }
+                            .salary-type-box{
+                                display: flex;
+                                flex-direction: column;
+                                gap: 1.5rem;
+                                &__input-area{
+                                    margin-left: 1.5rem;
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 5rem;
+                                }
+                            }
+                            .amount-box{
+                                display: flex;
+                                align-items: center;
+                                gap: 2rem;
+                                &__item{
+                                    width: 24rem;
+                                    display: flex;
+                                    flex-direction: column;
+                                    gap: 0.6rem;
+                                }
+                            }
+                            .holiday-box{
+                                display: flex;
+                                flex-direction: column;
+                                gap: 1.5rem;
+                                &__check-area{
+                                    margin-left: 1.5rem;
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 4rem;
+                                }
+                            }
+                            .over-time-box{
+                                display: flex;
+                                flex-direction: column;
+                                gap: 1rem;
+                                &__input-area{
+                                    margin-left: 1.5rem;
+                                    display: flex;
+                                    gap: 2rem;
+                                    .input-item{
+                                        width: 24rem;
+                                        display: flex;
+                                        flex-direction: column;
+                                        gap: 0.6rem;
+                                    }
+                                }
+                            }
+                            .employee-salary{
+                                display: flex;
+                                flex-direction: column;
+                                gap: 1.5rem;
+                                &__list{
+                                    margin-left: 1.5rem;
+                                    &__tags-area{
+                                        display: flex;
+                                        margin-left: 2rem;
+                                        .tag{
+                                            width: fit-content;
+                                            padding: 1rem 2rem;
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            border: 2px solid $cGreen;
+                                            border-top-left-radius: 1rem;
+                                            border-top-right-radius: 1rem;
+                                            background-color: white;
+                                            cursor: pointer;
+                                            p{
+                                                font-size: 1.3rem;
+                                                font-weight: $fw-bold;
+                                                letter-spacing: 0.1rem;
+                                                color: $cGreen;
+                                            }
+                                        }
+                                        .open{
+                                            background-color: $cGreen;
+                                            p{
+                                                color: white;
+                                            }
+                                        }
+                                    }
+                                    &__body{
+                                        width: math.div(770,1280) * 100vw;
+                                        border: 2px solid $cGreen;
+                                        border-radius: 1rem;
+                                        .inner{
+                                            width: math.div(740,1280) * 100vw;
+                                            margin: 0 auto;
+                                            padding: 1.5rem;
+                                            .employee-list{
+                                                display: none;
+                                            }
+                                            .employee-list-open{
+                                                display: block;
+                                            }
+                                            .item{
+                                                display: flex;
+                                                align-items: center;
+                                                gap: 5rem;
+                                                padding: 1rem 0;
+                                                border-top: 1px dashed #B9B9B9;
+                                                p{
+                                                    width: 16rem;
+                                                    margin-left: 1.5rem;
+                                                    font-size: 1.3rem;
+                                                    font-weight: $fw-bold;
+                                                    letter-spacing: 0.1rem;
+                                                    color: $cBlack;
+                                                }
+                                                input{
+                                                    width: 12rem;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            .--project-btn-area{
+                                width: fit-content;
+                                margin: 0 auto;
+                                margin-top: 3rem;
+                                padding-bottom: 4rem;
+                            }
+                        }
+                    }
+                    .acc-wrap-close{
+                        border: 1px solid #B0B5BE;
+                    }
+                }
+            }
+        }
+    }
+    .btn-area{
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        .btn{
+            height: 4.5rem;
+            border-radius: 1rem;
+            font-size: 1.2rem;
+            font-weight: $fw-bold;
+            letter-spacing: 0.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.5s;
+        }
+        .--save{
+            width: 12.1rem;
+            border: 2px solid $cBlue02;
+            color: $cBlue02;
+        }
+        .--save:hover{
+            background-color: $cBlue02;
+        }
+        .--delete{
+            width: 10.8rem;
+            border: 2px solid $cRed;
+            color: $cRed;
+        }
+        .--delete:hover{
+            background-color: $cRed;
+        }
+        .--back{
+            width: 6rem;
+            border: 2px solid $cGray02;
+            color: $cGray02;
+            cursor: pointer;
+        }
+        .--back:hover{
+            background-color: $cGray02;
+        }
+        .btn:hover{
+            opacity: 1;
+            color: white;
+        }
+    }
+}
+.toggle {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    border-radius: 50px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .toggle input[type=checkbox] {
+    display: none;
+  }
+  .toggle:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: #e9e9eb;
+    -webkit-transition: 0.2s ease-out;
+    transition: 0.2s ease-out;
+  }
+  .toggle:after {
+    content: "";
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: 20px;
+    height: 20px;
+    display: block;
+    border-radius: 50px;
+    background: #fff;
+    box-shadow: 0 9px 28px -6px rgba(0, 0, 0, 0.3);
+    -webkit-transition: 0.2s ease-out;
+    transition: 0.2s ease-out;
+  }
+  .toggle.checked:before {
+    background: $cGreen;
+  }
+  .toggle.checked:after {
+    left: 19px;
+    box-shadow: 0 9px 28px -6px rgba(0, 0, 0, 0.5);
+}

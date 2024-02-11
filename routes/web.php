@@ -38,7 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::prefix('employee')->name('employee.')->group(function(){
+    Route::prefix('employee')->name('employee.')->group(function () {
         Route::get('/', [EmployeeController::class, 'index'])->name('');
         Route::get('/create', [EmployeeController::class, 'create'])->name('create');
         Route::post('/store', [EmployeeController::class, 'store'])->name('store');
@@ -48,28 +48,24 @@ Route::middleware('auth')->group(function () {
         Route::post('/csv', [EmployeeController::class, 'csvImport'])->name('csv');
     });
 
-    Route::prefix('company')->name('company.')->group(function(){
+    Route::prefix('company')->name('company.')->group(function () {
         Route::get('/', [CompanyController::class, 'index'])->name('');
-        Route::get('/create', [CompanyController::class, 'create'])->name('create');
         Route::post('/store', [CompanyController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [CompanyController::class, 'edit'])->name('edit');
-        Route::post('/update/{id}', [CompanyController::class, 'update'])->name('update');
-        Route::get('/delete/{id}', [CompanyController::class, 'delete'])->name('delete');
+        Route::post('/update', [CompanyController::class, 'update'])->name('update');
+        Route::get('/delete', [CompanyController::class, 'delete'])->name('delete');
 
         Route::post('/csv', [CompanyController::class, 'csvImport'])->name('csv');
     });
 
-    Route::prefix('vehicle')->name('vehicle.')->group(function(){
+    Route::prefix('vehicle')->name('vehicle.')->group(function () {
         Route::get('/', [VehicleController::class, 'index'])->name('');
-        Route::get('/create', [VehicleController::class, 'create'])->name('create');
         Route::post('/store', [VehicleController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [VehicleController::class, 'edit'])->name('edit');
-        Route::post('/update/{id}', [VehicleController::class, 'update'])->name('update');
+        Route::post('/update', [VehicleController::class, 'update'])->name('update');
         Route::get('/delete/{id}', [VehicleController::class, 'delete'])->name('delete');
         Route::post('/csv', [VehicleController::class, 'csvImport'])->name('csv');
     });
 
-    Route::prefix('project')->name('project.')->group(function(){
+    Route::prefix('project')->name('project.')->group(function () {
         Route::get('/', [ProjectController::class, 'index'])->name('');
         Route::get('/create', [ProjectController::class, 'create'])->name('create');
         Route::post('/store', [ProjectController::class, 'store'])->name('store');
@@ -81,51 +77,58 @@ Route::middleware('auth')->group(function () {
         Route::post('/csv', [ProjectController::class, 'csvImport'])->name('csv');
     });
 
-    Route::prefix('shift')->name('shift.')->group(function(){
+    Route::prefix('shift')->name('shift.')->group(function () {
         Route::get('/', [ShiftController::class, 'index'])->name('');
+        Route::get('/selectWeek', [ShiftController::class, 'selectWeek'])->name('selectWeek');
         Route::post('/selectWeek', [ShiftController::class, 'selectWeek'])->name('selectWeek');
-        Route::get('/create/{id}', [ShiftController::class, 'create'])->name('create');
-        Route::post('/store/{id}', [ShiftController::class, 'store'])->name('store');
-        Route::get('/edit/{date}', [ShiftController::class, 'edit'])->name('edit');
-        Route::post('/selectWeekByEdit', [ShiftController::class, 'selectWeekByEdit'])->name('selectWeekByEdit');
-        Route::post('/update/{id}', [ShiftController::class, 'update'])->name('update');
-        Route::post('/delete/{id}', [ShiftController::class, 'delete'])->name('delete');
-        Route::post('/update-vehicle/{id}', [ShiftController::class, 'updateVehicle'])->name('update-vehicle');
-        Route::post('/update-retailPrice/{id}', [ShiftController::class, 'updateRetailPrice'])->name('update-retailPrice');
-        Route::post('/update-driverPrice/{id}', [ShiftController::class, 'updateDriverPrice'])->name('update-driverPrice');
-        Route::get('/employeeShowShift', [ShiftController::class, 'employeeShowShift'])->name('employeeShowShift');
-        Route::post('/employeeShowShift/selectWeek', [ShiftController::class, 'employeeShowShiftSelectWeek'])->name('employeeShowShiftSelectWeek');
-        Route::get('/employeePriceShift', [ShiftController::class, 'employeePriceShift'])->name('employeePriceShift');
-        Route::post('/employeePriceShift/selectWeek', [ShiftController::class, 'employeePriceShiftSelectWeek'])->name('employeePriceShiftSelectWeek');
-        Route::get('/projectPriceShift', [ShiftController::class, 'projectPriceShift'])->name('projectPriceShift');
-        Route::post('/projectPriceShift/selectWeek', [ShiftController::class, 'projectPriceShiftSelectWeek'])->name('projectPriceShiftSelectWeek');
-        Route::get('/projectCount', [ShiftController::class, 'projectCount'])->name('projectCount');
-        Route::post('/projectCount/selectWeek', [ShiftController::class, 'projectCountSelectWeek'])->name('projectCountSelectWeek');
+        // Route::get('/create/{id}', [ShiftController::class, 'create'])->name('create');
+        Route::post('/store', [ShiftController::class, 'store'])->name('store');
+
+        Route::get('/edit', [ShiftController::class, 'selectWeek'])->name('edit');
+        Route::post('/edit', [ShiftController::class, 'selectWeek'])->name('edit');
+        Route::post('/edit/selectWeek', [ShiftController::class, 'selectWeek'])->name('editSelectWeek');
+
+        Route::post('/update', [ShiftController::class, 'update'])->name('update');
+        Route::post('/delete', [ShiftController::class, 'delete'])->name('delete');
+
+        Route::post('/employeeShowShift', [ShiftController::class, 'selectWeek'])->name('employeeShowShift');
+        Route::post('/employeeShowShift/selectWeek', [ShiftController::class, 'selectWeek'])->name('employeeShowShiftSelectWeek');
+
+        Route::post('/employeePriceShift', [ShiftController::class, 'selectWeek'])->name('employeePriceShift');
+        Route::post('/employeePriceShift/selectWeek', [ShiftController::class, 'selectWeek'])->name('employeePriceShiftSelectWeek');
+
+        Route::post('/projectPriceShift', [ShiftController::class, 'selectWeek'])->name('projectPriceShift');
+        Route::post('/projectPriceShift/selectWeek', [ShiftController::class, 'selectWeek'])->name('projectPriceShiftSelectWeek');
+
+        Route::post('/projectCount', [ShiftController::class, 'selectWeek'])->name('projectCount');
+        Route::post('/projectCount/selectWeek', [ShiftController::class, 'selectWeek'])->name('projectCountSelectWeek');
+
+        Route::get('/csv', [ShiftController::class, 'csv'])->name('csv');
+        Route::post('/csv/import', [ShiftController::class, 'csvImport'])->name('csvImport');
 
 
-        Route::get('/project', [ShiftController::class, 'project'])->name('project');
-        Route::post('/csv', [ShiftController::class, 'csvImport'])->name('csv');
+        // Route::get('/project', [ShiftController::class, 'project'])->name('project');
     });
 
-    Route::prefix('shiftImport')->name('shiftImport.')->group(function(){
-        Route::get('/', [ShiftController::class, 'shiftImport'])->name('');
-        Route::post('/confirm', [ShiftController::class, 'shiftConfirmCsv'])->name('confirm-csv');
-        Route::post('/shiftImport-Csv', [ShiftController::class, 'shiftImportCsv'])->name('Csv');
+    // Route::prefix('shiftImport')->name('shiftImport.')->group(function () {
+    //     Route::get('/', [ShiftController::class, 'shiftImport'])->name('');
+    //     Route::post('/confirm', [ShiftController::class, 'shiftConfirmCsv'])->name('confirm-csv');
+    //     Route::post('/shiftImport-Csv', [ShiftController::class, 'shiftImportCsv'])->name('Csv');
+    // });
+
+    Route::prefix('csv-issue')->name('csv-issue.')->group(function () {
+        Route::get('/', [CsvIssueController::class, 'index'])->name('');
+        Route::post('/show', [CsvIssueController::class, 'show'])->name('show');
+        Route::get('/export/{projectId}/{month}', [CsvIssueController::class, 'csvExport'])->name('export');
     });
 
-    Route::prefix('csv-issue')->name('csv-issue.')->group(function(){
-        Route::get('/',[CsvIssueController::class, 'index'])->name('');
-        Route::post('/show',[CsvIssueController::class, 'show'])->name('show');
-        Route::get('/export/{projectId}/{month}',[CsvIssueController::class, 'csvExport'])->name('export');
+    Route::prefix('csv-employee')->name('csv-employee.')->group(function () {
+        Route::get('/', [CsvIssueController::class, 'employeeIndex'])->name('');
+        Route::post('/show', [CsvIssueController::class, 'employeeShow'])->name('show');
+        Route::get('/export/{employeeId}/{year}/{month}', [CsvIssueController::class, 'employeeCsvExport'])->name('export');
     });
 
-    Route::prefix('csv-employee')->name('csv-employee.')->group(function(){
-        Route::get('/',[CsvIssueController::class, 'employeeIndex'])->name('');
-        Route::post('/show',[CsvIssueController::class, 'employeeShow'])->name('show');
-        Route::get('/export/{employeeId}/{year}/{month}',[CsvIssueController::class, 'employeeCsvExport'])->name('export');
-    });
-
-    Route::prefix('invoice')->name('invoice.')->group(function(){
+    Route::prefix('invoice')->name('invoice.')->group(function () {
         Route::get('/', [InvoiceController::class, 'index'])->name('');
 
         // ドライバー関連
@@ -164,4 +167,4 @@ Route::middleware('auth')->group(function () {
 
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -29,5 +29,8 @@
 @use "./project/invoice_project";
 @use "./project/invoice_charter";
 @use "./project/pdf-edit";
+@use "./project/shift/index";
+@use "./project/information/info";
+@use "./project/client/client";
 
 

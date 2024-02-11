@@ -22,9 +22,9 @@
         @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div class="min-h-screen bg-gray-100 dark:bg-gray-900 all-wrap">
             @include('layouts.navigation')
-                
+
             {{-- <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white dark:bg-gray-800 shadow">
@@ -39,5 +39,6 @@
                 {{ $slot }}
             </main>
         </div>
+
     </body>
 </html>
