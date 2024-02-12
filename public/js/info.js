@@ -78,10 +78,12 @@ window.addEventListener('DOMContentLoaded', () => {
             resetStyle();
             resetSetTxt();
         })
-        addBtn.addEventListener('click', () => {
-            resetStyle();
-            resetSetTxt();
-        })
+        if(addBtn != null){
+            addBtn.addEventListener('click', () => {
+                resetStyle();
+                resetSetTxt();
+            })
+        }
 
         // クリック時データをテキストにセット
         const clickSetText = (clickElem) => {
@@ -215,12 +217,15 @@ window.addEventListener('DOMContentLoaded', () => {
         const addBtn = document.getElementById('addBtn');
         const closeBtn = document.querySelector('.createCloseBtn');
 
-        addBtn.addEventListener('click', () => {
-            defaultView.style.display = 'none';
-            editView.style.display = 'none';
-            createView.style.display = 'flex';
-            hoverStyleActive();
-        })
+        if(addBtn != null){
+            addBtn.addEventListener('click', () => {
+                defaultView.style.display = 'none';
+                editView.style.display = 'none';
+                createView.style.display = 'flex';
+                hoverStyleActive();
+            })
+        }
+
         closeBtn.addEventListener('click', () => {
             defaultView.style.display = 'flex';
             createView.style.display = 'none';

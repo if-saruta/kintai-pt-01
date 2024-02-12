@@ -89,6 +89,9 @@
                             width: 8rem;
                             border: 2px solid $cGreen;
                             border-radius: 1rem;
+                            cursor: pointer;
+                            color: $cGreen;
+                            transition: 0.5s;
                             &__inner{
                                 width: fit-content;
                                 margin: 0 auto;
@@ -98,15 +101,17 @@
                                 gap: 1.5rem;
                                 i{
                                     font-size: 1.5rem;
-                                    color: $cGreen;
                                 }
                                 p{
                                     font-size: 1.4rem;
                                     font-weight: $fw-bold;
                                     letter-spacing: 0.1rem;
-                                    color: $cGreen;
                                 }
                             }
+                        }
+                        .add-btn:hover{
+                            color: white;
+                            background-color: $cGreen;
                         }
                     }
                 }
@@ -122,6 +127,7 @@
                         padding: 1rem 0;
                         border: 2px solid $cGreen;
                         border-radius: 1rem;
+                        transition: 0.5s;
                         &__inner{
                             width: math.div(820,1280) * 100vw;
                             margin: 0 auto;

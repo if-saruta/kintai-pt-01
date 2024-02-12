@@ -187,7 +187,7 @@
                             <p class="company">
                                 {{$client->name}}
                             </p>
-                            <a class="edit-btn action-btn editBtn">
+                            <a href="{{route('project.edit',['id' => $client->id])}}" class="edit-btn action-btn">
                                 <div class="edit-btn__inner">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                     <p class="edit-btn-txt">編集</p>
@@ -206,7 +206,7 @@
                         <div class="info-wrap__register-list__head__row">
                             <p class="">Client Name</p>
                         </div>
-                        <a href="{{route('project.create')}}" class="add-btn" id="addBtn">
+                        <a href="{{route('project.create')}}" class="add-btn" >
                             <div class="add-btn__inner">
                                 <i class="fa-solid fa-circle-plus"></i>
                                 <p class="">追加</p>

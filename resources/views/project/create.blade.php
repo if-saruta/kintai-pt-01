@@ -7,7 +7,8 @@
 
     <main class="main">
         <div class="main__white-board --client-white-board">
-            <div class="client-main">
+            <form action="{{route('project.store')}}" method="POST" class="client-main">
+                @csrf
                 <div class="client-head-box">
                     <div class="client-head-box__inner">
                         <div class="client-name-area">
@@ -19,13 +20,13 @@
                             <button class="btn --save" type="submit" name="action" value="save">
                                 入力内容を登録
                             </button>
-                            <button class="btn --delete" type="submit" name="action" value="delete"
+                            {{-- <button class="btn --delete" type="submit" name="action" value="delete"
                                 onclick='return confirm("本当に削除しますか?")'>
                                 所属先を削除
-                            </button>
-                            <div class="btn --back closeBtn" onclick='return confirm("入力したデータは失われます。")'>
+                            </button> --}}
+                            <a href="{{route('project.')}}" class="btn --back closeBtn" onclick='return confirm("入力したデータは失われます。")'>
                                 戻る
-                            </div>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -48,7 +49,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="project-list__body" id="projectsContainer">
+                        <div class="project-list__body accordionContainer" id="projectsContainer">
                             {{-- 案件 --}}
                             <div class="list-item acc-wrap project-info-wrap">
                                 <div class="list-item__inner">
@@ -69,7 +70,7 @@
                                         <div class="charter-box">
                                             <label for="charter" class="input-head">チャーター案件</label>
                                             <div class="toggle">
-                                                <input type="checkbox" name="projects[0][is_charter]" value="1" id="charter" />
+                                                <input type="checkbox" name="projects[0][is_charter]" value="1" class="toggle-input" id="charter" />
                                             </div>
                                         </div>
                                         {{-- 給与形式 --}}
@@ -197,7 +198,7 @@
                                             </div>
                                         </div>
                                         {{-- ボタン --}}
-                                        <div class="btn-area --project-btn-area">
+                                        {{-- <div class="btn-area --project-btn-area">
                                             <button class="btn --delete" type="submit" name="action" value="delete"
                                                 onclick='return confirm("本当に削除しますか?")'>
                                                 案件を削除
@@ -205,14 +206,14 @@
                                             <div class="btn --back closeBtn" onclick='return confirm("入力したデータは失われます。")'>
                                                 閉じる
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </main>
 
@@ -244,7 +245,7 @@
                     <div class="charter-box">
                         <label for="charter" class="input-head">チャーター案件</label>
                         <div class="toggle">
-                            <input type="checkbox" name="projects[${newProjectIndex}][is_charter]" value="1" id="charter" />
+                            <input type="checkbox" name="projects[${newProjectIndex}][is_charter]" class="toggle-input" value="1" id="charter${newProjectIndex}" />
                         </div>
                     </div>
                     {{-- 給与形式 --}}
@@ -255,12 +256,12 @@
                         </div>
                         <div class="salary-type-box__input-area">
                             <div class="input-item flex-10">
-                                <input type="radio" name="projects[${newProjectIndex}][payment_type]" value="0" id="salary-type-1">
-                                <label for="salary-type-1" class="label-txt">歩合</label>
+                                <input type="radio" name="projects[${newProjectIndex}][payment_type]" value="0" id="salary-type-1${newProjectIndex}">
+                                <label for="salary-type-1${newProjectIndex}" class="label-txt">歩合</label>
                             </div>
                             <div class="input-item flex-10">
-                                <input type="radio" name="projects[${newProjectIndex}][payment_type]" value="1" id="salary-type-2">
-                                <label for="salary-type-2" class="label-txt">日給</label>
+                                <input type="radio" name="projects[${newProjectIndex}][payment_type]" value="1" id="salary-type-2${newProjectIndex}">
+                                <label for="salary-type-2${newProjectIndex}" class="label-txt">日給</label>
                             </div>
                         </div>
                     </div>
@@ -348,9 +349,6 @@
                             onclick='return confirm("本当に削除しますか?")'>
                             案件を削除
                         </button>
-                        <div class="btn --back closeBtn" onclick='return confirm("入力したデータは失われます。")'>
-                            閉じる
-                        </div>
                     </div>
                 </div>
             </div>
