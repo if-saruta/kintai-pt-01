@@ -358,6 +358,7 @@
                         .table-cell{
                             width: fit-content;
                             &__item{
+                                min-width: 10rem;
                                 position: relative;
                                 font-size: 1.3rem;
                                 font-weight: $fw-regular;
