@@ -17,10 +17,10 @@ return new class extends Migration
             $table->boolean('is_charter')->default(false);
             $table->string('name')->nullable();
             $table->string('payment_type')->nullable();  //0 歩合 1 日給
-            $table->decimal('retail_price', 10, 2)->nullable();
-            $table->decimal('driver_price', 10, 2)->nullable();
+            $table->unsignedInteger('retail_price')->nullable();
+            $table->unsignedInteger('driver_price')->nullable();
             $table->decimal('estimated_overtime_hours')->nullable();
-            $table->decimal('overtime_hourly_wage')->nullable();
+            $table->unsignedInteger('overtime_hourly_wage')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

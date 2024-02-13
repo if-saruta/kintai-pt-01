@@ -23,7 +23,7 @@
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
                     <button
                         class="{{ request()->routeIs('shift.employeeShowShift*') ? 'active' : '' }} link">
-                        <span class="">従業員閲覧用</span>
+                        <span class="">稼働表</span>
                     </button>
                 </form>
                 <form action="{{route('shift.employeePriceShift')}}" method="POST" class="main__link-block__item --shift-link-block__item">
@@ -32,7 +32,7 @@
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
                     <button
                         class="{{ request()->routeIs('shift.employeePriceShift*') ? 'active' : '' }} link">
-                        <span class="">従業員給与</span>
+                        <span class="">ドライバー価格</span>
                     </button>
                 </form>
                 <form action="{{route('shift.projectPriceShift')}}" method="POST" class="main__link-block__item --shift-link-block__item">
@@ -49,7 +49,7 @@
                     <input hidden name="witch" value="page05" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
                     <button
-                        class="{{ request()->routeIs('shift.projectCount*') ? 'active' : '' }} link">
+                        class="{{ request()->routeIs('shift.projectCount') ? 'active' : '' }} link">
                         <span class="">案件数用</span>
                     </button>
                 </form>

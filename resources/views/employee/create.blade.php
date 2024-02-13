@@ -126,7 +126,7 @@
                     <div class="select-area">
                         <div class="select-area__item">
                             <p class="">貸出形態</p>
-                            <select name="rental_type" id="" class="c-select" required>
+                            <select name="rental_type" id="observeSelect" class="c-select" required>
                                 <option value="0">自車</option>
                                 <option value="1">月リース</option>
                                 <option value="2">なんでも月リース</option>
@@ -134,12 +134,15 @@
                             </select>
                         </div>
                         <div class="select-area__item">
-                            <p class="">貸出形態</p>
-                            <select name="vehicle" id="" class="c-select">
-                                @foreach ($vehicles as $vehicle)
+                            <p class="">貸出車両</p>
+                            <div class="" id="controlSelect">
+                                <select name="vehicle" class="c-select">
+                                    <option value="">選択してください</option>
+                                    @foreach ($vehicles as $vehicle)
                                     <option value="{{$vehicle->id}}">{{$vehicle->number}}</option>
-                                @endforeach
-                            </select>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -153,7 +156,7 @@
                                 </div>
                                 <div class="list-item__input-area">
                                     <div class="salary">
-                                        <p class="">給与</p>
+                                        <p class="">ドライバー価格</p>
                                         @if ($project->payment_type == 1)
                                         <input type="text" name="employeePrice[{{$project->id}}]" class="c-input" placeholder="1,000">
                                         @else

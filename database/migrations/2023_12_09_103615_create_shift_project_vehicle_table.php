@@ -18,12 +18,12 @@ return new class extends Migration
             $table->string('unregistered_project')->nullable();//未登録案件名
             $table->unsignedBigInteger('vehicle_id')->nullable();//車両
             $table->string('unregistered_vehicle')->nullable();//未登録車両
-            $table->decimal('retail_price', 10, 2)->nullable();//上代
-            $table->decimal('driver_price', 10, 2)->nullable();//給与
-            $table->decimal('total_allowance', 10, 2)->nullable();//手当合計
-            $table->decimal('parking_fee', 10, 2)->nullable();//パーキング代
-            $table->decimal('expressway_fee', 10, 2)->nullable();//高速代
-            $table->decimal('overtime_fee', 10, 2)->nullable();//残業代
+            $table->unsignedInteger('retail_price')->nullable();//上代
+            $table->unsignedInteger('driver_price')->nullable();//給与
+            $table->unsignedInteger('total_allowance')->nullable();//手当合計
+            $table->unsignedInteger('parking_fee')->nullable();//パーキング代
+            $table->unsignedInteger('expressway_fee')->nullable();//高速代
+            $table->unsignedInteger('overtime_fee')->nullable();//残業代
             $table->string('vehicle_rental_type')->nullable();// 0 : 自車 1 : 月リース 2 : なんでも月リース 3 : 日割り
             $table->unsignedBigInteger('rental_vehicle_id')->nullable();//車両
             $table->timestamps();

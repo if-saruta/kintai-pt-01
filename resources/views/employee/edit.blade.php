@@ -129,7 +129,7 @@
                     <div class="select-area">
                         <div class="select-area__item">
                             <p class="">貸出形態</p>
-                            <select name="rental_type" id="" class="c-select" required>
+                            <select name="rental_type" id="observeSelect" class="c-select" required>
                                 <option value="0" {{ $employee->vehicle_rental_type == 0 ? 'selected' : '' }}>自車</option>
                                 <option value="1" {{ $employee->vehicle_rental_type == 1 ? 'selected' : '' }}>月リース</option>
                                 <option value="2" {{ $employee->vehicle_rental_type == 2 ? 'selected' : '' }}>なんでも月リース</option>
@@ -137,17 +137,19 @@
                             </select>
                         </div>
                         <div class="select-area__item">
-                            <p class="">貸出形態</p>
-                            <select name="vehicle" id="" class="c-select">
-                                <option value="">選択してください</option>
-                                @foreach ($vehicles as $vehicle)
-                                    @if ($vehicle->id == $employee->vehicle_id)
-                                        <option selected value="{{$vehicle->id}}">{{$vehicle->number}}</option>
-                                    @else
-                                        <option value="{{$vehicle->id}}">{{$vehicle->number}}</option>
-                                    @endif
-                                @endforeach
-                            </select>
+                            <p class="">貸出車両</p>
+                            <div class="" id="controlSelect">
+                                <select name="vehicle" class="c-select">
+                                    <option value="">選択してください</option>
+                                    @foreach ($vehicles as $vehicle)
+                                        @if ($vehicle->id == $employee->vehicle_id)
+                                            <option selected value="{{$vehicle->id}}">{{$vehicle->number}}</option>
+                                        @else
+                                            <option value="{{$vehicle->id}}">{{$vehicle->number}}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -161,7 +163,7 @@
                                 </div>
                                 <div class="list-item__input-area">
                                     <div class="salary">
-                                        <p class="">給与</p>
+                                        <p class="">ドライバー価格</p>
                                         @if ($project->payment_type == 1)
                                         @php
                                             $amount = 0;

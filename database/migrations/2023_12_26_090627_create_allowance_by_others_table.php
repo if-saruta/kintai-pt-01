@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('employee_id')->constrained();
             $table->string('allowanceName')->nullable();
-            $table->decimal('amount', 15, 2)->nullable();
+            $table->unsignedInteger('amount')->nullable();
             $table->timestamps();
         });
     }

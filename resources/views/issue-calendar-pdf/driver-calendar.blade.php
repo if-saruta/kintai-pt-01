@@ -121,7 +121,7 @@
             <th>手当</th>
             <th>高速代</th>
             <th>パーキング代</th>
-            <th>二代目</th>
+            <th>2台目</th>
         </tr>
     </thead>
     <tbody>
@@ -139,7 +139,7 @@
           @endphp
 
           @php
-            //   二代目・三代目の確認変数
+            //   2台目・三代目の確認変数
             $second_machine_check = true;
             // 稼働の確認
             $is_working = true;
@@ -192,7 +192,7 @@
                   <td class="expressway-fee"><p class="">{{number_format(ceil($spv->expressway_fee))}}</p></td>
                   <td class="parking-fee"><p class="">{{number_format(ceil($spv->parking_fee))}}</p></td>
                   <td class="vehicle">
-                    {{-- 契約形態別の二代目・三代目の確認 --}}
+                    {{-- 契約形態別の2台目・三代目の確認 --}}
                     <p class="">
                       {{-- 自車 --}}
                       @if ($rental_type == 0 && $spv->vehicle_id)
@@ -201,7 +201,7 @@
                             if($second_machine_check){
                               $second_machine_count++;
                               $second_machine_check = false;
-                            // 二代目の車両の種類を確認
+                            // 2台目の車両の種類を確認
                               if(!in_array($spv->vehicle->number, $secound_vehicle_array)){
                                 $secound_vehicle_array[] = $spv->vehicle->number;
                               }
@@ -265,7 +265,7 @@
             <th>手当</th>
             <th>高速代</th>
             <th>パーキング代</th>
-            <th>二代目</th>
+            <th>2台目</th>
         </tr>
     </thead>
     <tbody>
@@ -282,7 +282,7 @@
           @endphp
 
           @php
-            //   二代目・三代目の確認変数
+            //   2台目・三代目の確認変数
             $second_machine_check = true;
             // 稼働の確認
             $is_working = true;
@@ -335,7 +335,7 @@
                   <td class="expressway-fee"><p class="">{{number_format(ceil($spv->expressway_fee))}}</p></td>
                   <td class="parking-fee"><p class="">{{number_format(ceil($spv->parking_fee))}}</p></td>
                   <td class="vehicle">
-                    {{-- 契約形態別の二代目・三代目の確認 --}}
+                    {{-- 契約形態別の2台目・三代目の確認 --}}
                     <p class="">
                       {{-- 自車 --}}
                       @if ($rental_type == 0 && $spv->vehicle_id)
@@ -344,7 +344,7 @@
                             if($second_machine_check){
                               $second_machine_count++;
                               $second_machine_check = false;
-                            // 二代目の車両の種類を確認
+                            // 2台目の車両の種類を確認
                               if(!in_array($spv->vehicle->number, $secound_vehicle_array)){
                                 $secound_vehicle_array[] = $spv->vehicle->number;
                               }
@@ -398,7 +398,7 @@
   </table>
 </div>
 
-  {{-- 二代目・三代目の日割りの料金の設定 --}}
+  {{-- 2台目・三代目の日割りの料金の設定 --}}
   @php
     $secound_lease_fee = 0;
     $third_lease_fee = 1000;
@@ -454,7 +454,7 @@
       @if ($rental_type == 0 || $rental_type == 1)
         @if ($second_machine_count > 0)
           <tr>
-            <td>リース　二代目(日割り)</td>
+            <td>リース　2台目(日割り)</td>
             <td>{{number_format(ceil($second_machine_count * $secound_lease_fee))}}</td>
           </tr>
         @endif
@@ -476,7 +476,7 @@
 
       @if ($rental_type != 2 || $rental_type != 3)
         <tr>
-          <td>保険料　二代目(日割り)</td>
+          <td>保険料　2台目(日割り)</td>
           <td>{{number_format(ceil(($second_machine_count + $third_machine_count )* $secound_insurance_fee))}}</td>
         </tr>
       @endif
@@ -518,7 +518,7 @@
   <table class="vehicle-table other-table">
     <tbody>
       <tr>
-        <td>二代目車両</td>
+        <td>2台目車両</td>
       </tr>
       @foreach ($secound_vehicle_array as $number)
       <tr>
@@ -531,7 +531,7 @@
   <table class="vehicle-table other-table">
     <tbody>
       <tr>
-        <td>三代目車両</td>
+        <td>三台目車両</td>
       </tr>
       @foreach ($third_vehicle_array as $number)
       <tr>

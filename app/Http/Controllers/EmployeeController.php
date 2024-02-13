@@ -10,6 +10,7 @@ use App\Models\Company;
 use App\Models\Project;
 use App\Models\ProjectEmployeePayment;
 use App\Models\Vehicle;
+use App\Models\Shift;
 use App\Models\AllowanceByProject;
 use League\Csv\Reader;
 use League\Csv\Statement;
@@ -122,6 +123,19 @@ class EmployeeController extends Controller
             }
         }
 
+        // 登録済みのシフトの日付を取得
+        $unDate = Shift::query()
+                ->select('date')
+                ->groupBy('date')
+                ->get()
+                ->pluck('date');
+
+        foreach($unDate as $date){
+            Shift::create([
+                'date' => $date,
+                'employee_id' => $employee->id
+            ]);
+        }
 
         return redirect()->route('employee.');
     }

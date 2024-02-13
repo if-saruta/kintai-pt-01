@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('employee_id');
             $table->unsignedBigInteger('project_id');
-            $table->decimal('amount', 15, 2)->nullable();
+            $table->unsignedInteger('amount')->nullable();
             $table->timestamps();
 
             $table->foreign('employee_id')->references('id')->on('employees');

@@ -73,31 +73,31 @@
                                                 <input type="checkbox" name="projects[0][is_charter]" value="1" class="toggle-input" id="charter" />
                                             </div>
                                         </div>
-                                        {{-- 給与形式 --}}
+                                        {{-- ドライバー価格形式 --}}
                                         <div class="salary-type-box">
                                             <div class="head input-head">
-                                                <p class="">給与形態</p>
+                                                <p class="">ドライバー価格形態</p>
                                                 <p class="item-type">必須</p>
                                             </div>
                                             <div class="salary-type-box__input-area">
                                                 <div class="input-item flex-10">
-                                                    <input checked type="radio" name="projects[0][payment_type]" value="0" id="salary-type-1">
+                                                    <input type="radio" name="projects[0][payment_type]" value="0" id="salary-type-1">
                                                     <label for="salary-type-1" class="label-txt">歩合</label>
                                                 </div>
                                                 <div class="input-item flex-10">
-                                                    <input type="radio" name="projects[0][payment_type]" value="1" id="salary-type-2">
+                                                    <input checked type="radio" name="projects[0][payment_type]" value="1" id="salary-type-2">
                                                     <label for="salary-type-2" class="label-txt">日給</label>
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- 給与・上代 --}}
+                                        {{-- ドライバー価格・上代 --}}
                                         <div class="amount-box">
                                             <div class="amount-box__item">
                                                 <p class="input-head">上代</p>
                                                 <input type="text" name="projects[0][retail_price]" class="c-input" placeholder="1,000" required>
                                             </div>
                                             <div class="amount-box__item">
-                                                <p class="input-head">給与</p>
+                                                <p class="input-head">ドライバー価格</p>
                                                 <input type="text" name="projects[0][driver_price]" class="c-input" placeholder="1,000" required>
                                             </div>
                                         </div>
@@ -152,9 +152,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- 従業員別給与 --}}
+                                        {{-- 従業員別ドライバー価格 --}}
                                         <div class="employee-salary">
-                                            <p class="input-head">従業員別給与</p>
+                                            <p class="input-head">ドライバー別支払い</p>
                                             <div class="employee-salary__list">
                                                 <div class="employee-salary__list__tags-area">
                                                     <div class="tag open employeeTag01"><p class="">正社員</p></div>
@@ -248,31 +248,31 @@
                             <input type="checkbox" name="projects[${newProjectIndex}][is_charter]" class="toggle-input" value="1" id="charter${newProjectIndex}" />
                         </div>
                     </div>
-                    {{-- 給与形式 --}}
+                    {{-- ドライバー価格形式 --}}
                     <div class="salary-type-box">
                         <div class="head input-head">
-                            <p class="">給与形態</p>
+                            <p class="">ドライバー価格形態</p>
                             <p class="item-type">必須</p>
                         </div>
                         <div class="salary-type-box__input-area">
                             <div class="input-item flex-10">
-                                <input checked type="radio" name="projects[${newProjectIndex}][payment_type]" value="0" id="salary-type-1${newProjectIndex}">
+                                <input type="radio" name="projects[${newProjectIndex}][payment_type]" value="0" id="salary-type-1${newProjectIndex}">
                                 <label for="salary-type-1${newProjectIndex}" class="label-txt">歩合</label>
                             </div>
                             <div class="input-item flex-10">
-                                <input type="radio" name="projects[${newProjectIndex}][payment_type]" value="1" id="salary-type-2${newProjectIndex}">
+                                <input checked type="radio" name="projects[${newProjectIndex}][payment_type]" value="1" id="salary-type-2${newProjectIndex}">
                                 <label for="salary-type-2${newProjectIndex}" class="label-txt">日給</label>
                             </div>
                         </div>
                     </div>
-                    {{-- 給与・上代 --}}
+                    {{-- ドライバー価格・上代 --}}
                     <div class="amount-box">
                         <div class="amount-box__item">
                             <p class="input-head">上代</p>
                             <input type="text" name="projects[${newProjectIndex}][retail_price]" class="c-input" placeholder="1,000" required>
                         </div>
                         <div class="amount-box__item">
-                            <p class="input-head">給与</p>
+                            <p class="input-head">ドライバー価格</p>
                             <input type="text" name="projects[${newProjectIndex}][driver_price]" class="c-input" placeholder="1,000" required>
                         </div>
                     </div>
@@ -327,9 +327,9 @@
                             </div>
                         </div>
                     </div>
-                    {{-- 従業員別給与 --}}
+                    {{-- 従業員別ドライバー価格 --}}
                     <div class="employee-salary">
-                        <p class="input-head">従業員別給与</p>
+                        <p class="input-head">従業員別ドライバー価格</p>
                         <div class="employee-salary__list">
                             <div class="employee-salary__list__tags-area">
                                 <div class="tag open employeeTag01"><p class="">正社員</p></div>

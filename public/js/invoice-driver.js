@@ -151,62 +151,33 @@ window.addEventListener('load', () => {
         const amountCheck = document.getElementById('amountCheck');
         const expressCheck = document.getElementById('expresswayCheck');
         const parkingCheck = document.getElementById('parkingCheck');
+        const vehicleCheck = document.getElementById('vehicleCheck');
         const overtimeCheck = document.getElementById('overtimeCheck');
 
         const amountRow = document.querySelectorAll('.amountRow');
-        amountCheck.addEventListener('change', () => {
-            if(!amountCheck.checked){
-                for(let i = 0; i < amountRow.length; i++){
-                    amountRow[i].style.display = 'none';
-                }
-            }else{
-                console.log('te');
-                for(let i = 0; i < amountRow.length; i++){
-                    amountRow[i].style.display = 'flex';
-                }
-            }
-        })
+        const expressRow = document.querySelectorAll('.expresswayRow');
+        const parkingRow = document.querySelectorAll('.parkingRow');
+        const vehicleRow = document.querySelectorAll('.vehicleRow');
+        const overtimeRow = document.querySelectorAll('.overtimeRow');
 
-        const expressRow = document.querySelectorAll('.expresswayRow')
-        expressCheck.addEventListener('change', () => {
-            if(!expressCheck.checked){
-                console.log('te');
-                for(let i = 0; i < expressRow.length; i++){
-                    expressRow[i].style.display = 'none';
+        const activeRow = (check, row) => {
+            check.addEventListener('change', () => {
+                if(!check.checked){
+                    for(let i = 0; i < row.length; i++){
+                        row[i].style.display = 'none';
+                    }
+                }else{
+                    for(let i = 0; i < row.length; i++){
+                        row[i].style.display = 'flex';
+                    }
                 }
-            }else{
-                for(let i = 0; i < expressRow.length; i++){
-                    expressRow[i].style.display = 'flex';
-                }
-            }
-        })
-
-        const parkingRow = document.querySelectorAll('.parkingRow')
-        parkingCheck.addEventListener('change', () => {
-            if(!parkingCheck.checked){
-                for(let i = 0; i < parkingRow.length; i++){
-                    parkingRow[i].style.display = 'none';
-                }
-            }else{
-                for(let i = 0; i < parkingRow.length; i++){
-                    parkingRow[i].style.display = 'flex';
-                }
-            }
-        })
-
-        const overtimeRow = document.querySelectorAll('.overtimeRow')
-        overtimeCheck.addEventListener('change', () => {
-            if(!overtimeCheck.checked){
-                for(let i = 0; i < overtimeRow.length; i++){
-                    overtimeRow[i].style.display = 'none';
-                }
-            }else{
-                for(let i = 0; i < overtimeRow.length; i++){
-                    overtimeRow[i].style.display = 'flex';
-                }
-            }
-        })
-
+            })
+        }
+        activeRow(amountCheck, amountRow);
+        activeRow(expressCheck, expressRow);
+        activeRow(parkingCheck, parkingRow);
+        activeRow(vehicleCheck, vehicleRow);
+        activeRow(overtimeCheck, overtimeRow);
 
     }
     itemActiveCheck();
