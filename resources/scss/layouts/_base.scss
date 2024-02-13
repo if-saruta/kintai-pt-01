@@ -7,7 +7,10 @@ html {
 	font-size: 62.5%;
 	scroll-behavior: smooth;
 	overflow-y: auto;
-	font-family: 'Noto Sans JP', sans-serif;
+	// font-family: 'Noto Sans JP', sans-serif;
+    font-family: $ff-noto;
+    font-weight: $fw-bold;
+    letter-spacing: 0.1rem;
 	font-weight: 400;
 }
 body{
@@ -15,6 +18,14 @@ body{
 	height: 100%;
     background-color: $cBg!important;
 }
+body::-webkit-scrollbar{
+	display: none;
+}
+::placeholder{
+    color: $cGray;
+    opacity: 0.4;
+}
+
 .all-wrap{
     display: flex;
 }
@@ -59,12 +70,13 @@ body{
         }
     }
     &__white-board{
-        // position: relative;
-        // overflow: scroll;
         width: 100%;
         height: math.div(710,800) * 100vh;
         border-radius: 10px;
         background-color: white;
+    }
+    .--profile{
+        margin-top: 4rem;
     }
 
 }

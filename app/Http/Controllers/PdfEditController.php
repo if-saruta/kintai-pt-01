@@ -26,6 +26,9 @@ class PdfEditController extends Controller
         $total_overtime = $request->total_overtime;
         $employee = $request->employee;
 
+        $year = $request->year;
+        $month = $request->month;
+
         $employeeInfo = Employee::find($employee);
         $employeeName = $employeeInfo->name;
 
@@ -55,7 +58,7 @@ class PdfEditController extends Controller
 
         $etc = $total_expressway + $total_parking + $total_overtime;
 
-        return view('edit-pdf.driver-edit-pdf', compact( 'companies','administrative_commission_fee','total_lease','total_insurance','administrative_fee','transfer_fee','total_allowance','etc','total_salary','employeeInfo', 'banks','today'));
+        return view('edit-pdf.driver-edit-pdf', compact( 'companies','administrative_commission_fee','total_lease','total_insurance','administrative_fee','transfer_fee','total_allowance','etc','total_salary','employeeInfo', 'banks','today', 'year', 'month'));
     }
 
 

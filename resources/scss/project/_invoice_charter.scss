@@ -1,38 +1,73 @@
 @use "../foundation/variables.scss" as *;
 @use "../foundation/mixin.scss" as *;
 @use "sass:math";
-
+.--charter-board{
+    // height: auto;
+}
 .invoice{
+    height: 100%;
+    position: relative;
+    overflow-y: scroll;
     &__charter{
-        margin-left: 70px;
+        margin-left: 20px;
+        padding-top: 3rem;
         .select-area{
-            margin-top: 50px;
             display: flex;
-            flex-direction: column;
-            gap: 25px;
-            .invoice-date{
-                display: flex;
-                gap: 10px;
-            }
+            align-items: center;
             &__block{
                 display: flex;
-                align-items: center;
-                gap: 10px;
-                label{
-                    font-size: 14px;
-                }
+                gap: 1rem;
+                align-items: end;
                 select{
-                    width: 180px;
+                    padding-left: 0;
+                    text-align-last: center;
+                }
+                .year-select{
+                    width: 9rem;
+                }
+                .month-select{
+                    width: 6rem;
+                }
+                .name-select{
+                    width: 22rem;
                 }
             }
+            .month-block{
+                margin-left: 3rem;
+            }
+            .name-block{
+                margin-left: 5rem;
+            }
+            .search-btn{
+                width: 7.4rem;
+                margin-left: 5rem;
+                border-radius: 2px solid $cGreen;
+                p{
+                    white-space: nowrap;
+                    font-size: 1rem;
+                    font-weight: $fw-bold;
+                    letter-spacing: 0.1rem;
+                    color: $cGreen;
+                }
+            }
+            label{
+                font-size: 1.4rem;
+                font-weight: $fw-bold;
+                letter-spacing: 0.1rem;
+                color: $cBlack;
+            }
+        }
+        .calendar-pdf-button{
+            margin-top: 3rem;
         }
         .charter-calender-wrap{
             width: fit-content;
-            margin-top: 50px;
-            padding: 50px;
+            margin-top: 30px;
+            // padding: 50px;
             border-radius: 10px;
             background-color: white;
             &__charter-calender{
+                margin-top: 3rem;
                 .head{
                     width: fit-content;
                     display: flex;

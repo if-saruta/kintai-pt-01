@@ -13,7 +13,7 @@
                     <div class="client-head-box__inner">
                         <div class="client-name-area">
                             <p class="client-name-area__head-title">クライアント名</p>
-                            <input type="text" name="clientName" class="c-input client-name-input" placeholder="株式会社example">
+                            <input type="text" name="clientName" class="c-input client-name-input" placeholder="株式会社example" required>
                         </div>
                         {{-- ボタン --}}
                         <div class="btn-area">
@@ -34,7 +34,7 @@
                     {{-- クライアントPDF --}}
                     <div class="client-pdf-box">
                         <p class="client-pdf-box__txt">クライアント名（PDF使用時）</p>
-                        <input type="text" name="clientNameByPDF" class="c-input" placeholder="株式会社example">
+                        <input type="text" name="clientNameByPDF" class="c-input" placeholder="株式会社example" required>
                     </div>
                     {{-- 案件リスト --}}
                     <div class="project-list">
@@ -59,7 +59,7 @@
                                             {{-- 案件名 --}}
                                             <div class="project-input">
                                                 <p class="">案件名</p>
-                                                <input type="text" name="projects[0][name]" class="c-input" placeholder="example案件">
+                                                <input type="text" name="projects[0][name]" class="c-input" placeholder="example案件" required>
                                             </div>
                                             <i class="fa-solid fa-angle-up angle"></i>
                                         </div>
@@ -81,7 +81,7 @@
                                             </div>
                                             <div class="salary-type-box__input-area">
                                                 <div class="input-item flex-10">
-                                                    <input type="radio" name="projects[0][payment_type]" value="0" id="salary-type-1">
+                                                    <input checked type="radio" name="projects[0][payment_type]" value="0" id="salary-type-1">
                                                     <label for="salary-type-1" class="label-txt">歩合</label>
                                                 </div>
                                                 <div class="input-item flex-10">
@@ -94,11 +94,11 @@
                                         <div class="amount-box">
                                             <div class="amount-box__item">
                                                 <p class="input-head">上代</p>
-                                                <input type="text" name="projects[0][retail_price]" class="c-input" placeholder="1,000">
+                                                <input type="text" name="projects[0][retail_price]" class="c-input" placeholder="1,000" required>
                                             </div>
                                             <div class="amount-box__item">
                                                 <p class="input-head">給与</p>
-                                                <input type="text" name="projects[0][driver_price]" class="c-input" placeholder="1,000">
+                                                <input type="text" name="projects[0][driver_price]" class="c-input" placeholder="1,000" required>
                                             </div>
                                         </div>
                                         {{-- 休日 --}}
@@ -234,7 +234,7 @@
                         {{-- 案件名 --}}
                         <div class="project-input">
                             <p class="">案件名</p>
-                            <input type="text" name="projects[${newProjectIndex}][name]" class="c-input" placeholder="example案件">
+                            <input type="text" name="projects[${newProjectIndex}][name]" class="c-input" placeholder="example案件" required>
                         </div>
                         <i class="fa-solid fa-angle-up angle"></i>
                     </div>
@@ -256,7 +256,7 @@
                         </div>
                         <div class="salary-type-box__input-area">
                             <div class="input-item flex-10">
-                                <input type="radio" name="projects[${newProjectIndex}][payment_type]" value="0" id="salary-type-1${newProjectIndex}">
+                                <input checked type="radio" name="projects[${newProjectIndex}][payment_type]" value="0" id="salary-type-1${newProjectIndex}">
                                 <label for="salary-type-1${newProjectIndex}" class="label-txt">歩合</label>
                             </div>
                             <div class="input-item flex-10">
@@ -269,11 +269,11 @@
                     <div class="amount-box">
                         <div class="amount-box__item">
                             <p class="input-head">上代</p>
-                            <input type="text" name="projects[${newProjectIndex}][retail_price]" class="c-input" placeholder="1,000">
+                            <input type="text" name="projects[${newProjectIndex}][retail_price]" class="c-input" placeholder="1,000" required>
                         </div>
                         <div class="amount-box__item">
                             <p class="input-head">給与</p>
-                            <input type="text" name="projects[${newProjectIndex}][driver_price]" class="c-input" placeholder="1,000">
+                            <input type="text" name="projects[${newProjectIndex}][driver_price]" class="c-input" placeholder="1,000" required>
                         </div>
                     </div>
                     {{-- 休日 --}}

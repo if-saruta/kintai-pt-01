@@ -9,14 +9,12 @@
         <div class="main__link-block --info-link-block">
             <div class="main__link-block__tags">
                 <div class="main__link-block__item --info-link-block__item">
-                    <a href="{{route('company.')}}"
-                        class="{{ request()->routeIs('company*.') ? 'active' : '' }} link">
+                    <a href="{{route('company.')}}" class="{{ request()->routeIs('company*.') ? 'active' : '' }} link">
                         <span class="">所属先</span>
                     </a>
                 </div>
                 <div class="main__link-block__item --info-link-block__item">
-                    <a href="{{route('vehicle.')}}"
-                        class="{{ request()->routeIs('vehicle*.') ? 'active' : '' }} link">
+                    <a href="{{route('vehicle.')}}" class="{{ request()->routeIs('vehicle*.') ? 'active' : '' }} link">
                         <span class="">車両</span>
                     </a>
                 </div>
@@ -79,10 +77,11 @@
                         </div>
                     </div>
                     {{-- 編集画面 --}}
-                    <form action="{{route('company.update')}}" method="POST" class="info-wrap__register-item__inner --edit-inner" id="editView">
+                    <form action="{{route('company.update')}}" method="POST"
+                        class="info-wrap__register-item__inner --edit-inner" id="editView">
                         @csrf
                         <div class="scroll-y">
-                            <input hidden type="text" class="setValueElem" name="id">
+                            <input hidden type="text" class="setValueElem" name="id" required>
                             <div class="info-row info-row-edit">
                                 <p class="info-row__head info-row-edit__head">所属先名</p>
                                 <div class="info-row__data --top --top-edit">
@@ -92,13 +91,13 @@
                             <div class="info-row info-row-edit">
                                 <p class="info-row__head info-row-edit__head">登録番号</p>
                                 <div class="info-row__data info-row-edit__data">
-                                    <input type="text" class="c-input setValueElem" name="register_number">
+                                    <input type="text" class="c-input setValueElem" name="register_number" required>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
                                 <p class="info-row__head info-row-edit__head">電話番号</p>
                                 <div class="info-row__data info-row-edit__data">
-                                    <input type="text" class="c-input setValueElem" name="phone">
+                                    <input type="text" class="c-input setValueElem" name="phone" required>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
@@ -110,106 +109,109 @@
                             <div class="info-row info-row-edit">
                                 <p class="info-row__head info-row-edit__head">郵便番号</p>
                                 <div class="info-row__data info-row-edit__data">
-                                    <input type="text" class="c-input setValueElem" name="post_code">
+                                    <input type="text" class="c-input setValueElem" name="post_code" required>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
                                 <p class="info-row__head info-row-edit__head">住所</p>
                                 <div class="info-row__data info-row-edit__data">
-                                    <textarea id="" cols="30" rows="10" class="c-textarea setValueElem" name="address"></textarea>
+                                    <textarea id="" cols="30" rows="10" class="c-textarea setValueElem"
+                                        name="address" required></textarea>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
                                 <p class="info-row__head info-row-edit__head">銀行口座</p>
                                 <div class="info-row__data info-row-edit__data">
-                                    <input type="text" class="c-input setValueElem" name="bank_name">
+                                    <input type="text" class="c-input setValueElem" name="bank_name" required>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
                                 <p class="info-row__head info-row-edit__head">口座名義人</p>
                                 <div class="info-row__data info-row-edit__data">
-                                    <input type="text" class="c-input setValueElem" name="account_holder_name">
+                                    <input type="text" class="c-input setValueElem" name="account_holder_name" required>
+                                </div>
+                            </div>
+                            {{-- ボタン --}}
+                            <div class="btn-area">
+                                <button class="btn --save" type="submit" name="action" value="save">
+                                    入力内容を登録
+                                </button>
+                                <button class="btn --delete" type="submit" name="action" value="delete"
+                                    onclick='return confirm("本当に削除しますか?")'>
+                                    所属先を削除
+                                </button>
+                                <div class="btn --back closeBtn" onclick='return confirm("入力したデータは失われます。")'>
+                                    戻る
                                 </div>
                             </div>
                         </div>
 
-                        {{-- ボタン --}}
-                        <div class="btn-area">
-                            <button class="btn --save" type="submit" name="action" value="save">
-                                入力内容を登録
-                            </button>
-                            <button class="btn --delete" type="submit" name="action" value="delete" onclick='return confirm("本当に削除しますか?")'>
-                                所属先を削除
-                            </button>
-                            <div class="btn --back closeBtn" onclick='return confirm("入力したデータは失われます。")'>
-                                戻る
-                            </div>
-                        </div>
                     </form>
                     {{-- 新規作成画面 --}}
-                    <form action="{{route('company.store')}}" method="POST" class="info-wrap__register-item__inner --edit-inner" id="createView">
+                    <form action="{{route('company.store')}}" method="POST"
+                        class="info-wrap__register-item__inner --edit-inner" id="createView">
                         @csrf
                         <div class="scroll-y">
                             <input hidden type="text" class="setValueElem" name="id">
                             <div class="info-row info-row-edit">
                                 <p class="info-row__head info-row-edit__head">所属先名</p>
                                 <div class="info-row__data --top --top-edit">
-                                    <input type="text" class="c-input setValueElem" name="name">
+                                    <input type="text" class="c-input setValueElem" name="name" placeholder="株式会社⚪︎⚪︎⚪︎⚪︎" required>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
                                 <p class="info-row__head info-row-edit__head">登録番号</p>
                                 <div class="info-row__data info-row-edit__data">
-                                    <input type="text" class="c-input setValueElem" name="register_number">
+                                    <input type="text" class="c-input setValueElem" name="register_number" placeholder="T0000000" required>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
                                 <p class="info-row__head info-row-edit__head">電話番号</p>
                                 <div class="info-row__data info-row-edit__data">
-                                    <input type="text" class="c-input setValueElem" name="phone">
+                                    <input type="text" class="c-input setValueElem" name="phone" placeholder="000-0000-0000" required>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
                                 <p class="info-row__head info-row-edit__head">FAX</p>
                                 <div class="info-row__data info-row-edit__data">
-                                    <input type="text" class="c-input setValueElem" name="fax">
+                                    <input type="text" class="c-input setValueElem" name="fax" placeholder="000-0000-0000">
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
                                 <p class="info-row__head info-row-edit__head">郵便番号</p>
                                 <div class="info-row__data info-row-edit__data">
-                                    <input type="text" class="c-input setValueElem" name="post_code">
+                                    <input type="text" class="c-input setValueElem" name="post_code" placeholder="000-0000" required>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
                                 <p class="info-row__head info-row-edit__head">住所</p>
                                 <div class="info-row__data info-row-edit__data">
-                                    <textarea id="" cols="30" rows="10" class="c-textarea setValueElem" name="address"></textarea>
+                                    <textarea id="" cols="30" rows="10" class="c-textarea setValueElem" name="address" placeholder="東京都新宿区新宿 0-00-00" required></textarea>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
                                 <p class="info-row__head info-row-edit__head">銀行口座</p>
                                 <div class="info-row__data info-row-edit__data">
-                                    <input type="text" class="c-input setValueElem" name="bank_name">
+                                    <input type="text" class="c-input setValueElem" name="bank_name" placeholder="⚪︎⚪︎銀行⚪︎⚪︎支店(普) 0000000" required>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
                                 <p class="info-row__head info-row-edit__head">口座名義人</p>
                                 <div class="info-row__data info-row-edit__data">
-                                    <input type="text" class="c-input setValueElem" name="account_holder_name">
+                                    <input type="text" class="c-input setValueElem" name="account_holder_name" placeholder="山田　太郎" required>
+                                </div>
+                            </div>
+                            {{-- ボタン --}}
+                            <div class="btn-area">
+                                <button class="btn --save" type="submit" name="action" value="save">
+                                    入力内容を登録
+                                </button>
+                                <div class="btn --back createCloseBtn" onclick='return confirm("入力したデータは失われます。")'>
+                                    戻る
                                 </div>
                             </div>
                         </div>
 
-                        {{-- ボタン --}}
-                        <div class="btn-area">
-                            <button class="btn --save" type="submit" name="action" value="save">
-                                入力内容を登録
-                            </button>
-                            <div class="btn --back createCloseBtn" onclick='return confirm("入力したデータは失われます。")'>
-                                戻る
-                            </div>
-                        </div>
                     </form>
                 </div>
                 <div class="info-wrap__register-list">
@@ -264,4 +266,3 @@
 
 {{-- script --}}
 <script src="{{asset('js/info.js')}}"></script>
-

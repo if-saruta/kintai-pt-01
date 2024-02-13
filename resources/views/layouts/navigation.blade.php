@@ -4,7 +4,7 @@
         <div class="nav__top__link">
             <!-- Logo -->
             <div class="logo-block">
-                <a href="{{ route('dashboard') }}" class="logo-block__inner">
+                <a href="{{ route('shift.') }}" class="logo-block__inner">
                     <div class="logo-block__inner__img">
                         <img class="" src="{{ asset('img/logo.png') }}" alt="">
                     </div>
@@ -35,7 +35,7 @@
                     </div>
                     <span class="nav-item__txt">{{ __('ドライバー管理') }}</span>
                 </a>
-                <a href="{{ route('invoice.') }}" class="{{ request()->routeIs('invoice.*') ? 'active' : '' }} nav-item">
+                <a href="{{ route('invoice.driverShift') }}" class="{{ request()->routeIs('invoice.*') ? 'active' : '' }} nav-item">
                     <div class="icon-wrap">
                         <i class="fa-solid fa-file-invoice"></i>
                     </div>

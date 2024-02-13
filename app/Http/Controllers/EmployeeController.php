@@ -21,9 +21,13 @@ class EmployeeController extends Controller
     public function index()
     {
         $employees = Employee::all();
+        $employeesByCompany = $employees->groupBy(function ($employee){
+            return $employee->company->name;
+        });
+
         $companies = Company::all();
 
-        return view('employee.index', compact('employees'));
+        return view('employee.index', compact('employeesByCompany'));
     }
 
     public function create()
@@ -131,10 +135,10 @@ class EmployeeController extends Controller
         // 日給登録してある案件を取得
         $projectPayments = Project::where('payment_type', 1)->get();
         $projectEmployeePayments = ProjectEmployeePayment::where('employee_id', $id)->get();
-        $allowanceProjectAmounts = AllowanceByProject::where('employee_id', $id)->get();
-        $allowanceOtherAmounts = AllowanceByOther::where('employee_id', $id)->get();
+        $allowanceProjects = AllowanceByProject::where('employee_id', $id)->get();
+        $allowanceOthers = AllowanceByOther::where('employee_id', $id)->get();
 
-        return view('employee.edit', compact('employee','companies','projects','vehicles','projectPayments', 'projectEmployeePayments', 'allowanceProjectAmounts', 'allowanceOtherAmounts'));
+        return view('employee.edit', compact('employee','companies','projects','vehicles','projectPayments', 'projectEmployeePayments', 'allowanceProjects', 'allowanceOthers'));
     }
 
     public function update(Request $request, $id)

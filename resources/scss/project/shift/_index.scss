@@ -9,6 +9,7 @@
         // justify-content: space-between;
         &__item:nth-child(1){
             .link{
+                display: block;
                 border: 2px solid $cSkyBlue;
                 color: $cSkyBlue;
             }

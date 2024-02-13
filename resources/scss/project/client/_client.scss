@@ -7,6 +7,8 @@
     padding-top: 0.5rem;
     padding-bottom: 4.5rem;
     height: auto!important;
+    min-height: math.div(745,800) * 100vh!important;
+    box-sizing: border-box;
     .client-main{
         position: relative;
         width: math.div(990,1280) * 100vw;

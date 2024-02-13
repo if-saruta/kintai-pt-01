@@ -271,28 +271,25 @@
 
     &__driver-shift{
         position: relative;
-        margin-left: 80px;
-        .select-area{
-            margin-top: 50px;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            .invoice-date{
-                display: flex;
-                gap: 10px;
-            }
-            &__block{
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                label{
-                    font-size: 14px;
-                }
-                select{
-                    width: 180px;
-                }
-            }
-        }
+        margin-left: 20px;
+        // .select-area{
+        //     display: flex;
+        //     .invoice-date{
+        //         display: flex;
+        //         gap: 10px;
+        //     }
+        //     &__block{
+        //         display: flex;
+        //         align-items: center;
+        //         gap: 10px;
+        //         label{
+        //             font-size: 14px;
+        //         }
+        //         select{
+        //             width: 180px;
+        //         }
+        //     }
+        // }
         .PDF-dump{
             position: absolute;
             top: 200px;
@@ -344,9 +341,9 @@
 
     .driver-shift{
         width: fit-content;
-        padding: 50px;
+        // padding: 50px;
         border-radius: 10px;
-        margin-top: 50px;
+        margin-top: 150px;
         background-color: white;
         &__head{
             width: fit-content;
@@ -566,7 +563,7 @@
         position: relative;
         width: 100px;
         height: 30px;
-        border: 1px solid #4FD1C5;
+        border: 2px solid #4FD1C5;
         border-radius: 6px;
         background-color: white;
         font-size: 12px;

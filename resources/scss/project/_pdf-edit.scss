@@ -29,15 +29,29 @@
 }
 
 .common{
-    margin-top: 50px;
-    margin-left: 100px;
+    // margin-top: 50px;
+    margin-left: 20px;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    &__block{
-        width: fit-content;
+    .employee-date{
+        margin-top: 0;
+    }
+    &__select-area{
         display: flex;
-        align-items: center;
+        gap: 4rem;
+    }
+    &__block{
+        width: 20rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        label{
+            font-size: 1.2rem;
+            font-weight: $fw-bold;
+            letter-spacing: 0.1rem;
+            color: $cBlack;
+        }
         input{
             width: 200px;
         }
@@ -135,13 +149,17 @@
 }
 
 .pdf-issue-btn{
-    width: 200px;
-    height: 40px;
+    width: 150px;
+    height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid $cGreen;
+    border: 2px solid $cGreen;
     border-radius: 10px;
+    font-size: 1.4rem;
+    font-weight: $fw-bold;
+    letter-spacing: 0.1rem;
+    color: $cGreen;
     background-color: white;
 }
 
@@ -247,19 +265,20 @@
 }
 
 .pdf-wrap{
-    position: relative;
-    overflow-x: scroll;
-    width: 100vw;
+    // position: relative;
+    // overflow-x: scroll;
+    // width: 100vw;
     margin-top: 40px;
     &__inner{
         width: fit-content;
         display: flex;
         gap: 50px;
-        padding: 0px 100px;
+        margin-left: 2rem;
+        // padding: 0px 100px;
         padding-bottom: 100px;
     }
     .pdf{
-        width: 1000px;
+        // width: 1000px;
         margin: 0 auto;
         margin-top: 20px;
         padding: 30px 0px;
@@ -267,10 +286,12 @@
         flex-shrink: 0;
     }
     .--driver-issue{
+        padding: 5rem;
+        border: 1px solid $cGray;
         .pdf-main{
             position: relative;
             width: 718px;
-            margin: 0 auto
+            // margin: 0 auto
         }
         table{
             border-collapse:collapse;
@@ -420,6 +441,9 @@
     }
 
     .--company-issue{
+        padding: 5rem;
+        border: 1px solid $cGray;
+        margin-right: 5rem;
         .pdf-main{
             position: relative;
             width: 718px;
@@ -760,4 +784,11 @@
     .w-100{
         width: 100px;
     }
+}
+.domp-btn-wrap{
+    padding-top: 3rem;
+    padding-left: 3rem;
+}
+.domp-btn{
+    margin: 0;
 }

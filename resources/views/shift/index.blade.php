@@ -8,15 +8,19 @@
     <main class="main --shift-main">
         <div class="main__link-block --shift-link-block">
             <div class="main__link-block__tags">
-                <div class="main__link-block__item --shift-link-block__item">
-                    <a href="{{route('shift.')}}"
+                <form action="{{route('shift.')}}" method="POST" class="main__link-block__item --shift-link-block__item">
+                    @csrf
+                    <input hidden name="witch" value="page01" type="text">
+                    <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                    <button
                         class="{{ request()->routeIs('shift.', 'shift.selectWeek') ? 'active' : '' }} link">
                         <span class="">全表示</span>
-                    </a>
-                </div>
+                    </button>
+                </form>
                 <form action="{{route('shift.employeeShowShift')}}" method="POST" class="main__link-block__item --shift-link-block__item">
                     @csrf
                     <input hidden name="witch" value="page02" type="text">
+                    <input hidden type="text" name="date" value="{{$startOfWeek}}">
                     <button
                         class="{{ request()->routeIs('shift.employeeShowShift*') ? 'active' : '' }} link">
                         <span class="">従業員閲覧用</span>
@@ -25,6 +29,7 @@
                 <form action="{{route('shift.employeePriceShift')}}" method="POST" class="main__link-block__item --shift-link-block__item">
                     @csrf
                     <input hidden name="witch" value="page03" type="text">
+                    <input hidden type="text" name="date" value="{{$startOfWeek}}">
                     <button
                         class="{{ request()->routeIs('shift.employeePriceShift*') ? 'active' : '' }} link">
                         <span class="">従業員給与</span>
@@ -33,6 +38,7 @@
                 <form action="{{route('shift.projectPriceShift')}}" method="POST" class="main__link-block__item --shift-link-block__item">
                     @csrf
                     <input hidden name="witch" value="page04" type="text">
+                    <input hidden type="text" name="date" value="{{$startOfWeek}}">
                     <button
                         class="{{ request()->routeIs('shift.projectPriceShift*') ? 'active' : '' }} link">
                         <span class="">上代閲覧用</span>
@@ -41,6 +47,7 @@
                 <form action="{{route('shift.projectCount')}}" method="POST" class="main__link-block__item --shift-link-block__item">
                     @csrf
                     <input hidden name="witch" value="page05" type="text">
+                    <input hidden type="text" name="date" value="{{$startOfWeek}}">
                     <button
                         class="{{ request()->routeIs('shift.projectCount') ? 'active' : '' }} link">
                         <span class="">案件数用</span>
@@ -52,6 +59,7 @@
                 <form action="{{route('shift.edit')}}" method="POST" class="icon-block">
                     @csrf
                     <input hidden name="witch" value="page06" type="text">
+                    <input hidden type="text" name="date" value="{{$startOfWeek}}">
                     <button class="{{ request()->routeIs('shift.edit*') ? 'active' : '' }} icon-block__button">
                         <i class="fa-solid fa-pen-to-square"></i>
                     </button>

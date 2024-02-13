@@ -79,6 +79,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('shift')->name('shift.')->group(function () {
         Route::get('/', [ShiftController::class, 'index'])->name('');
+        Route::post('/', [ShiftController::class, 'selectWeek'])->name('');
         Route::get('/selectWeek', [ShiftController::class, 'selectWeek'])->name('selectWeek');
         Route::post('/selectWeek', [ShiftController::class, 'selectWeek'])->name('selectWeek');
         // Route::get('/create/{id}', [ShiftController::class, 'create'])->name('create');
