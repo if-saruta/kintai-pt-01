@@ -77,6 +77,13 @@ body::-webkit-scrollbar{
     }
     .--profile{
         margin-top: 4rem;
+        &__inner{
+            height: math.div(700,800) * 100vh;
+            padding: 1.5rem 0;
+            position: relative;
+            overflow-y: scroll;
+            box-sizing: border-box;
+        }
     }
 
 }
