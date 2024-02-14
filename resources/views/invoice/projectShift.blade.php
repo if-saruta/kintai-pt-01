@@ -247,19 +247,20 @@
                                         @endforeach
                                         @else
                                         @foreach ( $getCompanies as $getCompany )
-                                        <div
-                                            class="project-shift-calender__data__row__item --employee-wrap project{{$getCompany->id}}">
+                                        <div class="project-shift-calender__data__row__item --employee-wrap project{{$getCompany->id}}">
                                             @foreach ( $ShiftProjectVehicles as $spv )
-                                            @if ($spv->shift->date == $date->format('Y-m-d'))
-                                            @if ($spv->shift->employee->company->id == $getCompany->id)
-                                            <p>{{$spv->shift->employee->name}}</p>
-                                            @if (isset($part_count[$getCompany->name]))
-                                            <?php $part_count[$getCompany->name]++?>
-                                            @else
-                                            <?php $part_count[$getCompany->name] = 1?>
-                                            @endif
-                                            @endif
-                                            @endif
+                                                @if ($spv->shift->date == $date->format('Y-m-d'))
+                                                    @if ($spv->shift->employee)
+                                                        @if ($spv->shift->employee->company->id == $getCompany->id)
+                                                            <p>{{$spv->shift->employee->name}}</p>
+                                                            @if (isset($part_count[$getCompany->name]))
+                                                                <?php $part_count[$getCompany->name]++?>
+                                                            @else
+                                                                <?php $part_count[$getCompany->name] = 1?>
+                                                            @endif
+                                                        @endif
+                                                    @endif
+                                                @endif
                                             @endforeach
                                         </div>
                                         @endforeach
@@ -300,20 +301,20 @@
                                         <div
                                             class="project-shift-calender__data__row__item project{{$getCompany->id}} salaryClm">
                                             @foreach ( $ShiftProjectVehicles as $spv )
-                                            @if ($spv->shift->date == $date->format('Y-m-d'))
-                                            @if ($spv->shift->employee->company->id == $getCompany->id && $project->id
-                                            == $spv->project_id)
-                                            <input type="text" name="driver_price[{{$spv->id}}]"
-                                                value="{{$spv->driver_price}}">
-                                            <?php $is_salary_check = true; ?>
-                                            <?php $tmp_salary += $spv->driver_price?>
-                                            @if (isset($company_total_salary[$getCompany->id]))
-                                            <?php $company_total_salary[$getCompany->id] += $spv->driver_price?>
-                                            @else
-                                            <?php $company_total_salary[$getCompany->id] = $spv->driver_price?>
-                                            @endif
-                                            @endif
-                                            @endif
+                                                @if ($spv->shift->date == $date->format('Y-m-d'))
+                                                    @if ($spv->shift->employee)
+                                                        @if ($spv->shift->employee->company->id == $getCompany->id && $project->id == $spv->project_id)
+                                                            <input type="text" name="driver_price[{{$spv->id}}]" value="{{$spv->driver_price}}">
+                                                            <?php $is_salary_check = true; ?>
+                                                            <?php $tmp_salary += $spv->driver_price?>
+                                                            @if (isset($company_total_salary[$getCompany->id]))
+                                                                <?php $company_total_salary[$getCompany->id] += $spv->driver_price?>
+                                                            @else
+                                                                <?php $company_total_salary[$getCompany->id] = $spv->driver_price?>
+                                                            @endif
+                                                        @endif
+                                                    @endif
+                                                @endif
                                             @endforeach
                                             {{-- @if ($is_salary_check)
                                             <p>{{$tmp_salary}}</p>
@@ -324,13 +325,13 @@
                                         <div
                                             class="project-shift-calender__data__row__item --clm project{{$getCompany->id}} retailClm">
                                             @foreach ( $ShiftProjectVehicles as $spv )
-                                            @if ($spv->shift->date == $date->format('Y-m-d'))
-                                            @if ($spv->shift->employee->company->id == $getCompany->id && $project->id
-                                            == $spv->project_id)
-                                            <input type="text" name="retail_price[{{$spv->id}}]"
-                                                value="{{$spv->retail_price}}">
-                                            @endif
-                                            @endif
+                                                @if ($spv->shift->date == $date->format('Y-m-d'))
+                                                    @if ($spv->shift->employee)
+                                                        @if ($spv->shift->employee->company->id == $getCompany->id && $project->id == $spv->project_id)
+                                                            <input type="text" name="retail_price[{{$spv->id}}]" value="{{$spv->retail_price}}">
+                                                        @endif
+                                                    @endif
+                                                @endif
                                             @endforeach
                                         </div>
 
@@ -338,18 +339,19 @@
                                         <div
                                             class="project-shift-calender__data__row__item --clm project{{$getCompany->id}} expressClm">
                                             @foreach ( $ShiftProjectVehicles as $spv )
-                                            @if ($spv->shift->date == $date->format('Y-m-d'))
-                                            @if ($spv->shift->employee->company->id == $getCompany->id && $project->id
-                                            == $spv->project_id)
-                                            <input type="text" name="expressway_fee[{{$spv->id}}]"
-                                                value="{{$spv->expressway_fee}}">
-                                            @if (isset($company_total_expressway[$getCompany->id]))
-                                            <?php $company_total_expressway[$getCompany->id] += $spv->expressway_fee?>
-                                            @else
-                                            <?php $company_total_expressway[$getCompany->id] = $spv->expressway_fee?>
-                                            @endif
-                                            @endif
-                                            @endif
+                                                @if ($spv->shift->date == $date->format('Y-m-d'))
+                                                    @if ($spv->shift->employee)
+                                                        @if ($spv->shift->employee->company->id == $getCompany->id && $project->id == $spv->project_id)
+                                                            <input type="text" name="expressway_fee[{{$spv->id}}]"
+                                                                value="{{$spv->expressway_fee}}">
+                                                            @if (isset($company_total_expressway[$getCompany->id]))
+                                                                <?php $company_total_expressway[$getCompany->id] += $spv->expressway_fee?>
+                                                            @else
+                                                                <?php $company_total_expressway[$getCompany->id] = $spv->expressway_fee?>
+                                                            @endif
+                                                        @endif
+                                                    @endif
+                                                @endif
                                             @endforeach
                                         </div>
 
