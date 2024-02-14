@@ -108,6 +108,11 @@
                 }
             }
         }
+        .scroll-x-shift-calendar{
+            position: relative;
+            overflow-x: scroll;
+            width: math.div(960,1280) * 100vw;
+        }
         .project-shift-calender {
             width: fit-content;
             position: relative;

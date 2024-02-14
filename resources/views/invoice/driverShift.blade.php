@@ -77,13 +77,13 @@
                         </div>
                     </form>
                     @if ($shifts !== null && !$shifts->isEmpty())
-                    <script>
+                    {{-- <script>
                         window.onbeforeunload = function(e) {
                             e.preventDefault();
                             return '';
                         };
 
-                    </script>
+                    </script> --}}
                     {{-- 手当モーダル --}}
                     <div class="allowance-modal-wrap" id="allowance-modal">
                         <span class="allowance-modal-wrap__bg allowanceModalBg"></span>

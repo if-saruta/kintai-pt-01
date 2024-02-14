@@ -87,13 +87,13 @@
                     ?>
 
                     @if ($ShiftProjectVehicles !== null && !$ShiftProjectVehicles->isEmpty())
-                    <script>
+                    {{-- <script>
                         window.onbeforeunload = function(e) {
                             e.preventDefault();
                             return '';
                         };
 
-                    </script>
+                    </script> --}}
                     <div class="project-shfit-wrap x-scroll --x-scroll-project-shift">
                         {{-- クライアント・案件情報 --}}
                         {{-- <div class="project-info-table">
@@ -136,7 +136,8 @@
                                 <p class="">保存</p>
                             </button>
 
-                            {{-- カレンダー --}}
+                            <div class="scroll-x-shift-calendar">
+                                                            {{-- カレンダー --}}
                             <div class="project-shift-calender">
                                 {{-- ヘッド --}}
                                 <div class="project-shift-calender__head">
@@ -436,6 +437,7 @@
                                         <p class="">{{$total_retail}}円</p>
                                     </div>
                                 </div>
+                            </div>
                             </div>
                         </form>
 
