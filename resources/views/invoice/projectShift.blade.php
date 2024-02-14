@@ -475,30 +475,30 @@
                             <div class="view-clm ab-invoice-check-elem">
                                 @foreach ($getCompanies as $getCompany)
                                 <div class="view-clm__item">
-                                    <label for="">{{$getCompany->name}}</label>
                                     <input type="checkbox" name="company_check[]" value="project{{$getCompany->id}}"
-                                        class="viewClmCheck" checked>
+                                    class="viewClmCheck" checked>
+                                    <label for="">{{$getCompany->name}}</label>
                                 </div>
                                 @endforeach
                                 <div class="view-clm__item">
-                                    <label for="">上代</label>
                                     <input type="checkbox" name="retail_check" value="retailClm" class="viewClmCheck"
-                                        checked>
+                                    checked>
+                                    <label for="">上代</label>
                                 </div>
                                 <div class="view-clm__item">
-                                    <label for="">ドライバー</label>
                                     <input type="checkbox" name="slary_check" value="salaryClm" class="viewClmCheck"
-                                        checked>
+                                    checked>
+                                    <label for="">ドライバー</label>
                                 </div>
                                 <div class="view-clm__item">
-                                    <label for="">高速代</label>
                                     <input type="checkbox" name="expressway_check" value="expressClm"
-                                        class="viewClmCheck" checked>
+                                    class="viewClmCheck" checked>
+                                    <label for="">高速代</label>
                                 </div>
                                 <div class="view-clm__item">
-                                    <label for="">パーキング代</label>
                                     <input type="checkbox" name="parking_check" value="parkingClm" class="viewClmCheck"
-                                        checked>
+                                    checked>
+                                    <label for="">パーキング代</label>
                                 </div>
                             </div>
                         </form>

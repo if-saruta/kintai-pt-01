@@ -165,7 +165,12 @@
                                                 <input type="text" name="parking_fee[{{$spv->id}}]" value="{{ ceil($spv->parking_fee) }}" class="input charter-input">
                                             </div>
                                             <div class="data__row__clm --common">
+                                                @if ($spv->shift->employee)
                                                 <input type="text" value="{{ $spv->shift->employee->name }}" class="input charter-input" readonly>
+                                                @else
+                                                <input type="text" value="{{ $spv->shift->unregistered_employee }}" class="input charter-input" readonly>
+                                                @endif
+
                                             </div>
                                             <div class="data__row__clm --common">
                                                 <input type="text" name="driver_price[{{$spv->id}}]" value="{{ ceil($spv->driver_price) }}" class="input charter-input">

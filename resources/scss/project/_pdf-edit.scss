@@ -60,7 +60,39 @@
         }
     }
 }
+.btn{
+    height: 4.5rem;
+    border-radius: 1rem;
+    font-size: 1.2rem;
+    font-weight: $fw-bold;
+    letter-spacing: 0.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.5s;
+}
+.--back{
+    width: 6rem;
+    border: 2px solid $cGray02;
+    color: $cGray02;
+    cursor: pointer;
+}
+.--back:hover{
+    color: white;
+    background-color: $cGray02;
+}
+.--pdf-back{
+    position: absolute;
+    top: 3rem;
+    left: 20rem;
+}
+.--pdf-back-driver{
+    position: absolute;
+    top: 3rem;
+    right: 50rem;
+}
 .--project-pdf-edit-board{
+    position: relative;
     height: auto!important;
 }
 .--common-data{

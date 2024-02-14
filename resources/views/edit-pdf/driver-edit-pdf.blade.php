@@ -48,6 +48,9 @@
                         <p class="">{{$employeeInfo->name}}</p>
                     </div>
                 </div>
+                <a href="{{route('invoice.driverShift')}}" class="btn --back --pdf-back-driver" onclick='return confirm("入力したデータは失われます。")'>
+                    戻る
+                </a>
                 <div class="common__select-area">
                     <div class="common__block">
                         <label for="">請求書番号 DD : </label>
