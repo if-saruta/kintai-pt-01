@@ -90,6 +90,21 @@
                         height: math.div(800,800) * 100vh;
                     }
                     .info-row{
+                        .flex-10{
+                            display: flex;
+                            align-items: center;
+                            gap: 0.8rem;
+                            .required{
+                                white-space: nowrap;
+                                padding: 0.25rem 0.9rem;
+                                font-size: 1rem;
+                                font-weight: $fw-bold;
+                                letter-spacing: 0.1rem;
+                                color: white;
+                                border-radius: 0.5rem;
+                                background-color: $cGreen;
+                            }
+                        }
                         &__head{
                             font-size: 1.2rem;
                             font-weight: $fw-bold;

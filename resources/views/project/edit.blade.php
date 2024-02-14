@@ -5,6 +5,14 @@
         </h2>
     </x-slot>
 
+    <script>
+        window.onbeforeunload = function(e) {
+            e.preventDefault();
+            return '';
+        };
+
+    </script>
+
     <main class="main">
         <div class="main__white-board --client-white-board">
             <form action="{{route('project.update',['id' => $client->id])}}" method="POST" class="client-main">
@@ -106,7 +114,7 @@
                                         <div class="holiday-box">
                                             <div class="head input-head">
                                                 <p class="">休日</p>
-                                                <p class="item-type any">任意</p>
+                                                {{-- <p class="item-type any">任意</p> --}}
                                             </div>
                                             <div class="holiday-box__check-area">
                                                 <div class="input-item flex-10">

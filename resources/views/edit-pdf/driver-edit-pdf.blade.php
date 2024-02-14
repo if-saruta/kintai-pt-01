@@ -5,6 +5,14 @@
         </h2>
     </x-slot>
 
+    <script>
+        window.onbeforeunload = function(e) {
+            e.preventDefault();
+            return '';
+        };
+
+    </script>
+
     <main class="main --shift-main">
         <div class="main__link-block --shift-link-block">
             <div class="main__link-block__tags">

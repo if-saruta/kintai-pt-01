@@ -83,50 +83,74 @@
                         <div class="scroll-y">
                             <input hidden type="text" class="setValueElem" name="id" required>
                             <div class="info-row info-row-edit">
-                                <p class="info-row__head info-row-edit__head">所属先名</p>
+                                <div class="flex-10">
+                                    <p class="info-row__head info-row-edit__head">所属先名</p>
+                                    <p class="required">必須</p>
+                                </div>
                                 <div class="info-row__data --top --top-edit">
                                     <input type="text" class="c-input setValueElem" name="name">
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
-                                <p class="info-row__head info-row-edit__head">登録番号</p>
+                                <div class="flex-10">
+                                    <p class="info-row__head info-row-edit__head">登録番号</p>
+                                    <p class="required">必須</p>
+                                </div>
                                 <div class="info-row__data info-row-edit__data">
                                     <input type="text" class="c-input setValueElem" name="register_number" required>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
-                                <p class="info-row__head info-row-edit__head">電話番号</p>
+                                <div class="flex-10">
+                                    <p class="info-row__head info-row-edit__head">電話番号</p>
+                                    <p class="required">必須</p>
+                                </div>
                                 <div class="info-row__data info-row-edit__data">
                                     <input type="text" class="c-input setValueElem" name="phone" required>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
-                                <p class="info-row__head info-row-edit__head">FAX</p>
+                                <div class="flex-10">
+                                    <p class="info-row__head info-row-edit__head">FAX</p>
+                                    <p class="required">必須</p>
+                                </div>
                                 <div class="info-row__data info-row-edit__data">
                                     <input type="text" class="c-input setValueElem" name="fax">
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
-                                <p class="info-row__head info-row-edit__head">郵便番号</p>
+                                <div class="flex-10">
+                                    <p class="info-row__head info-row-edit__head">郵便番号</p>
+                                    <p class="required">必須</p>
+                                </div>
                                 <div class="info-row__data info-row-edit__data">
                                     <input type="text" class="c-input setValueElem" name="post_code" required>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
-                                <p class="info-row__head info-row-edit__head">住所</p>
+                                <div class="flex-10">
+                                    <p class="info-row__head info-row-edit__head">住所</p>
+                                    <p class="required">必須</p>
+                                </div>
                                 <div class="info-row__data info-row-edit__data">
                                     <textarea id="" cols="30" rows="10" class="c-textarea setValueElem"
                                         name="address" required></textarea>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
-                                <p class="info-row__head info-row-edit__head">銀行口座</p>
+                                <div class="flex-10">
+                                    <p class="info-row__head info-row-edit__head">銀行口座</p>
+                                    <p class="required">必須</p>
+                                </div>
                                 <div class="info-row__data info-row-edit__data">
                                     <input type="text" class="c-input setValueElem" name="bank_name" required>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
-                                <p class="info-row__head info-row-edit__head">口座名義人</p>
+                                <div class="flex-10">
+                                    <p class="info-row__head info-row-edit__head">口座名義人</p>
+                                    <p class="required">必須</p>
+                                </div>
                                 <div class="info-row__data info-row-edit__data">
                                     <input type="text" class="c-input setValueElem" name="account_holder_name" required>
                                 </div>
@@ -154,49 +178,73 @@
                         <div class="scroll-y">
                             <input hidden type="text" class="setValueElem" name="id">
                             <div class="info-row info-row-edit">
-                                <p class="info-row__head info-row-edit__head">所属先名</p>
+                                <div class="flex-10">
+                                    <p class="info-row__head info-row-edit__head">所属先名</p>
+                                    <p class="required">必須</p>
+                                </div>
                                 <div class="info-row__data --top --top-edit">
                                     <input type="text" class="c-input setValueElem" name="name" placeholder="株式会社⚪︎⚪︎⚪︎⚪︎" required>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
-                                <p class="info-row__head info-row-edit__head">登録番号</p>
+                                <div class="flex-10">
+                                    <p class="info-row__head info-row-edit__head">登録番号</p>
+                                    <p class="required">必須</p>
+                                </div>
                                 <div class="info-row__data info-row-edit__data">
                                     <input type="text" class="c-input setValueElem" name="register_number" placeholder="T0000000" required>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
-                                <p class="info-row__head info-row-edit__head">電話番号</p>
+                                <div class="flex-10">
+                                    <p class="info-row__head info-row-edit__head">電話番号</p>
+                                    <p class="required">必須</p>
+                                </div>
                                 <div class="info-row__data info-row-edit__data">
                                     <input type="text" class="c-input setValueElem" name="phone" placeholder="000-0000-0000" required>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
-                                <p class="info-row__head info-row-edit__head">FAX</p>
+                                <div class="flex-10">
+                                    <p class="info-row__head info-row-edit__head">FAX</p>
+                                    <p class="required">必須</p>
+                                </div>
                                 <div class="info-row__data info-row-edit__data">
                                     <input type="text" class="c-input setValueElem" name="fax" placeholder="000-0000-0000">
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
-                                <p class="info-row__head info-row-edit__head">郵便番号</p>
+                                <div class="flex-10">
+                                    <p class="info-row__head info-row-edit__head">郵便番号</p>
+                                    <p class="required">必須</p>
+                                </div>
                                 <div class="info-row__data info-row-edit__data">
                                     <input type="text" class="c-input setValueElem" name="post_code" placeholder="000-0000" required>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
-                                <p class="info-row__head info-row-edit__head">住所</p>
+                                <div class="flex-10">
+                                    <p class="info-row__head info-row-edit__head">住所</p>
+                                    <p class="required">必須</p>
+                                </div>
                                 <div class="info-row__data info-row-edit__data">
                                     <textarea id="" cols="30" rows="10" class="c-textarea setValueElem" name="address" placeholder="東京都新宿区新宿 0-00-00" required></textarea>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
-                                <p class="info-row__head info-row-edit__head">銀行口座</p>
+                                <div class="flex-10">
+                                    <p class="info-row__head info-row-edit__head">銀行口座</p>
+                                    <p class="required">必須</p>
+                                </div>
                                 <div class="info-row__data info-row-edit__data">
                                     <input type="text" class="c-input setValueElem" name="bank_name" placeholder="⚪︎⚪︎銀行⚪︎⚪︎支店(普) 0000000" required>
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
-                                <p class="info-row__head info-row-edit__head">口座名義人</p>
+                                <div class="flex-10">
+                                    <p class="info-row__head info-row-edit__head">口座名義人</p>
+                                    <p class="required">必須</p>
+                                </div>
                                 <div class="info-row__data info-row-edit__data">
                                     <input type="text" class="c-input setValueElem" name="account_holder_name" placeholder="山田　太郎" required>
                                 </div>

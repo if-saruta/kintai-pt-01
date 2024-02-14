@@ -5,6 +5,14 @@
         </h2>
     </x-slot>
 
+    <script>
+        window.onbeforeunload = function(e) {
+            e.preventDefault();
+            return '';
+        };
+
+    </script>
+
     <main class="main">
         <form action="{{ route('employee.update',['id'=>$employee->id])}}" method="POST" class="main__white-board --employee-white-board">
             @csrf

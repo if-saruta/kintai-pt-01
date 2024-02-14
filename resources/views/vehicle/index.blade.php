@@ -45,13 +45,19 @@
                         @csrf
                         <input hidden type="text" class="setValueElem" name="id">
                         <div class="info-row info-row-edit">
-                            <p class="info-row__head info-row-edit__head">ナンバー</p>
+                            <div class="flex-10">
+                                <p class="info-row__head info-row-edit__head">ナンバー</p>
+                                <p class="required">必須</p>
+                            </div>
                             <div class="info-row__data --top --top-edit">
                                 <input type="text" class="c-input setValueElem" name="number" required>
                             </div>
                         </div>
                         <div class="info-row info-row-edit">
-                            <p class="info-row__head info-row-edit__head">所属先</p>
+                            <div class="flex-10">
+                                <p class="info-row__head info-row-edit__head">所属先</p>
+                                <p class="required">必須</p>
+                            </div>
                             <div class="info-row__data info-row-edit__data">
                                 {{-- <input type="text" class="c-input setValueElem" name="company"> --}}
                                 <select name="company" class="c-select" id="setSelectValueElem" required>
@@ -81,13 +87,19 @@
                         @csrf
                         <input hidden type="text" class="setValueElem" name="id">
                         <div class="info-row info-row-edit">
-                            <p class="info-row__head info-row-edit__head">ナンバー</p>
+                            <div class="flex-10">
+                                <p class="info-row__head info-row-edit__head">ナンバー</p>
+                                <p class="required">必須</p>
+                            </div>
                             <div class="info-row__data --top --top-edit">
                                 <input type="text" class="c-input setValueElem" name="number" placeholder="No.000" required>
                             </div>
                         </div>
                         <div class="info-row info-row-edit">
-                            <p class="info-row__head info-row-edit__head">所属先</p>
+                            <div class="flex-10">
+                                <p class="info-row__head info-row-edit__head">所属先</p>
+                                <p class="required">必須</p>
+                            </div>
                             <div class="info-row__data info-row-edit__data">
                                 <select name="company" class="c-select" required>
                                     <option value="">選択してください</option>

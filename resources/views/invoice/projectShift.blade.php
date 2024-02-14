@@ -87,6 +87,13 @@
                     ?>
 
                     @if ($ShiftProjectVehicles !== null && !$ShiftProjectVehicles->isEmpty())
+                    <script>
+                        window.onbeforeunload = function(e) {
+                            e.preventDefault();
+                            return '';
+                        };
+
+                    </script>
                     <div class="project-shfit-wrap x-scroll --x-scroll-project-shift">
                         {{-- クライアント・案件情報 --}}
                         {{-- <div class="project-info-table">

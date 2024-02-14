@@ -153,8 +153,10 @@ window.addEventListener('load', () => {
         const parkingCheck = document.getElementById('parkingCheck');
         const vehicleCheck = document.getElementById('vehicleCheck');
         const overtimeCheck = document.getElementById('overtimeCheck');
+        const allowanceCheck = document.getElementById('allowanceCheck');
 
         const amountRow = document.querySelectorAll('.amountRow');
+        const allowanceRow = document.querySelectorAll('.allowanceRow')
         const expressRow = document.querySelectorAll('.expresswayRow');
         const parkingRow = document.querySelectorAll('.parkingRow');
         const vehicleRow = document.querySelectorAll('.vehicleRow');
@@ -174,6 +176,7 @@ window.addEventListener('load', () => {
             })
         }
         activeRow(amountCheck, amountRow);
+        activeRow(allowanceCheck, allowanceRow)
         activeRow(expressCheck, expressRow);
         activeRow(parkingCheck, parkingRow);
         activeRow(vehicleCheck, vehicleRow);
