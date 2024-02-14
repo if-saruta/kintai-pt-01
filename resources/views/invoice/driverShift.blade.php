@@ -224,7 +224,7 @@
                                         $total_overtime = 0; //合計残業代
                                         $projectCount = []; //合計案件数
                                         $total_working_days = 0; //稼働日数
-                                        //   2台目・三代目の確認変数
+                                        //   2台目・3台目の確認変数
                                         $second_machine_check = true;
                                         $second_vehicle_use = []; //2台目に使用した車両
                                         $secound_vehicle_array = [];
@@ -732,7 +732,7 @@
                                             </div>
                                             <div class="vehicle-use">
                                                 <div class="vehicle-use__head text-center">
-                                                    <p class="">三代目車両</p>
+                                                    <p class="">3台目車両</p>
                                                 </div>
                                                 @foreach ($third_vehicle_array as $number)
                                                     <div class="vehicle-use__row text-center">
@@ -752,7 +752,7 @@
                                             $month_lease_fee = 30992;//月額リース料
                                             $second_lease = 1000;//2台目リース料　リース契約時
                                             $second_lease_myCar = 1500;//2台目リース料　自車契約時
-                                            $three_lease = 1000;//三代目リース料
+                                            $three_lease = 1000;//3台目リース料
                                             $lease_insurance = 9818;//月額リース保険料
                                             $month_lease_insurance = 410;//2台目以降保険料
                                             $daily_lease_rate = 1364;//日割りリース料
@@ -826,7 +826,7 @@
                                             @endif
                                             @if ($third_machine_count > 0)
                                                 <div class="total-amount-table__row">
-                                                    <div class="total-amount-table__row__item"><p class="">リース　三代目(日割り)</p></div>
+                                                    <div class="total-amount-table__row__item"><p class="">リース　3台目(日割り)</p></div>
                                                     <div class="total-amount-table__row__item --amount"><p class="">{{$three_lease * $third_machine_count}}</p></div>
                                                 </div>
                                                 @php

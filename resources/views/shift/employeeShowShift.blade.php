@@ -206,16 +206,21 @@
                                                 @foreach ( $shift->projectsVehicles as $spv )
                                                     @if ($spv->time_of_day == 0)
                                                     <div class="table-cell__item">
-                                                        <p class="table-cell__item__row">
-                                                            @if ($spv->project)
-                                                            {{$spv->project->name}}
-                                                            @endif
-                                                        </p>
-                                                        <p class="table-cell__item__row">
-                                                            @if ($spv->vehicle)
-                                                                No.{{$spv->vehicle->number}}
-                                                            @endif
-                                                        </p>
+                                                        @if ($spv->project)
+                                                        <p class="table-cell__item__row">{{$spv->project->name}}</p>
+                                                        @elseif($spv->unregistered_project)
+                                                        <p class="table-cell__item__row" style="color: red;">{{$spv->unregistered_project}}</p>
+                                                        @else
+                                                        <p class="table-cell__item__row"></p>
+                                                        @endif
+                                                        {{-- 車両 --}}
+                                                        @if ($spv->vehicle)
+                                                        <p class="table-cell__item__row">{{$spv->vehicle->number}}</p>
+                                                        @elseif($spv->unregistered_vehicle)
+                                                        <p class="table-cell__item__row" style="color: red;">{{$spv->unregistered_vehicle}}</p>
+                                                        @else
+                                                        <p class="table-cell__item__row"></p>
+                                                        @endif
                                                     </div>
                                                     @php $am_check_count++; @endphp
                                                     @endif
@@ -233,16 +238,21 @@
                                                 @foreach ( $shift->projectsVehicles as $spv )
                                                     @if ($spv->time_of_day == 1)
                                                     <div class="table-cell__item">
-                                                        <p class="table-cell__item__row">
-                                                            @if ($spv->project)
-                                                            {{$spv->project->name}}
-                                                            @endif
-                                                        </p>
-                                                        <p class="table-cell__item__row">
-                                                            @if ($spv->vehicle)
-                                                                No.{{$spv->vehicle->number}}
-                                                            @endif
-                                                        </p>
+                                                        @if ($spv->project)
+                                                        <p class="table-cell__item__row">{{$spv->project->name}}</p>
+                                                        @elseif($spv->unregistered_project)
+                                                        <p class="table-cell__item__row" style="color: red;">{{$spv->unregistered_project}}</p>
+                                                        @else
+                                                        <p class="table-cell__item__row"></p>
+                                                        @endif
+                                                        {{-- 車両 --}}
+                                                        @if ($spv->vehicle)
+                                                        <p class="table-cell__item__row">{{$spv->vehicle->number}}</p>
+                                                        @elseif($spv->unregistered_vehicle)
+                                                        <p class="table-cell__item__row" style="color: red;">{{$spv->unregistered_vehicle}}</p>
+                                                        @else
+                                                        <p class="table-cell__item__row"></p>
+                                                        @endif
                                                     </div>
                                                     @php $pm_check_count++; @endphp
                                                     @endif
