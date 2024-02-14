@@ -359,18 +359,20 @@
                                         <div
                                             class="project-shift-calender__data__row__item --clm project{{$getCompany->id}} parkingClm">
                                             @foreach ( $ShiftProjectVehicles as $spv )
-                                            @if ($spv->shift->date == $date->format('Y-m-d'))
-                                            @if ($spv->shift->employee->company->id == $getCompany->id && $project->id
-                                            == $spv->project_id)
-                                            <input type="text" name="parking_fee[{{$spv->id}}]"
-                                                value="{{$spv->parking_fee}}">
-                                            @if (isset($company_total_parking[$getCompany->id]))
-                                            <?php $company_total_parking[$getCompany->id] += $spv->parking_fee?>
-                                            @else
-                                            <?php $company_total_parking[$getCompany->id] = $spv->parking_fee?>
-                                            @endif
-                                            @endif
-                                            @endif
+                                                @if ($spv->shift->date == $date->format('Y-m-d'))
+                                                    @if ($spv->shift->employee)
+                                                        @if ($spv->shift->employee->company->id == $getCompany->id && $project->id
+                                                            == $spv->project_id)
+                                                            <input type="text" name="parking_fee[{{$spv->id}}]"
+                                                                value="{{$spv->parking_fee}}">
+                                                            @if (isset($company_total_parking[$getCompany->id]))
+                                                            <?php $company_total_parking[$getCompany->id] += $spv->parking_fee?>
+                                                            @else
+                                                            <?php $company_total_parking[$getCompany->id] = $spv->parking_fee?>
+                                                            @endif
+                                                        @endif
+                                                    @endif
+                                                @endif
                                             @endforeach
                                         </div>
                                         @endforeach
