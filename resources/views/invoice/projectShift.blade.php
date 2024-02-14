@@ -224,20 +224,22 @@
                                             <div
                                                 class="project-shift-calender__data__row__item__company project{{$getCompany->id}}">
                                                 @foreach ( $ShiftProjectVehicles as $spv )
-                                                @if ( $spv->shift->date == $date->format('Y-m-d') )
-                                                @if ( $spv->project->id == $project->id )
-                                                @if ( $spv->shift->employee->company_id == $getCompany->id )
-                                                <div class="">
-                                                    <p>{{$spv->shift->employee->name}}</p>
-                                                </div>
-                                                @if ( isset($part_count[$project->name]) )
-                                                <?php $part_count[$project->name]++?>
-                                                @else
-                                                <?php $part_count[$project->name] = 1?>
-                                                @endif
-                                                @endif
-                                                @endif
-                                                @endif
+                                                    @if ( $spv->shift->date == $date->format('Y-m-d') )
+                                                        @if ( $spv->project->id == $project->id )
+                                                            @if ($spv->shift->employee)
+                                                                @if ( $spv->shift->employee->company_id == $getCompany->id )
+                                                                    <div class="">
+                                                                        <p>{{$spv->shift->employee->name}}</p>
+                                                                    </div>
+                                                                    @if ( isset($part_count[$project->name]) )
+                                                                        <?php $part_count[$project->name]++?>
+                                                                    @else
+                                                                        <?php $part_count[$project->name] = 1?>
+                                                                    @endif
+                                                                @endif
+                                                            @endif
+                                                        @endif
+                                                    @endif
                                                 @endforeach
                                             </div>
                                             @endforeach

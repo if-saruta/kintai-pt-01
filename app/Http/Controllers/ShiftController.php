@@ -111,6 +111,8 @@ class ShiftController extends Controller
 
         $page = $request->input('witch') ?? session('page');
 
+        // dd($shiftDataByEmployee);
+
         if ($page) {
             if ($page == 'page01') {
                 return view('shift.index', compact('shiftDataByEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
