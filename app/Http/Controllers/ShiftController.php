@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use Svg\Tag\Rect;
 use Symfony\Component\VarDumper\VarDumper;
 use Illuminate\Support\Facades\Storage;
+use League\Csv\CharsetConverter;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -262,7 +263,10 @@ class ShiftController extends Controller
         $path = $request->file('csv_file')->getRealPath();
 
         // CSVファイルを読み込む
-        $csv = Reader::createFromPath($path, 'r');
+        // $csv = Reader::createFromPath($path, 'r');
+        $reader = Reader::createFromPath($path, 'r');
+        $encoder = (new CharsetConverter())->inputEncoding('SJIS-win');
+        $csv = $encoder->convert($reader);
 
         $records = [];
         foreach ($csv as $record) {
