@@ -30,13 +30,6 @@
                 </div>
             </div>
             <div class="employee-input-main">
-                <div class="register-number">
-                    <div class="head">
-                        <p class="input-head">登録番号</p>
-                        <p class="required">必須</p>
-                    </div>
-                    <input type="text" name="register_number" value="{{$employee->register_number}}" class="c-input" placeholder="T00000000" required>
-                </div>
                 <div class="company">
                     <div class="head">
                         <p class="input-head">所属先</p>
@@ -120,6 +113,13 @@
                             <label for="">未登録</label>
                         </div>
                     </div>
+                </div>
+                <div class="register-number">
+                    <div class="head">
+                        <p class="input-head">登録番号</p>
+                        <p class="required">必須</p>
+                    </div>
+                    <input type="text" name="register_number" value="{{$employee->register_number}}" class="c-input" placeholder="T00000000" required>
                 </div>
                 <div class="rental">
                     <div class="head">

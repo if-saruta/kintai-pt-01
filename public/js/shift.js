@@ -253,27 +253,29 @@ window.addEventListener('DOMContentLoaded', () => {
 
         const btn = document.querySelector('.import-btn');
 
-        input.addEventListener('change', function() {
-            var fileName = ''; // ファイル名を格納する変数
-            if (this.files && this.files.length > 0) {
-              // inputタグを通じて選択された最初のファイルの名前を取得
-              fileName = this.files[0].name;
-              var extension = fileName.split('.').pop().toLowerCase(); // ファイル名から拡張子を取得
+        if(input != null){
+            input.addEventListener('change', function() {
+                var fileName = ''; // ファイル名を格納する変数
+                if (this.files && this.files.length > 0) {
+                  // inputタグを通じて選択された最初のファイルの名前を取得
+                  fileName = this.files[0].name;
+                  var extension = fileName.split('.').pop().toLowerCase(); // ファイル名から拡張子を取得
 
-                // 拡張子をチェック（ここではPDFファイルのみを許可）
-                if (extension !== 'csv') {
-                    warningCsv();
-                    btn.disabled = true;
-                }else{
-                    clearCsv();
-                    btn.disabled = false;
+                    // 拡張子をチェック（ここではPDFファイルのみを許可）
+                    if (extension !== 'csv') {
+                        warningCsv();
+                        btn.disabled = true;
+                    }else{
+                        clearCsv();
+                        btn.disabled = false;
+                    }
                 }
-            }
-            // ファイル名をどこかに表示する（例えば、idがfileNameのdiv要素内）
-            setFileName.textContent = fileName;
+                // ファイル名をどこかに表示する（例えば、idがfileNameのdiv要素内）
+                setFileName.textContent = fileName;
 
 
-          });
+            });
+        }
 
           const warningCsv = () => {
             fileUpBox.style.backgroundColor = 'white';
@@ -315,4 +317,21 @@ window.addEventListener('DOMContentLoaded', () => {
 
     }
     csvActive();
+
+    const setHeight = () => {
+        const setElem = document.querySelectorAll('.setHightElem');
+
+        let max = 0;
+        for(let i = 0; i < setElem.length; i++){
+            let hight = setElem[i].clientHeight;
+            if(max < hight){
+                max = hight;
+            }
+        }
+
+        for(let i = 0; i < setElem.length; i++){
+            setElem[i].style.height = `${max}px`;
+        }
+    }
+    setHeight();
 })

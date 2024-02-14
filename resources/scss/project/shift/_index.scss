@@ -356,13 +356,13 @@
                             }
                         }
                         .table-cell{
-                            width: fit-content;
                             &__item{
-                                min-width: 10rem;
+                                width: 15rem;
                                 position: relative;
                                 font-size: 1.3rem;
                                 font-weight: $fw-regular;
                                 letter-spacing: 0.1rem;
+                                line-height: math.div(19,13);
                                 cursor: pointer;
                                 &__row{
                                     min-height: 2.5rem;
@@ -371,7 +371,7 @@
                                     align-items: center;
                                     justify-content: center;
                                     flex-shrink: 0;
-                                    white-space: nowrap;
+                                    // white-space: wrap;
                                     border-bottom: 1px dashed $cGray;
                                 }
                                 &__row:last-child{

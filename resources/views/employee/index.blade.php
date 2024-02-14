@@ -10,7 +10,6 @@
             <div class="employee-list-wrap">
                 <div class="sand-head --top">
                     <div class="sand-head__inner">
-                        <p class="w-number txt">Number</p>
                         <p class="w-name txt">Name</p>
                         <p class="w-status txt">Employment status</p>
                         <p class="w-Affiliation txt">Affiliation</p>
@@ -22,7 +21,6 @@
                             <div class="list-body__company-row"><p class="">{{$company}}</p></div>
                             @foreach ($employees as $employee)
                                 <div class="list-body__employee-row">
-                                    <p class="w-number txt">{{$employee->register_number}}</p>
                                     <p class="w-name txt">{{$employee->name}}</p>
                                     <p class="w-status txt">{{$employee->employment_status}}</p>
                                     <p class="w-Affiliation txt">{{$employee->company->name}}</p>
@@ -39,7 +37,6 @@
                 </div>
                 <div class="sand-head --under">
                     <div class="sand-head__inner">
-                        <p class="w-number txt">Number</p>
                         <p class="w-name txt">Name</p>
                         <p class="w-status txt">Employment status</p>
                         <p class="w-Affiliation txt">Affiliation</p>

@@ -182,13 +182,11 @@
                                 @if ($is_employee_open)
                                 <td class="table-employee-name">
                                     <div class="table-employee-name__block">
-                                        <p class="">
-                                            @if ($shift->employee)
-                                            {{$shift->employee->name}}
-                                            @else
-                                            {{$shift->unregistered_employee}}
-                                            @endif
-                                        </p>
+                                        @if ($shift->employee)
+                                            <p class="">{{$shift->employee->name}}</p>
+                                        @else
+                                            <p class="" style="color: red;">{{$shift->unregistered_employee}}</p>
+                                        @endif
                                     </div>
                                 </td>
                                 @php
@@ -253,20 +251,21 @@
                                             <input hidden type="text" value="" name="">
 
                                             {{-- データ表示 --}}
-                                            <p class="table-cell__item__row">
-                                                @if ($spv->project)
-                                                {{$spv->project->name}}
-                                                @else
-                                                {{$spv->unregistered_project}}
-                                                @endif
-                                            </p>
-                                            <p class="table-cell__item__row">
-                                                @if ($spv->vehicle)
-                                                No.{{$spv->vehicle->number}}
-                                                @else
-                                                No.{{$spv->unregistered_vehicle}}
-                                                @endif
-                                            </p>
+                                            @if ($spv->project)
+                                            <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                            @elseif($spv->unregistered_project)
+                                            <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
+                                            @else
+                                            <p class="table-cell__item__row setHightElem"></p>
+                                            @endif
+                                            {{-- 車両 --}}
+                                            @if ($spv->vehicle)
+                                            <p class="table-cell__item__row">{{$spv->vehicle->number}}</p>
+                                            @elseif($spv->unregistered_vehicle)
+                                            <p class="table-cell__item__row" style="color: red;">{{$spv->unregistered_vehicle}}</p>
+                                            @else
+                                            <p class="table-cell__item__row"></p>
+                                            @endif
                                             <p class="table-cell__item__row">
                                                 @if ($spv->retail_price)
                                                 {{$spv->retail_price}}
@@ -309,7 +308,7 @@
                                             $is_check = false;
                                             @endphp
                                             @endif
-                                            <p class="table-cell__item__row --empty-item__row"></p>
+                                            <p class="table-cell__item__row --empty-item__row setHightElem"></p>
                                             <p class="table-cell__item__row --empty-item__row"></p>
                                             <p class="table-cell__item__row --empty-item__row"></p>
                                             <p class="table-cell__item__row --empty-item__row"></p>
@@ -345,20 +344,21 @@
                         <input hidden type="text" value="" name="">
 
                         {{-- データ表示 --}}
-                        <p class="table-cell__item__row">
-                            @if ($spv->project)
-                            {{$spv->project->name}}
-                            @else
-                            {{$spv->unregistered_project}}
-                            @endif
-                        </p>
-                        <p class="table-cell__item__row">
-                            @if ($spv->vehicle)
-                            No.{{$spv->vehicle->number}}
-                            @else
-                            No.{{$spv->unregistered_vehicle}}
-                            @endif
-                        </p>
+                        @if ($spv->project)
+                        <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                        @elseif($spv->unregistered_project)
+                        <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
+                        @else
+                        <p class="table-cell__item__row setHightElem"></p>
+                        @endif
+                        {{-- 車両 --}}
+                        @if ($spv->vehicle)
+                        <p class="table-cell__item__row">{{$spv->vehicle->number}}</p>
+                        @elseif($spv->unregistered_vehicle)
+                        <p class="table-cell__item__row" style="color: red;">{{$spv->unregistered_vehicle}}</p>
+                        @else
+                        <p class="table-cell__item__row"></p>
+                        @endif
                         <p class="table-cell__item__row">
                             @if ($spv->retail_price)
                             {{$spv->retail_price}}
@@ -398,7 +398,7 @@
                         $is_check = false;
                         @endphp
                         @endif
-                        <p class="table-cell__item__row --empty-item__row"></p>
+                        <p class="table-cell__item__row --empty-item__row setHightElem"></p>
                         <p class="table-cell__item__row --empty-item__row"></p>
                         <p class="table-cell__item__row --empty-item__row"></p>
                         <p class="table-cell__item__row --empty-item__row"></p>

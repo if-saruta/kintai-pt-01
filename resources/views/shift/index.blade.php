@@ -167,13 +167,11 @@
                                             @if ($is_employee_open)
                                                 <td class="table-employee-name">
                                                     <div class="table-employee-name__block">
-                                                        <p class="">
-                                                            @if ($shift->employee)
-                                                                {{$shift->employee->name}}
-                                                            @else
-                                                                {{$shift->unregistered_employee}}
-                                                            @endif
-                                                        </p>
+                                                        @if ($shift->employee)
+                                                            <p class="">{{$shift->employee->name}}</p>
+                                                        @else
+                                                            <p class="" style="color: red;">{{$shift->unregistered_employee}}</p>
+                                                        @endif
                                                     </div>
                                                 </td>
                                                 @php
@@ -207,11 +205,11 @@
                                                     @if ($spv->time_of_day == 0)
                                                     <div class="table-cell__item">
                                                         @if ($spv->project)
-                                                        <p class="table-cell__item__row">{{$spv->project->name}}</p>
+                                                        <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
                                                         @elseif($spv->unregistered_project)
-                                                        <p class="table-cell__item__row" style="color: red;">{{$spv->unregistered_project}}</p>
+                                                        <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
                                                         @else
-                                                        <p class="table-cell__item__row"></p>
+                                                        <p class="table-cell__item__row setHightElem"></p>
                                                         @endif
                                                         {{-- 車両 --}}
                                                         @if ($spv->vehicle)
@@ -238,7 +236,7 @@
 
                                                 @for ($i = $am_check_count; $i < $max_count; $i++)
                                                     <div class="table-cell__item">
-                                                        <p class="table-cell__item__row"></p>
+                                                        <p class="table-cell__item__row setHightElem"></p>
                                                         <p class="table-cell__item__row"></p>
                                                         <p class="table-cell__item__row"></p>
                                                         <p class="table-cell__item__row"></p>
@@ -251,11 +249,11 @@
                                                     @if ($spv->time_of_day == 1)
                                                     <div class="table-cell__item">
                                                         @if ($spv->project)
-                                                        <p class="table-cell__item__row">{{$spv->project->name}}</p>
+                                                        <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
                                                         @elseif($spv->unregistered_project)
-                                                        <p class="table-cell__item__row" style="color: red;">{{$spv->unregistered_project}}</p>
+                                                        <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
                                                         @else
-                                                        <p class="table-cell__item__row"></p>
+                                                        <p class="table-cell__item__row setHightElem"></p>
                                                         @endif
                                                         {{-- 車両 --}}
                                                         @if ($spv->vehicle)
@@ -282,7 +280,7 @@
 
                                                 @for ($i = $pm_check_count; $i < $max_count; $i++)
                                                 <div class="table-cell__item">
-                                                    <p class="table-cell__item__row"></p>
+                                                    <p class="table-cell__item__row setHightElem"></p>
                                                     <p class="table-cell__item__row"></p>
                                                     <p class="table-cell__item__row"></p>
                                                     <p class="table-cell__item__row"></p>
@@ -307,3 +305,6 @@
 
 
 </x-app-layout>
+
+{{-- script --}}
+<script src="{{asset('js/shift.js')}}"></script>
