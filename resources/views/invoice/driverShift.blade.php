@@ -643,7 +643,7 @@
                                                                             <div class="driver-shift__calender-shift__day__info__row__data --common parkingRow">
 
                                                                             </div>
-                                                                            <div class="driver-shift__calender-shift__day__info__row__data --commonvehicleRow">
+                                                                            <div class="driver-shift__calender-shift__day__info__row__data --common vehicleRow">
 
                                                                             </div>
                                                                             {{-- 残業代 --}}
