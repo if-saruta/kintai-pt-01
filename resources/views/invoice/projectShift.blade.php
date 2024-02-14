@@ -299,7 +299,7 @@
                                                         ?>
                                         {{-- 給与 --}}
                                         <div
-                                            class="project-shift-calender__data__row__item project{{$getCompany->id}} salaryClm">
+                                            class="project-shift-calender__data__row__item --salary-item project{{$getCompany->id}} salaryClm">
                                             @foreach ( $ShiftProjectVehicles as $spv )
                                                 @if ($spv->shift->date == $date->format('Y-m-d'))
                                                     @if ($spv->shift->employee)
