@@ -7,7 +7,7 @@ use App\Models\Company;
 use App\Models\Employee;
 use App\Models\ShiftProjectVehicle;
 use App\Models\BankAccount;
-
+use App\Models\Client;
 use Illuminate\Http\Request;
 
 class PdfEditController extends Controller
@@ -77,6 +77,8 @@ class PdfEditController extends Controller
         $clientId = $request->client;
         $getYear = $request->year;
         $getMonth = $request->month;
+
+        $client = Client::find($clientId);
 
         // チェックされいなければ0と判定
         $company_check = $request->input('company_check', 0);

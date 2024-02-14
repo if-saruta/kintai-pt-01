@@ -31,7 +31,7 @@
                 </a>
             </div>
         </div>
-        <div class="main__white-board">
+        <div class="main__white-board --project-pdf-edit-board">
             <form action="{{route('invoice.project-issue-pdf')}}" method="POST">
                 @csrf
                 <div class="domp-btn-wrap">
@@ -49,7 +49,7 @@
                             <p class="">請求書</p>
                         </div>
                         <div class="driver">
-                            <p class="driver__name"><input type="text" name="name" class="input">様</p>
+                            <p class="driver__name"><input type="text" name="name" value="{{$projectClientNameByPdf}}" class="input">様</p>
                             <p class="f-s-13 driver__subject">
     <textarea name="subject" id="" cols="30" rows="10">
     件名：{{ $today->format('m') }}月度の差引金額について
