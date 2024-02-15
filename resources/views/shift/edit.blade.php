@@ -5,13 +5,13 @@
         </h2>
     </x-slot>
 
-    <script>
+    {{-- <script>
         window.onbeforeunload = function(e) {
             e.preventDefault();
             return '';
         };
 
-    </script>
+    </script> --}}
 
     <main class="main --shift-main">
         <div class="main__link-block --shift-link-block">
@@ -176,6 +176,27 @@
                             // 1日ごとの最大案件数
                             $max_count = 1;
                             @endphp
+                            {{-- 最大案件数の計算 --}}
+                            @php
+                                foreach ($shiftData as $shift) {
+                                    $am_count = 0;
+                                    $pm_count = 0;
+                                    foreach ($shift->projectsVehicles as $spv) {
+                                        $count = 0;
+                                        if($spv->time_of_day == 0){
+                                            $am_count++;
+                                        }
+                                        if($spv->time_of_day == 1){
+                                            $pm_count++;
+                                        }
+                                    }
+                                    if($max_count < $am_count){
+                                        $max_count = $am_count;
+                                    }elseif ($max_count < $pm_count) {
+                                        $max_count = $pm_count;
+                                    }
+                                }
+                            @endphp
                             <tr class="shift-calendar-table__body__row">
                                 @foreach ( $shiftData as $shift ) {{-- $shift == 1日のシフト --}}
                                 {{-- 一周目だけ従業員表示 --}}
@@ -194,26 +215,17 @@
                                 @endphp
                                 @endif
                                 @php
-                                // {{-- 最大案件数の計算 --}}
-                                $am_count = 0;
-                                $pm_count = 0;
-                                foreach ($shift->projectsVehicles as $spv) {
-                                $count = 0;
-                                if($spv->time_of_day == 0){
-                                $am_count++;
-                                }
-                                if($spv->time_of_day == 1){
-                                $pm_count++;
-                                }
-                                }
-                                if($max_count < $am_count){ $max_count=$am_count; }elseif ($max_count < $pm_count) {
-                                    $max_count=$pm_count; } $am_check_count=0; $pm_check_count=0; foreach
-                                    ($convertedDates as $date) { if($shift->date == $date->format('Y-m-d')){
-                                    $findYear = $date->format('Y');
-                                    $findMonth = $date->format('m');
-                                    $findDate = $date->format('d');
+
+                                $am_check_count = 0;
+                                $pm_check_count = 0;
+
+                                foreach ($convertedDates as $date) {
+                                    if ($shift->date == $date->format('Y-m-d')) {
+                                        $findYear = $date->format('Y');
+                                        $findMonth = $date->format('m');
+                                        $findDate = $date->format('d');
                                     }
-                                    }
+                                }
                                     @endphp
                                     {{-- 午前 --}}
                                     <td class="table-cell">

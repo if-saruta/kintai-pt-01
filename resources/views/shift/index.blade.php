@@ -161,7 +161,7 @@
                                 // 1日ごとの最大案件数
                                 $max_count = 1;
                                 @endphp
-                                    {{-- 最大案件数の計算 --}}
+                                {{-- 最大案件数の計算 --}}
                                 @php
                                     foreach ($shiftData as $shift) {
                                         $am_count = 0;
@@ -181,8 +181,6 @@
                                             $max_count = $pm_count;
                                         }
                                     }
-                                    // $am_check_count = 0;
-                                    // $pm_check_count = 0;
                                 @endphp
                                     <tr class="shift-calendar-table__body__row">
                                         @foreach ( $shiftData as $shift )  {{-- $shift == 1日のシフト --}}
@@ -203,22 +201,6 @@
                                             @endif
                                             {{-- 最大案件数の計算 --}}
                                             @php
-                                                // $am_count = 0;
-                                                // $pm_count = 0;
-                                                // foreach ($shift->projectsVehicles as $spv) {
-                                                //     $count = 0;
-                                                //     if($spv->time_of_day == 0){
-                                                //         $am_count++;
-                                                //     }
-                                                //     if($spv->time_of_day == 1){
-                                                //         $pm_count++;
-                                                //     }
-                                                // }
-                                                // if($max_count < $am_count){
-                                                //     $max_count = $am_count;
-                                                // }elseif ($max_count < $pm_count) {
-                                                //     $max_count = $pm_count;
-                                                // }
                                                 $am_check_count = 0;
                                                 $pm_check_count = 0;
                                             @endphp
