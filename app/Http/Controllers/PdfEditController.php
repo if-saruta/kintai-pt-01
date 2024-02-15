@@ -112,34 +112,36 @@ class PdfEditController extends Controller
         $projectData = [];
         foreach ($ShiftProjectVehicles as $spv) {
             foreach($companyIds as $id){
-                if($spv->shift->employee->company->id == $id){
-                    $projectName = $spv->project->name; // プロジェクト名
-                    $date = Carbon::parse($spv->shift->date); // シフトの日付
-                    $retailPrice = $spv->retail_price; // 上代単価
+                if($spv->shift->employee){
+                    if($spv->shift->employee->company->id == $id){
+                        $projectName = $spv->project->name; // プロジェクト名
+                        $date = Carbon::parse($spv->shift->date); // シフトの日付
+                        $retailPrice = $spv->retail_price; // 上代単価
 
-                    if (!isset($projectData[$projectName])) {
-                        $projectData[$projectName] = [
-                            'dates' => '',
-                            'count' => 0,
-                            'unit_price' => ceil($retailPrice),
-                            'total_price' => 0
-                        ];
+                        if (!isset($projectData[$projectName])) {
+                            $projectData[$projectName] = [
+                                'dates' => '',
+                                'count' => 0,
+                                'unit_price' => ceil($retailPrice),
+                                'total_price' => 0
+                            ];
+                        }
+
+                        // 日付を文字列として追加
+                        $formattedDate = $date->format('j'); // 日付のみ
+                        if (empty($projectData[$projectName]['dates'])) {
+                            $formattedDate = $date->format('m/d'); // 最初の日付は月/日
+                        }
+                        if (!str_contains($projectData[$projectName]['dates'], $formattedDate)) {
+                            $projectData[$projectName]['dates'] .= (empty($projectData[$projectName]['dates']) ? '' : ',') . $formattedDate;
+                        }
+
+                        // 案件数と上代の合計を更新
+                        $projectData[$projectName]['count']++;
+                        $projectData[$projectName]['total_price'] += $retailPrice;
+
+                        $total_retail += $retailPrice;
                     }
-
-                    // 日付を文字列として追加
-                    $formattedDate = $date->format('j'); // 日付のみ
-                    if (empty($projectData[$projectName]['dates'])) {
-                        $formattedDate = $date->format('m/d'); // 最初の日付は月/日
-                    }
-                    if (!str_contains($projectData[$projectName]['dates'], $formattedDate)) {
-                        $projectData[$projectName]['dates'] .= (empty($projectData[$projectName]['dates']) ? '' : ',') . $formattedDate;
-                    }
-
-                    // 案件数と上代の合計を更新
-                    $projectData[$projectName]['count']++;
-                    $projectData[$projectName]['total_price'] += $retailPrice;
-
-                    $total_retail += $retailPrice;
                 }
             }
         }
