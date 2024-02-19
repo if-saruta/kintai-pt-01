@@ -2,6 +2,8 @@
 
 namespace App\Exceptions;
 
+use Exception;
+
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 use Throwable;
@@ -27,6 +29,17 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        // 開発中は詳細なエラーを表示する
+        if (app()->environment('local')) {
+            return parent::render($request, $exception);
+        }
+
+        // 本番環境では全てのエラーで特定のルートにリダイレクトする
+        // return redirect()->route('home')->with('error', 'Sorry, something went wrong.');
     }
 
 

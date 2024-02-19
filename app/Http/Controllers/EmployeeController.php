@@ -18,7 +18,6 @@ use PhpParser\Node\Stmt\TryCatch;
 
 class EmployeeController extends Controller
 {
-
     public function index()
     {
         $employees = Employee::all();
@@ -44,6 +43,10 @@ class EmployeeController extends Controller
 
     public function store(Request $request)
     {
+
+        // $validated = $request->validate([
+        //     'name' => 'required'
+        // ]);
 
         if($request->rental_type == 1){
             $employee = Employee::create([

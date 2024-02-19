@@ -198,7 +198,7 @@ class ShiftController extends Controller
         $date = $request->startOfWeek;
 
         return redirect()->route('shift.edit')->with([
-            'date' => $date, // 例として固定の日付を設定
+            'date' => $date, 
             'page' => 'page06'
         ]);
     }

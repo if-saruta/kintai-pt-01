@@ -15,6 +15,7 @@ use App\Models\ShiftProjectVehicle;
 use App\Models\Vehicle;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Yasumi\Yasumi;
 
 class InvoiceController extends Controller
 {
@@ -76,21 +77,30 @@ class InvoiceController extends Controller
             $getShift->save();
         }
 
-        return $this->searchShift($request);
+        // return $this->searchShift($request);
+        $employeeId = $request->employeeId;
+        $getYear = $request->year;
+        $getMonth = $request->month;
+
+        return redirect()->route('invoice.searchShift')->with([
+            'employeeId' => $employeeId,
+            'year' => $getYear,
+            'month' => $getMonth
+        ]);
     }
 
     public function searchShift(Request $request)
     {
 
-        $employeeId = $request->employeeId;
-        $getYear = $request->year;
-        $getMonth = $request->month;
+        $employeeId = $request->employeeId ?? session('employeeId');
+        $getYear = $request->year ?? session('year');
+        $getMonth = $request->month ?? session('month');
 
         $employees = Employee::all();
-        $employeeName = Employee::find($employeeId);
+        $findEmployee = Employee::find($employeeId);
 
         $projects = Project::all();
-        $allowanceProject = AllowanceByProject::where('employee_id', $employeeName->id)->get();
+        $allowanceProject = AllowanceByProject::where('employee_id', $findEmployee->id)->get();
 
         $vehicles = Vehicle::all();
 
@@ -104,13 +114,105 @@ class InvoiceController extends Controller
 
         // 全日にちを取得
         $dates = $this->createDate($getYear, $getMonth);
+        // 祝日を取得
+        $holidays = $this->getHoliday($getYear);
+        // 二代目以降の情報を取得
+        [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount] = $this->machineInfoExtract($shifts);
+        // 案件情報を取得
+        $projectInfoArray = $this->projectInfoExtract($shifts);
+        // 集計表情報を取得
+        [$totalSalary, $totalAllowance, $totalParking, $totalExpressWay, $totalOverTime] = $this->totallingInfoExtract($shifts);
 
         $warning = null;
         if ($shifts == null || $shifts->isEmpty()) {
             $warning = "選択したシフトは登録されいません";
         }
 
-        return view('invoice.driverShift', compact('employees', 'employeeName', 'projects', 'vehicles', 'shifts', 'allowanceProject', 'getYear', 'getMonth', 'dates', 'warning'));
+        return view('invoice.driverShift', compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays', 'warning', 'secondMachineArray', 'thirdMachineArray', 'secondMachineCount', 'thirdMachineCount', 'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking', 'totalExpressWay', 'totalOverTime'));
+    }
+
+    function addVehicle($vehicleNumber, &$secondMachineArray, &$thirdMachineArray, &$secondMachineCheck) {
+        if($vehicleNumber != '自車'){
+            if ($secondMachineCheck) {
+                if (!in_array($vehicleNumber, $secondMachineArray)) {
+                    $secondMachineArray[] = $vehicleNumber;
+                }
+                $secondMachineCheck = false;
+                return 1; // 2台目カウント増加
+            } else {
+                if (!in_array($vehicleNumber, $thirdMachineArray)) {
+                    $thirdMachineArray[] = $vehicleNumber;
+                }
+                return 1; // 3台目カウント増加不要
+            }
+        }
+    }
+
+    function machineInfoExtract($shifts)
+    {
+        $secondMachineArray = [];
+        $thirdMachineArray = [];
+        $secondMachineCount = 0;
+        $thirdMachineCount = 0;
+
+        foreach($shifts as $shift){
+            $secondMachineCheck = true;
+            foreach($shift->projectsVehicles as $spv){
+                if(in_array($spv->vehicle_rental_type, [0, 1])){
+                    $vehicleNumber = $spv->vehicle ? $spv->vehicle->number : $spv->unregistered_vehicle;
+                    if(!$spv->rental_vehicle_id || $spv->vehicle_id != $spv->rental_vehicle_id){
+                        if ($secondMachineCheck) {
+                            $secondMachineCount += $this->addVehicle($vehicleNumber, $secondMachineArray, $thirdMachineArray, $secondMachineCheck);
+                        } else {
+                            $thirdMachineCount += $this->addVehicle($vehicleNumber, $secondMachineArray, $thirdMachineArray, $secondMachineCheck);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        return [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount];
+    }
+
+    function projectInfoExtract($shifts)
+    {
+        $projectInfoArray = [];
+        foreach($shifts as $shift){
+            foreach($shift->projectsVehicles as $spv){
+                $projectName = $spv->project ? $spv->project->name : $spv->unregistered_project;
+                if($projectName != '休み'){
+                    if(isset($projectInfoArray[$projectName][$spv->retail_price])){
+                        $projectInfoArray[$projectName][$spv->retail_price]++;
+                    }else{
+                        $projectInfoArray[$projectName][$spv->retail_price] = 1;
+                    }
+                }
+            }
+        }
+
+        return $projectInfoArray;
+    }
+
+    function totallingInfoExtract($shifts)
+    {
+        $totalSalary = 0;
+        $totalAllowance = 0;
+        $totalParking = 0;
+        $totalExpressWay = 0;
+        $totalOverTime = 0;
+
+        foreach($shifts as $shift){
+            foreach($shift->projectsVehicles as $spv){
+                $totalSalary += $spv->driver_price;
+                $totalAllowance += $spv->total_allowance;
+                $totalParking += $spv->parking_fee;
+                $totalExpressWay += $spv->expressway_fee;
+                $totalOverTime += $spv->overtime_fee;
+            }
+        }
+
+        return [$totalSalary, $totalAllowance, $totalParking, $totalExpressWay, $totalOverTime];
     }
 
     public function driverCalendarPDF(Request $request)
@@ -661,5 +763,12 @@ class InvoiceController extends Controller
         }
 
         return $dates;
+    }
+
+    public function getHoliday($year)
+    {
+        $holidays = Yasumi::create('Japan', $year, 'ja_JP');
+
+        return $holidays;
     }
 }

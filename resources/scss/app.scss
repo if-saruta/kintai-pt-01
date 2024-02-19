@@ -24,9 +24,10 @@
 */
 @use "./project/tmp";
 @use "./project/project";
-@use "./project/invoice_driver";
+@use "./project/invoice/invoice_driver";
 @use "./project/invoice_project";
 @use "./project/invoice_charter";
+@use "./project/invoice/invoice_common";
 @use "./project/pdf-edit";
 @use "./project/shift/index";
 @use "./project/information/info";

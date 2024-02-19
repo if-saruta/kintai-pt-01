@@ -38,6 +38,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/home', function(){
+        return view('home');
+    })->name('home');
+
     Route::prefix('employee')->name('employee.')->group(function () {
         Route::get('/', [EmployeeController::class, 'index'])->name('');
         Route::get('/create', [EmployeeController::class, 'create'])->name('create');
@@ -143,8 +147,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/project-calendar-pdf', [InvoiceController::class, 'projectCalendarPDF'])->name('project-calendar-pdf');
 
         // 検索機能関連
+        Route::get('/search-shift', [InvoiceController::class, 'searchShift'])->name('searchShift');
         Route::post('/search-shift', [InvoiceController::class, 'searchShift'])->name('searchShift');
         Route::post('/search-project-shift', [InvoiceController::class, 'searchProjectShift'])->name('searchProjectShift');
+
         // チャーター関連
         Route::get('/charter', [InvoiceController::class, 'charterShift'])->name('charterShift');
         Route::post('/search-charter-shift', [InvoiceController::class, 'searchCharterShift'])->name('searchCharterShift');
