@@ -74,6 +74,7 @@ class VehicleController extends Controller
         foreach ($csv as $row){
             Vehicle::create([
                 'number' => $row['number'],
+                'company_id' => $row['company_id']
             ]);
         }
 
