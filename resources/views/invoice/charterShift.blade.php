@@ -39,7 +39,7 @@
                         <div class="select-area">
                             <div class="select-area__block">
                                 <select name="year" id="" class="c-select year-select" required>
-                                    {{-- <option value="">選択してください</option> --}}
+                                    <option value="">----</option>
                                     @for ($year = now()->year; $year >= now()->year - 10; $year--)
                                     <option value="{{ $year }}">{{ $year }}</option>
                                     @endfor
@@ -48,6 +48,7 @@
                             </div>
                             <div class="select-area__block month-block">
                                 <select name="month" id="" class="c-select month-select" required>
+                                    <option value="">----</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -77,7 +78,7 @@
                             <input hidden type="text" value="{{$getMonth}}" name="month">
 
                             <button class="calendar-pdf-button">
-                                <p>月案件表PDF</p>
+                                <p>ダウンロード</p>
                             </button>
                         </form>
                         <form action="{{route('invoice.charter-shift-update')}}" method="POST">
@@ -120,27 +121,36 @@
                                         @foreach ($shiftArray as $data)
                                             <div class="data__row">
                                                 <div class="data__row__clm --date">
-                                                    <p class="">{{$data['shift']['date']}}</p>
+                                                    @foreach ($dates as $date)
+                                                        @if ($date->format('Y-m-d') == $data['shift']['date'])
+                                                            <p class="">{{ $date->format('n月j日') }}({{ $date->isoFormat('ddd') }})</p>
+                                                        @endif
+                                                    @endforeach
+                                                    {{-- <p class="">{{$data['shift']['date']}}</p> --}}
                                                 </div>
                                                 <div class="data__row__clm --project">
                                                     <input type="text" value="{{$data['project']['name']}}" class="input charter-input" readonly>
                                                 </div>
-                                                <div class="data__row__clm --common">
+                                                <div class="data__row__clm --common --text-right">
                                                     <input type="text" name="retail_price[{{$data['id']}}]" value="{{ ceil($data['retail_price']) }}" class="input charter-input">
                                                 </div>
-                                                <div class="data__row__clm --common">
+                                                <div class="data__row__clm --common --text-right">
                                                     <input type="text" name="expressway_fee[{{$data['id']}}]" value="{{ ceil($data['expressway_fee']) }}" class="input charter-input">
                                                 </div>
-                                                <div class="data__row__clm --common">
+                                                <div class="data__row__clm --common --text-right">
                                                     <input type="text" name="parking_fee[{{$data['id']}}]" value="{{ ceil($data['parking_fee']) }}" class="input charter-input">
                                                 </div>
-                                                <div class="data__row__clm --common">
-                                                    <input type="text" value="{{$data['shift']['employee']['name']}}" class="input charter-input" readonly>
+                                                <div class="data__row__clm --common --text-center">
+                                                    @if (isset($data['shift']['employee']['name']))
+                                                        <input type="text" value="{{$data['shift']['employee']['name']}}" class="input charter-input" readonly>
+                                                    @else
+                                                        <input type="text" value="{{$data['shift']['unregistered_employee']}}" class="input charter-input" readonly>
+                                                    @endif
                                                 </div>
-                                                <div class="data__row__clm --common">
+                                                <div class="data__row__clm --common --text-right">
                                                     <input type="text" name="driver_price[{{$data['id']}}]" value="{{ ceil($data['driver_price']) }}" class="input charter-input">
                                                 </div>
-                                                <div class="data__row__clm --common">
+                                                <div class="data__row__clm --common --text-center">
                                                     <input type="text" value="{{$data['project']['client']['name']}}" class="input charter-input" readonly>
                                                 </div>
                                             </div>
@@ -150,21 +160,25 @@
                                         @foreach ($unregisterProjectShift as $spv)
                                         <div class="data__row">
                                             <div class="data__row__clm --date">
-                                                <p class="">{{$spv->shift->date}}</p>
+                                                @foreach ($dates as $date)
+                                                    @if ($date->format('Y-m-d') == $spv->shift->date)
+                                                        <p class="">{{ $date->format('n月j日') }}({{ $date->isoFormat('ddd') }})</p>
+                                                    @endif
+                                                @endforeach
                                             </div>
                                             <div class="data__row__clm --project">
                                                 <input type="text" name="unregistered_project[{{$spv->id}}]" value="{{ $spv->unregistered_project }}" class="input charter-input" readonly>
                                             </div>
-                                            <div class="data__row__clm --common">
-                                                <input type="text" name="retail_price[{{$spv->id}}]" value="{{ ceil($spv->retail_price) }}" class="input charter-input">
+                                            <div class="data__row__clm --common --text-right">
+                                                <input type="text" name="retail_price[{{$spv->id}}]" value="{{ ceil($spv->retail_price) }}" class="input charter-input" readonly>
                                             </div>
-                                            <div class="data__row__clm --common">
-                                                <input type="text" name="expressway_fee[{{$spv->id}}]" value="{{ ceil($spv->expressway_fee) }}" class="input charter-input">
+                                            <div class="data__row__clm --common --text-right">
+                                                <input type="text" name="expressway_fee[{{$spv->id}}]" value="{{ ceil($spv->expressway_fee) }}" class="input charter-input" readonly>
                                             </div>
-                                            <div class="data__row__clm --common">
-                                                <input type="text" name="parking_fee[{{$spv->id}}]" value="{{ ceil($spv->parking_fee) }}" class="input charter-input">
+                                            <div class="data__row__clm --common --text-right">
+                                                <input type="text" name="parking_fee[{{$spv->id}}]" value="{{ ceil($spv->parking_fee) }}" class="input charter-input" readonly>
                                             </div>
-                                            <div class="data__row__clm --common">
+                                            <div class="data__row__clm --common --text-center">
                                                 @if ($spv->shift->employee)
                                                 <input type="text" value="{{ $spv->shift->employee->name }}" class="input charter-input" readonly>
                                                 @else
@@ -172,10 +186,10 @@
                                                 @endif
 
                                             </div>
-                                            <div class="data__row__clm --common">
-                                                <input type="text" name="driver_price[{{$spv->id}}]" value="{{ ceil($spv->driver_price) }}" class="input charter-input">
+                                            <div class="data__row__clm --common --text-right">
+                                                <input type="text" name="driver_price[{{$spv->id}}]" value="{{ ceil($spv->driver_price) }}" class="input charter-input" readonly>
                                             </div>
-                                            <div class="data__row__clm --common clientElem">
+                                            <div class="data__row__clm --common clientElem --text-center">
                                                 <input hidden type="text" value="{{$spv->id}}" class="input charter-input">
                                             </div>
                                         </div>

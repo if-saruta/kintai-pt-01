@@ -31,7 +31,7 @@
                     <input hidden name="witch" value="page02" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
                     <button class="{{ request()->routeIs('shift.employeeShowShift*') ? 'active' : '' }} link">
-                        <span class="">従業員閲覧用</span>
+                        <span class="">稼働表</span>
                     </button>
                 </form>
                 <form action="{{route('shift.employeePriceShift')}}" method="POST"
@@ -147,13 +147,16 @@
                 {{-- カレンダー表示 --}}
                 <div class="shift-calendar__main">
                     @if(!$shiftDataByEmployee->isEmpty())
+                    <div class="company-view" id="companyView">
+
+                    </div>
                     <table class="shift-calendar-table">
                         <thead class="shift-calendar-table__head">
                             <tr class="shift-calendar-table__head__day">
                                 <th rowspan="2"></th>
                                 @foreach ( $convertedDates as $date )
                                 <th colspan="2" class="txt">
-                                    <p class="">{{$date->format('d')}}日</p>
+                                    <p class="">{{$date->format('d')}}日({{ $date->isoFormat('ddd') }})</p>
                                 </th>
                                 @endforeach
                             </tr>
@@ -191,7 +194,12 @@
                             }
                             }
                             if($max_count < $am_count){ $max_count=$am_count; }elseif ($max_count < $pm_count) {
-                                $max_count=$pm_count; } } @endphp <tr class="shift-calendar-table__body__row">
+                                $max_count=$pm_count; } } @endphp
+                                <tr class="shift-calendar-table__body__row getRow">
+                                    {{-- 左側の会社の列作成のため --}}
+                                    @if ($shift->employee)
+                                    <td class="td-none companyInfo" data-company-name="{{ $shift->employee->company->name }}">
+                                @endif
                                 @foreach ( $shiftData as $shift ) {{-- $shift == 1日のシフト --}}
                                 {{-- 一周目だけ従業員表示 --}}
                                 @if ($is_employee_open)

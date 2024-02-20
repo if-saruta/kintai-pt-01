@@ -168,13 +168,13 @@ window.addEventListener('load', () => {
 
         const activeRow = (check, row) => {
             check.addEventListener('change', () => {
-                if(!check.checked){
+                if(check.checked){
                     for(let i = 0; i < row.length; i++){
-                        row[i].style.display = 'none';
+                        row[i].classList.add('display-none');
                     }
                 }else{
                     for(let i = 0; i < row.length; i++){
-                        row[i].style.display = 'flex';
+                        row[i].classList.remove('display-none');
                     }
                 }
             })
@@ -186,6 +186,38 @@ window.addEventListener('load', () => {
         activeRow(vehicleCheck, vehicleRow);
         activeRow(overtimeCheck, overtimeRow);
 
+        const invoiceAmountCheck = document.getElementById('invoiceAmountCheck');
+        const invoiceAllowanceCheck = document.getElementById('invoiceAllowanceCheck');
+        const invoiceExpresswayCheck = document.getElementById('invoiceExpresswayCheck');
+        const invoiceParkingCheck = document.getElementById('invoiceParkingCheck');
+        const invoiceVehicleCheck = document.getElementById('invoiceVehicleCheck');
+        const invoiceOvertimeCheck = document.getElementById('invoiceOvertimeCheck');
+
+        const setValue = (check, setElem) => {
+            if(check.checked){
+                setElem.value = 1;
+            }else{
+                setElem.value = null;
+            }
+        }
+        setValue(amountCheck, invoiceAmountCheck);
+        setValue(allowanceCheck, invoiceAllowanceCheck)
+        setValue(expressCheck, invoiceExpresswayCheck);
+        setValue(parkingCheck, invoiceParkingCheck);
+        setValue(vehicleCheck, invoiceVehicleCheck);
+        setValue(overtimeCheck, invoiceOvertimeCheck);
+
+
     }
-    // itemActiveCheck();
+    itemActiveCheck();
+
+    const textAreaSet = () => {
+        const getTextArea = document.getElementById('getTextArea');
+        const setTextArea = document.getElementById('setTextArea');
+
+        getTextArea.addEventListener('change', () => {
+            setTextArea.value = getTextArea.value;
+        })
+    }
+    textAreaSet();
 })

@@ -89,11 +89,64 @@
                                     <p class="">{{$findEmployee->name}}</p>
                                 </div>
                             </div>
+                            <form action="{{route('invoice.driver-edit-pdf')}}" method="POST" class="c-middle-head__button">
+                                @csrf
+                                <input hidden type="text" name="employeeId" value="{{$findEmployee->id}}">
+                                <input hidden type="text" name="year" value="{{$getYear}}">
+                                <input hidden type="text" name="month" value="{{$getMonth}}">
+                                
+                                <input hidden type="text" name="invoiceAmountCheck" id="invoiceAmountCheck">
+                                <input hidden type="text" name="invoiceAllowanceCheck" id="invoiceAllowanceCheck">
+                                <input hidden type="text" name="invoiceExpresswayCheck" id="invoiceExpresswayCheck">
+                                <input hidden type="text" name="invoiceParkingCheck" id="invoiceParkingCheck">
+                                <input hidden type="text" name="invoiceVehicleCheck" id="invoiceVehicleCheck">
+                                <input hidden type="text" name="invoiceOvertimeCheck" id="invoiceOvertimeCheck">
+                                <button>
+                                    請求書確認
+                                </button>
+                            </form>
                         </div>
+                        {{-- チェックエリア --}}
+                        <form action="{{route('invoice.driver-calendar-pdf')}}" method="POST" class="driver-invoice-shift__check-area">
+                            @csrf
+                            <div class="top">
+                                <div class="check-item">
+                                    <input type="checkbox" name="amountCheck" value="1" class="" id="amountCheck">
+                                    <label for="">金額</label>
+                                </div>
+                                <div class="check-item">
+                                    <input type="checkbox" name="allowanceCheck" value="1" class="" id="allowanceCheck">
+                                    <label for="">手当</label>
+                                </div>
+                                <div class="check-item">
+                                    <input type="checkbox" name="expresswayCheck" value="1" class="" id="expresswayCheck">
+                                    <label for="">高速代</label>
+                                </div>
+                                <div class="check-item">
+                                    <input type="checkbox" name="parkingCheck" value="1" class="" id="parkingCheck">
+                                    <label for="">パーキング代</label>
+                                </div>
+                                <div class="check-item">
+                                    <input type="checkbox" name="vehicleCheck" value="1" class="" id="vehicleCheck">
+                                    <label for="">2台目以降</label>
+                                </div>
+                                <div class="check-item">
+                                    <input type="checkbox" name="overtimeCheck" value="1" class="" id="overtimeCheck">
+                                    <label for="">残業代</label>
+                                </div>
+                            </div>
+                            <input hidden type="text" name="employeeId" value="{{$findEmployee->id}}">
+                            <input hidden type="text" name="year" value="{{$getYear}}">
+                            <input hidden type="text" name="month" value="{{$getMonth}}">
+                            <textarea hidden name="textarea" id="setTextArea" cols="30" rows="10"></textarea>
+                            <button class="">
+                                ダウンロード
+                            </button>
+                        </form>
                         {{-- カレンダー --}}
                         <div class="driver-invoice-shift__calendar">
-                            <form action="{{route('invoice.driverShiftUpdate')}}" method="POST" class="calendar-top-wrap">
-                                <button class="calendar-top-wrap__save-btn">
+                            <form action="{{route('invoice.driverShiftUpdate')}}" method="POST" class="driver-invoice-shift__calendar__calendar-top-wrap">
+                                <button class="driver-invoice-shift__calendar__calendar-top-wrap__save-btn">
                                     変更内容を保存
                                 </button>
                                 @csrf
@@ -101,17 +154,21 @@
                                 <input hidden type="text" name="year" value="{{$getYear}}">
                                 <input hidden type="text" name="month" value="{{$getMonth}}">
                                 {{-- メインカレンダー --}}
-                                <table class="driver-invoice-shift__calendar__table">
+                                @php
+                                    $vehicle_rantal_type = null;
+                                    $vehicle_rantal_number = null;
+                                @endphp
+                                <table class="driver-invoice-shift__calendar__calendar-top-wrap__table">
                                     <thead>
                                         <tr>
                                             <th>日付</th>
                                             <th>案件名</th>
-                                            <th>金額</th>
-                                            <th>手当</th>
-                                            <th>高速代</th>
-                                            <th>パーキング代</th>
-                                            <th>二台目以降</th>
-                                            <th>残業代</th>
+                                            <th class="amountRow">金額</th>
+                                            <th class="allowanceRow">手当</th>
+                                            <th class="expresswayRow">高速代</th>
+                                            <th class="parkingRow">パーキング代</th>
+                                            <th class="vehicleRow">2台目以降</th>
+                                            <th class="overtimeRow">残業代</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -121,93 +178,25 @@
                                                 $needRowCount = 3;
                                                 // 行数カウント
                                                 $rowCount = 0;
+                                                $count = 0;
                                             @endphp
                                             @if ($date->format('d') < 16)
                                                 {{-- 日付　休日、祝日の分岐 --}}
-                                                <tr class="">
-                                                    @if ($holidays->isHoliday($date))
-                                                        <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
-                                                    @elseif ($date->isSaturday())
-                                                        <td rowspan="3" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
-                                                    @elseif($date->isSunday())
-                                                        <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
-                                                    @else
-                                                        <td rowspan="3"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
-                                                    @endif
-                                                    @foreach ( $shifts as $shift )
-                                                        @if ($shift->date == $date->format('Y-m-d'))
-                                                            @foreach ( $shift->projectsVehicles as $index => $spv )
-                                                                @if ($index == 0)
-                                                                    <td class="w-project">
-                                                                        @if ($spv->project)
-                                                                            {{-- <input type="text" value="{{ $spv->project->name }}" class=""> --}}
-                                                                            <p class="">{{ $spv->project->name }}</p>
-                                                                        @else
-                                                                            <p class="" style="color: red;">{{ $spv->unregistered_project }}</p>
-                                                                        @endif
-                                                                    </td>
-                                                                    <td class="w-amount"><input type="text" value="{{ $spv->driver_price }}" name="driver_price[{{$spv->id}}]" class=""></td>
-                                                                    <td class="w-amount allowance-area">
-                                                                        <input type="text" value="{{ $spv->total_allowance }}" name="allowance[{{$spv->id}}]" class="allowance-input">
-                                                                        @if ($spv->project)
-                                                                            @foreach ($allowanceProject as $value)
-                                                                                @if ($value->project_id == $spv->project->id)
-                                                                                <input hidden class="allowanceName" type="text"
-                                                                                    value="{{$value->allowanceName}}">
-                                                                                <input hidden class="amount" type="text"
-                                                                                    value="{{$value->amount}}">
-                                                                                @endif
-                                                                            @endforeach
-                                                                        @endif
-                                                                    </td>
-                                                                    <td class="w-amount"><input type="text" value="{{ $spv->expressway_fee }}" name="expressway_fee[{{$spv->id}}]" class=""></td>
-                                                                    <td class="w-amount"><input type="text" value="{{ $spv->parking_fee }}" name="parking_fee[{{$spv->id}}]" class=""></td>
-                                                                    <td class="w-amount">
-                                                                        {{-- 自車または月リースか判定 --}}
-                                                                        @if ($spv->vehicle_rental_type == 0 || $spv->vehicle_rental_type == 1)
-                                                                            @if ($spv->rental_vehicle_id == null) {{-- nullなら自車 --}}
-                                                                                @if($spv->vehicle)
-                                                                                    @if ($spv->vehicle->number != '自車')
-                                                                                        <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
-                                                                                    @endif
-                                                                                @else
-                                                                                    <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
-                                                                                @endif
-                                                                            @elseif($spv->vehicle_id != $spv->rental_vehicle_id) {{-- 契約車両と登録車両を比較 --}}
-                                                                                @if($spv->vehicle)
-                                                                                    <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
-                                                                                @else
-                                                                                    <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
-                                                                                @endif
-                                                                            @endif
-                                                                        @endif
-                                                                    </td>
-                                                                    <td class="w-amount"><input type="text" value="{{ $spv->overtime_fee }}" name="overtime_fee[{{$spv->id}}]" class="mainVehicle"></td>
-                                                                    @php
-                                                                        $rowCount++;
-                                                                    @endphp
+                                                @foreach ( $shifts as $shift )
+                                                    @if ($shift->date == $date->format('Y-m-d'))
+                                                        @foreach ( $shift->projectsVehicles as $spv )
+                                                            <tr>
+                                                                @if ($count == 0)
+                                                                    @if ($holidays->isHoliday($date))
+                                                                        <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    @elseif ($date->isSaturday())
+                                                                        <td rowspan="3" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    @elseif($date->isSunday())
+                                                                        <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    @else
+                                                                        <td rowspan="3"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    @endif
                                                                 @endif
-                                                            @endforeach
-                                                        @endif
-                                                    @endforeach
-                                                    @if ($rowCount == 0)
-                                                        <td class="w-project"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        @php
-                                                            $rowCount++;
-                                                        @endphp
-                                                    @endif
-                                                </tr>
-                                                {{-- シフト --}}
-                                                @foreach ($shifts as $shift)
-                                                    @if($shift->date == $date->format('Y-m-d'))
-                                                        @foreach ( $shift->projectsVehicles as $index => $spv )
-                                                            @if ($index != 0)
                                                                 <td class="w-project">
                                                                     @if ($spv->project)
                                                                         {{-- <input type="text" value="{{ $spv->project->name }}" class=""> --}}
@@ -216,9 +205,9 @@
                                                                         <p class="" style="color: red;">{{ $spv->unregistered_project }}</p>
                                                                     @endif
                                                                 </td>
-                                                                <td class="w-amount"><input type="text" value="{{ $spv->driver_price }}" name="driver_price[{{$spv->id}}]" class=""></td>
-                                                                <td class="w-amount allowance-area">
-                                                                    <input type="text" value="{{ $spv->total_allowance }}" name="allowance[{{$spv->id}}]" class="allowance-input">
+                                                                <td class="w-amount amountRow"><input type="text" value="{{ number_format($spv->driver_price) }}" name="driver_price[{{$spv->id}}]" class=""></td>
+                                                                <td class="w-amount allowance-area allowanceRow">
+                                                                    <input type="text" value="{{ number_format($spv->total_allowance) }}" name="allowance[{{$spv->id}}]" class="allowance-input">
                                                                     @if ($spv->project)
                                                                         @foreach ($allowanceProject as $value)
                                                                             @if ($value->project_id == $spv->project->id)
@@ -230,87 +219,130 @@
                                                                         @endforeach
                                                                     @endif
                                                                 </td>
-                                                                <td class="w-amount"><input type="text" value="{{ $spv->expressway_fee }}" name="expressway_fee[{{$spv->id}}]" class=""></td>
-                                                                <td class="w-amount"><input type="text" value="{{ $spv->parking_fee }}" name="parking_fee[{{$spv->id}}]" class=""></td>
-                                                                <td class="w-amount">
+                                                                <td class="w-amount expresswayRow"><input type="text" value="{{ number_format($spv->expressway_fee) }}" name="expressway_fee[{{$spv->id}}]" class=""></td>
+                                                                <td class="w-amount parkingRow"><input type="text" value="{{ number_format($spv->parking_fee) }}" name="parking_fee[{{$spv->id}}]" class=""></td>
+                                                                <td class="w-amount vehicleRow">
                                                                     {{-- 自車または月リースか判定 --}}
                                                                     @if ($spv->vehicle_rental_type == 0 || $spv->vehicle_rental_type == 1)
                                                                         @if ($spv->rental_vehicle_id == null) {{-- nullなら自車 --}}
                                                                             @if($spv->vehicle)
                                                                                 @if ($spv->vehicle->number != '自車')
-                                                                                    <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                    <input type="text" value="No.{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                                 @endif
                                                                             @else
-                                                                                <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                <input style="color: red;" type="text" value="No.{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                             @endif
                                                                         @elseif($spv->vehicle_id != $spv->rental_vehicle_id) {{-- 契約車両と登録車両を比較 --}}
                                                                             @if($spv->vehicle)
-                                                                                <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                <input type="text" value="No.{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                             @else
-                                                                                <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                <input style="color: red;" type="text" value="No.{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                             @endif
                                                                         @endif
                                                                     @endif
                                                                 </td>
-                                                                <td class="w-amount"><input type="text" value="{{ $spv->overtime_fee }}" name="overtime_fee[{{$spv->id}}]" class=""></td>
+                                                                <td class="w-amount overtimeRow"><input type="text" value="{{ number_format($spv->overtime_fee) }}" name="overtime_fee[{{$spv->id}}]" class="mainVehicle"></td>
                                                                 @php
                                                                     $rowCount++;
+                                                                    // 貸出形態と貸出車両を格納
+                                                                    $vehicle_rantal_type = $spv->vehicle_rental_type;
+                                                                    if ($spv->rentalVehicle) {
+                                                                        $vehicle_rantal_number = $spv->rentalVehicle->number;
+                                                                    }
+                                                                    $count++;
                                                                 @endphp
-                                                            @endif
+                                                            </tr>
                                                         @endforeach
+                                                        {{-- 行数が足りない時のため --}}
+                                                        @for ($rowCount; $rowCount <= $needRowCount; $rowCount++)
+                                                            <tr>
+                                                                @if ($count == 0)
+                                                                    @if ($holidays->isHoliday($date))
+                                                                        <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    @elseif ($date->isSaturday())
+                                                                        <td rowspan="3" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    @elseif($date->isSunday())
+                                                                        <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    @else
+                                                                        <td rowspan="3"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    @endif
+                                                                @endif
+                                                                <td class="w-project"><p class=""></p></td>
+                                                                <td class="w-amount amountRow"><p class=""></p></td>
+                                                                <td class="w-amount allowanceRow"><p class=""></p></td>
+                                                                <td class="w-amount expresswayRow"><p class=""></p></td>
+                                                                <td class="w-amount parkingRow"><p class=""></p></td>
+                                                                <td class="w-amount vehicleRow"><p class=""></p></td>
+                                                                <td class="w-amount overtimeRow"><p class=""></p></td>
+                                                                @php
+                                                                    $rowCount++;
+                                                                    $count++;
+                                                                @endphp
+                                                            </tr>
+                                                        @endfor
                                                     @endif
                                                 @endforeach
-                                                @for ($i = $rowCount; $i < $needRowCount; $i++)
-                                                    <tr class="">
-                                                        <td class="w-project"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                    </tr>
-                                                @endfor
+                                                {{-- シフトがない時のため --}}
+                                                @if ($rowCount == 0)
+                                                    @for ($rowCount; $rowCount < 3; $rowCount++)
+                                                        <tr>
+                                                            @if ($count == 0)
+                                                                @if ($holidays->isHoliday($date))
+                                                                    <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                @elseif ($date->isSaturday())
+                                                                    <td rowspan="3" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                @elseif($date->isSunday())
+                                                                    <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                @else
+                                                                    <td rowspan="3"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                @endif
+                                                            @endif
+                                                            <td class="w-project"><p class=""></p></td>
+                                                            <td class="w-amount amountRow"><p class=""></p></td>
+                                                            <td class="w-amount allowanceRow"><p class=""></p></td>
+                                                            <td class="w-amount expresswayRow"><p class=""></p></td>
+                                                            <td class="w-amount parkingRow"><p class=""></p></td>
+                                                            <td class="w-amount vehicleRow"><p class=""></p></td>
+                                                            <td class="w-amount overtimeRow"><p class=""></p></td>
+                                                            @php
+                                                                $count++;
+                                                            @endphp
+                                                        </tr>
+                                                    @endfor
+                                                @endif
                                             @endif
                                         @endforeach
-                                        <tr>
-                                            <td class="w-amount" rowspan="3"></td>
-                                            <td class="w-project"></td>
-                                            <td class="w-amount"></td>
-                                            <td class="w-amount"></td>
-                                            <td class="w-amount"></td>
-                                            <td class="w-amount"></td>
-                                            <td class="w-amount"></td>
-                                            <td class="w-amount"></td>
-                                        </tr>
-                                        @for ($i = 1; $i < $needRowCount; $i++)
+                                        {{-- 16行に合わせるため --}}
+                                        @for ($i = 0; $i < $needRowCount; $i++)
                                             <tr class="">
+                                                @if ($i == 0)
+                                                <td rowspan="3" class="w-amount"></td>
+                                                @endif
                                                 <td class="w-project"><p class=""></p></td>
-                                                <td class="w-amount"><p class=""></p></td>
-                                                <td class="w-amount"><p class=""></p></td>
-                                                <td class="w-amount"><p class=""></p></td>
-                                                <td class="w-amount"><p class=""></p></td>
-                                                <td class="w-amount"><p class=""></p></td>
-                                                <td class="w-amount"><p class=""></p></td>
+                                                <td class="w-amount amountRow"></td>
+                                                <td class="w-amount allowanceRow"></td>
+                                                <td class="w-amount expresswayRow"></td>
+                                                <td class="w-amount parkingRow"></td>
+                                                <td class="w-amount vehicleRow"></td>
+                                                <td class="w-amount overtimeRow"></td>
                                             </tr>
                                         @endfor
                                     </tbody>
                                 </table>
                                 {{-- メインカレンダー --}}
-                                <table class="driver-invoice-shift__calendar__table">
+                                <table class="driver-invoice-shift__calendar__calendar-top-wrap__table">
                                     <thead>
                                         <tr>
                                             <th>日付</th>
                                             <th>案件名</th>
-                                            <th>金額</th>
-                                            <th>手当</th>
-                                            <th>高速代</th>
-                                            <th>パーキング代</th>
-                                            <th>二台目以降</th>
-                                            <th>残業代</th>
+                                            <th class="amountRow">金額</th>
+                                            <th class="allowanceRow">手当</th>
+                                            <th class="expresswayRow">高速代</th>
+                                            <th class="parkingRow">パーキング代</th>
+                                            <th class="vehicleRow">2台目以降</th>
+                                            <th class="overtimeRow">残業代</th>
                                         </tr>
                                     </thead>
-
                                     <tbody>
                                         @foreach ( $dates as $date )
                                             @php
@@ -318,93 +350,25 @@
                                                 $needRowCount = 3;
                                                 // 行数カウント
                                                 $rowCount = 0;
+                                                $count = 0;
                                             @endphp
                                             @if ($date->format('d') >= 16)
                                                 {{-- 日付　休日、祝日の分岐 --}}
-                                                <tr class="">
-                                                    @if ($holidays->isHoliday($date))
-                                                        <td rowspan="3" style="color: red;"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
-                                                    @elseif ($date->isSaturday())
-                                                        <td rowspan="3" style="color: skyblue;"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
-                                                    @elseif($date->isSunday())
-                                                        <td rowspan="3" style="color: red;"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
-                                                    @else
-                                                        <td rowspan="3"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
-                                                    @endif
-                                                    @foreach ( $shifts as $shift )
-                                                        @if ($shift->date == $date->format('Y-m-d'))
-                                                            @foreach ( $shift->projectsVehicles as $index => $spv )
-                                                                @if ($index == 0)
-                                                                    <td class="w-project">
-                                                                        @if ($spv->project)
-                                                                            {{-- <input type="text" value="{{ $spv->project->name }}" class=""> --}}
-                                                                            <p class="">{{ $spv->project->name }}</p>
-                                                                        @else
-                                                                            <p class="" style="color: red;">{{ $spv->unregistered_project }}</p>
-                                                                        @endif
-                                                                    </td>
-                                                                    <td class="w-amount"><input type="text" value="{{ $spv->driver_price }}" name="driver_price[{{$spv->id}}]" class=""></td>
-                                                                    <td class="w-amount allowance-area">
-                                                                        <input type="text" value="{{ $spv->total_allowance }}" name="allowance[{{$spv->id}}]" class="allowance-input">
-                                                                        @if ($spv->project)
-                                                                            @foreach ($allowanceProject as $value)
-                                                                                @if ($value->project_id == $spv->project->id)
-                                                                                <input hidden class="allowanceName" type="text"
-                                                                                    value="{{$value->allowanceName}}">
-                                                                                <input hidden class="amount" type="text"
-                                                                                    value="{{$value->amount}}">
-                                                                                @endif
-                                                                            @endforeach
-                                                                        @endif
-                                                                    </td>
-                                                                    <td class="w-amount"><input type="text" value="{{ $spv->expressway_fee }}" name="expressway_fee[{{$spv->id}}]" class=""></td>
-                                                                    <td class="w-amount"><input type="text" value="{{ $spv->parking_fee }}" name="parking_fee[{{$spv->id}}]" class=""></td>
-                                                                    <td class="w-amount">
-                                                                        {{-- 自車または月リースか判定 --}}
-                                                                        @if ($spv->vehicle_rental_type == 0 || $spv->vehicle_rental_type == 1)
-                                                                            @if ($spv->rental_vehicle_id == null) {{-- nullなら自車 --}}
-                                                                                @if($spv->vehicle)
-                                                                                    @if ($spv->vehicle->number != '自車')
-                                                                                        <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
-                                                                                    @endif
-                                                                                @else
-                                                                                    <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
-                                                                                @endif
-                                                                            @elseif($spv->vehicle_id != $spv->rental_vehicle_id) {{-- 契約車両と登録車両を比較 --}}
-                                                                                @if($spv->vehicle)
-                                                                                    <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
-                                                                                @else
-                                                                                    <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
-                                                                                @endif
-                                                                            @endif
-                                                                        @endif
-                                                                    </td>
-                                                                    <td class="w-amount"><input type="text" value="{{ $spv->overtime_fee }}" name="overtime_fee[{{$spv->id}}]" class=""></td>
-                                                                    @php
-                                                                        $rowCount++;
-                                                                    @endphp
+                                                @foreach ( $shifts as $shift )
+                                                    @if ($shift->date == $date->format('Y-m-d'))
+                                                        @foreach ( $shift->projectsVehicles as $spv )
+                                                            <tr>
+                                                                @if ($count == 0)
+                                                                    @if ($holidays->isHoliday($date))
+                                                                        <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    @elseif ($date->isSaturday())
+                                                                        <td rowspan="3" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    @elseif($date->isSunday())
+                                                                        <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    @else
+                                                                        <td rowspan="3"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    @endif
                                                                 @endif
-                                                            @endforeach
-                                                        @endif
-                                                    @endforeach
-                                                    @if ($rowCount == 0)
-                                                        <td class="w-project"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        @php
-                                                            $rowCount++;
-                                                        @endphp
-                                                    @endif
-                                                </tr>
-                                                {{-- シフト --}}
-                                                @foreach ($shifts as $shift)
-                                                    @if($shift->date == $date->format('Y-m-d'))
-                                                        @foreach ( $shift->projectsVehicles as $index => $spv )
-                                                            @if ($index != 0)
                                                                 <td class="w-project">
                                                                     @if ($spv->project)
                                                                         {{-- <input type="text" value="{{ $spv->project->name }}" class=""> --}}
@@ -413,9 +377,9 @@
                                                                         <p class="" style="color: red;">{{ $spv->unregistered_project }}</p>
                                                                     @endif
                                                                 </td>
-                                                                <td class="w-amount"><input type="text" value="{{ $spv->driver_price }}" name="driver_price[{{$spv->id}}]" class=""></td>
-                                                                <td class="w-amount allowance-area">
-                                                                    <input type="text" value="{{ $spv->total_allowance }}" name="allowance[{{$spv->id}}]" class="allowance-input">
+                                                                <td class="w-amount amountRow"><input type="text" value="{{ number_format($spv->driver_price) }}" name="driver_price[{{$spv->id}}]" class=""></td>
+                                                                <td class="w-amount allowance-area allowanceRow">
+                                                                    <input type="text" value="{{ number_format($spv->total_allowance) }}" name="allowance[{{$spv->id}}]" class="allowance-input">
                                                                     @if ($spv->project)
                                                                         @foreach ($allowanceProject as $value)
                                                                             @if ($value->project_id == $spv->project->id)
@@ -427,69 +391,113 @@
                                                                         @endforeach
                                                                     @endif
                                                                 </td>
-                                                                <td class="w-amount"><input type="text" value="{{ $spv->expressway_fee }}" name="expressway_fee[{{$spv->id}}]" class=""></td>
-                                                                <td class="w-amount"><input type="text" value="{{ $spv->parking_fee }}" name="parking_fee[{{$spv->id}}]" class=""></td>
-                                                                <td class="w-amount">
+                                                                <td class="w-amount expresswayRow"><input type="text" value="{{ number_format($spv->expressway_fee) }}" name="expressway_fee[{{$spv->id}}]" class=""></td>
+                                                                <td class="w-amount parkingRow"><input type="text" value="{{ number_format($spv->parking_fee) }}" name="parking_fee[{{$spv->id}}]" class=""></td>
+                                                                <td class="w-amount vehicleRow">
                                                                     {{-- 自車または月リースか判定 --}}
                                                                     @if ($spv->vehicle_rental_type == 0 || $spv->vehicle_rental_type == 1)
                                                                         @if ($spv->rental_vehicle_id == null) {{-- nullなら自車 --}}
                                                                             @if($spv->vehicle)
                                                                                 @if ($spv->vehicle->number != '自車')
-                                                                                    <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                    <input type="text" value="No.{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                                 @endif
                                                                             @else
-                                                                                <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                <input style="color: red;" type="text" value="No.{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                             @endif
                                                                         @elseif($spv->vehicle_id != $spv->rental_vehicle_id) {{-- 契約車両と登録車両を比較 --}}
                                                                             @if($spv->vehicle)
-                                                                                <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                <input type="text" value="No.{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                             @else
-                                                                                <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                <input style="color: red;" type="text" value="No.{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                             @endif
                                                                         @endif
                                                                     @endif
                                                                 </td>
-                                                                <td class="w-amount"><input type="text" value="{{ $spv->overtime_fee }}" name="overtime_fee[{{$spv->id}}]" class=""></td>
+                                                                <td class="w-amount overtimeRow"><input type="text" value="{{ number_format($spv->overtime_fee) }}" name="overtime_fee[{{$spv->id}}]" class="mainVehicle"></td>
                                                                 @php
                                                                     $rowCount++;
+                                                                    // 貸出形態と貸出車両を格納
+                                                                    $vehicle_rantal_type = $spv->vehicle_rental_type;
+                                                                    if ($spv->rentalVehicle) {
+                                                                        $vehicle_rantal_number = $spv->rentalVehicle->number;
+                                                                    }
+                                                                    $count++;
                                                                 @endphp
-                                                            @endif
+                                                            </tr>
                                                         @endforeach
+                                                        {{-- 行数が足りない時のため --}}
+                                                        @for ($rowCount; $rowCount <= $needRowCount; $rowCount++)
+                                                            <tr>
+                                                                @if ($count == 0)
+                                                                    @if ($holidays->isHoliday($date))
+                                                                        <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    @elseif ($date->isSaturday())
+                                                                        <td rowspan="3" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    @elseif($date->isSunday())
+                                                                        <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    @else
+                                                                        <td rowspan="3"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    @endif
+                                                                @endif
+                                                                <td class="w-project"><p class=""></p></td>
+                                                                <td class="w-amount amountRow"><p class=""></p></td>
+                                                                <td class="w-amount allowanceRow"><p class=""></p></td>
+                                                                <td class="w-amount expresswayRow"><p class=""></p></td>
+                                                                <td class="w-amount parkingRow"><p class=""></p></td>
+                                                                <td class="w-amount vehicleRow"><p class=""></p></td>
+                                                                <td class="w-amount overtimeRow"><p class=""></p></td>
+                                                                @php
+                                                                    $rowCount++;
+                                                                    $count++;
+                                                                @endphp
+                                                            </tr>
+                                                        @endfor
                                                     @endif
                                                 @endforeach
-                                                @for ($i = $rowCount; $i < $needRowCount; $i++)
-                                                    <tr class="">
-                                                        <td class="w-project"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                        <td class="w-amount"><p class=""></p></td>
-                                                    </tr>
-                                                @endfor
+                                                {{-- シフトがない時のため --}}
+                                                @if ($rowCount == 0)
+                                                    @for ($rowCount; $rowCount < 3; $rowCount++)
+                                                        <tr>
+                                                            @if ($count == 0)
+                                                                @if ($holidays->isHoliday($date))
+                                                                    <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                @elseif ($date->isSaturday())
+                                                                    <td rowspan="3" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                @elseif($date->isSunday())
+                                                                    <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                @else
+                                                                    <td rowspan="3"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                @endif
+                                                            @endif
+                                                            <td class="w-project"><p class=""></p></td>
+                                                            <td class="w-amount amountRow"><p class=""></p></td>
+                                                            <td class="w-amount allowanceRow"><p class=""></p></td>
+                                                            <td class="w-amount expresswayRow"><p class=""></p></td>
+                                                            <td class="w-amount parkingRow"><p class=""></p></td>
+                                                            <td class="w-amount vehicleRow"><p class=""></p></td>
+                                                            <td class="w-amount overtimeRow"><p class=""></p></td>
+                                                            @php
+                                                                $count++;
+                                                            @endphp
+                                                        </tr>
+                                                    @endfor
+                                                @endif
                                             @endif
                                         @endforeach
-                                        @for ($i = $dates[count($dates) - 1]->format('d'); $i < 31; $i++ )
-                                            <tr>
-                                                <td rowspan="3" class="w-amount"></td>
-                                                <td class="w-project"></td>
-                                                <td class="w-amount"></td>
-                                                <td class="w-amount"></td>
-                                                <td class="w-amount"></td>
-                                                <td class="w-amount"></td>
-                                                <td class="w-amount"></td>
-                                                <td class="w-amount"></td>
-                                            </tr>
-                                            @for ($j = 1; $j < $needRowCount; $j++)
+                                        @for ($i = $dates[count($dates) - 1]->format('d'); $i < 31; $i++)
+                                            {{-- 16行に合わせるため --}}
+                                            @for ($j = 0; $j < $needRowCount; $j++)
                                                 <tr class="">
+                                                    @if ($j == 0)
+                                                    <td rowspan="3" class="w-amount"></td>
+                                                    @endif
                                                     <td class="w-project"><p class=""></p></td>
-                                                    <td class="w-amount"><p class=""></p></td>
-                                                    <td class="w-amount"><p class=""></p></td>
-                                                    <td class="w-amount"><p class=""></p></td>
-                                                    <td class="w-amount"><p class=""></p></td>
-                                                    <td class="w-amount"><p class=""></p></td>
-                                                    <td class="w-amount"><p class=""></p></td>
+                                                    <td class="w-amount amountRow"></td>
+                                                    <td class="w-amount allowanceRow"></td>
+                                                    <td class="w-amount expresswayRow"></td>
+                                                    <td class="w-amount parkingRow"></td>
+                                                    <td class="w-amount vehicleRow"></td>
+                                                    <td class="w-amount overtimeRow"></td>
                                                 </tr>
                                             @endfor
                                         @endfor
@@ -498,7 +506,7 @@
                             </form>
                             <div class="calendar-bottom-wrap">
                                 <div class="calendar-bottom-wrap__box calendar-bottom-wrap__top">
-                                    <textarea name="" id="" cols="30" rows="10"></textarea>
+                                    <textarea name="" id="getTextArea" cols="30" rows="10"></textarea>
                                     <table class="total-info-table">
                                         <tbody>
                                             <tr>
@@ -527,7 +535,7 @@
                                             </tr>
                                             <tr>
                                                 <th>事務委託手数料(15%)</th>
-                                                <td>{{ number_format($totalSalary * 0.15) }}</td>
+                                                <td>{{ number_format(ceil($totalSalary * 0.15)) }}</td>
                                             </tr>
                                             <tr>
                                                 <th>事務手数料</th>
@@ -537,14 +545,42 @@
                                                 <th>振込手数料</th>
                                                 <td>600</td>
                                             </tr>
-                                            <tr>
-                                                <th></th>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <th></th>
-                                                <td></td>
-                                            </tr>
+                                            @if ($vehicle_rantal_type == 1 || $vehicle_rantal_type == 2)
+                                                <tr>
+                                                    <th>リース代　月契約No.{{ $vehicle_rantal_number }}</th>
+                                                    <td>30,992</td>
+                                                </tr>
+                                            @endif
+                                            @if ($secondMachineCount != 0)
+                                                @php
+                                                    $second_lease = 1000;
+                                                    if ($vehicle_rantal_type == 0) {
+                                                        $second_lease = 1500;
+                                                    }
+                                                @endphp
+                                                <tr>
+                                                    <th>リース2台目(日割り)</th>
+                                                    <td>{{ number_format($secondMachineCount * $second_lease) }}</td>
+                                                </tr>
+                                            @endif
+                                            @if ($thirdMachineCount != 0)
+                                                <tr>
+                                                    <th>リース3台目(日割り)</th>
+                                                    <td>{{ number_format($thirdMachineCount * 1000) }}</td>
+                                                </tr>
+                                            @endif
+                                            @if ($vehicle_rantal_type == 1 || $vehicle_rantal_type == 2)
+                                                <tr>
+                                                    <th>保険料　月契約No.{{ $vehicle_rantal_number }}</th>
+                                                    <td>9,818</td>
+                                                </tr>
+                                            @endif
+                                            @if ($secondMachineCount != 0)
+                                                <tr>
+                                                    <th>保険料 2台目(日割り)</th>
+                                                    <td>{{ number_format($secondMachineCount * 410) }}</td>
+                                                </tr>
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
@@ -562,7 +598,7 @@
                                                 @foreach ($data as $price => $count)
                                                     <tr>
                                                         <td>{{ $projectName }}</td>
-                                                        <td>{{ $price }}</td>
+                                                        <td>{{ number_format((float)$price) }}</td>
                                                         <td>{{ $count }}</td>
                                                     </tr>
                                                 @endforeach

@@ -138,12 +138,15 @@
                 {{-- カレンダー表示 --}}
                 <div class="shift-calendar__main">
                     @if(!$shiftDataByEmployee->isEmpty())
+                    <div class="company-view" id="companyView">
+
+                    </div>
                     <table class="shift-calendar-table">
                         <thead class="shift-calendar-table__head">
                             <tr class="shift-calendar-table__head__day">
                                 <th rowspan="2"></th>
                                 @foreach ( $convertedDates as $date )
-                                <th colspan="2" class="txt"><p class="">{{$date->format('d')}}日</p></th>
+                                <th colspan="2" class="txt"><p class="">{{$date->format('d')}}日({{ $date->isoFormat('ddd') }})</p></th>
                                 @endforeach
                                 <th rowspan="2">合計</th>
                             </tr>
@@ -155,7 +158,7 @@
                             </tr>
                         </thead>
                         <tbody class="shift-calendar-table__body">
-                            @foreach ( $shiftDataByEmployee as $employeeId => $shiftData )
+                            @foreach ( $sortedShiftDataByEmployee as $employeeId => $shiftData )
                                 @php
                                 // 一周目だけ従業員表示
                                 $is_employee_open = true;
@@ -185,7 +188,11 @@
                                         }
                                     }
                                 @endphp
-                                    <tr class="shift-calendar-table__body__row">
+                                    <tr class="shift-calendar-table__body__row getRow">
+                                        {{-- 左側の会社の列作成のため --}}
+                                        @if ($shift->employee)
+                                            <td class="td-none companyInfo" data-company-name="{{ $shift->employee->company->name }}">
+                                        @endif
                                         @foreach ( $shiftData as $shift )  {{-- $shift == 1日のシフト --}}
                                             {{-- 一周目だけ従業員表示 --}}
                                             @if ($is_employee_open)

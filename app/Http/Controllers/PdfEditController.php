@@ -8,28 +8,28 @@ use App\Models\Employee;
 use App\Models\ShiftProjectVehicle;
 use App\Models\BankAccount;
 use App\Models\Client;
+use App\Models\Shift;
 use Illuminate\Http\Request;
+use App\Http\Controllers\InvoiceController;
 
 class PdfEditController extends Controller
 {
     public function driver_edit_pdf(Request $request)
     {
-        $administrative_commission_fee = $request->administrative_commission_fee;
-        $total_lease = $request->total_lease;
-        $total_insurance = $request->total_insurance;
-        $administrative_fee = $request->administrative_fee;
-        $transfer_fee = $request->transfer_fee;
-        $total_salary = $request->total_salary;
-        $total_allowance = $request->total_allowance;
-        $total_expressway = $request->total_expressway;
-        $total_parking = $request->total_parking;
-        $total_overtime = $request->total_overtime;
-        $employee = $request->employee;
+        $invoiceAmountCheck = $request->invoiceAmountCheck;
+        $invoiceAllowanceCheck = $request->invoiceAllowanceCheck;
+        $invoiceExpresswayCheck = $request->invoiceExpresswayCheck;
+        $invoiceParkingCheck = $request->invoiceParkingCheck;
+        $invoiceVehicleCheck = $request->invoiceVehicleCheck;
+        $invoiceOvertimeCheck = $request->invoiceOvertimeCheck;
 
-        $year = $request->year;
-        $month = $request->month;
 
-        $employeeInfo = Employee::find($employee);
+        $employeeId = $request->employeeId;
+
+        $getYear = $request->year;
+        $getMonth = $request->month;
+
+        $employeeInfo = Employee::find($employeeId);
         $employeeName = $employeeInfo->name;
 
         $banks = BankAccount::where('employee_id', $employeeInfo->id)->get();
@@ -38,27 +38,51 @@ class PdfEditController extends Controller
 
         $today = Carbon::now();
 
-        $amountCheck = $request->input('amountCheck', 0);
-        $expresswayCheck = $request->input('expresswayCheck', 0);
-        $parkingCheck = $request->input('parkingCheck', 0);
-        $overtimeCheck = $request->input('overtimeCheck', 0);
+        // シフトを検索・取得
+        $shifts = Shift::with('employee', 'projectsVehicles.project', 'projectsVehicles.vehicle', 'projectsVehicles.rentalVehicle')
+        ->where('employee_id', $employeeId)
+        ->whereYear('date', $getYear)
+        ->whereMonth('date', $getMonth)
+        ->get();
 
-        if($amountCheck == 0){
-            $total_salary = 0;
-        }
-        if($expresswayCheck == 0){
-            $total_expressway = 0;
-        }
-        if($parkingCheck == 0){
-            $total_parking = 0;
-        }
-        if($overtimeCheck == 0){
-            $total_overtime = 0;
+        $rentalType = null;
+        foreach($shifts as $shift){
+            foreach($shift->projectsVehicles as $spv){
+                $rentalType = $spv->vehicle_rental_type;
+            }
         }
 
-        $etc = $total_expressway + $total_parking + $total_overtime;
+        $invoiceController = new InvoiceController();
+        // 集計表情報を取得
+        [$totalSalary, $totalAllowance, $totalParking, $totalExpressWay, $totalOverTime] = $invoiceController->totallingInfoExtract($shifts);
+        // 二代目以降の情報を取得
+        [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount] = $invoiceController->machineInfoExtract($shifts);
+        if($invoiceAmountCheck == 1){
+            $totalSalary = 0;
+        }
+        if($invoiceAllowanceCheck == 1){
+            $totalAllowance = 0;
+        }
+        if($invoiceExpresswayCheck == 1){
+            $totalExpressWay = 0;
+        }
+        if($invoiceParkingCheck == 1){
+            $totalParking = 0;
+        }
+        if($invoiceVehicleCheck == 1){
+            $secondMachineCount = 0;
+            $thirdMachineCount = 0;
+        }
+        if($invoiceOvertimeCheck == 1){
+            $totalOverTime = 0;
+        }
 
-        return view('edit-pdf.driver-edit-pdf', compact( 'companies','administrative_commission_fee','total_lease','total_insurance','administrative_fee','transfer_fee','total_allowance','etc','total_salary','employeeInfo', 'banks','today', 'year', 'month'));
+        // $amountCheck = $request->input('amountCheck', 0);
+        // $expresswayCheck = $request->input('expresswayCheck', 0);
+        // $parkingCheck = $request->input('parkingCheck', 0);
+        // $overtimeCheck = $request->input('overtimeCheck', 0);
+
+        return view('edit-pdf.driver-edit-pdf', compact('getYear', 'getMonth', 'today', 'employeeInfo', 'companies', 'banks', 'totalSalary', 'totalAllowance', 'totalExpressWay', 'totalParking', 'totalOverTime', 'secondMachineCount', 'thirdMachineCount', 'rentalType'));
     }
 
 

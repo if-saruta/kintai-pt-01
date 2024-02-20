@@ -300,7 +300,37 @@
             padding-right: 5rem;
             padding-bottom: 5rem;
             display: flex;
-            flex-direction: column;
+            // flex-direction: column;
+            .company-view{
+                width: 8rem;
+                margin-top: 6.05rem;
+                display: flex;
+                flex-direction: column;
+                flex-shrink: 0;
+                &__item{
+                    position: relative;
+                    width: 100%;
+                    border: 0.5px solid black;
+                    flex-shrink: 0;
+                    box-sizing: border-box;
+                    background-color: $cGray;
+                    p{
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%,-50%);
+                        writing-mode: vertical-rl;
+                        text-orientation: upright;
+                        // white-space: nowrap;
+                        font-size: 1rem;
+                        letter-spacing: 0.1rem;
+                        color: $cBlack;
+                    }
+                }
+                &__item:nth-child(1){
+                    border-bottom: 0px;
+                }
+            }
             .shift-calendar-table{
                 position: relative;
                 &__head{
@@ -338,6 +368,9 @@
                 &__body{
                     &__row{
                         margin-bottom: 1rem;
+                        .td-none{
+                            display: none;
+                        }
                         .table-employee-name{
                             position: sticky;
                             left: 0;

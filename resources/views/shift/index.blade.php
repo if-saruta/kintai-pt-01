@@ -8,48 +8,48 @@
     <main class="main --shift-main">
         <div class="main__link-block --shift-link-block">
             <div class="main__link-block__tags">
-                <form action="{{route('shift.')}}" method="POST" class="main__link-block__item --shift-link-block__item">
+                <form action="{{route('shift.')}}" method="POST"
+                    class="main__link-block__item --shift-link-block__item">
                     @csrf
                     <input hidden name="witch" value="page01" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
-                    <button
-                        class="{{ request()->routeIs('shift.', 'shift.selectWeek') ? 'active' : '' }} link">
+                    <button class="{{ request()->routeIs('shift.', 'shift.selectWeek') ? 'active' : '' }} link">
                         <span class="">全表示</span>
                     </button>
                 </form>
-                <form action="{{route('shift.employeeShowShift')}}" method="POST" class="main__link-block__item --shift-link-block__item">
+                <form action="{{route('shift.employeeShowShift')}}" method="POST"
+                    class="main__link-block__item --shift-link-block__item">
                     @csrf
                     <input hidden name="witch" value="page02" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
-                    <button
-                        class="{{ request()->routeIs('shift.employeeShowShift*') ? 'active' : '' }} link">
+                    <button class="{{ request()->routeIs('shift.employeeShowShift*') ? 'active' : '' }} link">
                         <span class="">稼働表</span>
                     </button>
                 </form>
-                <form action="{{route('shift.employeePriceShift')}}" method="POST" class="main__link-block__item --shift-link-block__item">
+                <form action="{{route('shift.employeePriceShift')}}" method="POST"
+                    class="main__link-block__item --shift-link-block__item">
                     @csrf
                     <input hidden name="witch" value="page03" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
-                    <button
-                        class="{{ request()->routeIs('shift.employeePriceShift*') ? 'active' : '' }} link">
+                    <button class="{{ request()->routeIs('shift.employeePriceShift*') ? 'active' : '' }} link">
                         <span class="">ドライバー価格</span>
                     </button>
                 </form>
-                <form action="{{route('shift.projectPriceShift')}}" method="POST" class="main__link-block__item --shift-link-block__item">
+                <form action="{{route('shift.projectPriceShift')}}" method="POST"
+                    class="main__link-block__item --shift-link-block__item">
                     @csrf
                     <input hidden name="witch" value="page04" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
-                    <button
-                        class="{{ request()->routeIs('shift.projectPriceShift*') ? 'active' : '' }} link">
+                    <button class="{{ request()->routeIs('shift.projectPriceShift*') ? 'active' : '' }} link">
                         <span class="">上代閲覧用</span>
                     </button>
                 </form>
-                <form action="{{route('shift.projectCount')}}" method="POST" class="main__link-block__item --shift-link-block__item">
+                <form action="{{route('shift.projectCount')}}" method="POST"
+                    class="main__link-block__item --shift-link-block__item">
                     @csrf
                     <input hidden name="witch" value="page05" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
-                    <button
-                        class="{{ request()->routeIs('shift.projectCount') ? 'active' : '' }} link">
+                    <button class="{{ request()->routeIs('shift.projectCount') ? 'active' : '' }} link">
                         <span class="">案件数用</span>
                     </button>
                 </form>
@@ -138,91 +138,106 @@
                 {{-- カレンダー表示 --}}
                 <div class="shift-calendar__main">
                     @if(!$shiftDataByEmployee->isEmpty())
-                    <table class="shift-calendar-table">
-                        <thead class="shift-calendar-table__head">
-                            <tr class="shift-calendar-table__head__day">
-                                <th rowspan="2"></th>
-                                @foreach ( $convertedDates as $date )
-                                <th colspan="2" class="txt"><p class="">{{$date->format('d')}}日</p></th>
-                                @endforeach
-                            </tr>
-                            <tr class="shift-calendar-table__head__part">
-                                @foreach ( $convertedDates as $date )
-                                <th class="txt"><p class="">AM</p></th>
-                                <th class="txt"><p class="">PM</p></th>
-                                @endforeach
-                            </tr>
-                        </thead>
-                        <tbody class="shift-calendar-table__body">
-                            @foreach ( $shiftDataByEmployee as $employeeId => $shiftData )
-                                @php
-                                // 一周目だけ従業員表示
-                                $is_employee_open = true;
-                                // 1日ごとの最大案件数
-                                $max_count = 1;
-                                @endphp
-                                {{-- 最大案件数の計算 --}}
-                                @php
-                                    foreach ($shiftData as $shift) {
-                                        $am_count = 0;
-                                        $pm_count = 0;
-                                        foreach ($shift->projectsVehicles as $spv) {
-                                            $count = 0;
-                                            if($spv->time_of_day == 0){
-                                                $am_count++;
+                        <div class="company-view" id="companyView">
+                            
+                        </div>
+                        <table class="shift-calendar-table">
+                            <thead class="shift-calendar-table__head">
+                                <tr class="shift-calendar-table__head__day">
+                                    <th rowspan="2"></th>
+                                    @foreach ( $convertedDates as $date )
+                                    <th colspan="2" class="txt">
+                                        <p class="">{{$date->format('d')}}日({{ $date->isoFormat('ddd') }})</p>
+                                    </th>
+                                    @endforeach
+                                </tr>
+                                <tr class="shift-calendar-table__head__part">
+                                    @foreach ( $convertedDates as $date )
+                                    <th class="txt">
+                                        <p class="">AM</p>
+                                    </th>
+                                    <th class="txt">
+                                        <p class="">PM</p>
+                                    </th>
+                                    @endforeach
+                                </tr>
+                            </thead>
+                            <tbody class="shift-calendar-table__body">
+                                @foreach ( $sortedShiftDataByEmployee as $employeeId => $shiftData )
+                                    @php
+                                    // 一周目だけ従業員表示
+                                    $is_employee_open = true;
+                                    // 1日ごとの最大案件数
+                                    $max_count = 1;
+                                    @endphp
+                                    {{-- 最大案件数の計算 --}}
+                                    @php
+                                        foreach ($shiftData as $shift) {
+                                            $am_count = 0;
+                                            $pm_count = 0;
+                                            foreach ($shift->projectsVehicles as $spv) {
+                                                $count = 0;
+                                                if($spv->time_of_day == 0){
+                                                    $am_count++;
+                                                }
+                                                if($spv->time_of_day == 1){
+                                                    $pm_count++;
+                                                }
                                             }
-                                            if($spv->time_of_day == 1){
-                                                $pm_count++;
+                                            if($max_count < $am_count){
+                                                $max_count=$am_count;
+                                            }elseif ($max_count < $pm_count) {
+                                                $max_count=$pm_count;
                                             }
                                         }
-                                        if($max_count < $am_count){
-                                            $max_count = $am_count;
-                                        }elseif ($max_count < $pm_count) {
-                                            $max_count = $pm_count;
-                                        }
-                                    }
-                                @endphp
-                                    <tr class="shift-calendar-table__body__row">
-                                        @foreach ( $shiftData as $shift )  {{-- $shift == 1日のシフト --}}
-                                            {{-- 一周目だけ従業員表示 --}}
-                                            @if ($is_employee_open)
-                                                <td class="table-employee-name">
-                                                    <div class="table-employee-name__block">
-                                                        @if ($shift->employee)
-                                                            <p class="">{{$shift->employee->name}}</p>
-                                                        @else
-                                                            <p class="" style="color: red;">{{$shift->unregistered_employee}}</p>
-                                                        @endif
-                                                    </div>
-                                                </td>
-                                                @php
-                                                    $is_employee_open = false;
-                                                @endphp
-                                            @endif
-                                            {{-- 最大案件数の計算 --}}
+                                    @endphp
+                                <tr class="shift-calendar-table__body__row getRow">
+                                    {{-- 左側の会社の列作成のため --}}
+                                    @if ($shift->employee)
+                                        <td class="td-none companyInfo" data-company-name="{{ $shift->employee->company->name }}">
+                                    @endif
+                                    @foreach ( $shiftData as $shift ) {{-- $shift == 1日のシフト --}}
+                                        {{-- 一周目だけ従業員表示 --}}
+                                        @if ($is_employee_open)
+                                            <td class="table-employee-name">
+                                                <div class="table-employee-name__block">
+                                                    @if ($shift->employee)
+                                                    <p class="">{{$shift->employee->name}}</p>
+                                                    @else
+                                                    <p class="" style="color: red;">{{$shift->unregistered_employee}}</p>
+                                                    @endif
+                                                </div>
+                                            </td>
                                             @php
-                                                $am_check_count = 0;
-                                                $pm_check_count = 0;
+                                            $is_employee_open = false;
                                             @endphp
-                                            {{-- 午前 --}}
-                                            <td class="table-cell">
-                                                @foreach ( $shift->projectsVehicles as $spv )
-                                                    @if ($spv->time_of_day == 0)
+                                        @endif
+                                        {{-- 最大案件数の計算 --}}
+                                        @php
+                                            $am_check_count = 0;
+                                            $pm_check_count = 0;
+                                        @endphp
+                                        {{-- 午前 --}}
+                                        <td class="table-cell">
+                                            @foreach ( $shift->projectsVehicles as $spv )
+                                                @if ($spv->time_of_day == 0)
                                                     <div class="table-cell__item">
                                                         @if ($spv->project)
-                                                        <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                                            <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
                                                         @elseif($spv->unregistered_project)
-                                                        <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
+                                                            <p class="table-cell__item__row setHightElem" style="color: red;">
+                                                                {{$spv->unregistered_project}}</p>
                                                         @else
-                                                        <p class="table-cell__item__row setHightElem"></p>
+                                                            <p class="table-cell__item__row setHightElem"></p>
                                                         @endif
                                                         {{-- 車両 --}}
                                                         @if ($spv->vehicle)
-                                                        <p class="table-cell__item__row">{{$spv->vehicle->number}}</p>
+                                                            <p class="table-cell__item__row">{{$spv->vehicle->number}}</p>
                                                         @elseif($spv->unregistered_vehicle)
-                                                        <p class="table-cell__item__row" style="color: red;">{{$spv->unregistered_vehicle}}</p>
+                                                            <p class="table-cell__item__row" style="color: red;">
+                                                                {{$spv->unregistered_vehicle}}</p>
                                                         @else
-                                                        <p class="table-cell__item__row"></p>
+                                                            <p class="table-cell__item__row"></p>
                                                         @endif
                                                         <p class="table-cell__item__row">
                                                             @if ($spv->retail_price)
@@ -236,54 +251,10 @@
                                                         </p>
                                                     </div>
                                                     @php $am_check_count++; @endphp
-                                                    @endif
-                                                @endforeach
+                                                @endif
+                                            @endforeach
 
-                                                @for ($i = $am_check_count; $i < $max_count; $i++)
-                                                    <div class="table-cell__item">
-                                                        <p class="table-cell__item__row setHightElem"></p>
-                                                        <p class="table-cell__item__row"></p>
-                                                        <p class="table-cell__item__row"></p>
-                                                        <p class="table-cell__item__row"></p>
-                                                    </div>
-                                                @endfor
-                                            </td>
-                                            {{-- 午後 --}}
-                                            <td class="table-cell">
-                                                @foreach ( $shift->projectsVehicles as $spv )
-                                                    @if ($spv->time_of_day == 1)
-                                                    <div class="table-cell__item">
-                                                        @if ($spv->project)
-                                                        <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
-                                                        @elseif($spv->unregistered_project)
-                                                        <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
-                                                        @else
-                                                        <p class="table-cell__item__row setHightElem"></p>
-                                                        @endif
-                                                        {{-- 車両 --}}
-                                                        @if ($spv->vehicle)
-                                                        <p class="table-cell__item__row">{{$spv->vehicle->number}}</p>
-                                                        @elseif($spv->unregistered_vehicle)
-                                                        <p class="table-cell__item__row" style="color: red;">{{$spv->unregistered_vehicle}}</p>
-                                                        @else
-                                                        <p class="table-cell__item__row"></p>
-                                                        @endif
-                                                        <p class="table-cell__item__row">
-                                                            @if ($spv->retail_price)
-                                                                {{$spv->retail_price}}
-                                                            @endif
-                                                        </p>
-                                                        <p class="table-cell__item__row">
-                                                            @if ($spv->driver_price)
-                                                                {{$spv->driver_price}}
-                                                            @endif
-                                                        </p>
-                                                    </div>
-                                                    @php $pm_check_count++; @endphp
-                                                    @endif
-                                                @endforeach
-
-                                                @for ($i = $pm_check_count; $i < $max_count; $i++)
+                                            @for ($i = $am_check_count; $i < $max_count; $i++)
                                                 <div class="table-cell__item">
                                                     <p class="table-cell__item__row setHightElem"></p>
                                                     <p class="table-cell__item__row"></p>
@@ -291,17 +262,61 @@
                                                     <p class="table-cell__item__row"></p>
                                                 </div>
                                             @endfor
-                                            </td>
-                                        @endforeach
-                                    </tr>
+                                        </td>
+                                        {{-- 午後 --}}
+                                        <td class="table-cell">
+                                            @foreach ( $shift->projectsVehicles as $spv )
+                                                @if ($spv->time_of_day == 1)
+                                                    <div class="table-cell__item">
+                                                        @if ($spv->project)
+                                                            <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                                        @elseif($spv->unregistered_project)
+                                                            <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
+                                                        @else
+                                                            <p class="table-cell__item__row setHightElem"></p>
+                                                        @endif
+                                                        {{-- 車両 --}}
+                                                        @if ($spv->vehicle)
+                                                            <p class="table-cell__item__row">{{$spv->vehicle->number}}</p>
+                                                        @elseif($spv->unregistered_vehicle)
+                                                            <p class="table-cell__item__row" style="color: red;">{{$spv->unregistered_vehicle}}</p>
+                                                        @else
+                                                            <p class="table-cell__item__row"></p>
+                                                        @endif
+                                                        <p class="table-cell__item__row">
+                                                            @if ($spv->retail_price)
+                                                            {{$spv->retail_price}}
+                                                            @endif
+                                                        </p>
+                                                        <p class="table-cell__item__row">
+                                                            @if ($spv->driver_price)
+                                                            {{$spv->driver_price}}
+                                                            @endif
+                                                        </p>
+                                                    </div>
+                                                    @php $pm_check_count++; @endphp
+                                                @endif
+                                            @endforeach
+
+                                            @for ($i = $pm_check_count; $i < $max_count; $i++)
+                                                <div class="table-cell__item">
+                                                    <p class="table-cell__item__row setHightElem"></p>
+                                                    <p class="table-cell__item__row"></p>
+                                                    <p class="table-cell__item__row"></p>
+                                                    <p class="table-cell__item__row"></p>
+                                                </div>
+                                            @endfor
+                                        </td>
+                                    @endforeach
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
-                    @else
+                @else
                     <p>{{$startOfWeek}}〜{{$endOfWeek}}のシフトはありません</p>
-                    @endif
-                </div>
+                @endif
             </div>
+        </div>
 
         </div>
 

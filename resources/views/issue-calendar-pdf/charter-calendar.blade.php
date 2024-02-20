@@ -31,6 +31,16 @@
           text-align: center;
           padding: 1.5px 5px;
         }
+        .project{
+            text-align: left;
+            padding-left: 5px;
+            box-sizing: border-box;
+        }
+        .text-right{
+            text-align: right;
+            padding-right: 5px;
+            box-sizing: border-box;
+        }
     </style>
 
     <table>
@@ -49,13 +59,25 @@
         <tbody>
             @foreach ( $shiftArray as $data )
             <tr>
-                <td>{{$data['shift']['date']}}</td>
-                <td>{{$data['project']['name']}}</td>
-                <td>{{ ceil($data['retail_price']) }}</td>
-                <td>{{ ceil($data['expressway_fee']) }}</td>
-                <td>{{ ceil($data['parking_fee']) }}</td>
-                <td>{{$data['shift']['employee']['name']}}</td>
-                <td>{{ ceil($data['driver_price']) }}</td>
+                <td>
+                    @foreach ($dates as $date)
+                        @if ($date->format('Y-m-d') == $data['shift']['date'])
+                            <p class="">{{ $date->format('n月j日') }}({{ $date->isoFormat('ddd') }})</p>
+                        @endif
+                    @endforeach
+                </td>
+                <td class="project">{{$data['project']['name']}}</td>
+                <td class="text-right">{{ number_format($data['retail_price']) }}</td>
+                <td class="text-right">{{ number_format($data['expressway_fee']) }}</td>
+                <td class="text-right">{{ number_format($data['parking_fee']) }}</td>
+                <td class="">
+                    @if (isset($data['shift']['employee']['name']))
+                        <p>{{$data['shift']['employee']['name']}}</p>
+                    @else
+                        <p class="">{{ $data['shift']['unregistered_employee'] }}</p>
+                    @endif
+                </td>
+                <td class="text-right">{{ number_format($data['driver_price']) }}</td>
                 <td>{{$data['project']['client']['name']}}</td>
             </tr>
             @endforeach

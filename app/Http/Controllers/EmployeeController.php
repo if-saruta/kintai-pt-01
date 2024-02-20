@@ -189,12 +189,10 @@ class EmployeeController extends Controller
         $employeePrices = $request->input('employeePrice');
         if($employeePrices){
             foreach ($employeePrices as $projectId => $price) {
-                $projectEmployeePayment = ProjectEmployeePayment::where('employee_id', $id)
-                ->where('project_id', $projectId)
-                ->first();
-
-                $projectEmployeePayment->amount = $price;
-                $projectEmployeePayment->save();
+                ProjectEmployeePayment::updateOrCreate(
+                    ['project_id' => $projectId, 'employee_id' => $employee->id],
+                    ['amount' => $price]
+                );
             }
         }
 

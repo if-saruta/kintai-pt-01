@@ -173,19 +173,20 @@
                                     <div class="salary">
                                         <p class="">ドライバー価格</p>
                                         @if ($project->payment_type == 1)
-                                        @php
-                                            $amount = 0;
-                                            foreach ($projectEmployeePayments as $projectEmployeePayment) {
-                                                if($projectEmployeePayment->project_id == $project->id){
-                                                    $amount = $projectEmployeePayment->amount;
+                                            @php
+                                                $amount = 0;
+                                                $id = null;
+                                                foreach ($projectEmployeePayments as $projectEmployeePayment) {
+                                                    if($projectEmployeePayment->project_id == $project->id){
+                                                        $amount = $projectEmployeePayment->amount;
+                                                    }
                                                 }
-                                            }
-                                        @endphp
-                                        <input type="text" name="employeePrice[{{$project->id}}]" value="{{$amount}}" class="c-input" placeholder="1,000">
+                                            @endphp
+                                            <input type="text" name="employeePrice[{{$project->id}}]" value="{{$amount}}" class="c-input" placeholder="1,000">
                                         @else
-                                        <div class="read-only">
-                                            <input type="text" class="c-input" placeholder="1,000" readonly>
-                                        </div>
+                                            <div class="read-only">
+                                                <input type="text" class="c-input" placeholder="1,000" readonly>
+                                            </div>
                                         @endif
                                     </div>
                                     <div class="allowance projectAllowanceContainer">

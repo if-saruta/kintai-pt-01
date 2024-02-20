@@ -131,6 +131,59 @@ class InvoiceController extends Controller
         return view('invoice.driverShift', compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays', 'warning', 'secondMachineArray', 'thirdMachineArray', 'secondMachineCount', 'thirdMachineCount', 'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking', 'totalExpressWay', 'totalOverTime'));
     }
 
+    public function driverCalendarPDF(Request $request)
+    {
+        $employeeId = $request->employeeId;
+        $getYear = $request->year;
+        $getMonth = $request->month;
+        $textarea = $request->textarea;
+        $amountCheck = $request->amountCheck;
+        $allowanceCheck = $request->allowanceCheck;
+        $expresswayCheck = $request->expresswayCheck;
+        $parkingCheck = $request->parkingCheck;
+        $vehicleCheck = $request->vehicleCheck;
+        $overtimeCheck = $request->overtimeCheck;
+
+        $employees = Employee::all();
+        $findEmployee = Employee::find($employeeId);
+        $employeeName = $findEmployee->name;
+
+        $projects = Project::all();
+        $allowanceProject = AllowanceByProject::where('employee_id', $findEmployee->id)->get();
+
+        $vehicles = Vehicle::all();
+
+        // シフトを検索・取得
+        $shifts = Shift::with('employee', 'projectsVehicles.project', 'projectsVehicles.vehicle', 'projectsVehicles.rentalVehicle')
+            ->where('employee_id', $employeeId)
+            ->whereYear('date', $getYear)
+            ->whereMonth('date', $getMonth)
+            ->get();
+
+
+        // 全日にちを取得
+        $dates = $this->createDate($getYear, $getMonth);
+        // 祝日を取得
+        $holidays = $this->getHoliday($getYear);
+        // 二代目以降の情報を取得
+        [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount] = $this->machineInfoExtract($shifts);
+        // 案件情報を取得
+        $projectInfoArray = $this->projectInfoExtract($shifts);
+        // 集計表情報を取得
+        [$totalSalary, $totalAllowance, $totalParking, $totalExpressWay, $totalOverTime] = $this->totallingInfoExtract($shifts);
+
+        $warning = null;
+        if ($shifts == null || $shifts->isEmpty()) {
+            $warning = "選択したシフトは登録されいません";
+        }
+
+        $pdf =  PDF::loadView('issue-calendar-pdf.driver-calendar', compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays', 'warning', 'secondMachineArray', 'thirdMachineArray', 'secondMachineCount', 'thirdMachineCount', 'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking', 'totalExpressWay', 'totalOverTime', 'textarea', 'amountCheck', 'allowanceCheck', 'expresswayCheck', 'parkingCheck', 'vehicleCheck', 'overtimeCheck'));
+        $fileName = "{$getMonth}月_{$employeeName}.pdf";
+
+        return $pdf->download($fileName); //生成されるファイル名
+        return view('issue-calendar-pdf.driver-calendar', compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays', 'warning', 'secondMachineArray', 'thirdMachineArray', 'secondMachineCount', 'thirdMachineCount', 'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking', 'totalExpressWay', 'totalOverTime', 'textarea'));
+    }
+
     function addVehicle($vehicleNumber, &$secondMachineArray, &$thirdMachineArray, &$secondMachineCheck) {
         if($vehicleNumber != '自車'){
             if ($secondMachineCheck) {
@@ -215,55 +268,6 @@ class InvoiceController extends Controller
         return [$totalSalary, $totalAllowance, $totalParking, $totalExpressWay, $totalOverTime];
     }
 
-    public function driverCalendarPDF(Request $request)
-    {
-        $employeeId = $request->employee;
-        $getYear = $request->year;
-        $getMonth = $request->month;
-
-        $employees = Employee::all();
-        $employeeName = Employee::find($employeeId);
-
-        $projects = Project::all();
-        $allowanceProject = AllowanceByProject::where('employee_id', $employeeName->id)->get();
-
-        $vehicles = Vehicle::all();
-
-        // シフトを検索・取得
-        $shifts = Shift::with('employee', 'projectsVehicles.project', 'projectsVehicles.vehicle', 'projectsVehicles.rentalVehicle')
-            ->where('employee_id', $employeeId)
-            ->whereYear('date', $getYear)
-            ->whereMonth('date', $getMonth)
-            ->get();
-
-        $projectCount = [];
-        foreach ($shifts as $shift) {
-            foreach ($shift->projectsVehicles as $spv) {
-                if ($spv->project) {
-                    if (isset($projectCount[$spv->project->name][$spv->retail_price])) {
-                        $projectCount[$spv->project->name][$spv->retail_price]++;
-                    } else {
-                        $projectCount[$spv->project->name][$spv->retail_price] = 1;
-                    }
-                } else {
-                    if (isset($projectCount[$spv->unregistered_project][$spv->retail_price])) {
-                        $projectCount[$spv->unregistered_project][$spv->retail_price]++;
-                    } else {
-                        $projectCount[$spv->unregistered_project][$spv->retail_price] = 1;
-                    }
-                }
-            }
-        }
-
-        // 全日にちを取得
-        $dates = $this->createDate($getYear, $getMonth);
-
-        $pdf =  PDF::loadView('issue-calendar-pdf.driver-calendar', compact('employees', 'employeeName', 'projects', 'vehicles', 'shifts', 'projectCount', 'allowanceProject', 'getYear', 'getMonth', 'dates'));
-        $fileName = "test.pdf";
-
-        return $pdf->download($fileName); //生成されるファイル名
-        // return view('issue-calendar-pdf.driver-calendar', compact('employees', 'employeeName','projects', 'vehicles', 'shifts', 'projectCount', 'allowanceProject', 'getYear', 'getMonth', 'dates'));
-    }
 
     //*********************************************************************
     //******************************************************************* */
@@ -424,7 +428,7 @@ class InvoiceController extends Controller
         $dates = $this->createDate($getYear, $getMonth);
 
         $pdf =  PDF::loadView('issue-calendar-pdf.project-calendar', compact('projects', 'clients', 'client', 'ShiftProjectVehicles', 'getCompanies', 'getYear', 'getMonth', 'dates'));
-        $fileName = "test.pdf";
+        $fileName = "{getMonth}月.pdf";
 
         return $pdf->download($fileName); //生成されるファイル名
 
@@ -515,7 +519,7 @@ class InvoiceController extends Controller
         foreach ($retail_price as $id => $value) {
             $getShift = ShiftProjectVehicle::find($id);
             if ($getShift !== null) { // $getShiftがnullでないことを確認
-                $getShift->retail_price = $value;
+                $getShift->retail_price = $retail_price[$id];
                 $getShift->expressway_fee = $expressway_fee[$id];
                 $getShift->parking_fee = $parking_fee[$id];
                 $getShift->driver_price = $driver_price[$id];
@@ -531,8 +535,8 @@ class InvoiceController extends Controller
             }
         }
 
-        $getYear = $request->getYear;
-        $getMonth = $request->getMonth;
+        $getYear = $request->year;
+        $getMonth = $request->month;
 
         return redirect()->route('invoice.findCharterShift', ['year' => $getYear, 'month' => $getMonth]);
     }
@@ -572,6 +576,9 @@ class InvoiceController extends Controller
             ->whereNotNull('shift_project_vehicle.unregistered_project') // この行を追加
             ->orderBy('shifts.date', 'asc')
             ->get();
+
+            // 全日にちを取得
+        $dates = $this->createDate($getYear, $getMonth);
 
 
 
@@ -635,13 +642,14 @@ class InvoiceController extends Controller
         }
         // 元の配列に代入
         $shiftArray = array_values($arrangeShiftArray);
+        // dd($shiftArray);
 
         $warning = null;
         if (!$shiftArray) {
             $warning = "選択されたシフトは登録されていません";
         }
 
-        return view('invoice.charterShift', compact('ShiftProjectVehicles', 'shiftArray', 'unregisterProjectShift', 'clients', 'getYear', 'getMonth', 'warning'));
+        return view('invoice.charterShift', compact('ShiftProjectVehicles', 'shiftArray', 'unregisterProjectShift', 'clients', 'getYear', 'getMonth', 'warning', 'dates'));
     }
 
     public function charterCalendarPDF(Request $request)
@@ -675,7 +683,6 @@ class InvoiceController extends Controller
             ->whereNotNull('shift_project_vehicle.unregistered_project') // この行を追加
             ->orderBy('shifts.date', 'asc')
             ->get();
-
 
 
         // チャーター案件が含まれるシフトを配列に変換
@@ -742,7 +749,7 @@ class InvoiceController extends Controller
         // 全日にちを取得
         $dates = $this->createDate($getYear, $getMonth);
 
-        $pdf =  PDF::loadView('issue-calendar-pdf.charter-calendar', compact('ShiftProjectVehicles', 'shiftArray', 'unregisterProjectShift', 'clients', 'getYear', 'getMonth'));
+        $pdf =  PDF::loadView('issue-calendar-pdf.charter-calendar', compact('ShiftProjectVehicles', 'shiftArray', 'unregisterProjectShift', 'clients', 'getYear', 'getMonth', 'dates'));
         $fileName = "{$getYear}_{$getMonth}_チャーター.pdf";
 
         return $pdf->download($fileName); //生成されるファイル名

@@ -334,4 +334,46 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
     setHeight();
+
+    const companyClmCreate = () => {
+        const companyView = document.getElementById('companyView');
+        const getRow = document.querySelectorAll('.getRow');
+        const companyInfo = document.querySelectorAll('.companyInfo');
+        const companyKind = [];
+        let companyKindCount = 0;
+        const companyHeightArray = [];
+
+        for(let i = 0; i < companyInfo.length; i++){
+            // 会社の種類を格納
+            if(!companyKind.includes(companyInfo[i].getAttribute('data-company-name'))){
+                companyKind[companyKindCount] = companyInfo[i].getAttribute('data-company-name');
+                // 会社の種類の分だけ初期値設定
+                companyHeightArray[companyKindCount] = 0;
+                //index番号付与
+                companyKindCount++;
+            }
+        }
+        // 会社ごとの高さを取得
+        for(let i = 0; i < companyKind.length; i++){
+            for(let j = 0; j < companyInfo.length; j++){
+                if(companyKind[i] == companyInfo[j].getAttribute('data-company-name')){
+                    companyHeightArray[i] += companyInfo[j].closest('.getRow').clientHeight;
+                }
+            }
+        }
+
+        for(let i = 0; i < companyHeightArray.length; i++){
+            // divを作成
+            let newElem = document.createElement('div');
+            let txtElem = document.createElement('p');
+            newElem.classList.add('company-view__item');
+            newElem.style.height = (companyHeightArray[i] - 2) + 'px';
+            txtElem.textContent = companyKind[i];
+            newElem.appendChild(txtElem);
+            companyView.appendChild(newElem);
+        }
+
+
+    }
+    companyClmCreate();
 })

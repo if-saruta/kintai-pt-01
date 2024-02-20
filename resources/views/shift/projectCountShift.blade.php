@@ -143,7 +143,7 @@
                             <tr class="shift-calendar-table__head__day">
                                 <th></th>
                                 @foreach ( $convertedDates as $date )
-                                <th class="txt"><p class="">{{$date->format('d')}}日</p></th>
+                                <th class="txt"><p class="">{{$date->format('d')}}日({{ $date->isoFormat('ddd') }})</p></th>
                                 @endforeach
                             </tr>
                         </thead>

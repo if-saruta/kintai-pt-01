@@ -46,6 +46,19 @@ class ShiftController extends Controller
         $shiftDataByEmployee = $shifts->groupBy(function ($shift) {
             return $shift->employee_id;
         });
+        // 従業員IDでグループ化し、登録されている従業員を先に、登録されていない従業員を後にソート
+        $sortedShiftDataByEmployee = $shifts->groupBy('employee_id')->sortBy(function ($group, $key) {
+            // グループ内の最初のシフトから従業員を取得
+            $employee = $group->first()->employee;
+            if ($employee) {
+                // 従業員が登録されている場合、会社IDを返し、昇順にソート
+                return $employee->company_id ?? PHP_INT_MAX; // 従業員が会社に所属していない場合、大きな値を割り当て
+            } else {
+                // 従業員が登録されていない場合、非常に大きな値を返して、リストの最後に配置
+                return PHP_INT_MAX;
+            }
+        }, $preserveKeys = true);
+
 
         $dates = [];
         foreach ($shifts as $shift) {
@@ -62,7 +75,7 @@ class ShiftController extends Controller
         $payments = ProjectEmployeePayment::all();
 
 
-        return view('shift.index', compact('shiftDataByEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
+        return view('shift.index', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
     }
 
     public function selectWeek(Request $request)
@@ -90,11 +103,22 @@ class ShiftController extends Controller
 
         $shifts = Shift::with('employee', 'projectsVehicles.project', 'projectsVehicles.vehicle')
             ->whereBetween('date', [$startOfWeek, $endOfWeek])
-            ->orderBy('date', 'asc')
             ->get();
         $shiftDataByEmployee = $shifts->groupBy(function ($shift) {
             return $shift->employee_id;
         });
+        // 従業員IDでグループ化し、登録されている従業員を先に、登録されていない従業員を後にソート
+        $sortedShiftDataByEmployee = $shifts->groupBy('employee_id')->sortBy(function ($group, $key) {
+            // グループ内の最初のシフトから従業員を取得
+            $employee = $group->first()->employee;
+            if ($employee) {
+                // 従業員が登録されている場合、会社IDを返し、昇順にソート
+                return $employee->company_id ?? PHP_INT_MAX; // 従業員が会社に所属していない場合、大きな値を割り当て
+            } else {
+                // 従業員が登録されていない場合、非常に大きな値を返して、リストの最後に配置
+                return PHP_INT_MAX;
+            }
+        }, $preserveKeys = true);
 
         $dates = [];
         foreach ($shifts as $shift) {
@@ -116,13 +140,13 @@ class ShiftController extends Controller
 
         if ($page) {
             if ($page == 'page01') {
-                return view('shift.index', compact('shiftDataByEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
+                return view('shift.index', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
             } elseif ($page == 'page02') {
-                return view('shift.employeeShowShift', compact('shiftDataByEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
+                return view('shift.employeeShowShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
             } elseif ($page == 'page03') {
-                return view('shift.employeePriceShift', compact('shiftDataByEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
+                return view('shift.employeePriceShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
             } elseif ($page == 'page04') {
-                return view('shift.projectPriceShift', compact('shiftDataByEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
+                return view('shift.projectPriceShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
             } elseif ($page == 'page05') {
                 $shiftDataByDay = $shifts->groupBy(function ($shift) {
                     return $shift->date;
@@ -148,10 +172,10 @@ class ShiftController extends Controller
             } elseif ($page == 'page06') {
                 $projects = Project::all();
                 $vehicles = Vehicle::all();
-                return view('shift.edit', compact('shiftDataByEmployee', 'projects', 'vehicles', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
+                return view('shift.edit', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'projects', 'vehicles', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
             }
         } else {
-            return view('shift.index', compact('shiftDataByEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
+            return view('shift.index', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
         }
     }
 
@@ -198,7 +222,7 @@ class ShiftController extends Controller
         $date = $request->startOfWeek;
 
         return redirect()->route('shift.edit')->with([
-            'date' => $date, 
+            'date' => $date,
             'page' => 'page06'
         ]);
     }
@@ -263,10 +287,10 @@ class ShiftController extends Controller
         $path = $request->file('csv_file')->getRealPath();
 
         // CSVファイルを読み込む
-        // $csv = Reader::createFromPath($path, 'r');
-        $reader = Reader::createFromPath($path, 'r');
-        $encoder = (new CharsetConverter())->inputEncoding('SJIS-win');
-        $csv = $encoder->convert($reader);
+        $csv = Reader::createFromPath($path, 'r');
+        // $reader = Reader::createFromPath($path, 'r');
+        // $encoder = (new CharsetConverter())->inputEncoding('SJIS-win');
+        // $csv = $encoder->convert($reader);
 
         $records = [];
         foreach ($csv as $record) {
@@ -378,6 +402,7 @@ class ShiftController extends Controller
             }
         }
 
+        $employeeArray = [];
 
         foreach ($organizedData as $date => $employeeData) {
             foreach ($employeeData as $employee_r => $row) {
