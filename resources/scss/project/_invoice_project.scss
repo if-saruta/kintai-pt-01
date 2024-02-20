@@ -4,13 +4,62 @@
 
 .--invoice-white-board{
     .project-invoice-shift{
+        .project-calendar-pdf-form{
+            margin-top: 3rem;
+            .check-area{
+                display: flex;
+                gap: 2rem;
+                &__item{
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                    label{
+                        font-size: 1.3rem;
+                        font-weight: $fw-bold;
+                        letter-spacing: 0.1rem;
+                        color: $cBlack;
+                    }
+                }
+            }
+            button{
+                margin-top: 2rem;
+                width: 15rem;
+                height: 4.5rem;
+                border: 2px solid #4FD1C5;
+                border-radius: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.4rem;
+                font-weight: bold;
+                letter-spacing: 0.1rem;
+                color: #4FD1C5;
+            }
+        }
         .project-calendar-wrap{
             position: relative;
             overflow: scroll;
             width: math.div(980,1280) * 100vw;
+            height: math.div(410,800) * 100vh;
+            button{
+                width: 15rem;
+                height: 3rem;
+                margin-top: 2rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid #4F9FD1;
+                border-radius: 1rem;
+                font-size: 1.3rem;
+                font-weight: bold;
+                letter-spacing: 0.1rem;
+                color: #4F9FD1;
+                transition: 0.5s;
+            }
             &__table{
                 width: 200%;
                 table-layout:auto;
+                margin-top: 2rem;
                 thead{
                     tr{
                         height: 4rem;
@@ -20,7 +69,12 @@
                     tr{
                         height: 5rem;
                         td{
-                            
+                            input{
+                                width: 100%;
+                                padding: 0;
+                                border: 0;
+                                background-color: rgba(0, 217, 255, 0.148);
+                            }
                         }
                     }
                 }
@@ -35,5 +89,8 @@
                 }
             }
         }
+    }
+    .clm-none{
+        display: none;
     }
 }

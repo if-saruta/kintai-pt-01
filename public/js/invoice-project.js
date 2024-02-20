@@ -10,15 +10,21 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 if(checkBox[i].checked){
                     for(let j = 0; j < targetElem.length; j++){
-                        targetElem[j].style.display = 'flex';
+                        targetElem[j].classList.remove('clm-none');
                     }
                 }else{
                     for(let j = 0; j < targetElem.length; j++){
-                        targetElem[j].style.display = 'none';
+                        targetElem[j].classList.add('clm-none');
                     }
                 }
             })
         }
+
+        const colspanCalc = () => {
+            const rightHead = document.getElementById('rightHead');
+
+        }
+        colspanCalc();
     }
     calendarClmActive();
 })

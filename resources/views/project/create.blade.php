@@ -223,7 +223,7 @@
                 </div>
             </form>
         </div>
-        <form action="{{ route('project.csv') }}" method="POST">
+        <form action="{{ route('project.csv') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="file" name="csv_file">
             <button>インポート</button>
