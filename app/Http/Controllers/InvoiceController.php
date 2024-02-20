@@ -181,7 +181,7 @@ class InvoiceController extends Controller
         $fileName = "{$getMonth}月_{$employeeName}.pdf";
 
         return $pdf->download($fileName); //生成されるファイル名
-        return view('issue-calendar-pdf.driver-calendar', compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays', 'warning', 'secondMachineArray', 'thirdMachineArray', 'secondMachineCount', 'thirdMachineCount', 'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking', 'totalExpressWay', 'totalOverTime', 'textarea'));
+        return view('issue-calendar-pdf.driver-calendar', compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays', 'warning', 'secondMachineArray', 'thirdMachineArray', 'secondMachineCount', 'thirdMachineCount', 'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking', 'totalExpressWay', 'totalOverTime', 'textarea', 'amountCheck', 'allowanceCheck', 'expresswayCheck', 'parkingCheck', 'vehicleCheck', 'overtimeCheck'));
     }
 
     function addVehicle($vehicleNumber, &$secondMachineArray, &$thirdMachineArray, &$secondMachineCheck) {
@@ -213,11 +213,13 @@ class InvoiceController extends Controller
             foreach($shift->projectsVehicles as $spv){
                 if(in_array($spv->vehicle_rental_type, [0, 1])){
                     $vehicleNumber = $spv->vehicle ? $spv->vehicle->number : $spv->unregistered_vehicle;
-                    if(!$spv->rental_vehicle_id || $spv->vehicle_id != $spv->rental_vehicle_id){
-                        if ($secondMachineCheck) {
-                            $secondMachineCount += $this->addVehicle($vehicleNumber, $secondMachineArray, $thirdMachineArray, $secondMachineCheck);
-                        } else {
-                            $thirdMachineCount += $this->addVehicle($vehicleNumber, $secondMachineArray, $thirdMachineArray, $secondMachineCheck);
+                    if($vehicleNumber != null){
+                        if(!$spv->rental_vehicle_id || $spv->vehicle_id != $spv->rental_vehicle_id){
+                            if ($secondMachineCheck) {
+                                $secondMachineCount += $this->addVehicle($vehicleNumber, $secondMachineArray, $thirdMachineArray, $secondMachineCheck);
+                            } else {
+                                $thirdMachineCount += $this->addVehicle($vehicleNumber, $secondMachineArray, $thirdMachineArray, $secondMachineCheck);
+                            }
                         }
                     }
                 }
@@ -234,11 +236,13 @@ class InvoiceController extends Controller
         foreach($shifts as $shift){
             foreach($shift->projectsVehicles as $spv){
                 $projectName = $spv->project ? $spv->project->name : $spv->unregistered_project;
-                if($projectName != '休み'){
-                    if(isset($projectInfoArray[$projectName][$spv->retail_price])){
-                        $projectInfoArray[$projectName][$spv->retail_price]++;
-                    }else{
-                        $projectInfoArray[$projectName][$spv->retail_price] = 1;
+                if($projectName != null){
+                    if($projectName != '休み'){
+                        if(isset($projectInfoArray[$projectName][$spv->retail_price])){
+                            $projectInfoArray[$projectName][$spv->retail_price]++;
+                        }else{
+                            $projectInfoArray[$projectName][$spv->retail_price] = 1;
+                        }
                     }
                 }
             }

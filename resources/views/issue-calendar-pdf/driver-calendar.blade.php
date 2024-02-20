@@ -89,7 +89,7 @@
           box-sizing: border-box;
         }
         .vehicle{
-          width: 12%;
+          width: 11%;
           text-align: right;
           padding: 3px 0px;
           padding-right: 1px;
@@ -183,6 +183,16 @@
 <div class="top-table">
     <p class="name">{{ $findEmployee->name }}</p>
     <p class="date-info">{{ $getYear }}年{{ $getMonth }}月度</p>
+
+    @php
+        // シフトの数を判定し1日の行を最低3行にするコード
+        $rowNeed = 3;
+        foreach ($shifts as $shift) {
+            if ($rowNeed < $shift->projectsVehicles->count()) {
+                $rowNeed = $shift->projectsVehicles->count();
+            }
+        }
+    @endphp
   <table class="main-table">
     <thead>
         <tr>
@@ -212,14 +222,7 @@
       @foreach ($dates as $date)
         @if ($date->format('d') < 16)
           @php
-              // シフトの数を判定し1日の行を最低3行にするコード
-              $rowNeed = 3;
               $count = 0;
-              foreach ($shifts as $shift) {
-                if($shift->date == $date->format('Y-m-d')){
-                  $rowNeed = max(3, $shift->projectsVehicles->count());
-                }
-              }
           @endphp
 
           @php
@@ -288,24 +291,6 @@
                                 @endif
                             @endif
                         @endif
-                        {{-- @if ($rental_type == 0 && $spv->vehicle_id)
-                            {{$spv->vehicle->number}}
-                            @php
-                                if($second_machine_check){
-                                $second_machine_count++;
-                                $second_machine_check = false;
-                                // 2台目の車両の種類を確認
-                                if(!in_array($spv->vehicle->number, $secound_vehicle_array)){
-                                    $secound_vehicle_array[] = $spv->vehicle->number;
-                                }
-                                }else{
-                                $third_machine_count++;
-                                if(!in_array($spv->vehicle->number, $third_vehicle_array)){
-                                    $third_vehicle_array[] = $spv->vehicle->number;
-                                }
-                                }
-                            @endphp
-                        @endif --}}
                         </p>
                     </td>
                   @endif
@@ -407,13 +392,7 @@
       @foreach ($dates as $date)
         @if ($date->format('d') >= 16)
           @php
-              $rowNeed = 3;
               $count = 0;
-              foreach ($shifts as $shift) {
-                if($shift->date == $date->format('Y-m-d')){
-                  $rowNeed = max(3, $shift->projectsVehicles->count());
-                }
-              }
           @endphp
 
           @php

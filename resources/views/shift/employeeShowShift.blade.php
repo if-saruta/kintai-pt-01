@@ -277,6 +277,126 @@
                                         @endforeach
                                     </tr>
                             @endforeach
+
+                            {{-- 未登録従業員 --}}
+                            @foreach ( $shiftDataByUnEmployee as $unEmployee => $shiftData )
+                                @php
+                                // 一周目だけ従業員表示
+                                $is_employee_open = true;
+                                // 1日ごとの最大案件数
+                                $max_count = 1;
+                                @endphp
+                                {{-- 最大案件数の計算 --}}
+                                @php
+                                    foreach ($shiftData as $shift) {
+                                        $am_count = 0;
+                                        $pm_count = 0;
+                                        foreach ($shift->projectsVehicles as $spv) {
+                                            $count = 0;
+                                            if($spv->time_of_day == 0){
+                                                $am_count++;
+                                            }
+                                            if($spv->time_of_day == 1){
+                                                $pm_count++;
+                                            }
+                                        }
+                                        if($max_count < $am_count){
+                                            $max_count = $am_count;
+                                        }elseif ($max_count < $pm_count) {
+                                            $max_count = $pm_count;
+                                        }
+                                    }
+                                @endphp
+                                <tr class="shift-calendar-table__body__row getRow">
+                                    @if ($shift->employee)
+                                        <td class="td-none companyInfo" data-company-name="{{ $shift->employee->company->name }}">
+                                    @endif
+                                    @foreach ( $shiftData as $shift )  {{-- $shift == 1日のシフト --}}
+                                        {{-- 一周目だけ従業員表示 --}}
+                                        @if ($is_employee_open)
+                                            <td class="table-employee-name">
+                                                <div class="table-employee-name__block">
+
+                                                    <p class="" style="color: red;">{{$unEmployee}}</p>
+
+                                                </div>
+                                            </td>
+                                            @php
+                                                $is_employee_open = false;
+                                            @endphp
+                                        @endif
+                                        {{-- 最大案件数の計算 --}}
+                                        @php
+                                            $am_check_count = 0;
+                                            $pm_check_count = 0;
+                                        @endphp
+                                        {{-- 午前 --}}
+                                        <td class="table-cell">
+                                            @foreach ( $shift->projectsVehicles as $spv )
+                                                @if ($spv->time_of_day == 0)
+                                                <div class="table-cell__item">
+                                                    @if ($spv->project)
+                                                    <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                                    @elseif($spv->unregistered_project)
+                                                    <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
+                                                    @else
+                                                    <p class="table-cell__item__row setHightElem"></p>
+                                                    @endif
+                                                    {{-- 車両 --}}
+                                                    @if ($spv->vehicle)
+                                                    <p class="table-cell__item__row">{{$spv->vehicle->number}}</p>
+                                                    @elseif($spv->unregistered_vehicle)
+                                                    <p class="table-cell__item__row" style="color: red;">{{$spv->unregistered_vehicle}}</p>
+                                                    @else
+                                                    <p class="table-cell__item__row"></p>
+                                                    @endif
+                                                </div>
+                                                @php $am_check_count++; @endphp
+                                                @endif
+                                            @endforeach
+
+                                            @for ($i = $am_check_count; $i < $max_count; $i++)
+                                                <div class="table-cell__item">
+                                                    <p class="table-cell__item__row setHightElem"></p>
+                                                    <p class="table-cell__item__row"></p>
+                                                </div>
+                                            @endfor
+                                        </td>
+                                        {{-- 午後 --}}
+                                        <td class="table-cell">
+                                            @foreach ( $shift->projectsVehicles as $spv )
+                                                @if ($spv->time_of_day == 1)
+                                                <div class="table-cell__item">
+                                                    @if ($spv->project)
+                                                    <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                                    @elseif($spv->unregistered_project)
+                                                    <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
+                                                    @else
+                                                    <p class="table-cell__item__row setHightElem"></p>
+                                                    @endif
+                                                    {{-- 車両 --}}
+                                                    @if ($spv->vehicle)
+                                                    <p class="table-cell__item__row">{{$spv->vehicle->number}}</p>
+                                                    @elseif($spv->unregistered_vehicle)
+                                                    <p class="table-cell__item__row" style="color: red;">{{$spv->unregistered_vehicle}}</p>
+                                                    @else
+                                                    <p class="table-cell__item__row"></p>
+                                                    @endif
+                                                </div>
+                                                @php $pm_check_count++; @endphp
+                                                @endif
+                                            @endforeach
+
+                                            @for ($i = $pm_check_count; $i < $max_count; $i++)
+                                            <div class="table-cell__item">
+                                                <p class="table-cell__item__row setHightElem"></p>
+                                                <p class="table-cell__item__row"></p>
+                                            </div>
+                                        @endfor
+                                        </td>
+                                    @endforeach
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                     @else

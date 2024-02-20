@@ -94,7 +94,7 @@
                                 <input hidden type="text" name="employeeId" value="{{$findEmployee->id}}">
                                 <input hidden type="text" name="year" value="{{$getYear}}">
                                 <input hidden type="text" name="month" value="{{$getMonth}}">
-                                
+
                                 <input hidden type="text" name="invoiceAmountCheck" id="invoiceAmountCheck">
                                 <input hidden type="text" name="invoiceAllowanceCheck" id="invoiceAllowanceCheck">
                                 <input hidden type="text" name="invoiceExpresswayCheck" id="invoiceExpresswayCheck">
@@ -172,10 +172,18 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @php
+                                            // 基本の行数
+                                            $needRowCount = 3;
+                                            foreach ($shifts as $shift) {
+                                                if ($needRowCount < $shift->projectsVehicles->count()) {
+                                                    $needRowCount = $shift->projectsVehicles->count();
+                                                }
+                                            }
+                                        @endphp
+                                        {{-- <p>{{ $needRowCount }}</p> --}}
                                         @foreach ( $dates as $date )
                                             @php
-                                                // 基本の行数
-                                                $needRowCount = 3;
                                                 // 行数カウント
                                                 $rowCount = 0;
                                                 $count = 0;
@@ -188,13 +196,13 @@
                                                             <tr>
                                                                 @if ($count == 0)
                                                                     @if ($holidays->isHoliday($date))
-                                                                        <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                        <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @elseif ($date->isSaturday())
-                                                                        <td rowspan="3" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                        <td rowspan="{{ $needRowCount }}" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @elseif($date->isSunday())
-                                                                        <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                        <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @else
-                                                                        <td rowspan="3"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                        <td rowspan="{{ $needRowCount }}"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @endif
                                                                 @endif
                                                                 <td class="w-project">
@@ -230,13 +238,17 @@
                                                                                     <input type="text" value="No.{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                                 @endif
                                                                             @else
-                                                                                <input style="color: red;" type="text" value="No.{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                @if ($spv->unregistered_vehicle)
+                                                                                    <input style="color: red;" type="text" value="No.{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                @endif
                                                                             @endif
                                                                         @elseif($spv->vehicle_id != $spv->rental_vehicle_id) {{-- 契約車両と登録車両を比較 --}}
                                                                             @if($spv->vehicle)
                                                                                 <input type="text" value="No.{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                             @else
-                                                                                <input style="color: red;" type="text" value="No.{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                @if ($spv->unregistered_vehicle)
+                                                                                    <input style="color: red;" type="text" value="No.{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                @endif
                                                                             @endif
                                                                         @endif
                                                                     @endif
@@ -258,13 +270,13 @@
                                                             <tr>
                                                                 @if ($count == 0)
                                                                     @if ($holidays->isHoliday($date))
-                                                                        <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                        <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @elseif ($date->isSaturday())
-                                                                        <td rowspan="3" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                        <td rowspan="{{ $needRowCount }}" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @elseif($date->isSunday())
-                                                                        <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                        <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @else
-                                                                        <td rowspan="3"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                        <td rowspan="{{ $needRowCount }}"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @endif
                                                                 @endif
                                                                 <td class="w-project"><p class=""></p></td>
@@ -284,17 +296,17 @@
                                                 @endforeach
                                                 {{-- シフトがない時のため --}}
                                                 @if ($rowCount == 0)
-                                                    @for ($rowCount; $rowCount < 3; $rowCount++)
+                                                    @for ($rowCount; $rowCount < $needRowCount; $rowCount++)
                                                         <tr>
                                                             @if ($count == 0)
                                                                 @if ($holidays->isHoliday($date))
-                                                                    <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                 @elseif ($date->isSaturday())
-                                                                    <td rowspan="3" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    <td rowspan="{{ $needRowCount }}" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                 @elseif($date->isSunday())
-                                                                    <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                 @else
-                                                                    <td rowspan="3"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    <td rowspan="{{ $needRowCount }}"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                 @endif
                                                             @endif
                                                             <td class="w-project"><p class=""></p></td>
@@ -316,7 +328,7 @@
                                         @for ($i = 0; $i < $needRowCount; $i++)
                                             <tr class="">
                                                 @if ($i == 0)
-                                                <td rowspan="3" class="w-amount"></td>
+                                                <td rowspan="{{ $needRowCount }}" class="w-amount"></td>
                                                 @endif
                                                 <td class="w-project"><p class=""></p></td>
                                                 <td class="w-amount amountRow"></td>
@@ -344,10 +356,17 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        {{-- @php
+                                            // 基本の行数
+                                            $needRowCount = 3;
+                                            foreach ($shifts as $shift) {
+                                                if ($needRowCount < $shift->projectsVehicles->count()) {
+                                                    $needRowCount = $shift->projectsVehicles->count();
+                                                }
+                                            }
+                                        @endphp --}}
                                         @foreach ( $dates as $date )
                                             @php
-                                                // 基本の行数
-                                                $needRowCount = 3;
                                                 // 行数カウント
                                                 $rowCount = 0;
                                                 $count = 0;
@@ -360,13 +379,13 @@
                                                             <tr>
                                                                 @if ($count == 0)
                                                                     @if ($holidays->isHoliday($date))
-                                                                        <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                        <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @elseif ($date->isSaturday())
-                                                                        <td rowspan="3" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                        <td rowspan="{{ $needRowCount }}" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @elseif($date->isSunday())
-                                                                        <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                        <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @else
-                                                                        <td rowspan="3"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                        <td rowspan="{{ $needRowCount }}"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @endif
                                                                 @endif
                                                                 <td class="w-project">
@@ -402,13 +421,17 @@
                                                                                     <input type="text" value="No.{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                                 @endif
                                                                             @else
-                                                                                <input style="color: red;" type="text" value="No.{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                @if ($spv->unregistered_vehicle)
+                                                                                    <input style="color: red;" type="text" value="No.{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                @endif
                                                                             @endif
                                                                         @elseif($spv->vehicle_id != $spv->rental_vehicle_id) {{-- 契約車両と登録車両を比較 --}}
                                                                             @if($spv->vehicle)
                                                                                 <input type="text" value="No.{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                             @else
-                                                                                <input style="color: red;" type="text" value="No.{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                @if ($spv->unregistered_vehicle)
+                                                                                    <input style="color: red;" type="text" value="No.{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                @endif
                                                                             @endif
                                                                         @endif
                                                                     @endif
@@ -426,17 +449,17 @@
                                                             </tr>
                                                         @endforeach
                                                         {{-- 行数が足りない時のため --}}
-                                                        @for ($rowCount; $rowCount <= $needRowCount; $rowCount++)
+                                                        @for ($rowCount; $rowCount < $needRowCount; $rowCount++)
                                                             <tr>
                                                                 @if ($count == 0)
                                                                     @if ($holidays->isHoliday($date))
-                                                                        <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                        <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @elseif ($date->isSaturday())
-                                                                        <td rowspan="3" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                        <td rowspan="{{ $needRowCount }}" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @elseif($date->isSunday())
-                                                                        <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                        <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @else
-                                                                        <td rowspan="3"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                        <td rowspan="{{ $needRowCount }}"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @endif
                                                                 @endif
                                                                 <td class="w-project"><p class=""></p></td>
@@ -447,7 +470,7 @@
                                                                 <td class="w-amount vehicleRow"><p class=""></p></td>
                                                                 <td class="w-amount overtimeRow"><p class=""></p></td>
                                                                 @php
-                                                                    $rowCount++;
+                                                                    // $rowCount++;
                                                                     $count++;
                                                                 @endphp
                                                             </tr>
@@ -456,17 +479,17 @@
                                                 @endforeach
                                                 {{-- シフトがない時のため --}}
                                                 @if ($rowCount == 0)
-                                                    @for ($rowCount; $rowCount < 3; $rowCount++)
+                                                    @for ($rowCount; $rowCount < $needRowCount; $rowCount++)
                                                         <tr>
                                                             @if ($count == 0)
                                                                 @if ($holidays->isHoliday($date))
-                                                                    <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                 @elseif ($date->isSaturday())
-                                                                    <td rowspan="3" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    <td rowspan="{{ $needRowCount }}" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                 @elseif($date->isSunday())
-                                                                    <td rowspan="3" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                 @else
-                                                                    <td rowspan="3"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    <td rowspan="{{ $needRowCount }}"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                 @endif
                                                             @endif
                                                             <td class="w-project"><p class=""></p></td>
@@ -489,7 +512,7 @@
                                             @for ($j = 0; $j < $needRowCount; $j++)
                                                 <tr class="">
                                                     @if ($j == 0)
-                                                    <td rowspan="3" class="w-amount"></td>
+                                                    <td rowspan="{{ $needRowCount }}" class="w-amount"></td>
                                                     @endif
                                                     <td class="w-project"><p class=""></p></td>
                                                     <td class="w-amount amountRow"></td>
