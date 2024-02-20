@@ -2,282 +2,37 @@
 @use "../foundation/mixin.scss" as *;
 @use "sass:math";
 
-.--invoice-project-board{
-    // height: auto;
-}
-.invoice {
-    overflow: auto!important;
-    .--x-scroll-project-shift {
-        // width: math.div(970, 1280) * 100vw !important;
-        // height: math.div(600,800) * 100vw;
-    }
-    &__project-shift {
-        position: relative;
-        margin-left: 20px;
-        padding-top: 2.8rem;
-        .project-shfit-wrap {
-            // width: fit-content;
-            // margin-top: 150px;
-            margin-top: 4rem;
-            // padding: 20px;
-            padding-top: 0rem;
-            border-radius: 10px;
-            background-color: white;
-            .employee-date{
-                width: fit-content;
-                // margin-top: 4rem;
-                display: flex;
-                flex-direction: column;
-                gap: 1rem;
-                &__year-month{
-                    display: flex;
-                    gap: 1rem;
-                    font-size: 1.2rem;
-                    font-weight: $fw-bold;
-                    letter-spacing: 0.1rem;
-                    color: $cBlack;
-                }
-                &__employee{
-                    width: 40rem;
-                    box-sizing: border-box;
-                    padding-left: 1.5rem;
-                    padding-bottom: 1rem;
-                    border-bottom: 3px solid $cGreen;
-                    font-size: 1.6rem;
-                    font-weight: $fw-bold;
-                    letter-spacing: 0.1rem;
-                    color: $cBlack;
-                }
-            }
-            .mt-free{
-                margin-top: 10rem;
-            }
-        }
-        .project-info-table {
-            width: fit-content;
-            display: flex;
-            flex-direction: column;
-            border-bottom: 1px solid #2d3748;
-            border-right: 1px solid #2d3748;
-            font-size: 14px;
-            font-weight: bold;
-            background-color: white;
-            &__row {
-                display: flex;
-                border-top: 1px solid #2d3748;
-                &__txt {
-                    padding: 6px 0;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    border-left: 1px solid #2d3748;
-                }
-                .--head {
-                    width: 160px;
-                }
-                .--data {
-                    min-width: 210px;
-                }
-                .--project {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 5px;
-                }
-            }
-        }
-        .scroll-x-shift-calendar{
+.--invoice-white-board{
+    .project-invoice-shift{
+        .project-calendar-wrap{
             position: relative;
             overflow: scroll;
-        width: math.div(970, 1280) * 100vw !important;
-        height: math.div(385,800) * 100vh;
-        margin-top: 30px;
-        }
-        .project-shift-calender {
-            width: fit-content;
-            position: relative;
-            padding-right: 50px;
-            &__head {
-                position: sticky;
-                top: 0;
-                left: 0;
-                display: flex;
-                border-top: 1px solid #2d3748;
-                border-bottom: 1px solid #2d3748;
-                border-right: 1px solid #2d3748;
-                font-size: 14px;
-                background-color: white;
-                &__item {
-                    min-width: 150px;
-                    min-height: 40px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    text-align: center;
-                    border-left: 1px solid #2d3748;
-                    .project-txt {
-                        padding: 7px 0px;
+            width: math.div(980,1280) * 100vw;
+            &__table{
+                width: 200%;
+                table-layout:auto;
+                thead{
+                    tr{
+                        height: 4rem;
                     }
                 }
-                .--andCompany {
-                    display: flex;
-                    flex-direction: column;
-                    min-width: 150px;
-                    &__wrap {
-                        display: flex;
-                        border-top: 1px solid $cBlack;
-                        &__block {
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            min-width: 150px;
-                            padding: 7px 0;
-                            border-left: 1px solid $cBlack;
-                        }
-                        &__block:nth-child(1) {
-                            border-left: 0px solid $cBlack;
+                tbody{
+                    tr{
+                        height: 5rem;
+                        td{
+                            
                         }
                     }
                 }
-                .--column {
-                    flex-direction: column;
+                .project-table-date{
+                    width: 8rem;
                 }
-
-                &__project {
-                    display: flex;
-                    .project-block {
-                        display: flex;
-                        flex-direction: column;
-                        // border-left: 1px solid $cBlack;
-                        &__project-name {
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            border-left: 1px solid $cBlack;
-                            border-bottom: 1px solid $cBlack;
-                            p {
-                                padding: 5px 0;
-                            }
-                        }
-                        .company-block {
-                            display: flex;
-                            .company-item {
-                                display: flex;
-                                &__clm {
-                                    min-width: 150px;
-                                    padding: 5px 0;
-                                    display: flex;
-                                    flex-direction: column;
-                                    align-items: center;
-                                    justify-content: center;
-                                    border-left: 1px solid $cBlack;
-                                }
-                            }
-                        }
-                    }
+                .project-table-w-name{
+                    width: 8rem;
                 }
-            }
-
-            &__data {
-                border-right: 1px solid #2d3748;
-                &__row {
-                    min-height: 40px;
-                    display: flex;
-                    border-bottom: 1px solid #2d3748;
-                    &__item {
-                        min-width: 150px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        text-align: center;
-                        border-left: 1px solid #2d3748;
-                        &__company {
-                            min-width: 150px;
-                            min-height: 50px;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            // padding: 5px 10px;
-                            border-left: 1px solid $cBlack;
-                        }
-                        &__company:nth-child(1) {
-                            border-left: 0px solid $cBlack;
-                        }
-                        input {
-                            width: 100%;
-                            height: 100%;
-                            padding: 0;
-                            border: 0px;
-                            font-size: 12px;
-                            background-color: rgba(0, 208, 255, 0.267);
-                        }
-                    }
-                    .--salary-item{
-                        flex-direction: column;
-                    }
-                    .--andCompany {
-                        // min-width: 150px;
-                    }
-                    .--employee-wrap {
-                        flex-direction: column;
-                        gap: 5px;
-                    }
-                    .--column {
-                        flex-direction: column;
-                        gap: 10px;
-                    }
-                    .--clm {
-                        flex-direction: column;
-                    }
-                    .--projectTotalCount {
-                        min-width: 301px;
-                    }
+                .project-table-w-amount{
+                    width: 5rem;
                 }
-                .total {
-                    padding: 5px;
-                    display: flex;
-                    align-items: center;
-                    gap: 100px;
-                    background-color: #4fd1c5;
-                    font-size: 25px;
-                    font-weight: bold;
-                }
-            }
-        }
-
-        .view-clm {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            &__item {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-        }
-        .PDF-dump{
-            top: 0rem;
-        }
-        .--project-pdf {
-            // display: flex;
-            .ab-elem{
-                position: absolute;
-                top: 11rem;
-                left: 75rem;
-            }
-            .ab-invoice-elem{
-                position: absolute;
-                top: 11rem;
-                left: 58rem;
-            }
-            .ab-invoice-check-elem{
-                position: absolute;
-                top: 20rem;
-                left: 2rem;
-                white-space: nowrap;
-                font-size: 1.2rem;
-                font-weight: $fw-bold;
-                letter-spacing: 0.1rem;
-                color: $cBlack;
             }
         }
     }

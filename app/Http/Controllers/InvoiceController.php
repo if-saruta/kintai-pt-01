@@ -368,7 +368,7 @@ class InvoiceController extends Controller
             })
             ->get();
 
-        // 所属先取得
+        // 所属先ID取得
         $companyIds = [];
         foreach ($ShiftProjectVehicles as $spv) {
             if ($spv->shift && $spv->shift->employee && $spv->shift->employee->company) {
@@ -379,6 +379,7 @@ class InvoiceController extends Controller
                 }
             }
         }
+        // 所属先データ取得
         $getCompanies = Company::whereIn('id', $companyIds)->get();
 
         // 全日にちを取得
