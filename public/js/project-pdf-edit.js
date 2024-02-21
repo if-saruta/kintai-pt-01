@@ -120,10 +120,10 @@ window.addEventListener('DOMContentLoaded', () => {
             newRow.classList.add('tableRow');
 
             newRow.innerHTML = `
-                <td class="table-item w-400"><input type="text" name="item[]" value="" class="input project-table-input changeElem"></td>
-                <td class="table-data w-100"><input type="number" name="number[]" value="" class="input project-table-input changeElem cntElem"></td>
-                <td class="table-data w-100"><input type="number" name="until[]" value="" class="input project-table-input changeElem untilElem"></td>
-                <td class="table-data w-110"><input type="number" name="amount[]" value="" class="input project-table-input changeElem amountElem"></td>
+                <td class="table-item w-400"><input type="text" name="item[]" value="" class="input project-table-input changeElem project-edit-pdf-text-left"></td>
+                <td class="table-data w-100"><input type="number" name="number[]" value="" class="input project-table-input changeElem cntElem project-edit-pdf-text-right"></td>
+                <td class="table-data w-100"><input type="number" name="until[]" value="" class="input project-table-input changeElem untilElem project-edit-pdf-text-right"></td>
+                <td class="table-data w-110"><input type="number" name="amount[]" value="" class="input project-table-input changeElem amountElem project-edit-pdf-text-right"></td>
                 <div class="salaryRowDelete deleteRowBtn"><span class="deleteRowBtn__line"><span/><span class="deleteRowBtn__line"><span/><div/>
             `;
             //最後の行を取得

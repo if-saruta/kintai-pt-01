@@ -9,6 +9,7 @@ use App\Models\ShiftProjectVehicle;
 use App\Models\BankAccount;
 use App\Models\Client;
 use App\Models\Shift;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Http\Controllers\InvoiceController;
 
@@ -90,12 +91,12 @@ class PdfEditController extends Controller
 
     public function project_edit_pdf(Request $request)
     {
-        $get_total_retail = $request->total_retail;
-        $total_count = $request->total_count;
-        $pdf_retail = $request->pdf_retail;
-        $projectClientNameByPdf = $request->projectClientNameByPdf;
-        $total_express_way_fee = $request->total_express_way__fee;
-        $total_parking_fee = $request->total_parking_fee;
+        // $get_total_retail = $request->total_retail;
+        // $total_count = $request->total_count;
+        // $pdf_retail = $request->pdf_retail;
+        // $projectClientNameByPdf = $request->projectClientNameByPdf;
+        // $total_express_way_fee = $request->total_express_way__fee;
+        // $total_parking_fee = $request->total_parking_fee;
         $today = Carbon::now();
 
         $clientId = $request->client;
@@ -104,32 +105,65 @@ class PdfEditController extends Controller
 
         $client = Client::find($clientId);
 
+        $projects = Project::where('client_id', $clientId)->get();
+
+        // 検索用
+        $clients = Client::all();
+        $getClient = Client::find($clientId);
+
+        // シフトを検索・取得
+        $ShiftProjectVehicles = ShiftProjectVehicle::with('shift', 'shift.employee.company', 'project')
+            ->whereHas('shift', function ($query) use ($getYear, $getMonth) {
+                $query->whereYear('date', $getYear)
+                    ->whereMonth('date', $getMonth);
+            })
+            ->whereHas('project', function ($query) use ($clientId) {
+                $query->where('client_id', $clientId);
+            })
+            ->get();
+
+        $total_count = $ShiftProjectVehicles->count();
+
+        // 所属先ID取得
+        $companyIds = [];
+        foreach ($ShiftProjectVehicles as $spv) {
+            if ($spv->shift && $spv->shift->employee && $spv->shift->employee->company) {
+                // Company にアクセス
+                $company = $spv->shift->employee->company;
+                if (!in_array($company->id, $companyIds)) {
+                    $companyIds[] = $company->id;;
+                }
+            }
+        }
+
+        $getCompanies = Company::whereIn('id', $companyIds)->get();
+
         // チェックされいなければ0と判定
-        $company_check = $request->input('company_check', 0);
-        $retail_check = $request->input('retail_check', 0);
-        $salary_check = $request->input('salary_check', 0);
-        $expressway_check = $request->input('expressway_check', 0);
-        $parking_check = $request->input('parking_check', 0);
+        // $company_check = $request->input('company_check', 0);
+        // $retail_check = $request->input('retail_check', 0);
+        // $salary_check = $request->input('salary_check', 0);
+        // $expressway_check = $request->input('expressway_check', 0);
+        // $parking_check = $request->input('parking_check', 0);
 
         // 所属先IDだけ抽出
-        $companyIds = [];
-        foreach($company_check as $value){
-            $replaceValue = str_replace("project", "", $value);
-            $companyIds[] = $replaceValue;
-        }
+        // $companyIds = [];
+        // foreach($company_check as $value){
+        //     $replaceValue = str_replace("project", "", $value);
+        //     $companyIds[] = $replaceValue;
+        // }
 
         // $total_retail = $get_total_retail + $total_express_way_fee + $total_parking_fee;
 
         // シフトを検索・取得
-        $ShiftProjectVehicles = ShiftProjectVehicle::with('shift','shift.employee.company','project')
-        ->whereHas('shift', function ($query) use ($getYear, $getMonth) {
-            $query->whereYear('date', $getYear)
-                ->whereMonth('date', $getMonth);
-        })
-        ->whereHas('project', function ($query) use ($clientId) {
-            $query->where('client_id', $clientId);
-        })
-        ->get();
+        // $ShiftProjectVehicles = ShiftProjectVehicle::with('shift','shift.employee.company','project')
+        // ->whereHas('shift', function ($query) use ($getYear, $getMonth) {
+        //     $query->whereYear('date', $getYear)
+        //         ->whereMonth('date', $getMonth);
+        // })
+        // ->whereHas('project', function ($query) use ($clientId) {
+        //     $query->where('client_id', $clientId);
+        // })
+        // ->get();
 
 
         $total_retail = 0;
@@ -177,7 +211,7 @@ class PdfEditController extends Controller
             $date = Carbon::parse($spv->shift->date);
             $expresswayFee = $spv->expressway_fee; // 高速代
 
-            if($spv->expressway_fee && $expressway_check !== 0){
+            if($spv->expressway_fee){
                 foreach($companyIds as $id){
                     if($spv->shift->employee->company->id == $id){
                         if (!isset($expresswayData[$projectName])) {
@@ -220,7 +254,7 @@ class PdfEditController extends Controller
             $date = Carbon::parse($spv->shift->date);
             $parkingFee = $spv->parking_fee; // パーキング料金
 
-            if($spv->parking_fee && $parking_check !== 0){
+            if($spv->parking_fee){
                 foreach($companyIds as $id){
                     if($spv->shift->employee->company->id == $id){
                         if (!isset($parkingData[$projectName])) {
@@ -255,6 +289,6 @@ class PdfEditController extends Controller
             }
         }
 
-        return view('edit-pdf.project-edit-pdf', compact('total_retail', 'total_count', 'pdf_retail', 'projectClientNameByPdf', 'today', 'projectData', 'expresswayData', 'parkingData'));
+        return view('edit-pdf.project-edit-pdf', compact('total_retail', 'total_count', 'today', 'projectData', 'expresswayData', 'parkingData', 'getClient'));
     }
 }

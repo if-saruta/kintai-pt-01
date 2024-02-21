@@ -87,10 +87,23 @@
                 .project-table-w-amount{
                     width: 5rem;
                 }
+                .txt-right{
+                    text-align: right;
+                    padding-right: 5px;
+                    box-sizing: border-box;
+                }
+                .txt-right-input{
+                    text-align: right;
+                    padding-right: 5px;
+                    box-sizing: border-box;
+                }
             }
         }
     }
     .clm-none{
+        display: none;
+    }
+    .all-clm-none{
         display: none;
     }
 }

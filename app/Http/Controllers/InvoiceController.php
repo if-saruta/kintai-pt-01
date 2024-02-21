@@ -399,6 +399,12 @@ class InvoiceController extends Controller
         $getYear = $request->year;
         $getMonth = $request->month;
 
+        $retailCheck = $request->has('retailCheck') ? 1 : 0;
+        $salaryCheck = $request->has('salaryCheck') ? 1 : 0;
+        $expresswayCheck = $request->has('expresswayCheck') ? 1 : 0;
+        $parkingCheck = $request->has('parkingCheck') ? 1 : 0;
+        $selectedCompanies = $request->input('company', []);
+
         $projects = Project::where('client_id', $clientId)->get();
 
         // 検索用
@@ -416,28 +422,25 @@ class InvoiceController extends Controller
             })
             ->get();
 
-        // 所属先取得
+        // 所属先ID格納配列
         $companyIds = [];
-        foreach ($ShiftProjectVehicles as $spv) {
-            if ($spv->shift && $spv->shift->employee && $spv->shift->employee->company) {
-                // Company にアクセス
-                $company = $spv->shift->employee->company;
-                if (!in_array($company->id, $companyIds)) {
-                    $companyIds[] = $company->id;;
-                }
-            }
+        // 取得したinputの配列のKeyにcompanyのidが格納済み
+        foreach($selectedCompanies as $index => $value){
+            $companyIds[] = $index;
         }
         $getCompanies = Company::whereIn('id', $companyIds)->get();
+
 
         // 全日にちを取得
         $dates = $this->createDate($getYear, $getMonth);
 
-        $pdf =  PDF::loadView('issue-calendar-pdf.project-calendar', compact('projects', 'clients', 'client', 'ShiftProjectVehicles', 'getCompanies', 'getYear', 'getMonth', 'dates'));
-        $fileName = "{getMonth}月.pdf";
+        $clientName = $client->name;
+        $pdf =  PDF::loadView('issue-calendar-pdf.project-calendar', compact('projects', 'clients', 'client', 'ShiftProjectVehicles', 'getCompanies', 'getYear', 'getMonth', 'dates', 'retailCheck', 'salaryCheck', 'expresswayCheck', 'parkingCheck'));
+        $fileName = "{$getMonth}月_{$clientName}.pdf";
 
         return $pdf->download($fileName); //生成されるファイル名
 
-        return view('issue-calendar-pdf.project-calendar', compact('projects', 'clients', 'client', 'ShiftProjectVehicles', 'getCompanies', 'getYear', 'getMonth', 'dates'));
+        return view('issue-calendar-pdf.project-calendar', compact('projects', 'clients', 'client', 'ShiftProjectVehicles', 'getCompanies', 'getYear', 'getMonth', 'dates', 'retailCheck', 'salaryCheck', 'expresswayCheck', 'parkingCheck'));
     }
 
 
