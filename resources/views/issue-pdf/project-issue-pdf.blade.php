@@ -147,6 +147,9 @@
         .--right{
             right: 5px;
         }
+        .--left{
+            left: 5px;
+        }
         .w-401{
             width: 401px;
         }
@@ -212,17 +215,17 @@
         <table class="mini-table">
             <tr>
                 <td class="w-401"></td>
-                <td class="mini-table-data w-201"><p class="mini-table-data-txt --center">小計</p></td>
+                <td class="mini-table-data w-201"><p class="mini-table-data-txt --left">小計</p></td>
                 <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{number_format($subTotalRetail)}}</p></td>
             </tr>
             <tr>
                 <td class="w-401"></td>
-                <td class="mini-table-data w-201"><p class="mini-table-data-txt --center">消費税(10%)</p></td>
+                <td class="mini-table-data w-201"><p class="mini-table-data-txt --left">消費税(10%)</p></td>
                 <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{number_format($tax)}}</p></td>
             </tr>
             <tr>
                 <td class="w-401"></td>
-                <td class="mini-table-data w-201"><p class="mini-table-data-txt --center"> 合計金額(内消費税)</p></td>
+                <td class="mini-table-data w-201"><p class="mini-table-data-txt --left"> 合計金額(内消費税)</p></td>
                 <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{number_format($totalRetail)}}</p></td>
             </tr>
         </table>

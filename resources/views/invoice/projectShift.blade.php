@@ -190,6 +190,22 @@
                                                 @endforeach
                                             </tr>
                                         @endif
+                                        @if ($project_count == 1 && $company_count == 1)
+                                            <tr>
+                                                {{-- 日付ヘッド --}}
+                                                <th rowspan="2" class="project-table-date">----</th>
+                                                @foreach ($getCompanies as $company)
+                                                <th class="company{{ $company->id }}">{{ $company->name }}</th>
+                                                @endforeach
+                                                <th class="retailClm">上代</th>
+                                                @foreach ($getCompanies as $company)
+                                                <th class="company{{ $company->id }} salaryClm">{{ $company->name }}</th>
+                                                <th class="retailClm company{{ $company->id }} retailClm">上代</th>
+                                                <th class="company{{ $company->id }} expressClm">高速代</th>
+                                                <th class="company{{ $company->id }} parkingClm">パーキング代</th>
+                                                @endforeach
+                                            </tr>
+                                        @endif
                                     </thead>
                                     <tbody>
                                         @foreach ( $dates as $date )
