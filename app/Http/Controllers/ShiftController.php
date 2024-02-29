@@ -20,6 +20,7 @@ use Svg\Tag\Rect;
 use Symfony\Component\VarDumper\VarDumper;
 use Illuminate\Support\Facades\Storage;
 use League\Csv\CharsetConverter;
+use Yasumi\Yasumi;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -29,6 +30,7 @@ class ShiftController extends Controller
     {
         // 現在の日付を取得
         $date = Carbon::today();
+        $holidays = $this->getHoliday($date->format('Y'));
 
         // 週の始まり（月曜日）と終わり（日曜日）を取得
         $startOfWeek = $date->startOfWeek()->toDateString();
@@ -86,7 +88,7 @@ class ShiftController extends Controller
 
         $payments = ProjectEmployeePayment::all();
 
-        return view('shift.index', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'sortedShiftDataByEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
+        return view('shift.index', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'sortedShiftDataByEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays'));
     }
 
     public function selectWeek(Request $request)
@@ -106,13 +108,16 @@ class ShiftController extends Controller
         $startOfWeek = $date->startOfWeek()->toDateString();
         $endOfWeek = $date->endOfWeek()->toDateString();
 
+        // 祝日を取得
+        $holidays = $this->getHoliday($date->format('Y'));
+
         // その週の月曜日を取得（新しいインスタンスを作成）
         $monday = $date->copy()->startOfWeek();
 
         // その週の日曜日を取得（新しいインスタンスを作成）
         $sunday = $date->copy()->endOfWeek();
 
-
+        // 登録従業員シフト抽出
         $shifts = Shift::with('employee', 'projectsVehicles.project', 'projectsVehicles.vehicle')
             ->whereBetween('date', [$startOfWeek, $endOfWeek])
             ->whereNotNull('employee_id')
@@ -132,7 +137,7 @@ class ShiftController extends Controller
                 return PHP_INT_MAX;
             }
         }, $preserveKeys = true);
-
+        // dd($shifts);
 
         // 未登録従業員シフト抽出
         $unShifts = Shift::with('employee', 'projectsVehicles.project', 'projectsVehicles.vehicle')
@@ -167,13 +172,13 @@ class ShiftController extends Controller
 
         if ($page) {
             if ($page == 'page01') {
-                return view('shift.index', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
+                return view('shift.index', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays'));
             } elseif ($page == 'page02') {
-                return view('shift.employeeShowShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
+                return view('shift.employeeShowShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays'));
             } elseif ($page == 'page03') {
-                return view('shift.employeePriceShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
+                return view('shift.employeePriceShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays'));
             } elseif ($page == 'page04') {
-                return view('shift.projectPriceShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
+                return view('shift.projectPriceShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays'));
             } elseif ($page == 'page05') {
                 $shiftDataByDay = $shifts->groupBy(function ($shift) {
                     return $shift->date;
@@ -195,14 +200,14 @@ class ShiftController extends Controller
                 }
                 $projects = Project::all();
 
-                return view('shift.projectCountShift', compact('shifts', 'unregistered_project', 'projects', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
+                return view('shift.projectCountShift', compact('shifts', 'unregistered_project', 'projects', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates','holidays'));
             } elseif ($page == 'page06') {
                 $projects = Project::all();
                 $vehicles = Vehicle::all();
-                return view('shift.edit', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'projects', 'vehicles', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
+                return view('shift.edit', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'projects', 'vehicles', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates','holidays'));
             }
         } else {
-            return view('shift.index', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates'));
+            return view('shift.index', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates','holidays'));
         }
     }
 
@@ -485,7 +490,8 @@ class ShiftController extends Controller
                                         foreach ($projects as $project) {
                                             $projectName = '';
                                             $projectName = $this->removeSpaces($project->name);
-                                            if ($recordData === $projectName) {
+                                            [$tmpProjectName, $charterProjectName] = $this->isCharterCheck($recordData);
+                                            if ($tmpProjectName === $projectName) {
                                                 $projectIdTmp = $project->id;
 
                                                 // 従業員の詳細のデータを取得
@@ -494,6 +500,7 @@ class ShiftController extends Controller
                                                 $middleShift = ShiftProjectVehicle::create([
                                                     'shift_id' => $shift->id,
                                                     'project_id' => $project->id,
+                                                    'charter_project_name' => $charterProjectName,
                                                     'retail_price' => $employeeInfo[0],
                                                     'driver_price' => $employeeInfo[1],
                                                     // 'total_allowance' => $employeeInfo[2],
@@ -554,7 +561,8 @@ class ShiftController extends Controller
                                         foreach ($projects as $project) {
                                             $projectName = '';
                                             $projectName = $this->removeSpaces($project->name);
-                                            if ($recordData === $projectName) {
+                                            [$tmpProjectName, $charterProjectName] = $this->isCharterCheck($recordData);
+                                            if ($tmpProjectName === $projectName) {
                                                 $projectIdTmp = $project->id;
 
                                                 // 従業員の詳細のデータを取得
@@ -564,6 +572,7 @@ class ShiftController extends Controller
                                                 $middleShift = ShiftProjectVehicle::create([
                                                     'shift_id' => $shift->id,
                                                     'project_id' => $project->id,
+                                                    'charter_project_name' => $charterProjectName,
                                                     'retail_price' => $employeeInfo[0],
                                                     'driver_price' => $employeeInfo[1],
                                                     // 'total_allowance' => $employeeInfo[2],
@@ -581,7 +590,8 @@ class ShiftController extends Controller
 
                                             $middleShift = ShiftProjectVehicle::create([
                                                 'shift_id' => $shift->id,
-                                                'unregistered_project' => $recordData,
+                                                'unregistered_project' => $tmpProjectName,
+                                                'charter_project_name' => $charterProjectName,
                                                 'retail_price' => $employeeInfo[0],
                                                 'driver_price' => $employeeInfo[1],
                                                 // 'total_allowance' => $employeeInfo[2],
@@ -619,7 +629,7 @@ class ShiftController extends Controller
 
         // csvにはいない登録従業員のシフト登録
         foreach($dateRow as $index => $date){
-            if ($index == 0) continue;
+            if ($index % 2 == 0) continue;
             foreach($employees as $employee){
                 if(!in_array($employee->name, $employeeArray)){
                     $shift = Shift::create([
@@ -633,14 +643,6 @@ class ShiftController extends Controller
         Storage::delete($path);
         $request->session()->forget('csv_file_path');
 
-        // 現在の日付を取得
-        // $date = Carbon::today();
-
-        // // 週の始まり（月曜日）と終わり（日曜日）を取得
-        // $startOfWeek = $date->startOfWeek()->toDateString();
-        // $endOfWeek = $date->endOfWeek()->toDateString();
-
-        // return view('shift.index',compact('startOfWeek', 'endOfWeek'));
 
         return redirect()->route('shift.selectWeek')->with([
             'date' => $getDate, // 例として固定の日付を設定
@@ -708,5 +710,25 @@ class ShiftController extends Controller
         }
 
         return array($retail_price, $driver_price, $vehicle_rental_type, $rental_vehicle_id);
+    }
+
+    public function isCharterCheck($CheckProjectName)
+    {
+        $string = null;
+        $modifiedVariableMixed = $CheckProjectName;
+        // 半角または全角コロンが含まれているかチェック
+        if (1 === preg_match('/[:：]/u', $CheckProjectName)) {
+            // var_dump($CheckProjectName);
+            $modifiedVariableMixed = preg_replace('/[:：].*?[:：]/u', '', $CheckProjectName);
+            $string = $CheckProjectName;
+        }
+        return [$modifiedVariableMixed, $string];
+    }
+
+    public function getHoliday($year)
+    {
+        $holidays = Yasumi::create('Japan', $year, 'ja_JP');
+
+        return $holidays;
     }
 }

@@ -21,6 +21,9 @@
       /* 全てのHTML要素に適用 */
       html, body, textarea {font-family: ipaexm, sans-serif;}html {line-height: 1.15;-webkit-text-size-adjust: 100%;-webkit-tap-highlight-color: transparent;}body {margin: 0;}main {display: block;}p,table,blockquote,address,pre,iframe,form,figure,dl {margin: 0;}h1,h2,h3,h4,h5,h6 {font-size: inherit; font-weight: inherit; margin: 0; } ul, ol { margin: 0; padding: 0; list-style: none; } dt { font-weight: 700; } dd { margin-left: 0; } hr { box-sizing: content-box; height: 0; overflow: visible; border-top-width: 1px; margin: 0; clear: both; color: inherit; } pre { font-family: monospace, monospace; font-size: inherit; } address { font-style: inherit; } a { background-color: transparent; text-decoration: none; color: inherit; } abbr[title] { text-decoration: underline dotted; } b, strong { font-weight: bolder; } code, kbd, samp { font-family: monospace, monospace; font-size: inherit; } small { font-size: 80%; } sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; } sub { bottom: -0.25em; } sup { top: -0.5em; } svg, img, embed, object, iframe { vertical-align: center; } button, input, optgroup, select, textarea { -webkit-appearance: none; appearance: none; vertical-align: middle; color: inherit; font: inherit; background: transparent; padding: 0; margin: 0; border-radius: 0; text-align: inherit; text-transform: inherit; } [type="checkbox"] { -webkit-appearance: checkbox; appearance: checkbox; } [type="radio"] { -webkit-appearance: radio; appearance: radio; } button, [type="button"], [type="reset"], [type="submit"] { cursor: pointer; } button:disabled, [type="button"]:disabled, [type="reset"]:disabled, [type="submit"]:disabled { cursor: default; } :-moz-focusring { outline: auto; } select:disabled { opacity: inherit; } option { padding: 0; } fieldset { margin: 0; padding: 0; min-width: 0; } legend { padding: 0; } progress { vertical-align: baseline; } textarea { overflow: auto; } [type="number"]::-webkit-inner-spin-button, [type="number"]::-webkit-outer-spin-button { height: auto; } [type="search"] { outline-offset: -2px; } [type="search"]::-webkit-search-decoration { -webkit-appearance: none; } ::-webkit-file-upload-button { -webkit-appearance: button; font: inherit; } label[for] { cursor: pointer; } details { display: block; } summary { display: list-item; } [contenteditable]:focus { outline: auto; } table { border-color: inherit; } caption { text-align: left; } td, th { vertical-align: top; padding: 0; } th { text-align: left; font-weight: 700; } th{ font-weight: normal; }
 
+      @page{
+        margin: 15px;
+      }
 
       table{
         width: 100%;
@@ -65,7 +68,7 @@
 <table>
     {{-- ヘッダー --}}
     <thead>
-        @if ($project_count > 1 || $company_count > 1) {{-- どちらか複数あれば --}}
+        @if ($project_count >= 1 || $company_count >= 1) {{-- どちらか複数あれば --}}
             <tr>
                 <th rowspan="2">----</th>
                 @foreach ($projects as $project)
@@ -106,9 +109,9 @@
                 @endforeach
             </tr>
         @endif
-        @if ($project_count == 1 && $company_count == 1)
+        {{-- @if ($project_count == 1 && $company_count == 1)
             <tr>
-                {{-- 日付ヘッド --}}
+                日付ヘッド
                 <th rowspan="1" class="project-table-date">----</th>
                 @foreach ($getCompanies as $company)
                 <th class="company{{ $company->id }}">{{ $company->name }}</th>
@@ -131,7 +134,7 @@
                     @endif
                 @endforeach
             </tr>
-        @endif
+        @endif --}}
     </thead>
     <tbody>
         @foreach ( $dates as $date )
@@ -165,7 +168,10 @@
                     }
                 @endphp
                 @if ($retailCheck == 1)
-                    <td class="right-txt">{{$tmp_total_retail_day}}</td>
+                    @php
+                        $amount = $tmp_total_retail_day ? number_format($tmp_total_retail_day) : '';
+                    @endphp
+                    <td class="right-txt">{{$amount}}</td>
                 @endif
                 @foreach ($projects as $project)
                     @foreach ($getCompanies as $company)
@@ -176,7 +182,10 @@
                                     @if($spv->shift->date == $date->format('Y-m-d'))
                                         @if ($spv->shift->employee)
                                             @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
-                                                {{ $spv->driver_price }}<br>
+                                                @php
+                                                    $amount = $spv->driver_price ? number_format($spv->driver_price) : '';
+                                                @endphp
+                                                {{ $amount }}<br>
                                             @endif
                                         @endif
                                     @endif
@@ -190,7 +199,10 @@
                                     @if($spv->shift->date == $date->format('Y-m-d'))
                                         @if ($spv->shift->employee)
                                             @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
-                                                {{ $spv->retail_price }}<br>
+                                                @php
+                                                    $amount = $spv->retail_price ? number_format($spv->retail_price) : '';
+                                                @endphp
+                                                {{ $amount }}<br>
                                             @endif
                                         @endif
                                     @endif
@@ -198,13 +210,16 @@
                             </td>
                         @endif
                         {{-- 高速代 --}}
-                        @if ($expresswayCheck)
+                        @if ($expresswayCheck == 1)
                             <td class="right-txt">
                                 @foreach ( $ShiftProjectVehicles as $spv )
                                     @if($spv->shift->date == $date->format('Y-m-d'))
                                         @if ($spv->shift->employee)
                                             @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
-                                                {{ $spv->expressway_fee }}<br>
+                                                @php
+                                                    $amount = $spv->expressway_fee ? number_format($spv->expressway_fee) : '';
+                                                @endphp
+                                                {{ $amount }}<br>
                                             @endif
                                         @endif
                                     @endif
@@ -218,7 +233,10 @@
                                     @if($spv->shift->date == $date->format('Y-m-d'))
                                         @if ($spv->shift->employee)
                                             @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
-                                                {{ $spv->parking_fee }}<br>
+                                                @php
+                                                    $amount = $spv->parking_fee ? number_format($spv->parking_fee) : '';
+                                                @endphp
+                                                {{ $amount }}<br>
                                             @endif
                                         @endif
                                     @endif

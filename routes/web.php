@@ -138,12 +138,14 @@ Route::middleware('auth')->group(function () {
 
         // ドライバー関連
         Route::get('/driver', [InvoiceController::class, 'driverShift'])->name('driverShift');
+        Route::post('/driver-create', [InvoiceController::class, 'driverShiftCreate'])->name('driverShiftCreate');
         Route::post('/driver-update', [InvoiceController::class, 'driverShiftUpdate'])->name('driverShiftUpdate');
         Route::post('/driver-calendar-pdf', [InvoiceController::class, 'driverCalendarPDF'])->name('driver-calendar-pdf');
 
         // 案件関連
         Route::get('/project', [InvoiceController::class, 'projectShift'])->name('projectShift');
         Route::post('/project-update', [InvoiceController::class, 'projectShiftUpdate'])->name('projectShiftUpdate');
+        Route::post('/project-delete', [InvoiceController::class, 'projectShiftDelete'])->name('projectShiftDelete');
         Route::post('/project-calendar-pdf', [InvoiceController::class, 'projectCalendarPDF'])->name('project-calendar-pdf');
 
         // 検索機能関連
@@ -157,6 +159,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/find-charter-shift/{year}/{month}', [InvoiceController::class, 'findCharterDate'])->name('findCharterShift');
         Route::post('/charter-shift-update', [InvoiceController::class, 'charterShiftUpdate'])->name('charter-shift-update');
         Route::post('/charter-client-update', [InvoiceController::class, 'charterClientUpdate'])->name('charter-client-update');
+        Route::post('/charter-project-update', [InvoiceController::class, 'charterProjectUpdate'])->name('charter-project-update');
+        Route::post('/charter-driver-update', [InvoiceController::class, 'charterDriverUpdate'])->name('charter-driver-update');
         Route::post('/charter-calendar-pdf', [InvoiceController::class, 'charterCalendarPDF'])->name('charter-calendar-pdf');
 
         // pdf発行前編集画面

@@ -54,16 +54,16 @@
                     <div class="project-edit-pdf__inner">
                         <div class="date">
                             <p class="">{{ $today->format('Y') }}年 {{ $today->format('m') }}月 {{ $today->format('d') }}日</p>
-                            <p class="date__invoice-number">請求書番号 : <input type="text" name="invoice_number" class="input" value="HY : {{ $today->format('Y') }}{{ $today->format('m') }}{{ $today->format('d') }}"></p>
+                            <p class="date__invoice-number">請求書番号 : <input type="text" name="invoice_number" class="input" value="{{ $today->format('Y') }}{{ $today->format('m') }}{{ $today->format('d') }}"></p>
                         </div>
                         <div class="title">
                             <p class="">請求書</p>
                         </div>
                         <div class="driver">
-                            <p class="driver__name"><input type="text" name="name" value="{{$getClient->pdfName}}" class="input">様</p>
+                            <p class="driver__name"><input type="text" name="name" value="{{$getClient->pdfName}} 様" class="input"></p>
                             <p class="f-s-13 driver__subject">
     <textarea name="subject" id="" cols="30" rows="10">
-    件名：{{ $today->format('m') }}月度の差引金額について
+    件名：{{ $today->format('n') }}月度の差引金額について
     下記の通りご請求申し上げます。
     </textarea>
                             </p>
@@ -80,6 +80,9 @@
     FAX:03-5875-7469
     登録番号: T6011801035426
     </textarea>
+    <div class="company__stanp">
+        <img class="" src="{{ asset('img/signature-stamp.png') }}" alt="">
+    </div>
                         </div>
                         <div class="amount">
                             <p class="amount-txt"><span class="">ご請求金額</span><span class="amount-fee">¥{{ceil($total_retail + ($total_retail * 0.1))}}</span></p>
@@ -162,7 +165,7 @@
                         <div class="bank">
                             <p class="">お振込先</p>
                             <div class="bank-txt-wrap">
-                                <textarea name="bank_name" id="" class="bank-textarea" cols="30" rows="10">東京東信用金庫　葛飾支店　（普）5083491　カ）ティーエヌジー</textarea>
+                                <textarea name="bank_name" id="" class="bank-textarea" cols="30" rows="10">{{$getCompanies->first()->bank_name}}         {{$getCompanies->first()->account_holder_name}}</textarea>
                             </div>
                         </div>
                     </div>

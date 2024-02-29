@@ -47,11 +47,12 @@ class EmployeeController extends Controller
         // $validated = $request->validate([
         //     'name' => 'required'
         // ]);
-
+// dd($request->initial);
         if($request->rental_type == 1){
             $employee = Employee::create([
                 'register_number' => $request->register_number,
                 'name' => $request->name,
+                'initials' => $request->initial,
                 'post_code' => $request->post_code,
                 'address' => $request->address,
                 'employment_status' => $request->status,
@@ -64,6 +65,7 @@ class EmployeeController extends Controller
             $employee = Employee::create([
                 'register_number' => $request->register_number,
                 'name' => $request->name,
+                'initials' => $request->initial,
                 'post_code' => $request->post_code,
                 'address' => $request->address,
                 'employment_status' => $request->status,
@@ -165,6 +167,7 @@ class EmployeeController extends Controller
         // 従業員データを更新
         $employee->register_number = $request->register_number;
         $employee->name = $request->name;
+        $employee->initials = $request->initial;
         $employee->post_code = $request->post_code;
         $employee->address = $request->address;
         $employee->employment_status = $request->status;

@@ -12,7 +12,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         })
     }
-    invoiceNumberChange();
+    // invoiceNumberChange();
 
     // モーダルの挙動を制御
     const bankModalActive = () => {

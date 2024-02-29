@@ -293,16 +293,20 @@
 
         &__main{
             position: relative;
-            overflow: scroll;
+            overflow-y: scroll;
             height: math.div(580,800) * 100vh;
             margin-top: 15px;
-            margin-left: 1.55rem;
+            // margin-left: 1.55rem;
             padding-right: 5rem;
             padding-bottom: 5rem;
             display: flex;
             // flex-direction: column;
             .company-view{
-                width: 5rem;
+                // position: sticky;
+                // z-index: 1000;
+                // top: 0;
+                // left: 0;
+                width: 3rem;
                 margin-top: 6.05rem;
                 display: flex;
                 flex-direction: column;
@@ -323,6 +327,7 @@
                         text-orientation: upright;
                         // white-space: nowrap;
                         font-size: 1rem;
+                        font-weight: $fw-bold;
                         letter-spacing: 0.1rem;
                         color: $cBlack;
                     }
@@ -345,6 +350,12 @@
                         .txt{
                             padding: 0.8rem 0;
                         }
+                        // th:nth-child(1){
+                        //     border-bottom: 0.5px solid transparent;
+                        //     &::before{
+                        //         border: 0px;
+                        //     }
+                        // }
                     }
                     .empty-block{
                         position: sticky;
@@ -374,14 +385,15 @@
                         .table-employee-name{
                             position: sticky;
                             left: 0;
-                            font-size: 1.6rem;
+                            font-size: 1rem;
                             font-weight: $fw-bold;
                             letter-spacing: 0.1rem;
                             background-color: white;
                             z-index: 1000;
+                            // border-bottom: 1.5px solid black;
                             &__block{
                                 position: relative;
-                                min-width: 15rem;
+                                min-width: 6rem;
                                 height: 100%;
                                 display: flex;
                                 align-items: center;
@@ -390,10 +402,10 @@
                         }
                         .table-cell{
                             &__item{
-                                width: 15rem;
+                                width: math.div(80,1280) * 100vw;
                                 position: relative;
-                                font-size: 1.3rem;
-                                font-weight: $fw-regular;
+                                font-size: 1rem;
+                                font-weight: $fw-bold;
                                 letter-spacing: 0.1rem;
                                 line-height: math.div(19,13);
                                 cursor: pointer;
@@ -407,11 +419,18 @@
                                     // white-space: wrap;
                                     border-bottom: 1px dashed $cGray;
                                 }
+                                &__row:nth-child(3){
+                                    background-color: rgba(255, 0, 0, 0.087);
+                                }
+                                &__row:nth-child(4){
+                                    background-color: rgba(0, 0, 255, 0.087);
+                                }
                                 &__row:last-child{
                                     border-bottom: 1px solid $cBlack;
                                 }
                             }
                             &__item:last-child{
+                                border-bottom: 1px solid black;
                                 .table-cell__item__row:last-child{
                                     border-bottom: 0px;
                                 }
@@ -439,6 +458,9 @@
                                 }
                                 &__row{
                                     border-bottom: 1px solid transparent;
+                                }
+                                .--empty-item__row{
+                                    background-color: transparent!important;
                                 }
                                 .--empty-item__row:last-child{
                                     border-bottom: 1px solid $cBlack;
@@ -491,6 +513,10 @@
                         }
                         &__count{
                             width: 8rem;
+                            font-size: 2rem;
+                        }
+                        .--count-f-s{
+                            font-size: 2rem;
                         }
                         td{
                             // width: fit-content;

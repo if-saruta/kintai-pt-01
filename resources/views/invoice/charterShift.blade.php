@@ -37,30 +37,29 @@
                     <form action="{{ route('invoice.searchCharterShift') }}" method="POST">
                         @csrf
                         <div class="select-area">
-                            <div class="select-area__block">
+                            <div class="c-select-area__block">
                                 <select name="year" id="" class="c-select year-select" required>
                                     <option value="">----</option>
                                     @for ($year = now()->year; $year >= now()->year - 10; $year--)
-                                    <option value="{{ $year }}">{{ $year }}</option>
+                                        @if ($year == $getYear)
+                                            <option selected value="{{ $year }}">{{ $year }}</option>
+                                        @else
+                                            <option value="{{ $year }}">{{ $year }}</option>
+                                        @endif
                                     @endfor
                                 </select>
                                 <label for="">年</label>
                             </div>
-                            <div class="select-area__block month-block">
+                            <div class="c-select-area__block month-block">
                                 <select name="month" id="" class="c-select month-select" required>
                                     <option value="">----</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                    <option value="12">12</option>
+                                    @for ($i = 1; $i <= 12; $i++)
+                                        @if ($i == $getMonth)
+                                            <option selected value="{{ $i }}">{{ $i }}</option>
+                                        @else
+                                            <option value="{{ $i }}">{{ $i }}</option>
+                                        @endif
+                                    @endfor
                                 </select>
                                 <label for="">月</label>
                             </div>
@@ -70,7 +69,7 @@
                         </div>
                     </form>
 
-                    <div class="x-scroll">
+                    <div class="">
                         @if($shiftArray)
                         <form action="{{route('invoice.charter-calendar-pdf')}}" method="POST">
                             @csrf
@@ -90,110 +89,178 @@
                                 <button class="save-btn">
                                     <p class="">保存</p>
                                 </button>
-                                <div class="charter-calender-wrap__charter-calender">
-                                    <div class="head">
-                                        <div class="head__clm --date">
-                                            <p class="">日付</p>
+                                <div class="charter-calender-wrap__scroll">
+                                    <div class="charter-calender-wrap__charter-calender">
+                                        <div class="head">
+                                            <div class="head__clm --date">
+                                                <p class="">日付</p>
+                                            </div>
+                                            <div class="head__clm --project">
+                                                <p class="">案件名</p>
+                                            </div>
+                                            <div class="head__clm --common-amount">
+                                                <p class="">上代</p>
+                                            </div>
+                                            <div class="head__clm --common-amount">
+                                                <p class="">高速代</p>
+                                            </div>
+                                            <div class="head__clm --common-amount">
+                                                <p class="">パーキング代</p>
+                                            </div>
+                                            <div class="head__clm --common">
+                                                <p class="">ドライバー</p>
+                                            </div>
+                                            <div class="head__clm --common-amount">
+                                                <p class="">ドライバー価格</p>
+                                            </div>
+                                            <div class="head__clm --common">
+                                                <p class="">クライアント名</p>
+                                            </div>
                                         </div>
-                                        <div class="head__clm --project">
-                                            <p class="">案件名</p>
-                                        </div>
-                                        <div class="head__clm --common">
-                                            <p class="">上代</p>
-                                        </div>
-                                        <div class="head__clm --common">
-                                            <p class="">高速代</p>
-                                        </div>
-                                        <div class="head__clm --common">
-                                            <p class="">パーキング代</p>
-                                        </div>
-                                        <div class="head__clm --common">
-                                            <p class="">ドライバー</p>
-                                        </div>
-                                        <div class="head__clm --common">
-                                            <p class="">ドライバー価格</p>
-                                        </div>
-                                        <div class="head__clm --common">
-                                            <p class="">クライアント名</p>
-                                        </div>
-                                    </div>
-                                    <div class="data">
-                                        @foreach ($shiftArray as $data)
-                                            <div class="data__row">
-                                                <div class="data__row__clm --date">
-                                                    @foreach ($dates as $date)
-                                                        @if ($date->format('Y-m-d') == $data['shift']['date'])
-                                                            <p class="">{{ $date->format('n月j日') }}({{ $date->isoFormat('ddd') }})</p>
+                                        <div class="data">
+                                            @foreach ($shiftArray as $data)
+                                                <div class="data__row shiftRow">
+                                                    <div class="data__row__clm --date">
+                                                        @foreach ($dates as $date)
+                                                            @if ($date->format('Y-m-d') == $data['shift']['date'])
+                                                                <p class="">{{ $date->format('n月j日') }}({{ $date->isoFormat('ddd') }})</p>
+                                                            @endif
+                                                        @endforeach
+                                                        {{-- <p class="">{{$data['shift']['date']}}</p> --}}
+                                                    </div>
+                                                    <div class="data__row__clm --project projectNameBox register">
+                                                        <input type="text" value="{{$data['project']['name']}}" class="input charter-input" readonly>
+                                                        {{-- モーダルに値を渡す --}}
+                                                        <input hidden type="text" value="{{$data['id']}}" class="setId">
+                                                        @foreach ($dates as $date)
+                                                            @if ($date->format('Y-m-d') == $data['shift']['date'])
+                                                                <input hidden type="text" value="{{ $date->format('Y') }}" class="setYear">
+                                                                <input hidden type="text" value="{{ $date->format('n') }}" class="setMonth">
+                                                                <input hidden type="text" value="{{ $date->format('j') }}" class="setDay">
+                                                            @endif
+                                                        @endforeach
+                                                        <input hidden type="text" value="{{ $data['project']['name'] }}" class="setProjectName">
+                                                        @if (isset($data['shift']['employee']['name']))
+                                                            <input type="text" hidden value="{{$data['shift']['employee']['name']}}"  class="setEmployeeName">
+                                                        @else
+                                                            <input type="text" hidden value="{{$data['shift']['unregistered_employee']}}" class="setEmployeeName">
                                                         @endif
-                                                    @endforeach
-                                                    {{-- <p class="">{{$data['shift']['date']}}</p> --}}
-                                                </div>
-                                                <div class="data__row__clm --project">
-                                                    <input type="text" value="{{$data['project']['name']}}" class="input charter-input" readonly>
-                                                </div>
-                                                <div class="data__row__clm --common --text-right">
-                                                    <input type="text" name="retail_price[{{$data['id']}}]" value="{{ ceil($data['retail_price']) }}" class="input charter-input">
-                                                </div>
-                                                <div class="data__row__clm --common --text-right">
-                                                    <input type="text" name="expressway_fee[{{$data['id']}}]" value="{{ ceil($data['expressway_fee']) }}" class="input charter-input">
-                                                </div>
-                                                <div class="data__row__clm --common --text-right">
-                                                    <input type="text" name="parking_fee[{{$data['id']}}]" value="{{ ceil($data['parking_fee']) }}" class="input charter-input">
-                                                </div>
-                                                <div class="data__row__clm --common --text-center">
-                                                    @if (isset($data['shift']['employee']['name']))
-                                                        <input type="text" value="{{$data['shift']['employee']['name']}}" class="input charter-input" readonly>
-                                                    @else
-                                                        <input type="text" value="{{$data['shift']['unregistered_employee']}}" class="input charter-input" readonly>
-                                                    @endif
-                                                </div>
-                                                <div class="data__row__clm --common --text-right">
-                                                    <input type="text" name="driver_price[{{$data['id']}}]" value="{{ ceil($data['driver_price']) }}" class="input charter-input">
-                                                </div>
-                                                <div class="data__row__clm --common --text-center">
-                                                    <input type="text" value="{{$data['project']['client']['name']}}" class="input charter-input" readonly>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    <div class="data --unregister-data">
-                                        @foreach ($unregisterProjectShift as $spv)
-                                        <div class="data__row">
-                                            <div class="data__row__clm --date">
-                                                @foreach ($dates as $date)
-                                                    @if ($date->format('Y-m-d') == $spv->shift->date)
-                                                        <p class="">{{ $date->format('n月j日') }}({{ $date->isoFormat('ddd') }})</p>
-                                                    @endif
-                                                @endforeach
-                                            </div>
-                                            <div class="data__row__clm --project">
-                                                <input type="text" name="unregistered_project[{{$spv->id}}]" value="{{ $spv->unregistered_project }}" class="input charter-input" readonly>
-                                            </div>
-                                            <div class="data__row__clm --common --text-right">
-                                                <input type="text" name="retail_price[{{$spv->id}}]" value="{{ ceil($spv->retail_price) }}" class="input charter-input" readonly>
-                                            </div>
-                                            <div class="data__row__clm --common --text-right">
-                                                <input type="text" name="expressway_fee[{{$spv->id}}]" value="{{ ceil($spv->expressway_fee) }}" class="input charter-input" readonly>
-                                            </div>
-                                            <div class="data__row__clm --common --text-right">
-                                                <input type="text" name="parking_fee[{{$spv->id}}]" value="{{ ceil($spv->parking_fee) }}" class="input charter-input" readonly>
-                                            </div>
-                                            <div class="data__row__clm --common --text-center">
-                                                @if ($spv->shift->employee)
-                                                <input type="text" value="{{ $spv->shift->employee->name }}" class="input charter-input" readonly>
-                                                @else
-                                                <input type="text" value="{{ $spv->shift->unregistered_employee }}" class="input charter-input" readonly>
-                                                @endif
 
-                                            </div>
-                                            <div class="data__row__clm --common --text-right">
-                                                <input type="text" name="driver_price[{{$spv->id}}]" value="{{ ceil($spv->driver_price) }}" class="input charter-input" readonly>
-                                            </div>
-                                            <div class="data__row__clm --common clientElem --text-center">
-                                                <input hidden type="text" value="{{$spv->id}}" class="input charter-input">
-                                            </div>
+                                                    </div>
+                                                    <div class="data__row__clm --common-amount --text-right">
+                                                        <input type="text" name="retail_price[{{$data['id']}}]" value="{{ ceil($data['retail_price']) }}" class="input charter-input">
+                                                    </div>
+                                                    <div class="data__row__clm --common-amount --text-right">
+                                                        <input type="text" name="expressway_fee[{{$data['id']}}]" value="{{ ceil($data['expressway_fee']) }}" class="input charter-input">
+                                                    </div>
+                                                    <div class="data__row__clm --common-amount --text-right">
+                                                        <input type="text" name="parking_fee[{{$data['id']}}]" value="{{ ceil($data['parking_fee']) }}" class="input charter-input">
+                                                    </div>
+                                                    <div class="data__row__clm --common --text-center driverNameBox">
+                                                        @if (isset($data['shift']['employee']['name']))
+                                                            <input type="text" value="{{$data['shift']['employee']['name']}}" class="input charter-input" readonly>
+                                                        @else
+                                                            <input type="text" value="{{$data['shift']['unregistered_employee']}}" class="input charter-input" readonly>
+                                                        @endif
+
+                                                        {{-- モーダルに値を渡す --}}
+                                                        <input hidden type="text" value="{{$data['id']}}" class="setId">
+                                                        @foreach ($dates as $date)
+                                                            @if ($date->format('Y-m-d') == $data['shift']['date'])
+                                                                <input hidden type="text" value="{{ $date->format('Y') }}" class="setYear">
+                                                                <input hidden type="text" value="{{ $date->format('n') }}" class="setMonth">
+                                                                <input hidden type="text" value="{{ $date->format('j') }}" class="setDay">
+                                                            @endif
+                                                        @endforeach
+                                                        @if (isset($data['shift']['employee']['name']))
+                                                            <input type="text" hidden value="{{$data['shift']['employee']['name']}}"  class="setEmployeeName">
+                                                        @else
+                                                            <input type="text" hidden value="{{$data['shift']['unregistered_employee']}}" class="setEmployeeName">
+                                                        @endif
+
+                                                    </div>
+                                                    <div class="data__row__clm --common-amount --text-right">
+                                                        <input type="text" name="driver_price[{{$data['id']}}]" value="{{ ceil($data['driver_price']) }}" class="input charter-input">
+                                                    </div>
+                                                    <div class="data__row__clm --common --text-center">
+                                                        <input type="text" value="{{$data['project']['client']['name']}}" class="input charter-input" readonly>
+                                                    </div>
+                                                </div>
+                                            @endforeach
                                         </div>
-                                        @endforeach
+                                        <div class="data --unregister-data">
+                                            @foreach ($unregisterProjectShift as $spv)
+                                                @if ($spv->unregistered_project != '休み')
+                                                    <div class="data__row">
+                                                        <div class="data__row__clm --date">
+                                                            @foreach ($dates as $date)
+                                                                @if ($date->format('Y-m-d') == $spv->shift->date)
+                                                                    <p class="">{{ $date->format('n月j日') }}({{ $date->isoFormat('ddd') }})</p>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                        <div class="data__row__clm projectNameBox unregister --project">
+                                                            <input type="text" name="unregistered_project[{{$spv->id}}]" value="{{ $spv->unregistered_project }}" class="input charter-input" readonly>
+
+                                                            {{-- モーダルに値を渡す --}}
+                                                            <input hidden type="text" value="{{$spv->id}}" class="setId">
+                                                            @foreach ($dates as $date)
+                                                                @if ($date->format('Y-m-d') == $spv->shift->date)
+                                                                    <input hidden type="text" value="{{ $date->format('Y') }}" class="setYear">
+                                                                    <input hidden type="text" value="{{ $date->format('n') }}" class="setMonth">
+                                                                    <input hidden type="text" value="{{ $date->format('j') }}" class="setDay">
+                                                                @endif
+                                                            @endforeach
+                                                            <input hidden type="text" value="{{ $spv->unregistered_project }}" class="setProjectName">
+                                                            @if ($spv->shift->employee)
+                                                                <input type="text" hidden value="{{$spv->shift->employee->name}}"  class="setEmployeeName">
+                                                            @else
+                                                                <input type="text" hidden value="{{$spv->shift->unregistered_employee}}" class="setEmployeeName">
+                                                            @endif
+
+                                                        </div>
+                                                        <div class="data__row__clm --common-amount --text-right">
+                                                            <input type="text" name="retail_price[{{$spv->id}}]" value="{{ ceil($spv->retail_price) }}" class="input charter-input">
+                                                        </div>
+                                                        <div class="data__row__clm --common-amount --text-right">
+                                                            <input type="text" name="expressway_fee[{{$spv->id}}]" value="{{ ceil($spv->expressway_fee) }}" class="input charter-input">
+                                                        </div>
+                                                        <div class="data__row__clm --common-amount --text-right">
+                                                            <input type="text" name="parking_fee[{{$spv->id}}]" value="{{ ceil($spv->parking_fee) }}" class="input charter-input">
+                                                        </div>
+                                                        <div class="data__row__clm --common --text-center driverNameBox">
+                                                            @if ($spv->shift->employee)
+                                                            <input type="text" value="{{ $spv->shift->employee->name }}" class="input charter-input" readonly>
+                                                            @else
+                                                            <input type="text" value="{{ $spv->shift->unregistered_employee }}" class="input charter-input" readonly>
+                                                            @endif
+
+                                                            {{-- モーダルに値を渡す --}}
+                                                            <input hidden type="text" value="{{$spv->id}}" class="setId">
+                                                            @foreach ($dates as $date)
+                                                                @if ($date->format('Y-m-d') == $spv->shift->date)
+                                                                    <input hidden type="text" value="{{ $date->format('Y') }}" class="setYear">
+                                                                    <input hidden type="text" value="{{ $date->format('n') }}" class="setMonth">
+                                                                    <input hidden type="text" value="{{ $date->format('j') }}" class="setDay">
+                                                                @endif
+                                                            @endforeach
+                                                            @if ($spv->shift->employee)
+                                                                <input type="text" hidden value="{{ $spv->shift->employee->name }}"  class="setEmployeeName">
+                                                            @else
+                                                                <input type="text" hidden value="{{$spv->shift->unregistered_employee}}" class="setEmployeeName">
+                                                            @endif
+
+                                                        </div>
+                                                        <div class="data__row__clm --common-amount --text-right">
+                                                            <input type="text" name="driver_price[{{$spv->id}}]" value="{{ ceil($spv->driver_price) }}" class="input charter-input">
+                                                        </div>
+                                                        <div class="data__row__clm --common clientElem --text-center">
+                                                            <input hidden type="text" value="{{$spv->id}}" class="input charter-input">
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -237,13 +304,117 @@
                                                 <input type="text" class="input" name="clientPdfName">
                                             </div>
                                         </div>
-                                        <button class="save-btn client-modal-btn">
+                                        <button class="save-btn client-modal-btn" onclick='return confirm("本当に保存しますか？")'>
                                             <p class="">保存</p>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </form>
+                        {{-- 案件モーダル --}}
+                        <div class="shift-delete-modal shiftProjectModal">
+                            <div class="shift-delete-modal__bg shiftProjectModalClose"></div>
+                            <div class="shift-delete-modal__white-board">
+                                <form action="{{ route('invoice.charter-project-update') }}" method="POST">
+                                    @csrf
+                                    {{-- リダイレクト --}}
+                                    <input hidden type="text" value="{{$getYear}}" name="year">
+                                    <input hidden type="text" value="{{$getMonth}}" name="month">
+
+                                    <input hidden type="text" name="shiftPvId" class="setShiftPvId">
+
+                                    <div class="shift-delete-modal__white-board__inner">
+                                        <p class="title">案件情報</p>
+                                        <div class="shift-info-wrap">
+                                            <div class="shift-info-box">
+                                                <p class="head">日付 : </p>
+                                                <p class=""><span class="year">2024</span>年<span class="month">2</span>月<span class="day">12</span>日</p>
+                                            </div>
+                                            <div class="shift-info-box modalProjectShow">
+                                                <p class="head">案件名 : </p>
+                                                <p class="projectName">admin案件</p>
+                                            </div>
+                                            <div class="select-project modalSelectProject">
+                                                <p class="head">案件 : </p>
+                                                <div class="select-project__right-box">
+                                                    <div class="select-project__radio-wrap">
+                                                        <div class="item">
+                                                            <input type="radio" name="projectRadio" value="0" class="radio projectRadio">
+                                                            <label for="">既存案件</label>
+                                                        </div>
+                                                        <div class="item">
+                                                            <input checked type="radio" name="projectRadio" value="1" class="radio projectRadio">
+                                                            <label for="">案件入力</label>
+                                                        </div>
+                                                    </div>
+                                                    <input type="text" name="unProject" class="c-input inputProject">
+                                                    <select name="projectId" id="" class="c-select selectProject">
+                                                        @foreach ($projectsByCharter as $project)
+                                                            <option value="{{ $project->id }}">{{ $project->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="shift-info-box">
+                                                <p class="head">ドライバー : </p>
+                                                <p class="driverName">山田　太郎</p>
+                                            </div>
+                                        </div>
+                                        <div class="button-wrap">
+                                            <button name="action" value="update" class="btn --save saveBtn" onclick='return confirm("本当に登録しますか？")'>
+                                                変更する
+                                            </button>
+                                            <button name="action" value="delete" class="btn --delete" onclick='return confirm("本当に削除しますか？")'>
+                                                削除する
+                                            </button>
+                                            <div class="btn --back shiftProjectModalClose">
+                                                戻る
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        {{-- ドライバーモーダル --}}
+                        <div class="shift-driver-modal shiftDriverModal">
+                            <div class="shift-driver-modal__bg shiftDriverModalClose"></div>
+                            <div class="shift-driver-modal__white-board">
+                                <form action="{{ route('invoice.charter-driver-update') }}" method="POST">
+                                    @csrf
+                                    {{-- リダイレクト --}}
+                                    <input hidden type="text" value="{{$getYear}}" name="year">
+                                    <input hidden type="text" value="{{$getMonth}}" name="month">
+
+                                    <input hidden type="text" name="shiftPvId" class="setShiftPvId">
+
+                                    <div class="shift-driver-modal__white-board__inner">
+                                        <p class="title">ドライバー情報</p>
+                                        <div class="shift-info-wrap">
+                                            <div class="shift-info-box">
+                                                <p class="head">日付 : </p>
+                                                <p class=""><span class="year">2024</span>年<span class="month">2</span>月<span class="day">12</span>日</p>
+                                            </div>
+                                            <div class="shift-info-box">
+                                                <p class="head">ドライバー : </p>
+                                                <select name="employeeId" id="" class="c-select employeeSelect">
+                                                    @foreach ($employees as $employee)
+                                                        <option value="{{ $employee->id }}">{{ $employee->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="button-wrap">
+                                            <button name="action" value="update" class="btn --save saveBtn" onclick='return confirm("本当に登録しますか？")'>
+                                                変更する
+                                            </button>
+                                            <div class="btn --back shiftDriverModalClose">
+                                                戻る
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     @endif
                     @if ($warning !== null)
                         <p class="warning-txt">{{$warning}}</p>

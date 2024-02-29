@@ -526,6 +526,17 @@
             right: 0;
             line-height: 1.5;
             font-size: 13px;
+            textarea{
+                position: relative;
+                z-index: 2;
+            }
+            &__stanp{
+                position: absolute;
+                top: -5rem;
+                right: -2rem;
+                z-index: 1;
+                width: 15rem;
+            }
         }
         .amount{
             margin-top: 100px;
@@ -688,6 +699,18 @@
         right: 0;
         line-height: 1.5;
         font-size: 13px;
+        textarea{
+            position: relative;
+            z-index: 2;
+            border: 0px;
+        }
+        &__stanp{
+            position: absolute;
+            top: -5rem;
+            right: -2rem;
+            z-index: 1;
+            width: 15rem;
+        }
     }
     .amount{
         margin-top: 100px;

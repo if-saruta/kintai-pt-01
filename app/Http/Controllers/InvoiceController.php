@@ -27,12 +27,71 @@ class InvoiceController extends Controller
 
     public function driverShift()
     {
+        $getYear = null;
+        $getMonth = null;
+        $employeeId = null;
         $employees = Employee::all();
 
         $shifts = null;
         $warning = null;
 
-        return view('invoice.driverShift', compact('employees', 'shifts', 'warning'));
+        return view('invoice.driverShift', compact('employees', 'shifts', 'warning', 'getYear', 'getMonth', 'employeeId'));
+    }
+
+    public function driverShiftCreate(Request $request)
+    {
+        $getYear = $request->year;
+        $getMonth = $request->month;
+
+        $date = $request->createDate;
+        $employeeId = $request->employeeId;
+        $shiftPvId = $request->shiftPvId;
+        $dayOfPart = $request->dayOfPart;
+        $projectId = $request->createProject;
+        $vehicleId = $request->createVehicle;
+        $retailPrice = $request->createRetail;
+        $salaryPrice = $request->createSalary;
+
+        $attributes = ['date' => $date, 'employee_id' => $employeeId];
+        $values = ['date' => $date, 'employee_id' => $employeeId];
+        $shift = Shift::updateOrCreate($attributes, $values);
+
+        if($shiftPvId != ''){
+             $shiftPv = ShiftProjectVehicle::find($shiftPvId);
+             if ($request->input('action') == 'update') {
+                // 更新処理
+                if($shiftPv){
+                    $valuesByPvShift = [
+                        'project_id' => $projectId,
+                        'unregistered_project' => null,
+                        'vehicle_id' => $vehicleId,
+                        'unregistered_vehicle' => null,
+                        'retail_price' => $retailPrice,
+                        'driver_price' => $salaryPrice,
+                     ];
+                    $shiftPv->update($valuesByPvShift);
+                 }
+            } elseif ($request->input('action') == 'delete') {
+                // 削除処理
+                $shiftPv->delete();
+            }
+        }else{
+            $valuesByPvShift = [
+                'shift_id' => $shift->id,
+                'project_id' => $projectId,
+                'vehicle_id' => $vehicleId,
+                'retail_price' => $retailPrice,
+                'driver_price' => $salaryPrice,
+                'time_of_day' => $dayOfPart
+             ];
+            ShiftProjectVehicle::create($valuesByPvShift);
+        }
+
+        return redirect()->route('invoice.searchShift')->with([
+            'employeeId' => $employeeId,
+            'year' => $getYear,
+            'month' => $getMonth
+        ]);
     }
 
     public function driverShiftUpdate(Request $request)
@@ -91,10 +150,15 @@ class InvoiceController extends Controller
 
     public function searchShift(Request $request)
     {
-
+        // 検索情報
         $employeeId = $request->employeeId ?? session('employeeId');
         $getYear = $request->year ?? session('year');
         $getMonth = $request->month ?? session('month');
+
+        // 列の絞り込み
+        $selectedNarrowCheck = $request->input('narrowCheck', []);
+        // 行数の絞り込み
+        $needRowCount = $request->input('rowNeedCount');
 
         $employees = Employee::all();
         $findEmployee = Employee::find($employeeId);
@@ -104,12 +168,57 @@ class InvoiceController extends Controller
 
         $vehicles = Vehicle::all();
 
-        // シフトを検索・取得
-        $shifts = Shift::with('employee', 'projectsVehicles.project', 'projectsVehicles.vehicle', 'projectsVehicles.rentalVehicle')
+        $shifts = Shift::with(['employee', 'projectsVehicles.project', 'projectsVehicles.vehicle', 'projectsVehicles.rentalVehicle'])
             ->where('employee_id', $employeeId)
             ->whereYear('date', $getYear)
             ->whereMonth('date', $getMonth)
             ->get();
+
+        // 取得したシフトに含まれるproject・clientのIDを取得
+        $projectArray = [];
+        $clientArray = [];
+        foreach($shifts as $shift){
+            foreach($shift->projectsVehicles as $spv){
+                if($spv->project){
+                    if(!in_array($spv->project_id, $projectArray)){
+                        $projectArray[] = $spv->project_id;
+                    }
+                    if(!in_array($spv->project->client_id, $clientArray)){
+                        $clientArray[] = $spv->project->client_id;
+                    }
+                }
+            }
+        }
+        // Projectモデルを使用して、$projectArrayに含まれるIDのプロジェクトを取得
+        $findProjects = Project::whereIn('id', $projectArray)->get();
+        $findClients = Client::whereIn('id', $clientArray)->get();
+
+        // // 絞り込み情報の取得
+        $clientsId = $request->input('clientsId', []);
+        $projectsId = $request->input('projectsId', []);
+        // ShiftProjectVehicle モデルを使用して、特定の条件に一致するデータを取得
+        $query = ShiftProjectVehicle::query()
+        ->with(['shift','shift.employee', 'project', 'vehicle', 'rentalVehicle'])
+        ->whereHas('shift', function ($query) use ($employeeId, $getYear, $getMonth) {
+            // Employee ID、年、月でフィルタリング
+            $query->where('employee_id', $employeeId)
+                  ->whereYear('date', $getYear)
+                  ->whereMonth('date', $getMonth);
+        });
+
+
+        $shiftProjectVehiclesByEmployee = $query->get();
+
+        // コレクションのfilterメソッドを使用してフィルタリング
+        $shiftProjectVehicles = $shiftProjectVehiclesByEmployee->filter(function ($spv) use ($projectsId, $clientsId) {
+            if(!empty($clientsId) || !empty($projectsId)){
+                if($spv->project){
+                    return in_array($spv->project->id, $projectsId) || in_array($spv->project->client_id, $clientsId);
+                }
+            }else{
+                return $spv;
+            }
+        });
 
 
         // 全日にちを取得
@@ -117,18 +226,20 @@ class InvoiceController extends Controller
         // 祝日を取得
         $holidays = $this->getHoliday($getYear);
         // 二代目以降の情報を取得
-        [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount] = $this->machineInfoExtract($shifts);
+        [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount] = $this->machineInfoExtract($shiftProjectVehicles, $dates);
         // 案件情報を取得
-        $projectInfoArray = $this->projectInfoExtract($shifts);
+        $projectInfoArray = $this->projectInfoExtract($shiftProjectVehicles);
         // 集計表情報を取得
-        [$totalSalary, $totalAllowance, $totalParking, $totalExpressWay, $totalOverTime] = $this->totallingInfoExtract($shifts);
+        [$totalSalary, $totalAllowance, $totalParking, $totalExpressWay, $totalOverTime] = $this->totallingInfoExtract($shiftProjectVehicles);
 
         $warning = null;
         if ($shifts == null || $shifts->isEmpty()) {
             $warning = "選択したシフトは登録されいません";
         }
 
-        return view('invoice.driverShift', compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays', 'warning', 'secondMachineArray', 'thirdMachineArray', 'secondMachineCount', 'thirdMachineCount', 'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking', 'totalExpressWay', 'totalOverTime'));
+        return view('invoice.driverShift',
+            compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'shiftProjectVehicles', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays', 'warning', 'secondMachineArray', 'thirdMachineArray', 'secondMachineCount', 'thirdMachineCount', 'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking', 'totalExpressWay', 'totalOverTime', 'findProjects', 'findClients',
+                    'selectedNarrowCheck', 'needRowCount', 'clientsId', 'projectsId', 'employeeId'));
     }
 
     public function driverCalendarPDF(Request $request)
@@ -136,13 +247,101 @@ class InvoiceController extends Controller
         $employeeId = $request->employeeId;
         $getYear = $request->year;
         $getMonth = $request->month;
+
         $textarea = $request->textarea;
-        $amountCheck = $request->amountCheck;
-        $allowanceCheck = $request->allowanceCheck;
-        $expresswayCheck = $request->expresswayCheck;
-        $parkingCheck = $request->parkingCheck;
-        $vehicleCheck = $request->vehicleCheck;
-        $overtimeCheck = $request->overtimeCheck;
+        // チェックボックス
+        $amountCheck = $request->invoiceAmountCheck;
+        $allowanceCheck = $request->invoiceAllowanceCheck;
+        $expresswayCheck = $request->invoiceExpresswayCheck;
+        $parkingCheck = $request->invoiceParkingCheck;
+        $vehicleCheck = $request->invoiceVehicleCheck;
+        $overtimeCheck = $request->invoiceOvertimeCheck;
+        $setRowCount = $request->setRowCount;
+
+        // 合計テーブルのデータを受け取り
+        $totalSalaryName = $request->input('totalSalary.name'); //給与合計
+        $totalSalaryAmount = $request->input('totalSalary.amount'); //給与合計
+        $allowanceName = $request->input('allowance.name'); //手当
+        $allowanceAmount = $request->input('allowance.amount'); //手当
+        $taxName = $request->input('tax.name'); //消費税
+        $taxAmount = $request->input('tax.amount'); //消費税
+        $expressWayName = $request->input('expressWayName'); //高速代
+        $expressWayAmount = $request->input('expressWayAmount'); //高速代
+        $parkingName = $request->input('parkingName'); //パーキング代
+        $parkingAmount = $request->input('parkingAmount'); //パーキング代
+        $overtimeName = $request->input('overtimeName'); //残業代
+        $overtimeAmount = $request->input('overtimeAmount'); //残業代
+        $otherNames = $request->input('otherName', []); //追加項目名
+        $otherAmounts = $request->input('otherAmount', []); //追加項目金額
+        // 追加項目の空でない名前と金額のペアを新しい配列に追加
+        $others = [];
+        foreach ($otherNames as $index => $name) {
+            if (!empty($name) && !empty($otherAmounts[$index])) {
+                $others[] = [
+                    'name' => $name,
+                    'amount' => $otherAmounts[$index]
+                ];
+            }
+        }
+
+        // 費用テーブルのデータを受け取り
+        $administrativeOutsourcingName = $request->input('administrativeOutsourcing.name'); //業務委託手数料
+        $administrativeOutsourcingAmount = $request->input('administrativeOutsourcing.amount'); //業務委託手数料
+        $administrativeName = $request->input('administrative.name'); //事務手数料
+        $administrativeAmount = $request->input('administrative.amount'); //事務手数料
+        $transferName = $request->input('transfer.name'); //振り込み手数料
+        $transferAmount = $request->input('transfer.amount'); //振り込み手数料
+        // 条件に応じてリクエストから値を受け取る
+        $monthLeaseName = $request->input('monthLease.name'); //月リース
+        $monthLeaseAmount = $request->input('monthLease.amount'); //月リース
+        $secondLeaseName = $request->input('secondLease.name'); //二代目りーす
+        $secondLeaseAmount = $request->input('secondLease.amount'); //二代目りーす
+        $thirdLeaseName = $request->input('thirdLease.name'); //三台目リース
+        $thirdLeaseAmount = $request->input('thirdLease.amount'); //三台目リース
+        $monthInsuranceName = $request->input('monthInsurance.name'); //月保険料
+        $monthInsuranceAmount = $request->input('monthInsurance.amount'); //月保険料
+        $secondInsuranceName = $request->input('secondInsurance.name'); //二代目以降保険料
+        $secondInsuranceAmount = $request->input('secondInsurance.amount'); //二代目以降保険料
+        $otherCostNames = $request->input('otherCostName', []); //費用追加項目名
+        $otherCostAmonts = $request->input('otherCostAmont', []); //費用追加項目金額
+        // 追加項目の空でない名前と金額のペアを新しい配列に追加
+        $CostOthers = [];
+        foreach ($otherCostNames as $index => $name) {
+            if (!empty($name) && !empty($otherCostAmonts[$index])) {
+                $CostOthers[] = [
+                    'name' => $name,
+                    'amount' => $otherCostAmonts[$index]
+                ];
+            }
+        }
+
+        // // 絞り込み情報の取得
+        $clientsId = $request->input('calendarClientsId', []);
+        $projectsId = $request->input('calendarProjectsId', []);
+        // dd($clientsId);
+        // ShiftProjectVehicle モデルを使用して、特定の条件に一致するデータを取得
+        $query = ShiftProjectVehicle::query()
+        ->with(['shift','shift.employee', 'project', 'vehicle', 'rentalVehicle'])
+        ->whereHas('shift', function ($query) use ($employeeId, $getYear, $getMonth) {
+            // Employee ID、年、月でフィルタリング
+            $query->where('employee_id', $employeeId)
+                    ->whereYear('date', $getYear)
+                    ->whereMonth('date', $getMonth);
+        });
+
+
+        $shiftProjectVehiclesByEmployee = $query->get();
+
+        // コレクションのfilterメソッドを使用してフィルタリング
+        $shiftProjectVehicles = $shiftProjectVehiclesByEmployee->filter(function ($spv) use ($projectsId, $clientsId) {
+            if(!empty($clientsId) || !empty($projectsId)){
+                if($spv->project){
+                    return in_array($spv->project->id, $projectsId) || in_array($spv->project->client_id, $clientsId);
+                }
+            }else{
+                return $spv;
+            }
+        });
 
         $employees = Employee::all();
         $findEmployee = Employee::find($employeeId);
@@ -166,22 +365,29 @@ class InvoiceController extends Controller
         // 祝日を取得
         $holidays = $this->getHoliday($getYear);
         // 二代目以降の情報を取得
-        [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount] = $this->machineInfoExtract($shifts);
+        [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount] = $this->machineInfoExtract($shiftProjectVehicles, $dates);
         // 案件情報を取得
-        $projectInfoArray = $this->projectInfoExtract($shifts);
+        $projectInfoArray = $this->projectInfoExtract($shiftProjectVehicles);
         // 集計表情報を取得
-        [$totalSalary, $totalAllowance, $totalParking, $totalExpressWay, $totalOverTime] = $this->totallingInfoExtract($shifts);
+        [$totalSalary, $totalAllowance, $totalParking, $totalExpressWay, $totalOverTime] = $this->totallingInfoExtract($shiftProjectVehicles);
 
-        $warning = null;
-        if ($shifts == null || $shifts->isEmpty()) {
-            $warning = "選択したシフトは登録されいません";
-        }
-
-        $pdf =  PDF::loadView('issue-calendar-pdf.driver-calendar', compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays', 'warning', 'secondMachineArray', 'thirdMachineArray', 'secondMachineCount', 'thirdMachineCount', 'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking', 'totalExpressWay', 'totalOverTime', 'textarea', 'amountCheck', 'allowanceCheck', 'expresswayCheck', 'parkingCheck', 'vehicleCheck', 'overtimeCheck'));
+        $pdf =  PDF::loadView('issue-calendar-pdf.driver-calendar',
+                    compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays', 'secondMachineArray',
+                            'thirdMachineArray', 'secondMachineCount', 'thirdMachineCount', 'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking',
+                            'totalExpressWay', 'totalOverTime', 'textarea', 'amountCheck', 'allowanceCheck', 'expresswayCheck', 'parkingCheck', 'vehicleCheck', 'overtimeCheck',
+                            'setRowCount', 'shiftProjectVehicles',
+                            // ドライバー価格
+                            'totalSalaryName','totalSalaryAmount','allowanceName','allowanceAmount','taxName','taxAmount','expressWayAmount','parkingAmount','overtimeAmount','others',
+                            'parkingName', 'expressWayName', 'overtimeName',
+                            // 費用関連
+                            'administrativeOutsourcingName','administrativeOutsourcingAmount','administrativeName','administrativeAmount','transferName','transferAmount','monthLeaseName',
+                            'monthLeaseAmount','secondLeaseName','secondLeaseAmount','thirdLeaseName','thirdLeaseAmount','monthInsuranceName','monthInsuranceAmount','secondInsuranceName','secondInsuranceAmount','CostOthers'
+                        ));
         $fileName = "{$getMonth}月_{$employeeName}.pdf";
-
+        $pdf->setPaper('A4', 'portrait');
         return $pdf->download($fileName); //生成されるファイル名
-        return view('issue-calendar-pdf.driver-calendar', compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays', 'warning', 'secondMachineArray', 'thirdMachineArray', 'secondMachineCount', 'thirdMachineCount', 'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking', 'totalExpressWay', 'totalOverTime', 'textarea', 'amountCheck', 'allowanceCheck', 'expresswayCheck', 'parkingCheck', 'vehicleCheck', 'overtimeCheck'));
+
+        return view('issue-calendar-pdf.driver-calendar', compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays', 'secondMachineArray', 'thirdMachineArray', 'secondMachineCount', 'thirdMachineCount', 'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking', 'totalExpressWay', 'totalOverTime', 'textarea', 'amountCheck', 'allowanceCheck', 'expresswayCheck', 'parkingCheck', 'vehicleCheck', 'overtimeCheck', 'setRowCount', 'shiftProjectVehicles'));
     }
 
     function addVehicle($vehicleNumber, &$secondMachineArray, &$thirdMachineArray, &$secondMachineCheck) {
@@ -201,24 +407,26 @@ class InvoiceController extends Controller
         }
     }
 
-    function machineInfoExtract($shifts)
+    function machineInfoExtract($shiftProjectVehicles, $dates)
     {
         $secondMachineArray = [];
         $thirdMachineArray = [];
         $secondMachineCount = 0;
         $thirdMachineCount = 0;
 
-        foreach($shifts as $shift){
+        foreach($dates as $date){
             $secondMachineCheck = true;
-            foreach($shift->projectsVehicles as $spv){
-                if(in_array($spv->vehicle_rental_type, [0, 1])){
-                    $vehicleNumber = $spv->vehicle ? $spv->vehicle->number : $spv->unregistered_vehicle;
-                    if($vehicleNumber != null){
-                        if(!$spv->rental_vehicle_id || $spv->vehicle_id != $spv->rental_vehicle_id){
-                            if ($secondMachineCheck) {
-                                $secondMachineCount += $this->addVehicle($vehicleNumber, $secondMachineArray, $thirdMachineArray, $secondMachineCheck);
-                            } else {
-                                $thirdMachineCount += $this->addVehicle($vehicleNumber, $secondMachineArray, $thirdMachineArray, $secondMachineCheck);
+            foreach($shiftProjectVehicles as $spv){
+                if($spv->shift->date == $date->format('Y-m-d')){
+                    if(in_array($spv->vehicle_rental_type, [0, 1])){
+                        $vehicleNumber = $spv->vehicle ? $spv->vehicle->number : $spv->unregistered_vehicle;
+                        if($vehicleNumber != null){
+                            if(!$spv->rental_vehicle_id || $spv->vehicle_id != $spv->rental_vehicle_id){
+                                if ($secondMachineCheck) {
+                                    $secondMachineCount += $this->addVehicle($vehicleNumber, $secondMachineArray, $thirdMachineArray, $secondMachineCheck);
+                                } else {
+                                    $thirdMachineCount += $this->addVehicle($vehicleNumber, $secondMachineArray, $thirdMachineArray, $secondMachineCheck);
+                                }
                             }
                         }
                     }
@@ -230,19 +438,17 @@ class InvoiceController extends Controller
         return [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount];
     }
 
-    function projectInfoExtract($shifts)
+    function projectInfoExtract($shiftProjectVehicles)
     {
         $projectInfoArray = [];
-        foreach($shifts as $shift){
-            foreach($shift->projectsVehicles as $spv){
-                $projectName = $spv->project ? $spv->project->name : $spv->unregistered_project;
-                if($projectName != null){
-                    if($projectName != '休み'){
-                        if(isset($projectInfoArray[$projectName][$spv->retail_price])){
-                            $projectInfoArray[$projectName][$spv->retail_price]++;
-                        }else{
-                            $projectInfoArray[$projectName][$spv->retail_price] = 1;
-                        }
+        foreach($shiftProjectVehicles as $spv){
+            $projectName = $spv->project ? $spv->project->name : $spv->unregistered_project;
+            if($projectName != null){
+                if($projectName != '休み'){
+                    if(isset($projectInfoArray[$projectName][$spv->retail_price])){
+                        $projectInfoArray[$projectName][$spv->retail_price]++;
+                    }else{
+                        $projectInfoArray[$projectName][$spv->retail_price] = 1;
                     }
                 }
             }
@@ -251,7 +457,7 @@ class InvoiceController extends Controller
         return $projectInfoArray;
     }
 
-    function totallingInfoExtract($shifts)
+    function totallingInfoExtract($shiftProjectVehicles)
     {
         $totalSalary = 0;
         $totalAllowance = 0;
@@ -259,14 +465,12 @@ class InvoiceController extends Controller
         $totalExpressWay = 0;
         $totalOverTime = 0;
 
-        foreach($shifts as $shift){
-            foreach($shift->projectsVehicles as $spv){
-                $totalSalary += $spv->driver_price;
-                $totalAllowance += $spv->total_allowance;
-                $totalParking += $spv->parking_fee;
-                $totalExpressWay += $spv->expressway_fee;
-                $totalOverTime += $spv->overtime_fee;
-            }
+        foreach($shiftProjectVehicles as $spv){
+            $totalSalary += $spv->driver_price;
+            $totalAllowance += $spv->total_allowance;
+            $totalParking += $spv->parking_fee;
+            $totalExpressWay += $spv->expressway_fee;
+            $totalOverTime += $spv->overtime_fee;
         }
 
         return [$totalSalary, $totalAllowance, $totalParking, $totalExpressWay, $totalOverTime];
@@ -283,8 +487,11 @@ class InvoiceController extends Controller
         $clients = Client::all();
         $ShiftProjectVehicles = null;
         $warning = null;
+        $clientId = null;
+        $getYear = null;
+        $getMonth = null;
 
-        return view('invoice.projectShift', compact('clients', 'ShiftProjectVehicles', 'warning'));
+        return view('invoice.projectShift', compact('clients', 'ShiftProjectVehicles', 'warning', 'clientId', 'getYear', 'getMonth'));
     }
 
     public function projectShiftUpdate(Request $request)
@@ -303,44 +510,15 @@ class InvoiceController extends Controller
             $getShift->save();
         }
 
-        // $clientId = $request->client;
-        // $getYear = $request->year;
-        // $getMonth = $request->month;
+        return $this->searchProjectShift($request);
+    }
 
-        // $projects = Project::where('client_id', $clientId)->get();
+    public function projectShiftDelete(Request $request)
+    {
+        $id = $request->shiftPvId;
 
-        // // 検索用
-        // $clients = Client::all();
-        // $client = Client::find($clientId);
-
-        // // シフトを検索・取得
-        // $ShiftProjectVehicles = ShiftProjectVehicle::with('shift','shift.employee.company','project')
-        // ->whereHas('shift', function ($query) use ($getYear, $getMonth) {
-        //     $query->whereYear('date', $getYear)
-        //         ->whereMonth('date', $getMonth);
-        // })
-        // ->whereHas('project', function ($query) use ($clientId) {
-        //     $query->where('client_id', $clientId);
-        // })
-        // ->get();
-
-        // // 所属先取得
-        // $companyIds = [];
-        // foreach ($ShiftProjectVehicles as $spv) {
-        //     if ($spv->shift && $spv->shift->employee && $spv->shift->employee->company) {
-        //         // Company にアクセス
-        //         $company = $spv->shift->employee->company;
-        //         if(!in_array($company->id,$companyIds)){
-        //             $companyIds[] = $company->id;;
-        //         }
-        //     }
-        // }
-        // $getCompanies = Company::whereIn('id', $companyIds)->get();
-
-        // // 全日にちを取得
-        // $dates = $this->createDate($getYear, $getMonth);
-
-        // return view('invoice.projectShift', compact('projects', 'clients' ,'client', 'ShiftProjectVehicles', 'getCompanies', 'getYear', 'getMonth', 'dates'));
+        $shiftPv = ShiftProjectVehicle::find($id);
+        $shiftPv->delete();
 
         return $this->searchProjectShift($request);
     }
@@ -357,8 +535,14 @@ class InvoiceController extends Controller
         $clients = Client::all();
         $getClient = Client::find($clientId);
 
+        // 列の表示・非表示
+        $selectedDisplayCheck = $request->input('displayCheck', []);
+        $selectedDisplayCoCheck = $request->input('displayCoCheck', []);
+        // 案件の絞り込み
+        $narrowProjectIds = $request->input('narrowProjects', []);
+
         // シフトを検索・取得
-        $ShiftProjectVehicles = ShiftProjectVehicle::with('shift', 'shift.employee.company', 'project')
+        $ShiftProjectVehiclesByClient = ShiftProjectVehicle::with('shift', 'shift.employee.company', 'project')
             ->whereHas('shift', function ($query) use ($getYear, $getMonth) {
                 $query->whereYear('date', $getYear)
                     ->whereMonth('date', $getMonth);
@@ -368,9 +552,23 @@ class InvoiceController extends Controller
             })
             ->get();
 
+        // シフトを案件で絞り込み
+        $ShiftProjectVehicles = $ShiftProjectVehiclesByClient->filter(function ($spv) use ($narrowProjectIds){
+            if(!empty($narrowProjectIds)){
+                return in_array($spv->project_id, $narrowProjectIds);
+            }else{
+                return $spv;
+            }
+        });
+        // 絞り込み対象案件
+        $narrowProjects = Project::where('client_id', $clientId)
+                        ->when(!empty($narrowProjectIds), function($query) use ($narrowProjectIds){
+                            return $query->whereIn('id', $narrowProjectIds);
+                        })->get();
+
         // 所属先ID取得
         $companyIds = [];
-        foreach ($ShiftProjectVehicles as $spv) {
+        foreach ($ShiftProjectVehiclesByClient as $spv) {
             if ($spv->shift && $spv->shift->employee && $spv->shift->employee->company) {
                 // Company にアクセス
                 $company = $spv->shift->employee->company;
@@ -386,11 +584,14 @@ class InvoiceController extends Controller
         $dates = $this->createDate($getYear, $getMonth);
 
         $warning = null;
-        if ($ShiftProjectVehicles == null || $ShiftProjectVehicles->isEmpty()) {
+        if ($ShiftProjectVehiclesByClient == null || $ShiftProjectVehiclesByClient->isEmpty()) {
             $warning = "選択されたシフトは登録されていません";
         }
 
-        return view('invoice.projectShift', compact('projects', 'clients', 'getClient', 'ShiftProjectVehicles', 'getCompanies', 'getYear', 'getMonth', 'dates', 'warning'));
+        return view('invoice.projectShift',
+            compact('projects', 'clients', 'clientId', 'getClient', 'ShiftProjectVehicles', 'getCompanies',
+                    'getYear', 'getMonth', 'dates', 'warning',
+                    'selectedDisplayCheck', 'selectedDisplayCoCheck', 'narrowProjects', 'narrowProjectIds'));
     }
 
     public function projectCalendarPDF(Request $request)
@@ -399,34 +600,50 @@ class InvoiceController extends Controller
         $getYear = $request->year;
         $getMonth = $request->month;
 
-        $retailCheck = $request->has('retailCheck') ? 1 : 0;
-        $salaryCheck = $request->has('salaryCheck') ? 1 : 0;
-        $expresswayCheck = $request->has('expresswayCheck') ? 1 : 0;
-        $parkingCheck = $request->has('parkingCheck') ? 1 : 0;
+        $retailCheck = $request->input('retailCheck');
+        $salaryCheck = $request->input('salaryCheck');
+        $expresswayCheck = $request->input('expresswayCheck');
+        $parkingCheck = $request->input('parkingCheck');
         $selectedCompanies = $request->input('company', []);
+        $selectedProjectIds = $request->input('narrowProjectIds', []);
 
-        $projects = Project::where('client_id', $clientId)->get();
+        $projects = Project::where('client_id', $clientId)
+                    ->when(!empty($selectedProjectIds), function($query) use ($selectedProjectIds){
+                        return $query->whereIn('id', $selectedProjectIds);
+                    })->get();
 
         // 検索用
         $clients = Client::all();
         $client = Client::find($clientId);
 
         // シフトを検索・取得
-        $ShiftProjectVehicles = ShiftProjectVehicle::with('shift', 'shift.employee.company', 'project')
+        $ShiftProjectVehiclesByClient = ShiftProjectVehicle::with('shift', 'shift.employee.company', 'project')
             ->whereHas('shift', function ($query) use ($getYear, $getMonth) {
                 $query->whereYear('date', $getYear)
-                    ->whereMonth('date', $getMonth);
+                    ->whereMonth('date', $getMonth)
+                    ->whereNotNull('employee_id');
             })
             ->whereHas('project', function ($query) use ($clientId) {
                 $query->where('client_id', $clientId);
             })
             ->get();
 
+        $ShiftProjectVehicles = $ShiftProjectVehiclesByClient->filter(function ($spv) use ($selectedProjectIds){
+            if(!empty($selectedProjectIds)){
+                if($spv->project){
+                    return in_array($spv->project->id, $selectedProjectIds);
+                }
+            }else{
+                return $spv;
+            }
+        });
+
         // 所属先ID格納配列
         $companyIds = [];
         // 取得したinputの配列のKeyにcompanyのidが格納済み
         foreach($selectedCompanies as $index => $value){
-            $companyIds[] = $index;
+            if($value == null) continue;
+            $companyIds[] = $value;
         }
         $getCompanies = Company::whereIn('id', $companyIds)->get();
 
@@ -435,7 +652,7 @@ class InvoiceController extends Controller
         $dates = $this->createDate($getYear, $getMonth);
 
         $clientName = $client->name;
-        $pdf =  PDF::loadView('issue-calendar-pdf.project-calendar', compact('projects', 'clients', 'client', 'ShiftProjectVehicles', 'getCompanies', 'getYear', 'getMonth', 'dates', 'retailCheck', 'salaryCheck', 'expresswayCheck', 'parkingCheck'));
+        $pdf =  PDF::loadView('issue-calendar-pdf.project-calendar', compact('projects', 'clients', 'client', 'ShiftProjectVehicles', 'getCompanies', 'getYear', 'getMonth', 'dates', 'retailCheck', 'salaryCheck', 'expresswayCheck', 'parkingCheck'))->setPaper('a4', 'landscape');
         $fileName = "{$getMonth}月_{$clientName}.pdf";
 
         return $pdf->download($fileName); //生成されるファイル名
@@ -454,8 +671,10 @@ class InvoiceController extends Controller
     {
         $shiftArray = null;
         $warning = null;
+        $getYear = null;
+        $getMonth = null;
 
-        return view('invoice.charterShift', compact('shiftArray', 'warning'));
+        return view('invoice.charterShift', compact('shiftArray', 'warning', 'getYear', 'getMonth'));
     }
 
     public function charterClientUpdate(Request $request)
@@ -542,6 +761,73 @@ class InvoiceController extends Controller
                 $getShift->save();
             }
         }
+
+        $getYear = $request->year;
+        $getMonth = $request->month;
+
+        return redirect()->route('invoice.findCharterShift', ['year' => $getYear, 'month' => $getMonth]);
+    }
+
+    public function charterProjectUpdate(Request $request)
+    {
+        $id = $request->shiftPvId;
+        $shiftPv = ShiftProjectVehicle::find($id);
+
+        if($shiftPv){
+            if ($request->input('action') == 'update') {
+                // 更新処理
+                if($request->projectRadio == 0){
+                    // 既存案件
+                    $shiftPv->project_id = $request->projectId;
+                    $shiftPv->unregistered_project = null;
+                    $shiftPv->save();
+                }else{
+                    // 未登録案件
+                    $shiftPv->unregistered_project = $request->unProject;
+                    $shiftPv->save();
+                }
+            } elseif ($request->input('action') == 'delete') {
+                // 削除処理
+                $shiftPv->delete();
+            }
+        }
+
+        $getYear = $request->year;
+        $getMonth = $request->month;
+
+        return redirect()->route('invoice.findCharterShift', ['year' => $getYear, 'month' => $getMonth]);
+    }
+
+    public function charterDriverUpdate(Request $request)
+    {
+        $id = $request->shiftPvId;
+        $shiftPv = ShiftProjectVehicle::find($id);
+
+        $date = $shiftPv->shift->date;
+        $employeeId = $request->employeeId;
+        $shift = Shift::updateOrCreate(
+            ['date' => $date, 'employee_id' => $employeeId],
+            ['date' => $date, 'employee_id' => $employeeId]
+        );
+
+        ShiftProjectVehicle::create([
+            'shift_id' => $shift->id,
+            'project_id' => $shiftPv->project_id,
+            'unregistered_project' => $shiftPv->unregistered_project,
+            'vehicle_id' => $shiftPv->vehicle_id,
+            'unregistered_vehicle'=> $shiftPv->unregistered_vehicle,
+            'retail_price' => $shiftPv->retail_price,
+            'driver_price' => $shiftPv->driver_price,
+            'total_allowance' => $shiftPv->total_allowance,
+            'parking_fee' => $shiftPv->parking_fee,
+            'expressway_fee' => $shiftPv->expressway_fee,
+            'overtime_fee' => $shiftPv->overtime_fee,
+            'vehicle_rental_type' => $shiftPv->vehicle_rental_type,
+            'rental_vehicle_id' => $shiftPv->rental_vehicle_id,
+            'time_of_day' => $shiftPv->time_of_day
+        ]);
+
+        $shiftPv->delete();
 
         $getYear = $request->year;
         $getMonth = $request->month;
@@ -657,7 +943,10 @@ class InvoiceController extends Controller
             $warning = "選択されたシフトは登録されていません";
         }
 
-        return view('invoice.charterShift', compact('ShiftProjectVehicles', 'shiftArray', 'unregisterProjectShift', 'clients', 'getYear', 'getMonth', 'warning', 'dates'));
+        $projectsByCharter = project::where('is_charter', 1)->get();
+        $employees = Employee::all();
+
+        return view('invoice.charterShift', compact('ShiftProjectVehicles', 'shiftArray', 'unregisterProjectShift', 'clients', 'getYear', 'getMonth', 'warning', 'dates', 'projectsByCharter', 'employees'));
     }
 
     public function charterCalendarPDF(Request $request)

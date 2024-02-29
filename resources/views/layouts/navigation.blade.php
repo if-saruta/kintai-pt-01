@@ -5,10 +5,10 @@
             <!-- Logo -->
             <div class="logo-block">
                 <a href="{{ route('shift.') }}" class="logo-block__inner">
-                    <div class="logo-block__inner__img">
+                    <div class="logo-block__inner__img" id="logoImg">
                         <img class="" src="{{ asset('img/logo.png') }}" alt="">
                     </div>
-                    <p class="logo-block__inner__txt">Caramel</p>
+                    <p class="logo-block__inner__txt navTxt">Caramel</p>
                 </a>
             </div>
 
@@ -21,38 +21,49 @@
                     <div class="icon-wrap">
                         <i class="fa-solid fa-house"></i>
                     </div>
-                    <span class="nav-item__txt">{{ __('ダッシュボード') }}</span>
+                    <span class="nav-item__txt navTxt">{{ __('ダッシュボード') }}</span>
                 </a>
-                <a href="{{ route('project.') }}" class="{{ request()->routeIs('project.*') ? 'active' : '' }} nav-item">
+                <a href="{{ route('project.') }}"
+                    class="{{ request()->routeIs('project.*') ? 'active' : '' }} nav-item">
                     <div class="icon-wrap">
                         <i class="fa-regular fa-file"></i>
                     </div>
-                    <span class="nav-item__txt">{{ __('クライアント管理') }}</span>
+                    <span class="nav-item__txt navTxt">{{ __('クライアント管理') }}</span>
                 </a>
-                <a href="{{ route('employee.') }}" class="{{ request()->routeIs('employee.*') ? 'active' : '' }} nav-item">
+                <a href="{{ route('employee.') }}"
+                    class="{{ request()->routeIs('employee.*') ? 'active' : '' }} nav-item">
                     <div class="icon-wrap">
                         <i class="fa-solid fa-user"></i>
                     </div>
-                    <span class="nav-item__txt">{{ __('ドライバー管理') }}</span>
+                    <span class="nav-item__txt navTxt">{{ __('ドライバー管理') }}</span>
                 </a>
-                <a href="{{ route('invoice.driverShift') }}" class="{{ request()->routeIs('invoice.*') ? 'active' : '' }} nav-item">
+                <a href="{{ route('invoice.driverShift') }}"
+                    class="{{ request()->routeIs('invoice.*') ? 'active' : '' }} nav-item">
                     <div class="icon-wrap">
                         <i class="fa-solid fa-file-invoice"></i>
                     </div>
-                    <span class="nav-item__txt">{{ __('請求書') }}</span>
+                    <span class="nav-item__txt navTxt">{{ __('請求書') }}</span>
                 </a>
-                <a href="{{ route('company.') }}" class="{{ request()->routeIs('vehicle.*', 'company.*') ? 'active' : '' }} nav-item">
+                <a href="{{ route('company.') }}"
+                    class="{{ request()->routeIs('vehicle.*', 'company.*') ? 'active' : '' }} nav-item">
                     <div class="icon-wrap">
                         <i class="fa-solid fa-circle-info"></i>
                     </div>
-                    <span class="nav-item__txt">{{ __('情報管理') }}</span>
+                    <span class="nav-item__txt navTxt">{{ __('情報管理') }}</span>
                 </a>
-                <a href="{{ route('profile.edit') }}" class="{{ request()->routeIs('profile.*') ? 'active' : '' }} nav-item">
+                <a href="{{ route('profile.edit') }}"
+                    class="{{ request()->routeIs('profile.*') ? 'active' : '' }} nav-item">
                     <div class="icon-wrap">
                         <i class="fa-solid fa-gear"></i>
                     </div>
-                    <span class="nav-item__txt">{{ __('設定') }}</span>
+                    <span class="nav-item__txt navTxt">{{ __('設定') }}</span>
                 </a>
+                <div class="nav-item --close-nav-item open" id="navToggle">
+                    <div class="icon-wrap">
+                        <i class="fa-solid fa-caret-left"></i>
+                    </div>
+                    <span class="nav-item__txt --close-nav-item__txt navTxt">メニューを閉じる</span>
+                </div>
                 {{-- <a href="{{ route('company.') }}" class="{{ request()->routeIs('company.*') ? 'active' : '' }}">
                     {{ __('所属先') }}
                 </a> --}}

@@ -29,7 +29,7 @@
                         </button>
                         <a href="{{route('employee.delete', ["id" => $employee->id])}}" class="btn --delete" type="submit" name="action" value="delete"
                             onclick='return confirm("本当に削除しますか?")'>
-                            所属先を削除
+                            ドライバーを削除
                         </a>
                         <a href="{{route('employee.')}}" class="btn --back closeBtn" onclick='return confirm("入力したデータは失われます。")'>
                             戻る
@@ -38,6 +38,13 @@
                 </div>
             </div>
             <div class="employee-input-main">
+                <div class="employee-initial">
+                    <div class="head">
+                        <p class="input-head">イニシャル</p>
+                        <p class="required">必須</p>
+                    </div>
+                    <input class="c-input" name="initial" value="{{ $employee->initials }}" required>
+                </div>
                 <div class="company">
                     <div class="head">
                         <p class="input-head">所属先</p>
@@ -127,7 +134,7 @@
                         <p class="input-head">登録番号</p>
                         <p class="required">必須</p>
                     </div>
-                    <input type="text" name="register_number" value="{{$employee->register_number}}" class="c-input" placeholder="T00000000" required>
+                    <input type="text" name="register_number" value="{{$employee->register_number}}" class="c-input" placeholder="T00000000">
                 </div>
                 <div class="rental">
                     <div class="head">

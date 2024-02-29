@@ -19,6 +19,9 @@
         /* 全てのHTML要素に適用 */
         html, body, textarea {font-family: ipaexm, sans-serif;}html {line-height: 1.15;-webkit-text-size-adjust: 100%;-webkit-tap-highlight-color: transparent;}body {margin: 0;}main {display: block;}p,table,blockquote,address,pre,iframe,form,figure,dl {margin: 0;}h1,h2,h3,h4,h5,h6 {font-size: inherit; font-weight: inherit; margin: 0; } ul, ol { margin: 0; padding: 0; list-style: none; } dt { font-weight: 700; } dd { margin-left: 0; } hr { box-sizing: content-box; height: 0; overflow: visible; border-top-width: 1px; margin: 0; clear: both; color: inherit; } pre { font-family: monospace, monospace; font-size: inherit; } address { font-style: inherit; } a { background-color: transparent; text-decoration: none; color: inherit; } abbr[title] { text-decoration: underline dotted; } b, strong { font-weight: bolder; } code, kbd, samp { font-family: monospace, monospace; font-size: inherit; } small { font-size: 80%; } sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; } sub { bottom: -0.25em; } sup { top: -0.5em; } svg, img, embed, object, iframe { vertical-align: center; } button, input, optgroup, select, textarea { -webkit-appearance: none; appearance: none; vertical-align: middle; color: inherit; font: inherit; background: transparent; padding: 0; margin: 0; border-radius: 0; text-align: inherit; text-transform: inherit; } [type="checkbox"] { -webkit-appearance: checkbox; appearance: checkbox; } [type="radio"] { -webkit-appearance: radio; appearance: radio; } button, [type="button"], [type="reset"], [type="submit"] { cursor: pointer; } button:disabled, [type="button"]:disabled, [type="reset"]:disabled, [type="submit"]:disabled { cursor: default; } :-moz-focusring { outline: auto; } select:disabled { opacity: inherit; } option { padding: 0; } fieldset { margin: 0; padding: 0; min-width: 0; } legend { padding: 0; } progress { vertical-align: baseline; } textarea { overflow: auto; } [type="number"]::-webkit-inner-spin-button, [type="number"]::-webkit-outer-spin-button { height: auto; } [type="search"] { outline-offset: -2px; } [type="search"]::-webkit-search-decoration { -webkit-appearance: none; } ::-webkit-file-upload-button { -webkit-appearance: button; font: inherit; } label[for] { cursor: pointer; } details { display: block; } summary { display: list-item; } [contenteditable]:focus { outline: auto; } table { border-color: inherit; } caption { text-align: left; } td, th { vertical-align: top; padding: 0; } th { text-align: left; font-weight: 700; } th{ font-weight: normal; }
 
+        @page {
+            margin: 20px; /* 余白の制御はbodyタグ側で行いたいのでページ単位のマージンをキャンセルする */
+        }
         .top-table{
           /* width: 500px; */
         }
@@ -53,9 +56,12 @@
             text-align: center;
             vertical-align: middle;
         }
+        .project-head-txt{
+            font-size: 8px
+        }
         .project{
           width: 39.6%;
-          padding: 3px 0px;
+          padding: 4px 0px;
           padding-left: 5px;
           box-sizing: border-box;
           text-align: start;
@@ -63,42 +69,42 @@
         .driver-price{
           width: 7.7%;
           text-align: right;
-          padding: 3px 0px;
+          padding: 4px 0px;
           padding-right: 1px;
           box-sizing: border-box;
         }
         .allowance-fee{
           width: 7.7%;
           text-align: right;
-          padding: 3px 0px;
+          padding: 4px 0px;
           padding-right: 1px;
           box-sizing: border-box;
         }
         .expressway-fee{
           width: 8.1%;
           text-align: right;
-          padding: 3px 0px;
+          padding: 4px 0px;
           padding-right: 1px;
           box-sizing: border-box;
         }
         .parking-fee{
           width: 7.7%;
           text-align: right;
-          padding: 3px 0px;
+          padding: 4px 0px;
           padding-right: 1px;
           box-sizing: border-box;
         }
         .vehicle{
           width: 11%;
           text-align: right;
-          padding: 3px 0px;
+          padding: 4px 0px;
           padding-right: 1px;
           box-sizing: border-box;
         }
         .overtime{
             width: 7.7%;
           text-align: right;
-          padding: 3px 0px;
+          padding: 4px 0px;
           padding-right: 1px;
           box-sizing: border-box;
         }
@@ -186,10 +192,19 @@
 
     @php
         // シフトの数を判定し1日の行を最低3行にするコード
-        $rowNeed = 3;
-        foreach ($shifts as $shift) {
-            if ($rowNeed < $shift->projectsVehicles->count()) {
-                $rowNeed = $shift->projectsVehicles->count();
+        if($setRowCount == null){
+            $setRowCount = 3;
+        }
+        foreach ($dates as $date) {
+            $dateCount = 0;
+            foreach ($shiftProjectVehicles as $spv) {
+                if ($spv->shift->date == $date->format('Y-m-d')) {
+                    $dateCount++;
+                }
+            }
+            if($dateCount > $setRowCount){
+                $setRowCount = $dateCount;
+                $needRowCountWarning = 'シフトの数が指定した行数を上回っています';
             }
         }
     @endphp
@@ -197,7 +212,7 @@
     <thead>
         <tr>
             <th class="center-txt">日付</th>
-            <th class="center-txt">案件名</th>
+            <th class="center-txt project-head-txt">案件名</th>
             @if ($amountCheck != 1)
                 <th class="center-txt">金額</th>
             @endif
@@ -232,21 +247,15 @@
             $is_working = true;
           @endphp
 
-          @foreach ($shifts as $shift)
-            @if($shift->date == $date->format('Y-m-d'))
-              @foreach ($shift->projectsVehicles as $spv)
+          @foreach ($shiftProjectVehicles as $spv)
+            @if($spv->shift->date == $date->format('Y-m-d'))
                 <tr>
                   @if ($count == 0)
-                    <td rowspan="{{ $rowNeed }}" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                    <td rowspan="{{ $setRowCount }}" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                   @endif
 
                   @php
                     $count++;
-                    // // 集計表で使用する変数
-                    // $total_amount += $spv->driver_price;
-                    // $total_allowance += $spv->total_allowance;
-                    // $total_parking += $spv->parking_fee;
-                    // $total_expressway += $spv->expressway_fee;
                     $rental_type = $spv->vehicle_rental_type;
                     if($spv->rentalVehicle){
                       $rental_vehicle = $spv->rentalVehicle->number;
@@ -255,23 +264,40 @@
                     <td class="project">
                         <p class="">
                         @if ($spv->project)
-                        {{$spv->project->name}}
+                            @if($spv->project->name != '休み')
+                                {{$spv->project->name}}
+                            @endif
                         @else
-                            {{$spv->unregistered_project}}
+                            @if ($spv->unregistered_project != '休み')
+                                {{$spv->unregistered_project}}
+                            @endif
                         @endif
+                        &nbsp;
                         </p>
                     </td>
                   @if ($amountCheck != 1)
-                     <td class="driver-price"><p class="">{{number_format(ceil($spv->driver_price))}}</p></td>
+                    @php
+                        $amount = $spv->driver_price ? number_format($spv->driver_price) : '';
+                    @endphp
+                     <td class="driver-price"><p class="">{{ $amount }}</p></td>
                   @endif
                   @if ($allowanceCheck != 1)
-                     <td class="allowance-fee"><p class="">{{number_format(ceil($spv->total_allowance))}}</p></td>
+                     @php
+                        $amount = $spv->total_allowance ? number_format($spv->total_allowance) : '';
+                    @endphp
+                     <td class="allowance-fee"><p class="">{{ $amount }}</p></td>
                   @endif
                   @if ($expresswayCheck != 1)
-                      <td class="expressway-fee"><p class="">{{number_format(ceil($spv->expressway_fee))}}</p></td>
+                    @php
+                        $amount = $spv->expressway_fee ? number_format($spv->expressway_fee) : '';
+                    @endphp
+                      <td class="expressway-fee"><p class="">{{ $amount }}</p></td>
                   @endif
                   @if ($parkingCheck != 1)
-                     <td class="parking-fee"><p class="">{{number_format(ceil($spv->parking_fee))}}</p></td>
+                    @php
+                        $amount = $spv->parking_fee ? number_format($spv->parking_fee) : '';
+                    @endphp
+                     <td class="parking-fee"><p class="">{{ $amount }}</p></td>
                   @endif
                   @if ($vehicleCheck != 1)
                     <td class="vehicle">
@@ -295,18 +321,20 @@
                     </td>
                   @endif
                   @if ($overtimeCheck != 1)
-                    <td class="overtime"><p class="">{{ number_format($spv->overtime_fee) }}</p></td>
+                    @php
+                        $amount = $spv->overtime_fee ? number_format($spv->overtime_fee) : '';
+                    @endphp
+                    <td class="overtime"><p class="">{{ $amount }}</p></td>
                   @endif
                 </tr>
-              @endforeach
             @endif
           @endforeach
 
           {{-- シフトがない場合 --}}
-          @for ($count; $count < $rowNeed; $count++)
+          @for ($count; $count < $setRowCount; $count++)
               <tr>
                 @if ($count == 0)
-                  <td rowspan="{{ $rowNeed }}" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                  <td rowspan="{{ $setRowCount }}" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                 @endif
                 <td class="project">&nbsp;</td>
                 @if ($amountCheck != 1)
@@ -330,12 +358,11 @@
               </tr>
           @endfor
         @endif
-
       @endforeach
-      @for ($count = 0; $count < $rowNeed; $count++)
+      @for ($count = 0; $count < $setRowCount; $count++)
         <tr>
             @if ($count == 0)
-                <td rowspan="{{ $rowNeed }}" class="date"><p class=""></p></td>
+                <td rowspan="{{ $setRowCount }}" class="date"><p class=""></p></td>
             @endif
             <td class="project">&nbsp;</td>
             @if ($amountCheck != 1)
@@ -367,7 +394,7 @@
     <thead>
         <tr>
             <th class="center-txt">日付</th>
-            <th class="center-txt">案件名</th>
+            <th class="center-txt project-head-txt">案件名</th>
             @if ($amountCheck != 1)
                 <th class="center-txt">金額</th>
             @endif
@@ -402,25 +429,11 @@
             // $is_working = true;
           @endphp
 
-          @foreach ($shifts as $shift)
-            @if($shift->date== $date->format('Y-m-d'))
-              @foreach ($shift->projectsVehicles as $spv)
-                {{-- @php
-                  if($is_working){
-                    if($spv->project){
-                      if($spv->project->name !== '休み'){
-                        $working_count++;
-                        $is_working = false;
-                      }
-                    }else{
-                      $working_count++;
-                      $is_working = false;
-                    }
-                  }
-                @endphp --}}
+          @foreach ($shiftProjectVehicles as $spv)
+            @if($spv->shift->date== $date->format('Y-m-d'))
                 <tr>
                   @if ($count == 0)
-                    <td rowspan="{{ $rowNeed }}" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                    <td rowspan="{{ $setRowCount }}" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                   @endif
 
                   @php
@@ -437,24 +450,41 @@
                   @endphp
                   <td class="project">
                     <p class="">
-                      @if ($spv->project)
-                      {{$spv->project->name}}
-                      @else
-                        {{$spv->unregistered_project}}
-                      @endif
+                    @if ($spv->project)
+                        @if($spv->project->name != '休み')
+                            {{$spv->project->name}}
+                        @endif
+                    @else
+                        @if ($spv->unregistered_project != '休み')
+                            {{$spv->unregistered_project}}
+                        @endif
+                    @endif
+                    &nbsp;
                     </p>
-                  </td>
+                 </td>
                   @if ($amountCheck != 1)
-                     <td class="driver-price"><p class="">{{number_format(ceil($spv->driver_price))}}</p></td>
+                    @php
+                        $amount = $spv->driver_price ? number_format($spv->driver_price) : '';
+                    @endphp
+                     <td class="driver-price"><p class="">{{$amount}}</p></td>
                   @endif
                   @if ($allowanceCheck != 1)
-                     <td class="allowance-fee"><p class="">{{number_format(ceil($spv->total_allowance))}}</p></td>
+                    @php
+                        $amount = $spv->total_allowance ? number_format($spv->total_allowance) : '';
+                    @endphp
+                     <td class="allowance-fee"><p class="">{{$amount}}</p></td>
                   @endif
                   @if ($expresswayCheck != 1)
-                      <td class="expressway-fee"><p class="">{{number_format(ceil($spv->expressway_fee))}}</p></td>
+                     @php
+                        $amount = $spv->expressway_fee ? number_format($spv->expressway_fee) : '';
+                    @endphp
+                      <td class="expressway-fee"><p class="">{{$amount}}</p></td>
                   @endif
                   @if ($parkingCheck != 1)
-                     <td class="parking-fee"><p class="">{{number_format(ceil($spv->parking_fee))}}</p></td>
+                     @php
+                        $amount = $spv->parking_fee ? number_format($spv->parking_fee) : '';
+                    @endphp
+                     <td class="parking-fee"><p class="">{{$amount}}</p></td>
                   @endif
                   @if ($vehicleCheck != 1)
                     <td class="vehicle">
@@ -474,7 +504,7 @@
                                 @endif
                             @endif
                         @endif
-                        {{-- @if ($rental_type == 0 && $spv->vehicle_id)
+                        {{-- @if ($rental_type == 0 || $spv->vehicle_id)
                             {{$spv->vehicle->number}}
                             @php
                                 if($second_machine_check){
@@ -496,18 +526,20 @@
                     </td>
                   @endif
                   @if ($overtimeCheck != 1)
-                    <td class="overtime"><p class="">{{ number_format($spv->overtime_fee) }}</p></td>
+                    @php
+                        $amount = $spv->overtime_fee ? number_format($spv->overtime_fee) : '';
+                    @endphp
+                    <td class="overtime"><p class="">{{ $amount }}</p></td>
                   @endif
                 </tr>
-              @endforeach
             @endif
           @endforeach
 
           {{-- シフトがない場合 --}}
-          @for ($count; $count < $rowNeed; $count++)
+          @for ($count; $count < $setRowCount; $count++)
               <tr>
                 @if ($count == 0)
-                  <td rowspan="{{ $rowNeed }}" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                  <td rowspan="{{ $setRowCount }}" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                 @endif
                 <td class="project">&nbsp;</td>
                 @if ($amountCheck != 1)
@@ -534,10 +566,10 @@
 
       @endforeach
       @for ($i = $dates[count($dates) - 1]->format('d'); $i < 31; $i++)
-        @for ($count = 0; $count < $rowNeed; $count++)
+        @for ($count = 0; $count < $setRowCount; $count++)
             <tr>
                 @if ($count == 0)
-                    <td rowspan="{{ $rowNeed }}" class="date"><p class=""></p></td>
+                    <td rowspan="{{ $setRowCount }}" class="date"><p class=""></p></td>
                 @endif
                 <td class="project">&nbsp;</td>
                 @if ($amountCheck != 1)
@@ -580,79 +612,124 @@
 
   <table class="amount-total other-table">
     <tbody>
-      <tr>
-        <th>合計金額</th>
-        <td>{{number_format(ceil($totalSalary))}}</td>
-      </tr>
-      <tr>
-        <th>手当</th>
-        <td>{{number_format(ceil($totalAllowance))}}</td>
-      </tr>
-      <tr>
-        <th>消費税10%</th>
-        <td>{{number_format(ceil($totalSalary * 0.1))}}</td>
-      </tr>
-      <tr>
-        <th>パーキング代</th>
-        <td>{{number_format(ceil($totalParking))}}</td>
-      </tr>
-      <tr>
-        <th>高速代</th>
-        <td>{{number_format(ceil($totalExpressWay))}}</td>
-      </tr>
-      <tr>
-        <th>残業代</th>
-        <td>{{ number_format($totalOverTime) }}</td>
-      </tr>
-      <tr>
-        <th>事務手数料(15%)</th>
-        <td>{{ number_format(ceil($totalSalary * 0.15)) }}</td>
-      </tr>
-      <tr>
-        <th>事務手数料</th>
-        <td>{{number_format(ceil($administrative_fee))}}</td>
-      </tr>
-      <tr>
-        <th>振込手数料</th>
-        <td>{{number_format(ceil($transfer_fee))}}</td>
-      </tr>
-
-      @if ($rental_type == 1 || $rental_type == 2)
-      <tr>
-        <th>リース代　月契約 No.{{$rental_vehicle}}</th>
-        <td>{{number_format(ceil($month_lease_fee))}}</td>
-      </tr>
-      @endif
-
-      @if ($rental_type == 0 || $rental_type == 1)
-        @if ($secondMachineCount > 0)
-          <tr>
-            <th>リース　2台目(日割り)</th>
-            <td>{{number_format(ceil($secondMachineCount * $secound_lease_fee))}}</td>
-          </tr>
+        @if (!empty($totalSalaryName) || !empty($totalSalaryAmount))
+        <tr>
+            <th>{{ $totalSalaryName }}</th>
+            <td>{{ number_format($totalSalaryAmount) }}</td>
+        </tr>
         @endif
-      @endif
 
-      @if ($thirdMachineCount != 0)
+        @if (!empty($allowanceName) || !empty($allowanceAmount))
+        <tr>
+            <th>{{ $allowanceName }}</th>
+            <td>{{ number_format($allowanceAmount) }}</td>
+        </tr>
+        @endif
+
+        @if (!empty($taxName) || !empty($taxAmount))
+        <tr>
+            <th>{{ $taxName }}</th>
+            <td>{{ number_format($taxAmount) }}</td>
+        </tr>
+        @endif
+
+        @if (!empty($parkingName) || !empty($parkingAmount))
+        <tr>
+            <th>{{ $parkingName }}</th>
+            <td>{{ number_format($parkingAmount) }}</td>
+        </tr>
+        @endif
+
+        @if (!empty($expressWayName) || !empty($expressWayAmount))
+        <tr>
+            <th>{{ $expressWayName }}</th>
+            <td>{{ number_format($expressWayAmount) }}</td>
+        </tr>
+        @endif
+
+        @if (!empty($overtimeName) || !empty($overtimeAmount))
+        <tr>
+            <th>{{ $overtimeName }}</th>
+            <td>{{ number_format($overtimeAmount) }}</td>
+        </tr>
+        @endif
+
+        @foreach ($others as $other)
+        @if (!empty($other['name']) || !empty($other['amount']))
             <tr>
-                <th>リース3台目(日割り)</th>
-                <td>{{ number_format($thirdMachineCount * 1000) }}</td>
+                <th>{{ $other['name'] }}</th>
+                <td>{{ number_format($other['amount']) }}</td>
             </tr>
         @endif
-
-      @if ($rental_type == 1 || $rental_type == 2)
+        @endforeach
         <tr>
-          <th>保険料　月契約 No.{{$rental_vehicle}}</th>
-          <td>{{number_format(ceil($month_insurance_fee))}}</td>
+            <th style="border: 0px;padding-left:0px;">相殺分</th>
+            <td style="border: 0px;"></td>
         </tr>
-      @endif
-
-      @if ($rental_type != 2 || $rental_type != 3)
+        @if (!empty($administrativeOutsourcingName) || !empty($administrativeOutsourcingAmount))
         <tr>
-          <th>保険料　2台目(日割り)</th>
-          <td>{{number_format(ceil(($secondMachineCount + $third_machine_count )* $secound_insurance_fee))}}</td>
+            <th>{{ $administrativeOutsourcingName }}</th>
+            <td>{{ number_format($administrativeOutsourcingAmount) }}</td>
         </tr>
-      @endif
+        @endif
+
+        @if (!empty($administrativeName) || !empty($administrativeAmount))
+        <tr>
+            <th>{{ $administrativeName }}</th>
+            <td>{{ number_format($administrativeAmount) }}</td>
+        </tr>
+        @endif
+
+        @if (!empty($transferName) || !empty($transferAmount))
+        <tr>
+            <th>{{ $transferName }}</th>
+            <td>{{ number_format($transferAmount) }}</td>
+        </tr>
+        @endif
+
+        @if (!empty($monthLeaseName) || !empty($monthLeaseAmount))
+        <tr>
+            <th>{{ $monthLeaseName }}</th>
+            <td>{{ number_format($monthLeaseAmount) }}</td>
+        </tr>
+        @endif
+
+        @if (!empty($secondLeaseName) || !empty($secondLeaseAmount))
+        <tr>
+            <th>{{ $secondLeaseName }}</th>
+            <td>{{ number_format($secondLeaseAmount) }}</td>
+        </tr>
+        @endif
+
+        @if (!empty($thirdLeaseName) || !empty($thirdLeaseAmount))
+        <tr>
+            <th>{{ $thirdLeaseName }}</th>
+            <td>{{ number_format($thirdLeaseAmount) }}</td>
+        </tr>
+        @endif
+
+        @if (!empty($monthInsuranceName) || !empty($monthInsuranceAmount))
+        <tr>
+            <th>{{ $monthInsuranceName }}</th>
+            <td>{{ number_format($monthInsuranceAmount) }}</td>
+        </tr>
+        @endif
+
+        @if (!empty($secondInsuranceName) || !empty($secondInsuranceAmount))
+        <tr>
+            <th>{{ $secondInsuranceName }}</th>
+            <td>{{ number_format($secondInsuranceAmount) }}</td>
+        </tr>
+        @endif
+
+        @foreach ($CostOthers as $CostOther)
+        @if (!empty($CostOther['name']) || !empty($CostOther['amount']))
+            <tr>
+                <th>{{ $CostOther['name'] }}</th>
+                <td>{{ number_format($CostOther['amount']) }}</td>
+            </tr>
+        @endif
+        @endforeach
     </tbody>
   </table>
 </div>

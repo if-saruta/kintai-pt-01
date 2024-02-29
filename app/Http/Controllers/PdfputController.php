@@ -87,14 +87,19 @@ class PdfputController extends Controller
         $employee = Employee::find($employeeId);
         $today = Carbon::now();
 
+        $image_path = storage_path('image/signature-stamp.png');
+        $image_data = base64_encode(file_get_contents($image_path));
+
         // ファイル名指定
         $name = $employee->name;
 
-        $pdf = PDF::loadView('issue-pdf.company-issue-pdf', compact('textWithBreaks', 'invoiceNumber', 'employee', 'today', 'costItem','costNum','costUntil','costAmount','costSubTotal','costTax','costTotal', 'bankInfoWithBreaks'));
+        $pdf = PDF::loadView('issue-pdf.company-issue-pdf', compact('image_data','textWithBreaks', 'invoiceNumber', 'employee', 'today', 'costItem','costNum','costUntil','costAmount','costSubTotal','costTax','costTotal', 'bankInfoWithBreaks'));
 
         $fileName = "{$today->format('Y-m-d')}_{$name}_相殺.pdf";
 
         return $pdf->download($fileName); //生成されるファイル名
+
+        // return view('issue-pdf.company-issue-pdf', compact('image_data','textWithBreaks', 'invoiceNumber', 'employee', 'today', 'costItem','costNum','costUntil','costAmount','costSubTotal','costTax','costTotal', 'bankInfoWithBreaks'));
     }
 
     public function project_issue_pdf(Request $request)
@@ -122,17 +127,21 @@ class PdfputController extends Controller
 
         $today = Carbon::now();
 
+        // 印鑑の画像を読み込み
+        $image_path = storage_path('image/signature-stamp.png');
+        $image_data = base64_encode(file_get_contents($image_path));
+
         $pdf = PDF::loadView('issue-pdf.project-issue-pdf',
         compact('invoiceNumber', 'name', 'subjectWithBreaks', 'companyInfoWithBreaks'
                 ,'item', 'number', 'until', 'amount', 'subTotalRetail'
                 ,'tax', 'totalRetail', 'bankNameInfoWithBreaks', 'today'
-                ,'taxTable01', 'taxTable02', 'taxTable03', 'taxTable04'));
+                ,'taxTable01', 'taxTable02', 'taxTable03', 'taxTable04', 'image_data'));
 
         // return view('issue-pdf.project-issue-pdf', compact('invoiceNumber', 'name', 'subjectWithBreaks', 'companyInfoWithBreaks'
         // ,'item', 'number', 'until', 'amount', 'subTotalRetail'
         // ,'tax', 'totalRetail', 'bankNameInfoWithBreaks', 'today'
         // ,'taxTable01', 'taxTable02', 'taxTable03', 'taxTable04'));
-        
+
         $fileName = "{$today->format('Y-m-d')}_{$invoiceNumber}.pdf";
 
         return $pdf->download($fileName); //生成されるファイル名

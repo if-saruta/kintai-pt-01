@@ -42,6 +42,22 @@
             line-height: 1.5;
             font-size: 13px;
         }
+        .company-info-txt{
+            position: relative;
+            z-index: 2;
+        }
+        .company-stanp {
+            position: absolute;
+            z-index: 1;
+            top: -15px;
+            right: -30px;
+            z-index: 1;
+            width: 110px;
+        }
+
+        .company-stanp img {
+            width: 100%;
+        }
         .amount{
             margin-top: 100px;
         }
@@ -185,13 +201,16 @@
             <p class="">請求書</p>
         </div>
         <div class="driver">
-            <p class="">{{$name}}　様</p>
+            <p class="">{{$name}}</p>
             <p class="f-s-13">
                 {!! $subjectWithBreaks !!}
             </p>
         </div>
         <div class="company">
-            {!! $companyInfoWithBreaks !!}
+            <p class="company-info-txt">{!! $companyInfoWithBreaks !!}</p>
+            <div class="company-stanp">
+                <img class="" src="data:image/png;base64,{{ $image_data }}" alt="">
+            </div>
         </div>
         <div class="amount">
             <p class="amount-txt"><span class="">ご請求金額</span><span class="amount-fee">¥{{number_format($totalRetail)}}</span></p>
@@ -242,7 +261,7 @@
         <div class="bank">
             <p class="">お振込先</p>
             <div class="bank-txt-wrap">
-                <p class="">{{$bankNameInfoWithBreaks}}</p>
+                <p class="" style="white-space: pre-wrap;">{!! $bankNameInfoWithBreaks !!}</p>
             </div>
         </div>
     </div>

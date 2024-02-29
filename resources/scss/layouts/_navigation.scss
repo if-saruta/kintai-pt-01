@@ -66,6 +66,17 @@
             }
           }
         }
+        .--close-nav-item{
+            cursor: pointer;
+            .icon-wrap{
+                i{
+                    font-size: 2rem;
+                }
+            }
+            &__txt{
+                opacity: 1;
+            }
+        }
         .active{
           border-radius: 1.5rem;
           background-color: white;
@@ -80,7 +91,19 @@
             }
           }
         }
+        .close-nav-item{
+            padding-left: 0rem;
+            background-color: transparent;
+            box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.0);
+        }
       }
     }
   }
+}
+.nav-close{
+    width: 3rem!important;
+    margin-left: 1rem;
+}
+.nav-img-close{
+    width: 3rem!important;
 }

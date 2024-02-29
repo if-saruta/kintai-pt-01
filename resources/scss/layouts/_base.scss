@@ -87,3 +87,7 @@ body::-webkit-scrollbar{
     }
 
 }
+.main-change-width{
+    width: math.div(1220,1280) * 100vw;
+    margin-left: math.div(50,1280) * 100vw;
+}

@@ -41,7 +41,11 @@
                                 <select name="year" id="" class="c-select year-select" required>
                                     <option value="">----</option>
                                     @for ($year = now()->year; $year >= now()->year - 10; $year--)
-                                    <option value="{{ $year }}">{{ $year }}</option>
+                                        @if ($year == $getYear)
+                                            <option selected value="{{ $year }}">{{ $year }}</option>
+                                        @else
+                                            <option value="{{ $year }}">{{ $year }}</option>
+                                        @endif
                                     @endfor
                                 </select>
                                 <label for="">年</label>
@@ -49,18 +53,13 @@
                             <div class="c-select-area__block month-block">
                                 <select name="month" id="" class="c-select month-select" required>
                                     <option value="">----</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                    <option value="12">12</option>
+                                    @for ($i = 1; $i <= 12; $i++)
+                                        @if ($i == $getMonth)
+                                            <option selected value="{{ $i }}">{{ $i }}</option>
+                                        @else
+                                            <option value="{{ $i }}">{{ $i }}</option>
+                                        @endif
+                                    @endfor
                                 </select>
                                 <label for="">月</label>
                             </div>
@@ -69,7 +68,11 @@
                                 <select name="employeeId" id="" class="c-select name-select" required>
                                     <option value="">----</option>
                                     @foreach ($employees as $employee)
-                                    <option value="{{$employee->id}}">{{$employee->name}}</option>
+                                        @if ($employee->id == $employeeId)
+                                            <option selected value="{{$employee->id}}">{{$employee->name}}</option>
+                                        @else
+                                            <option value="{{$employee->id}}">{{$employee->name}}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -89,60 +92,225 @@
                                     <p class="">{{$findEmployee->name}}</p>
                                 </div>
                             </div>
-                            <form action="{{route('invoice.driver-edit-pdf')}}" method="POST" class="c-middle-head__button">
-                                @csrf
-                                <input hidden type="text" name="employeeId" value="{{$findEmployee->id}}">
-                                <input hidden type="text" name="year" value="{{$getYear}}">
-                                <input hidden type="text" name="month" value="{{$getMonth}}">
-
-                                <input hidden type="text" name="invoiceAmountCheck" id="invoiceAmountCheck">
-                                <input hidden type="text" name="invoiceAllowanceCheck" id="invoiceAllowanceCheck">
-                                <input hidden type="text" name="invoiceExpresswayCheck" id="invoiceExpresswayCheck">
-                                <input hidden type="text" name="invoiceParkingCheck" id="invoiceParkingCheck">
-                                <input hidden type="text" name="invoiceVehicleCheck" id="invoiceVehicleCheck">
-                                <input hidden type="text" name="invoiceOvertimeCheck" id="invoiceOvertimeCheck">
-                                <button>
-                                    請求書確認
-                                </button>
-                            </form>
+                            <button class="c-middle-head__button invoice-form formSubmit" id="invoiceBtnClickElem">
+                                請求書確認
+                            </button>
                         </div>
                         {{-- チェックエリア --}}
-                        <form action="{{route('invoice.driver-calendar-pdf')}}" method="POST" class="driver-invoice-shift__check-area">
+                        <div class="driver-invoice-shift__check-area">
                             @csrf
-                            <div class="top">
-                                <div class="check-item">
-                                    <input type="checkbox" name="amountCheck" value="1" class="" id="amountCheck">
-                                    <label for="">金額</label>
-                                </div>
-                                <div class="check-item">
-                                    <input type="checkbox" name="allowanceCheck" value="1" class="" id="allowanceCheck">
-                                    <label for="">手当</label>
-                                </div>
-                                <div class="check-item">
-                                    <input type="checkbox" name="expresswayCheck" value="1" class="" id="expresswayCheck">
-                                    <label for="">高速代</label>
-                                </div>
-                                <div class="check-item">
-                                    <input type="checkbox" name="parkingCheck" value="1" class="" id="parkingCheck">
-                                    <label for="">パーキング代</label>
-                                </div>
-                                <div class="check-item">
-                                    <input type="checkbox" name="vehicleCheck" value="1" class="" id="vehicleCheck">
-                                    <label for="">2台目以降</label>
-                                </div>
-                                <div class="check-item">
-                                    <input type="checkbox" name="overtimeCheck" value="1" class="" id="overtimeCheck">
-                                    <label for="">残業代</label>
-                                </div>
-                            </div>
+                            <input hidden name="amountCheck" class="setAmountCheck">
+                            <input hidden name="allowanceCheck" class="setAllowanceCheck">
+                            <input hidden name="expresswayCheck" class="setExpresswayCheck">
+                            <input hidden name="parkingCheck" class="setParkingCheck">
+                            <input hidden name="vehicleCheck" class="setVehicleCheck">
+                            <input hidden name="overtimeCheck" class="setOvertimeCheck">
+                            {{-- <input hidden name="setRowCount" type="text" class="setRowCount"> --}}
+                            {{-- 絞り込み情報 --}}
+                            @foreach ($clientsId as $clientId)
+                                <input hidden type="text" name="calendarClientsId[]" value="{{ $clientId }}">
+                            @endforeach
+                            @foreach ($projectsId as $projectId)
+                                <input hidden type="text" name="calendarProjectsId[]" value="{{ $projectId }}">
+                            @endforeach
+
                             <input hidden type="text" name="employeeId" value="{{$findEmployee->id}}">
                             <input hidden type="text" name="year" value="{{$getYear}}">
                             <input hidden type="text" name="month" value="{{$getMonth}}">
-                            <textarea hidden name="textarea" id="setTextArea" cols="30" rows="10"></textarea>
-                            <button class="">
-                                ダウンロード
-                            </button>
+                            {{-- <textarea hidden name="textarea" id="setTextArea" cols="30" rows="10"></textarea> --}}
+                        </div>
+                        <button class="c-middle-head__button pdf-form formSubmit">
+                            ダウンロード
+                        </button>
+                        {{-- 設定ボタン --}}
+                        <div class="setting-btn" id="settingBtn">
+                            設定
+                        </div>
+                        {{-- 設定モーダル --}}
+                        <form action="{{ route('invoice.searchShift') }}" method="POST" class="setting-modal-wrap" id="settingModalWrap">
+                            @csrf
+                            <input hidden type="text" name="employeeId" value="{{$findEmployee->id}}">
+                            <input hidden type="text" name="year" value="{{$getYear}}">
+                            <input hidden type="text" name="month" value="{{$getMonth}}">
+                            <span class="setting-modal-wrap__bg settingCloseBtn"></span>
+                            <div class="setting-modal-wrap__white-board">
+                                <div class="setting-modal-wrap__white-board__inner">
+                                    <p class="head">設定</p>
+                                    <p class="title">非表示項目</p>
+
+                                    <div class="check-area">
+                                        <div class="check-item">
+                                            <input type="checkbox" name="narrowCheck[]" value="1" class="" id="narrowAmountCheck" @if(in_array('1', $selectedNarrowCheck)) checked @endif>
+                                            <label for="">金額</label>
+                                        </div>
+                                        <div class="check-item">
+                                            <input type="checkbox" name="narrowCheck[]" value="2" class="" id="narrowAllowanceCheck" @if(in_array('2', $selectedNarrowCheck)) checked @endif>
+                                            <label for="">手当</label>
+                                        </div>
+                                        <div class="check-item">
+                                            <input type="checkbox" name="narrowCheck[]" value="3" class="" id="narrowExpresswayCheck" @if(in_array('3', $selectedNarrowCheck)) checked @endif>
+                                            <label for="">高速代</label>
+                                        </div>
+                                        <div class="check-item">
+                                            <input type="checkbox" name="narrowCheck[]" value="4" class="" id="narrowParkingCheck" @if(in_array('4', $selectedNarrowCheck)) checked @endif>
+                                            <label for="">パーキング代</label>
+                                        </div>
+                                        <div class="check-item">
+                                            <input type="checkbox" name="narrowCheck[]" value="5" class="" id="narrowVehicleCheck" @if(in_array('5', $selectedNarrowCheck)) checked @endif>
+                                            <label for="">2台目以降</label>
+                                        </div>
+                                        <div class="check-item">
+                                            <input type="checkbox" name="narrowCheck[]" value="6" class="" id="narrowOvertimeCheck" @if(in_array('6', $selectedNarrowCheck)) checked @endif>
+                                            <label for="">残業代</label>
+                                        </div>
+                                    </div>
+                                    <p class="title">クライアント絞り込み</p>
+                                    <div class="check-area">
+                                        @foreach ($findClients as $client)
+                                            <div class="check-item">
+                                                <input type="checkbox" class="" value="{{ $client->id }}" name="clientsId[]" @if(in_array($client->id, $clientsId)) checked @endif>
+                                                <label for="">{{ $client->name }}</label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <p class="title">案件絞り込み</p>
+                                    <div class="check-area">
+                                        @foreach ($findProjects as $project)
+                                            <div class="check-item">
+                                                <input type="checkbox" class="" value="{{ $project->id }}" name="projectsId[]" @if(in_array($project->id, $projectsId)) checked @endif>
+                                                <label for="">{{ $project->name }}</label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <p class="title">行数</p>
+                                    <select name="rowNeedCount" id="" class="c-select row-select">
+                                        <option value="">--</option>
+                                        @for ($i = 1; $i <= 10; $i++)
+                                            @if ($i == $needRowCount)
+                                                <option selected value="{{ $i }}">{{ $i }}</option>
+                                            @else
+                                                <option value="{{ $i }}">{{ $i }}</option>
+                                            @endif
+                                        @endfor
+                                    </select>
+                                    <div class="button-area">
+                                        <button class="">
+                                            絞り込み
+                                        </button>
+                                        <div class="button-area__back settingCloseBtn">
+                                            戻る
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
+                        {{-- 新規追加モーダル --}}
+                        <div class="shift-modal" id="shiftModal">
+                            <span class="shift-modal__bg shiftModalClose"></span>
+                            <div class="shift-modal__white-board">
+                                <form action="{{ route('invoice.driverShiftCreate') }}" method="POST">
+                                    @csrf
+                                    <div class="shift-modal__white-board__inner">
+                                        <p class="title shiftModalTitle">案件作成</p>
+                                        <div class="shift-date">
+                                            <p class="shift-date__year"><span class="big setYearTxt">2020</span>年</p>
+                                            <p class="shift-date__month-date"><span class="big setMonthTxt">12</span>月<span class="big setDayTxt">12</span>日</p>
+                                            <p class="shift-date__time-of-part shiftTimeOfPart"></p>
+                                        </div>
+                                        <div class="active-box">
+                                            {{-- 警告文 --}}
+                                            <p class="warning-txt shiftModalWarningTxt">
+                                                <span class="unProjectTxt"></span>は未登録案件です。<br>
+                                                未登録案件を使用する場合は、<a href="{{ route('project.create') }}" class="warning-txt__link">クライアント管理</a> から登録が必要です。
+                                            </p>
+                                            {{-- 従業員情報 --}}
+                                            <input hidden type="text" name="employeeId" value="{{ $findEmployee->id }}">
+                                            {{-- リダイレクト情報 --}}
+                                            <input hidden type="text" name="year" value="{{$getYear}}">
+                                            <input hidden type="text" name="month" value="{{$getMonth}}">
+                                            {{-- 日付 --}}
+                                            <input hidden type="text" name="createDate" value="" class="setDateValue">
+                                            {{-- id --}}
+                                            <input hidden type="text" name="shiftPvId" class="setShiftPvId">
+                                            {{-- 午前・午後 --}}
+                                            <div class="active-box__item shiftTimeOfPartRadioBox">
+                                                <p class="">区分</p>
+                                                <div class="radio-area">
+                                                    <label for="am">
+                                                        <input checked type="radio" name="dayOfPart" value="0" class="" id="am">
+                                                        午前
+                                                    </label>
+                                                    <label for="pm">
+                                                        <input type="radio"  name="dayOfPart" value="1" class="" id="pm">
+                                                        午後
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            {{-- 案件 --}}
+                                            <div class="active-box__item">
+                                                <p class="">案件</p>
+                                                <select name="createProject" id="" class="c-select projectSelect">
+                                                    @foreach ($projects as $project)
+                                                        <option value="{{ $project->id }}">{{ $project->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            {{-- 車両 --}}
+                                            <div class="active-box__item">
+                                                <p class="">車両</p>
+                                                <select name="createVehicle" id="" class="c-select vehicleSelect">
+                                                    @foreach ($vehicles as $vehicle)
+                                                        <option value="{{ $vehicle->id }}">{{ $vehicle->number }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            {{-- 上代 --}}
+                                            <div class="active-box__item">
+                                                <p class="">上代</p>
+                                                <input type="text" name="createRetail" class="c-input setRetailPrice" placeholder="10000" required>
+                                            </div>
+                                            {{-- 給与 --}}
+                                            <div class="active-box__item">
+                                                <p class="">給与</p>
+                                                <input type="text" name="createSalary" class="c-input setDriverPrice" placeholder="9000" required>
+                                            </div>
+                                        </div>
+                                        <div class="button-box">
+                                            <button name="action" value="update" class="btn --save">
+                                                入力内容で案件を登録
+                                            </button>
+                                            <button name="action" value="delete" class="btn --delete shiftModalDelete">
+                                                案件を削除する
+                                            </button>
+                                            <div class="btn --back shiftModalClose">
+                                                閉じる
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        @php
+                            // 基本の行数
+                            if($needRowCount == null){
+                                $needRowCount = 3;
+                            }
+                            $needRowCountWarning = null;
+                            foreach ($dates as $date) {
+                                $dateCount = 0;
+                                foreach ($shiftProjectVehicles as $spv) {
+                                    if ($spv->shift->date == $date->format('Y-m-d')) {
+                                        $dateCount++;
+                                    }
+                                }
+                                if($dateCount > $needRowCount){
+                                    $needRowCount = $dateCount;
+                                    $needRowCountWarning = 'シフトの数が指定した行数を上回っています';
+                                }
+                            }
+                        @endphp
+                        <p class="">{{ $needRowCountWarning }}</p>
                         {{-- カレンダー --}}
                         <div class="driver-invoice-shift__calendar">
                             <form action="{{route('invoice.driverShiftUpdate')}}" method="POST" class="driver-invoice-shift__calendar__calendar-top-wrap">
@@ -172,16 +340,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php
-                                            // 基本の行数
-                                            $needRowCount = 3;
-                                            foreach ($shifts as $shift) {
-                                                if ($needRowCount < $shift->projectsVehicles->count()) {
-                                                    $needRowCount = $shift->projectsVehicles->count();
-                                                }
-                                            }
-                                        @endphp
-                                        {{-- <p>{{ $needRowCount }}</p> --}}
                                         @foreach ( $dates as $date )
                                             @php
                                                 // 行数カウント
@@ -190,10 +348,10 @@
                                             @endphp
                                             @if ($date->format('d') < 16)
                                                 {{-- 日付　休日、祝日の分岐 --}}
-                                                @foreach ( $shifts as $shift )
-                                                    @if ($shift->date == $date->format('Y-m-d'))
-                                                        @foreach ( $shift->projectsVehicles as $spv )
-                                                            <tr>
+                                                @foreach ( $shiftProjectVehicles as $spv )
+                                                    @if ($spv->shift->date == $date->format('Y-m-d'))
+                                                        {{-- @foreach ( $shift->projectsVehicles as $spv ) --}}
+                                                            <tr class="">
                                                                 @if ($count == 0)
                                                                     @if ($holidays->isHoliday($date))
                                                                         <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
@@ -205,55 +363,59 @@
                                                                         <td rowspan="{{ $needRowCount }}"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @endif
                                                                 @endif
-                                                                <td class="w-project">
+                                                                <td class="w-project shiftActive editShift">
                                                                     @if ($spv->project)
-                                                                        {{-- <input type="text" value="{{ $spv->project->name }}" class=""> --}}
                                                                         <p class="">{{ $spv->project->name }}</p>
                                                                     @else
                                                                         <p class="" style="color: red;">{{ $spv->unregistered_project }}</p>
                                                                     @endif
+                                                                    {{-- モーダルが取得する情報 --}}
+                                                                    <input hidden type="text" value="{{ $date->format('Y-m-d') }}" class="shiftDate" data-year="{{ $date->format('Y') }}" data-month="{{ $date->format('n') }}" data-day="{{ $date->format('j') }}">
+                                                                    <input hidden type="text" class="shiftValues"
+                                                                         data-id="{{ $spv->id }}" data-project-id="{{ $spv->project_id }}"
+                                                                         data-unproject-name="{{ $spv->unregistered_project }}" data-time-of-part="{{ $spv->time_of_day }}"
+                                                                         data-vehicle-id="{{ $spv->vehicle_id }}" data-retail-price="{{ $spv->retail_price }}"
+                                                                         data-driver-price="{{ $spv->driver_price }}" >
                                                                 </td>
-                                                                <td class="w-amount amountRow"><input type="text" value="{{ number_format($spv->driver_price) }}" name="driver_price[{{$spv->id}}]" class=""></td>
+                                                                <td class="w-amount amountRow"><input type="text" value="{{ $spv->driver_price }}" name="driver_price[{{$spv->id}}]" class=""></td>
                                                                 <td class="w-amount allowance-area allowanceRow">
-                                                                    <input type="text" value="{{ number_format($spv->total_allowance) }}" name="allowance[{{$spv->id}}]" class="allowance-input">
+                                                                    <input type="text" value="{{ $spv->total_allowance }}" name="allowance[{{$spv->id}}]" class="allowance-input">
                                                                     @if ($spv->project)
                                                                         @foreach ($allowanceProject as $value)
                                                                             @if ($value->project_id == $spv->project->id)
-                                                                            <input hidden class="allowanceName" type="text"
-                                                                                value="{{$value->allowanceName}}">
-                                                                            <input hidden class="amount" type="text"
-                                                                                value="{{$value->amount}}">
+                                                                                <input hidden class="allowanceName" type="text" value="{{$value->allowanceName}}">
+                                                                                <input hidden class="amount" type="text" value="{{$value->amount}}">
                                                                             @endif
                                                                         @endforeach
                                                                     @endif
                                                                 </td>
-                                                                <td class="w-amount expresswayRow"><input type="text" value="{{ number_format($spv->expressway_fee) }}" name="expressway_fee[{{$spv->id}}]" class=""></td>
-                                                                <td class="w-amount parkingRow"><input type="text" value="{{ number_format($spv->parking_fee) }}" name="parking_fee[{{$spv->id}}]" class=""></td>
+                                                                <td class="w-amount expresswayRow"><input type="text" value="{{ $spv->expressway_fee }}" name="expressway_fee[{{$spv->id}}]" class=""></td>
+                                                                <td class="w-amount parkingRow"><input type="text" value="{{ $spv->parking_fee }}" name="parking_fee[{{$spv->id}}]" class=""></td>
                                                                 <td class="w-amount vehicleRow">
                                                                     {{-- 自車または月リースか判定 --}}
                                                                     @if ($spv->vehicle_rental_type == 0 || $spv->vehicle_rental_type == 1)
                                                                         @if ($spv->rental_vehicle_id == null) {{-- nullなら自車 --}}
                                                                             @if($spv->vehicle)
                                                                                 @if ($spv->vehicle->number != '自車')
-                                                                                    <input type="text" value="No.{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                    <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                                 @endif
                                                                             @else
                                                                                 @if ($spv->unregistered_vehicle)
-                                                                                    <input style="color: red;" type="text" value="No.{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                    <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                                 @endif
                                                                             @endif
                                                                         @elseif($spv->vehicle_id != $spv->rental_vehicle_id) {{-- 契約車両と登録車両を比較 --}}
                                                                             @if($spv->vehicle)
-                                                                                <input type="text" value="No.{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                             @else
                                                                                 @if ($spv->unregistered_vehicle)
-                                                                                    <input style="color: red;" type="text" value="No.{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                    <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                                 @endif
                                                                             @endif
                                                                         @endif
                                                                     @endif
                                                                 </td>
-                                                                <td class="w-amount overtimeRow"><input type="text" value="{{ number_format($spv->overtime_fee) }}" name="overtime_fee[{{$spv->id}}]" class="mainVehicle"></td>
+                                                                <td class="w-amount overtimeRow"><input type="text" value="{{ $spv->overtime_fee }}" name="overtime_fee[{{$spv->id}}]" class=""></td>
                                                                 @php
                                                                     $rowCount++;
                                                                     // 貸出形態と貸出車両を格納
@@ -264,40 +426,45 @@
                                                                     $count++;
                                                                 @endphp
                                                             </tr>
-                                                        @endforeach
-                                                        {{-- 行数が足りない時のため --}}
-                                                        @for ($rowCount; $rowCount <= $needRowCount; $rowCount++)
-                                                            <tr>
-                                                                @if ($count == 0)
-                                                                    @if ($holidays->isHoliday($date))
-                                                                        <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
-                                                                    @elseif ($date->isSaturday())
-                                                                        <td rowspan="{{ $needRowCount }}" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
-                                                                    @elseif($date->isSunday())
-                                                                        <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
-                                                                    @else
-                                                                        <td rowspan="{{ $needRowCount }}"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
-                                                                    @endif
-                                                                @endif
-                                                                <td class="w-project"><p class=""></p></td>
-                                                                <td class="w-amount amountRow"><p class=""></p></td>
-                                                                <td class="w-amount allowanceRow"><p class=""></p></td>
-                                                                <td class="w-amount expresswayRow"><p class=""></p></td>
-                                                                <td class="w-amount parkingRow"><p class=""></p></td>
-                                                                <td class="w-amount vehicleRow"><p class=""></p></td>
-                                                                <td class="w-amount overtimeRow"><p class=""></p></td>
-                                                                @php
-                                                                    $rowCount++;
-                                                                    $count++;
-                                                                @endphp
-                                                            </tr>
-                                                        @endfor
+                                                        {{-- @endforeach --}}
                                                     @endif
                                                 @endforeach
+                                                {{-- 行数が足りない時のため --}}
+                                                @for ($rowCount; $rowCount < $needRowCount; $rowCount++)
+                                                    <tr class="shiftActive createShift">
+                                                        @if ($count == 0)
+                                                            @if ($holidays->isHoliday($date))
+                                                                <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                            @elseif ($date->isSaturday())
+                                                                <td rowspan="{{ $needRowCount }}" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                            @elseif($date->isSunday())
+                                                                <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                            @else
+                                                                <td rowspan="{{ $needRowCount }}"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                            @endif
+                                                        @endif
+                                                        <td class="w-project">
+                                                            <p class="">
+                                                                {{-- 日付 --}}
+                                                                <input hidden type="text" value="{{ $date->format('Y-m-d') }}" class="shiftDate" data-year="{{ $date->format('Y') }}" data-month="{{ $date->format('n') }}" data-day="{{ $date->format('j') }}">
+                                                            </p>
+                                                        </td>
+                                                        <td class="w-amount amountRow"><p class=""></p></td>
+                                                        <td class="w-amount allowanceRow"><p class=""></p></td>
+                                                        <td class="w-amount expresswayRow"><p class=""></p></td>
+                                                        <td class="w-amount parkingRow"><p class=""></p></td>
+                                                        <td class="w-amount vehicleRow"><p class=""></p></td>
+                                                        <td class="w-amount overtimeRow"><p class=""></p></td>
+                                                        @php
+                                                            // $rowCount++;
+                                                            $count++;
+                                                        @endphp
+                                                    </tr>
+                                                @endfor
                                                 {{-- シフトがない時のため --}}
                                                 @if ($rowCount == 0)
                                                     @for ($rowCount; $rowCount < $needRowCount; $rowCount++)
-                                                        <tr>
+                                                        <tr class="shiftActive createShift">
                                                             @if ($count == 0)
                                                                 @if ($holidays->isHoliday($date))
                                                                     <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
@@ -309,7 +476,12 @@
                                                                     <td rowspan="{{ $needRowCount }}"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                 @endif
                                                             @endif
-                                                            <td class="w-project"><p class=""></p></td>
+                                                            <td class="w-project">
+                                                                <p class="">
+                                                                    {{-- 日付 --}}
+                                                                    <input hidden type="text" value="{{ $date->format('Y-m-d') }}" class="shiftDate" data-year="{{ $date->format('Y') }}" data-month="{{ $date->format('n') }}" data-day="{{ $date->format('j') }}">
+                                                                </p>
+                                                            </td>
                                                             <td class="w-amount amountRow"><p class=""></p></td>
                                                             <td class="w-amount allowanceRow"><p class=""></p></td>
                                                             <td class="w-amount expresswayRow"><p class=""></p></td>
@@ -356,15 +528,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- @php
-                                            // 基本の行数
-                                            $needRowCount = 3;
-                                            foreach ($shifts as $shift) {
-                                                if ($needRowCount < $shift->projectsVehicles->count()) {
-                                                    $needRowCount = $shift->projectsVehicles->count();
-                                                }
-                                            }
-                                        @endphp --}}
                                         @foreach ( $dates as $date )
                                             @php
                                                 // 行数カウント
@@ -373,9 +536,9 @@
                                             @endphp
                                             @if ($date->format('d') >= 16)
                                                 {{-- 日付　休日、祝日の分岐 --}}
-                                                @foreach ( $shifts as $shift )
-                                                    @if ($shift->date == $date->format('Y-m-d'))
-                                                        @foreach ( $shift->projectsVehicles as $spv )
+                                                @foreach ( $shiftProjectVehicles as $spv )
+                                                    @if ($spv->shift->date == $date->format('Y-m-d'))
+                                                        {{-- @foreach ( $shift->projectsVehicles as $spv ) --}}
                                                             <tr>
                                                                 @if ($count == 0)
                                                                     @if ($holidays->isHoliday($date))
@@ -388,17 +551,23 @@
                                                                         <td rowspan="{{ $needRowCount }}"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @endif
                                                                 @endif
-                                                                <td class="w-project">
+                                                                <td class="w-project shiftActive editShift">
                                                                     @if ($spv->project)
-                                                                        {{-- <input type="text" value="{{ $spv->project->name }}" class=""> --}}
                                                                         <p class="">{{ $spv->project->name }}</p>
                                                                     @else
                                                                         <p class="" style="color: red;">{{ $spv->unregistered_project }}</p>
                                                                     @endif
+                                                                    {{-- モーダルが取得する情報 --}}
+                                                                    <input hidden type="text" value="{{ $date->format('Y-m-d') }}" class="shiftDate" data-year="{{ $date->format('Y') }}" data-month="{{ $date->format('n') }}" data-day="{{ $date->format('j') }}">
+                                                                    <input hidden type="text" class="shiftValues"
+                                                                         data-id="{{ $spv->id }}" data-project-id="{{ $spv->project_id }}"
+                                                                         data-unproject-name="{{ $spv->unregistered_project }}" data-time-of-part="{{ $spv->time_of_day }}"
+                                                                         data-vehicle-id="{{ $spv->vehicle_id }}" data-retail-price="{{ $spv->retail_price }}"
+                                                                         data-driver-price="{{ $spv->driver_price }}" >
                                                                 </td>
-                                                                <td class="w-amount amountRow"><input type="text" value="{{ number_format($spv->driver_price) }}" name="driver_price[{{$spv->id}}]" class=""></td>
+                                                                <td class="w-amount amountRow"><input type="text" value="{{ $spv->driver_price }}" name="driver_price[{{$spv->id}}]" class=""></td>
                                                                 <td class="w-amount allowance-area allowanceRow">
-                                                                    <input type="text" value="{{ number_format($spv->total_allowance) }}" name="allowance[{{$spv->id}}]" class="allowance-input">
+                                                                    <input type="text" value="{{ $spv->total_allowance }}" name="allowance[{{$spv->id}}]" class="allowance-input">
                                                                     @if ($spv->project)
                                                                         @foreach ($allowanceProject as $value)
                                                                             @if ($value->project_id == $spv->project->id)
@@ -410,33 +579,33 @@
                                                                         @endforeach
                                                                     @endif
                                                                 </td>
-                                                                <td class="w-amount expresswayRow"><input type="text" value="{{ number_format($spv->expressway_fee) }}" name="expressway_fee[{{$spv->id}}]" class=""></td>
-                                                                <td class="w-amount parkingRow"><input type="text" value="{{ number_format($spv->parking_fee) }}" name="parking_fee[{{$spv->id}}]" class=""></td>
+                                                                <td class="w-amount expresswayRow"><input type="text" value="{{ $spv->expressway_fee }}" name="expressway_fee[{{$spv->id}}]" class=""></td>
+                                                                <td class="w-amount parkingRow"><input type="text" value="{{ $spv->parking_fee }}" name="parking_fee[{{$spv->id}}]" class=""></td>
                                                                 <td class="w-amount vehicleRow">
                                                                     {{-- 自車または月リースか判定 --}}
                                                                     @if ($spv->vehicle_rental_type == 0 || $spv->vehicle_rental_type == 1)
                                                                         @if ($spv->rental_vehicle_id == null) {{-- nullなら自車 --}}
                                                                             @if($spv->vehicle)
                                                                                 @if ($spv->vehicle->number != '自車')
-                                                                                    <input type="text" value="No.{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                    <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                                 @endif
                                                                             @else
                                                                                 @if ($spv->unregistered_vehicle)
-                                                                                    <input style="color: red;" type="text" value="No.{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                    <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                                 @endif
                                                                             @endif
                                                                         @elseif($spv->vehicle_id != $spv->rental_vehicle_id) {{-- 契約車両と登録車両を比較 --}}
                                                                             @if($spv->vehicle)
-                                                                                <input type="text" value="No.{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                             @else
                                                                                 @if ($spv->unregistered_vehicle)
-                                                                                    <input style="color: red;" type="text" value="No.{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                    <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
                                                                                 @endif
                                                                             @endif
                                                                         @endif
                                                                     @endif
                                                                 </td>
-                                                                <td class="w-amount overtimeRow"><input type="text" value="{{ number_format($spv->overtime_fee) }}" name="overtime_fee[{{$spv->id}}]" class="mainVehicle"></td>
+                                                                <td class="w-amount overtimeRow"><input type="text" value="{{ $spv->overtime_fee }}" name="overtime_fee[{{$spv->id}}]" class="mainVehicle"></td>
                                                                 @php
                                                                     $rowCount++;
                                                                     // 貸出形態と貸出車両を格納
@@ -447,40 +616,45 @@
                                                                     $count++;
                                                                 @endphp
                                                             </tr>
-                                                        @endforeach
-                                                        {{-- 行数が足りない時のため --}}
-                                                        @for ($rowCount; $rowCount < $needRowCount; $rowCount++)
-                                                            <tr>
-                                                                @if ($count == 0)
-                                                                    @if ($holidays->isHoliday($date))
-                                                                        <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
-                                                                    @elseif ($date->isSaturday())
-                                                                        <td rowspan="{{ $needRowCount }}" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
-                                                                    @elseif($date->isSunday())
-                                                                        <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
-                                                                    @else
-                                                                        <td rowspan="{{ $needRowCount }}"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
-                                                                    @endif
-                                                                @endif
-                                                                <td class="w-project"><p class=""></p></td>
-                                                                <td class="w-amount amountRow"><p class=""></p></td>
-                                                                <td class="w-amount allowanceRow"><p class=""></p></td>
-                                                                <td class="w-amount expresswayRow"><p class=""></p></td>
-                                                                <td class="w-amount parkingRow"><p class=""></p></td>
-                                                                <td class="w-amount vehicleRow"><p class=""></p></td>
-                                                                <td class="w-amount overtimeRow"><p class=""></p></td>
-                                                                @php
-                                                                    // $rowCount++;
-                                                                    $count++;
-                                                                @endphp
-                                                            </tr>
-                                                        @endfor
+                                                        {{-- @endforeach --}}
                                                     @endif
                                                 @endforeach
+                                                {{-- 行数が足りない時のため --}}
+                                                @for ($rowCount; $rowCount < $needRowCount; $rowCount++)
+                                                    <tr class="shiftActive createShift">
+                                                        @if ($count == 0)
+                                                            @if ($holidays->isHoliday($date))
+                                                                <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                            @elseif ($date->isSaturday())
+                                                                <td rowspan="{{ $needRowCount }}" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                            @elseif($date->isSunday())
+                                                                <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                            @else
+                                                                <td rowspan="{{ $needRowCount }}"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                            @endif
+                                                        @endif
+                                                        <td class="w-project">
+                                                            <p class="">
+                                                                {{-- 日付 --}}
+                                                                <input hidden type="text" value="{{ $date->format('Y-m-d') }}" class="shiftDate" data-year="{{ $date->format('Y') }}" data-month="{{ $date->format('n') }}" data-day="{{ $date->format('j') }}">
+                                                            </p>
+                                                        </td>
+                                                        <td class="w-amount amountRow"><p class=""></p></td>
+                                                        <td class="w-amount allowanceRow"><p class=""></p></td>
+                                                        <td class="w-amount expresswayRow"><p class=""></p></td>
+                                                        <td class="w-amount parkingRow"><p class=""></p></td>
+                                                        <td class="w-amount vehicleRow"><p class=""></p></td>
+                                                        <td class="w-amount overtimeRow"><p class=""></p></td>
+                                                        @php
+                                                            // $rowCount++;
+                                                            $count++;
+                                                        @endphp
+                                                    </tr>
+                                                @endfor
                                                 {{-- シフトがない時のため --}}
                                                 @if ($rowCount == 0)
                                                     @for ($rowCount; $rowCount < $needRowCount; $rowCount++)
-                                                        <tr>
+                                                        <tr class="shiftActive createShift">
                                                             @if ($count == 0)
                                                                 @if ($holidays->isHoliday($date))
                                                                     <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
@@ -492,7 +666,12 @@
                                                                     <td rowspan="{{ $needRowCount }}"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                 @endif
                                                             @endif
-                                                            <td class="w-project"><p class=""></p></td>
+                                                            <td class="w-project">
+                                                                <p class="">
+                                                                    {{-- 日付 --}}
+                                                                    <input hidden type="text" value="{{ $date->format('Y-m-d') }}" class="shiftDate" data-year="{{ $date->format('Y') }}" data-month="{{ $date->format('n') }}" data-day="{{ $date->format('j') }}">
+                                                                </p>
+                                                            </td>
                                                             <td class="w-amount amountRow"><p class=""></p></td>
                                                             <td class="w-amount allowanceRow"><p class=""></p></td>
                                                             <td class="w-amount expresswayRow"><p class=""></p></td>
@@ -528,85 +707,127 @@
                                 </table>
                             </form>
                             <div class="calendar-bottom-wrap">
-                                <div class="calendar-bottom-wrap__box calendar-bottom-wrap__top">
-                                    <textarea name="" id="getTextArea" cols="30" rows="10"></textarea>
-                                    <table class="total-info-table">
-                                        <tbody>
-                                            <tr>
-                                                <th>合計金額</th>
-                                                <td>{{ number_format($totalSalary) }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>案件別手当</th>
-                                                <td>{{ number_format($totalAllowance) }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>消費税</th>
-                                                <td>{{ number_format($totalSalary * 0.1) }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>パーキング代</th>
-                                                <td>{{ number_format($totalParking) }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>高速代</th>
-                                                <td>{{ number_format($totalExpressWay) }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>残業代</th>
-                                                <td>{{ number_format($totalOverTime) }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>事務委託手数料(15%)</th>
-                                                <td>{{ number_format(ceil($totalSalary * 0.15)) }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>事務手数料</th>
-                                                <td>10,000</td>
-                                            </tr>
-                                            <tr>
-                                                <th>振込手数料</th>
-                                                <td>600</td>
-                                            </tr>
-                                            @if ($vehicle_rantal_type == 1 || $vehicle_rantal_type == 2)
-                                                <tr>
-                                                    <th>リース代　月契約No.{{ $vehicle_rantal_number }}</th>
-                                                    <td>30,992</td>
-                                                </tr>
-                                            @endif
-                                            @if ($secondMachineCount != 0)
-                                                @php
-                                                    $second_lease = 1000;
-                                                    if ($vehicle_rantal_type == 0) {
-                                                        $second_lease = 1500;
-                                                    }
-                                                @endphp
-                                                <tr>
-                                                    <th>リース2台目(日割り)</th>
-                                                    <td>{{ number_format($secondMachineCount * $second_lease) }}</td>
-                                                </tr>
-                                            @endif
-                                            @if ($thirdMachineCount != 0)
-                                                <tr>
-                                                    <th>リース3台目(日割り)</th>
-                                                    <td>{{ number_format($thirdMachineCount * 1000) }}</td>
-                                                </tr>
-                                            @endif
-                                            @if ($vehicle_rantal_type == 1 || $vehicle_rantal_type == 2)
-                                                <tr>
-                                                    <th>保険料　月契約No.{{ $vehicle_rantal_number }}</th>
-                                                    <td>9,818</td>
-                                                </tr>
-                                            @endif
-                                            @if ($secondMachineCount != 0)
-                                                <tr>
-                                                    <th>保険料 2台目(日割り)</th>
-                                                    <td>{{ number_format($secondMachineCount * 410) }}</td>
-                                                </tr>
-                                            @endif
-                                        </tbody>
-                                    </table>
-                                </div>
+                                <form action="{{route('invoice.driver-edit-pdf')}}" method="POST" class="calendar-bottom-wrap__box calendar-bottom-wrap__top" id="form">
+                                    @csrf
+                                    <textarea name="textarea" id="setTextArea" cols="30" rows="10"></textarea>
+                                    <div>
+                                        {{-- 共通 --}}
+                                        <input hidden type="text" name="employeeId" value="{{$findEmployee->id}}">
+                                        <input hidden type="text" name="year" value="{{$getYear}}">
+                                        <input hidden type="text" name="month" value="{{$getMonth}}">
+
+                                        <input hidden type="text" name="invoiceAmountCheck" class="setAmountCheck">
+                                        <input hidden type="text" name="invoiceAllowanceCheck" class="setAllowanceCheck">
+                                        <input hidden type="text" name="invoiceExpresswayCheck" class="setExpresswayCheck">
+                                        <input hidden type="text" name="invoiceParkingCheck" class="setParkingCheck">
+                                        <input hidden type="text" name="invoiceVehicleCheck" class="setVehicleCheck">
+                                        <input hidden type="text" name="invoiceOvertimeCheck" class="setOvertimeCheck">
+                                        {{-- 絞り込み情報 --}}
+                                        @foreach ($clientsId as $clientId)
+                                            <input hidden type="text" name="invoiceClientsId[]" value="{{ $clientId }}">
+                                        @endforeach
+                                        @foreach ($projectsId as $projectId)
+                                            <input hidden type="text" name="invoiceProjectsId[]" value="{{ $projectId }}">
+                                        @endforeach
+                                        {{-- カレンダー用 --}}
+                                        <input hidden name="setRowCount" type="text" class="setRowCount">
+
+                                        <div class="total-info-table-wrap" id="infoTableParent">
+                                            <div class="total-info-table-wrap__box">
+                                                <table class="total-info-table">
+                                                    <tbody id="totalSalaryTableBody">
+                                                        <tr class="info-table-row">
+                                                            <th><input type="text" name="totalSalary[name]" value="合計金額"></th>
+                                                            <td><input type="text" name="totalSalary[amount]" value="{{ $totalSalary }}"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                        </tr>
+                                                        <tr class="info-table-row">
+                                                            <th><input type="text" name="allowance[name]" value="案件別手当"></th>
+                                                            <td><input type="text" name="allowance[amount]" value="{{ $totalAllowance }}"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                        </tr>
+                                                        <tr class="info-table-row">
+                                                            <th><input type="text" name="tax[name]" value="消費税"></th>
+                                                            <td><input type="text" name="tax[amount]" value="{{ $totalSalary * 0.1 }}"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                        </tr>
+                                                        <tr class="info-table-row">
+                                                            <th><input type="text" name="parkingName" value="パーキング代"></th>
+                                                            <td><input type="text" name="parkingAmount" value="{{ $totalParking }}"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                        </tr>
+                                                        <tr class="info-table-row">
+                                                            <th><input type="text" name="expressWayName" value="高速代"></th>
+                                                            <td><input type="text" name="expressWayAmount" value="{{ $totalExpressWay }}"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                        </tr>
+                                                        <tr class="info-table-row">
+                                                            <th><input type="text" name="overtimeName" value="残業代"></th>
+                                                            <td><input type="text" name="overtimeAmount" value="{{ $totalOverTime }}"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <div class="row-add-btn" id="totalSalaryAddBtn">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </div>
+                                            </div>
+                                            <p class="txt">相殺分</p>
+                                            <div class="total-info-table-wrap__box">
+                                                <table class="total-info-table">
+                                                    <tbody id="totalCostTableBody">
+                                                        <tr class="info-table-row">
+                                                            <th><input type="text" name="administrativeOutsourcing[name]" value="事務委託手数料(15%)"></th>
+                                                            <td><input type="text" name="administrativeOutsourcing[amount]" value="{{ ceil($totalSalary * 0.15) }}"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                        </tr>
+                                                        <tr class="info-table-row">
+                                                            <th><input type="text" name="administrative[name]" value="事務手数料"></th>
+                                                            <td><input type="text" name="administrative[amount]" value="10000"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                        </tr>
+                                                        <tr class="info-table-row">
+                                                            <th><input type="text" name="transfer[name]" value="振込手数料"></th>
+                                                            <td><input type="text" name="transfer[amount]" value="600"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                        </tr>
+                                                        @if ($vehicle_rantal_type == 1 || $vehicle_rantal_type == 2)
+                                                            <tr class="info-table-row">
+                                                                <th><input type="text" name="monthLease[name]" value="リース代　月契約No.{{ $vehicle_rantal_number }}"></th>
+                                                                <td><input type="text" name="monthLease[amount]" value="30,992"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            </tr>
+                                                        @endif
+                                                        @if ($secondMachineCount != 0)
+                                                            @php
+                                                                $second_lease = 1000;
+                                                                if ($vehicle_rantal_type == 0) {
+                                                                    $second_lease = 1500;
+                                                                }
+                                                            @endphp
+                                                            <tr class="info-table-row">
+                                                                <th><input type="text" name="secondLease[name]" value="リース2台目(日割り)"></th>
+                                                                <td><input type="text" name="secondLease[amount]" value="{{ $secondMachineCount * $second_lease }}"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            </tr>
+                                                        @endif
+                                                        @if ($thirdMachineCount != 0)
+                                                            <tr class="info-table-row">
+                                                                <th><input type="text" name="thirdLease[name]" value="リース3台目(日割り)"></th>
+                                                                <td><input type="text" name="thirdLease[amount]" value="{{ $thirdMachineCount * 1000 }}"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            </tr>
+                                                        @endif
+                                                        @if ($vehicle_rantal_type == 1 || $vehicle_rantal_type == 2)
+                                                            <tr class="info-table-row">
+                                                                <th><input type="text" name="monthInsurance[name]" value="保険料　月契約No.{{ $vehicle_rantal_number }}"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></th>
+                                                                <td><input type="text" name="monthInsurance[amount]" value="9,818"></td>
+                                                            </tr>
+                                                        @endif
+                                                        @if ($secondMachineCount != 0)
+                                                            <tr class="info-table-row">
+                                                                <th><input type="text" name="secondInsurance[name]" value="保険料 2台目(日割り)"></th>
+                                                                <td><input type="text" name="secondInsurance[amount]" value="{{ $secondMachineCount * 410 }}"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            </tr>
+                                                        @endif
+                                                    </tbody>
+                                                </table>
+                                                <div class="row-add-btn" id="totalCostAddBtn">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input hidden type="submit" id="gearingBtn">
+                                    </div>
+                                </form>
                                 <div class="calendar-bottom-wrap__box">
                                     <table class="shift-info-table">
                                         <thead>

@@ -143,7 +143,17 @@
                             <tr class="shift-calendar-table__head__day">
                                 <th></th>
                                 @foreach ( $convertedDates as $date )
-                                <th class="txt"><p class="">{{$date->format('d')}}日({{ $date->isoFormat('ddd') }})</p></th>
+                                    <th class="txt">
+                                        @if ($holidays->isHoliday($date))
+                                            <p class="" style="color: red;">{{$date->format('d')}}日({{ $date->isoFormat('ddd') }})</p>
+                                        @elseif ($date->isSaturday())
+                                            <p class="" style="color: skyblue;">{{$date->format('d')}}日({{ $date->isoFormat('ddd') }})</p>
+                                        @elseif($date->isSunday())
+                                            <p class="" style="color: red;">{{$date->format('d')}}日({{ $date->isoFormat('ddd') }})</p>
+                                        @else
+                                            <p class="">{{$date->format('d')}}日({{ $date->isoFormat('ddd') }})</p>
+                                        @endif
+                                    </th>
                                 @endforeach
                             </tr>
                         </thead>
@@ -207,7 +217,7 @@
                                                 }
                                             }
                                     @endphp
-                                    <td class="--count-row__project">
+                                    <td class="--count-row__project --count-f-s">
                                         {{$day_count}}
                                     </td>
                                 @endforeach
