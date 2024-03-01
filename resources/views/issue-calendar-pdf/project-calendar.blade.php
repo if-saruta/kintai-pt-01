@@ -39,6 +39,9 @@
           text-align: center;
           padding: 1.5px 2px;
       }
+      table td{
+        height: 2%;
+      }
       .total-retail{
         width: fit-content;
         margin-top: 10px;

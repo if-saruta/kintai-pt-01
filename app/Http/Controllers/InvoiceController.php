@@ -484,7 +484,7 @@ class InvoiceController extends Controller
 
     public function projectShift()
     {
-        $clients = Client::all();
+        $clients = Client::where('id', '!=', 1)->get();
         $ShiftProjectVehicles = null;
         $warning = null;
         $clientId = null;
@@ -532,7 +532,7 @@ class InvoiceController extends Controller
         $projects = Project::where('client_id', $clientId)->get();
 
         // 検索用
-        $clients = Client::all();
+        $clients = Client::where('id', '!=', 1)->get();
         $getClient = Client::find($clientId);
 
         // 列の表示・非表示
@@ -613,7 +613,7 @@ class InvoiceController extends Controller
                     })->get();
 
         // 検索用
-        $clients = Client::all();
+        $clients = Client::where('id', '!=', 1)->get();
         $client = Client::find($clientId);
 
         // シフトを検索・取得
@@ -880,7 +880,7 @@ class InvoiceController extends Controller
         $shiftArray = $ShiftProjectVehicles->toArray();
 
         // チャーター案件があるクライアントを取得
-        $clients = Client::all();
+        $clients = Client::where('id', '!=', 1)->get();
 
         // 新しい配列を作成
         $arrangeShiftArray = [];

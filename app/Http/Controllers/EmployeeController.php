@@ -314,6 +314,7 @@ class EmployeeController extends Controller
                 'register_number' => $row['register_number'],
                 'company_id' => $row['company_id'],
                 'name' => $row['name'],
+                'initials' => $row['initials'],
                 'post_code' => $row['post_code'],
                 'address' => $row['address'],
                 'employment_status' => $row['employment_status'],

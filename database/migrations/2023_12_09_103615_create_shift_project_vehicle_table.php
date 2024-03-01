@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('shift_id');
             $table->unsignedBigInteger('project_id')->nullable();//案件名
             $table->string('unregistered_project')->nullable();//未登録案件名
+            $table->string('charter_project_name')->nullable();
             $table->unsignedBigInteger('vehicle_id')->nullable();//車両
             $table->string('unregistered_vehicle')->nullable();//未登録車両
             $table->unsignedInteger('retail_price')->nullable();//上代
@@ -26,6 +27,7 @@ return new class extends Migration
             $table->unsignedInteger('overtime_fee')->nullable();//残業代
             $table->string('vehicle_rental_type')->nullable();// 0 : 自車 1 : 月リース 2 : なんでも月リース 3 : 日割り
             $table->unsignedBigInteger('rental_vehicle_id')->nullable();//車両
+            $table->string('time_of_day')->nullable();
             $table->timestamps();
 
             $table->foreign('shift_id')->references('id')->on('shifts')->onDelete('cascade');

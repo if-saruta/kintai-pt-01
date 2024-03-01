@@ -16,8 +16,11 @@ class ProjectController extends Controller
 {
     public function index()
     {
-        $projects = Project::all();
-        $clients = Client::all();
+        // client_idが1以外のプロジェクトを取得
+        $projects = Project::where('client_id', '!=', 1)->get();
+
+        // idが1以外のクライアントを取得
+        $clients = Client::where('id', '!=', 1)->get();
 
         return view('project.index', compact('clients'));
     }
