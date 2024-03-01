@@ -746,7 +746,7 @@
                                                         </tr>
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="tax[name]" value="消費税"></th>
-                                                            <td><input type="text" name="tax[amount]" value="{{ $totalSalary * 0.1 }}"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            <td><input type="text" name="tax[amount]" value="{{ ceil($totalSalary * 0.1) }}"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                         </tr>
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="parkingName" value="パーキング代"></th>
@@ -785,7 +785,7 @@
                                                         @if ($vehicle_rantal_type == 1 || $vehicle_rantal_type == 2)
                                                             <tr class="info-table-row">
                                                                 <th><input type="text" name="monthLease[name]" value="リース代　月契約No.{{ $vehicle_rantal_number }}"></th>
-                                                                <td><input type="text" name="monthLease[amount]" value="30,992"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                                <td><input type="text" name="monthLease[amount]" value="30992"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                             </tr>
                                                         @endif
                                                         @if ($secondMachineCount != 0)
@@ -808,8 +808,8 @@
                                                         @endif
                                                         @if ($vehicle_rantal_type == 1 || $vehicle_rantal_type == 2)
                                                             <tr class="info-table-row">
-                                                                <th><input type="text" name="monthInsurance[name]" value="保険料　月契約No.{{ $vehicle_rantal_number }}"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></th>
-                                                                <td><input type="text" name="monthInsurance[amount]" value="9,818"></td>
+                                                                <th><input type="text" name="monthInsurance[name]" value="保険料　月契約No.{{ $vehicle_rantal_number }}"></th>
+                                                                <td><input type="text" name="monthInsurance[amount]" value="9818"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                             </tr>
                                                         @endif
                                                         @if ($secondMachineCount != 0)

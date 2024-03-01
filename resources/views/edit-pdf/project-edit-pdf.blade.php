@@ -42,6 +42,8 @@
         <div class="main__white-board --project-pdf-edit-board">
             <form action="{{route('invoice.project-issue-pdf')}}" method="POST">
                 @csrf
+                {{-- 隠しフィールド --}}
+                <input hidden type="text" name="clientId" value="{{ $clientId }}">
                 <div class="domp-btn-wrap">
                     <button class="pdf-issue-btn project-pdf-issue-btn domp-btn">
                         <p class="">ダウンロード</p>

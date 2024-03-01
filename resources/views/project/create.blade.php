@@ -223,11 +223,11 @@
                 </div>
             </form>
         </div>
-        <form action="{{ route('project.csv') }}" method="POST" enctype="multipart/form-data">
+        {{-- <form action="{{ route('project.csv') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="file" name="csv_file">
             <button>インポート</button>
-        </form>
+        </form> --}}
     </main>
 
     <script>

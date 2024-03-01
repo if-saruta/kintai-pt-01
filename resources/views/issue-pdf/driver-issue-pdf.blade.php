@@ -208,15 +208,17 @@
                 <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
                 <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{number_format($salarySubTotal)}}</p></td>
             </tr>
-            <tr>
-                <td class="top-table-data w-70 --bg-green"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-70 --bg-green"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-260 --bg-green"><p class="top-table-data-txt --right">消費税(10%)</p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{number_format(ceil($salaryTax))}}</p></td>
-            </tr>
+            @if ($salaryTax != null)
+                <tr>
+                    <td class="top-table-data w-70 --bg-green"><p class="top-table-data-txt --center"></p></td>
+                    <td class="top-table-data w-70 --bg-green"><p class="top-table-data-txt --center"></p></td>
+                    <td class="top-table-data w-260 --bg-green"><p class="top-table-data-txt --right">消費税(10%)</p></td>
+                    <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
+                    <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
+                    <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
+                    <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{number_format(ceil($salaryTax))}}</p></td>
+                </tr>
+            @endif
             <tr>
                 <td class="top-table-data w-70 --bg-green"><p class="top-table-data-txt --center"></p></td>
                 <td class="top-table-data w-70 --bg-green"><p class="top-table-data-txt --center"></p></td>

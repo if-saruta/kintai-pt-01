@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Employee;
 use App\Models\Project;
 use App\Models\Shift;
+use App\Models\Client;
 use App\Models\ShiftProject;
 use App\Models\ProjectEmployeePayment;
 
@@ -104,6 +105,7 @@ class PdfputController extends Controller
 
     public function project_issue_pdf(Request $request)
     {
+        $clientId = $request->clientId;
         $invoiceNumber = $request->invoice_number;
         $name = $request->name;
         $subject = $request->subject;
@@ -126,6 +128,8 @@ class PdfputController extends Controller
         $bankNameInfoWithBreaks = nl2br(e($bankName));
 
         $today = Carbon::now();
+        $client = Client::find($clientId);
+        $pdfName = $client->pdfName;
 
         // 印鑑の画像を読み込み
         $image_path = storage_path('image/signature-stamp.png');
@@ -142,7 +146,7 @@ class PdfputController extends Controller
         // ,'tax', 'totalRetail', 'bankNameInfoWithBreaks', 'today'
         // ,'taxTable01', 'taxTable02', 'taxTable03', 'taxTable04'));
 
-        $fileName = "{$today->format('Y-m-d')}_{$invoiceNumber}.pdf";
+        $fileName = "{$today->format('Y-m-d')}_{$pdfName}.pdf";
 
         return $pdf->download($fileName); //生成されるファイル名
     }

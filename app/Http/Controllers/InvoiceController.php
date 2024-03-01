@@ -204,7 +204,10 @@ class InvoiceController extends Controller
             $query->where('employee_id', $employeeId)
                   ->whereYear('date', $getYear)
                   ->whereMonth('date', $getMonth);
-        });
+        })
+        ->whereHas('project', function ($query) {
+            $query->where('client_id', '!=', 1);
+        });;
 
 
         $shiftProjectVehiclesByEmployee = $query->get();

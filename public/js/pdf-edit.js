@@ -102,8 +102,11 @@ window.addEventListener('DOMContentLoaded', () => {
         // 給与消費税
         const salaryTaxCalc = (salarySubTotal) => {
             const getTaxElement = document.getElementById('salaryTax')
-            const tax = salarySubTotal * 0.1;
-            getTaxElement.value = Math.ceil(tax);
+            let tax = 0;
+            if(getTaxElement){
+                tax = salarySubTotal * 0.1;
+                getTaxElement.value = Math.ceil(tax);
+            }
             return Math.ceil(tax);
         }
 
@@ -273,7 +276,6 @@ window.addEventListener('DOMContentLoaded', () => {
                     tmp += totalValue;
                 }
             }
-            console.log(tmp)
 
             totalAll.value = tmp;
         }
