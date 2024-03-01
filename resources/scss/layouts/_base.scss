@@ -18,6 +18,7 @@ body{
 	height: 100%;
     background-color: $cBg!important;
 }
+
 body::-webkit-scrollbar{
 	display: none;
 }
@@ -90,4 +91,42 @@ body::-webkit-scrollbar{
 .main-change-width{
     width: math.div(1220,1280) * 100vw;
     margin-left: math.div(50,1280) * 100vw;
+}
+.home{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 500px;
+    padding: 3rem 2rem;
+    background-color: white;
+    border-radius: 1rem;
+    .message{
+        width: fit-content;
+        margin: 0 auto;
+        font-size: 2rem;
+        letter-spacing: 0.1rem;
+    }
+    .message02{
+        width: fit-content;
+        margin: 0 auto;
+        margin-top: 2rem;
+        font-size: 1.5rem;
+        letter-spacing: 0.1rem;
+    }
+    .home-back{
+        display: block;
+        width: fit-content;
+        margin: 0 auto;
+        margin-top: 3rem;
+        font-size: 2rem;
+        padding: 1rem 2rem;
+        border-radius: 1rem;
+        border: 1px solid $cGray;
+        transition: 0.5s;
+    }
+    .home-back:hover{
+        color: white;
+        background-color: $cGray;
+    }
 }

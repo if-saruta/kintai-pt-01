@@ -34,12 +34,12 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         // 開発中は詳細なエラーを表示する
-        if (app()->environment('local')) {
-            return parent::render($request, $exception);
-        }
+        // if (app()->environment('local')) {
+        //     return parent::render($request, $exception);
+        // }
 
         // 本番環境では全てのエラーで特定のルートにリダイレクトする
-        // return redirect()->route('home')->with('error', 'Sorry, something went wrong.');
+        return redirect()->route('home')->with('error', 'Sorry, something went wrong.');
     }
 
 

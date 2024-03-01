@@ -4,7 +4,7 @@
             {{ __('請求書') }}
         </h2>
     </x-slot>
-
+{{  }}
     {{-- <script>
         window.onbeforeunload = function(e) {
             e.preventDefault();
