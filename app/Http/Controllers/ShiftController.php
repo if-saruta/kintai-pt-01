@@ -435,6 +435,7 @@ class ShiftController extends Controller
         }
 
         $employeeArray = [];
+        // dd($organizedData);
 
         foreach ($organizedData as $date => $employeeData) {
             foreach ($employeeData as $employee_r => $row) {
@@ -509,6 +510,7 @@ class ShiftController extends Controller
                                                     'time_of_day' => 0,
                                                 ]);
                                                 $isProjectCheck = true;
+                                                break;
                                             }
                                         }
                                         if (!$isProjectCheck) {
@@ -581,10 +583,10 @@ class ShiftController extends Controller
                                                     'time_of_day' => 1,
                                                 ]);
                                                 $isProjectCheck = true;
+                                                break;
                                             }
                                         }
                                         if (!$isProjectCheck) {
-
                                             // 従業員の詳細のデータを取得
                                             $employeeInfo = $this->getEmployeeInfo($employeeIdTmp, $projectIdTmp);
 

@@ -12,32 +12,6 @@
 
     </script> --}}
 
-    {{-- @php
-        $secondLeaseFee = 1000;
-        $thirdLeaseFee = 1000;
-        $insuranceFee = 410;
-        $monthLease = 30992;
-        $monthInsurance = 9818;
-        $totalLease = 0;
-        $totalInsurance = 0;
-
-        if ($rentalType == 0) {
-            $secondLeaseFee = 1500;
-            $totalLease = ($secondMachineCount * $secondLeaseFee) + ($thirdMachineCount * $thirdLeaseFee);
-            $totalInsurance = ($secondMachineCount + $thirdMachineCount) * $insuranceFee;
-        }elseif($rentalType == 1){
-            $totalLease = $monthLease + ($secondMachineCount * $secondLeaseFee) + ($thirdMachineCount * $thirdLeaseFee);
-            $totalInsurance = $monthInsurance + (($secondMachineCount + $thirdMachineCount) * $insuranceFee);
-        }elseif($rentalType == 2){
-            $totalLease = $monthLease;
-            $totalInsurance = $monthInsurance;
-        }
-
-        $totalCost = (ceil($totalSalary * 0.15)) + ($totalLease + $totalInsurance) + 10000 + 600;
-
-
-    @endphp --}}
-
     @php
         $otherTotal = 0;
     @endphp
