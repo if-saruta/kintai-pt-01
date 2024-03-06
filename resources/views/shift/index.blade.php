@@ -249,12 +249,12 @@
                                                             @endif
                                                             <p class="table-cell__item__row">
                                                                 @if ($spv->retail_price)
-                                                                    {{$spv->retail_price}}
+                                                                    {{number_format($spv->retail_price)}}
                                                                 @endif
                                                             </p>
                                                             <p class="table-cell__item__row">
                                                                 @if ($spv->driver_price)
-                                                                    {{$spv->driver_price}}
+                                                                    {{number_format($spv->driver_price)}}
                                                                 @endif
                                                             </p>
                                                         </div>
@@ -293,12 +293,12 @@
                                                             @endif
                                                             <p class="table-cell__item__row">
                                                                 @if ($spv->retail_price)
-                                                                {{$spv->retail_price}}
+                                                                {{number_format($spv->retail_price)}}
                                                                 @endif
                                                             </p>
                                                             <p class="table-cell__item__row">
                                                                 @if ($spv->driver_price)
-                                                                {{$spv->driver_price}}
+                                                                {{number_format($spv->driver_price)}}
                                                                 @endif
                                                             </p>
                                                         </div>
@@ -390,12 +390,12 @@
                                                             @endif
                                                             <p class="table-cell__item__row">
                                                                 @if ($spv->retail_price)
-                                                                    {{$spv->retail_price}}
+                                                                    {{number_format($spv->retail_price)}}
                                                                 @endif
                                                             </p>
                                                             <p class="table-cell__item__row">
                                                                 @if ($spv->driver_price)
-                                                                    {{$spv->driver_price}}
+                                                                    {{number_format($spv->driver_price)}}
                                                                 @endif
                                                             </p>
                                                         </div>
@@ -434,12 +434,12 @@
                                                             @endif
                                                             <p class="table-cell__item__row">
                                                                 @if ($spv->retail_price)
-                                                                {{$spv->retail_price}}
+                                                                {{number_format($spv->retail_price)}}
                                                                 @endif
                                                             </p>
                                                             <p class="table-cell__item__row">
                                                                 @if ($spv->driver_price)
-                                                                {{$spv->driver_price}}
+                                                                {{number_format($spv->driver_price)}}
                                                                 @endif
                                                             </p>
                                                         </div>

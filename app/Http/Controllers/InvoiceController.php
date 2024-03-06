@@ -673,11 +673,12 @@ class InvoiceController extends Controller
     public function charterShift()
     {
         $shiftArray = null;
+        $unregisterProjectShift = null;
         $warning = null;
         $getYear = null;
         $getMonth = null;
 
-        return view('invoice.charterShift', compact('shiftArray', 'warning', 'getYear', 'getMonth'));
+        return view('invoice.charterShift', compact('shiftArray', 'unregisterProjectShift', 'warning', 'getYear', 'getMonth'));
     }
 
     public function charterClientUpdate(Request $request)
@@ -942,7 +943,7 @@ class InvoiceController extends Controller
         // dd($shiftArray);
 
         $warning = null;
-        if (!$shiftArray) {
+        if (!$shiftArray && !$unregisterProjectShift) {
             $warning = "選択されたシフトは登録されていません";
         }
 

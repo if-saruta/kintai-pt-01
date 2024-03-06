@@ -266,9 +266,9 @@
                                                         @endif
                                                         {{-- 車両 --}}
                                                         @if ($spv->vehicle)
-                                                        <p class="table-cell__item__row">{{$spv->vehicle->number}}</p>
+                                                        <p class="table-cell__item__row">No.{{$spv->vehicle->number}}</p>
                                                         @elseif($spv->unregistered_vehicle)
-                                                        <p class="table-cell__item__row" style="color: red;">{{$spv->unregistered_vehicle}}</p>
+                                                        <p class="table-cell__item__row" style="color: red;">No.{{$spv->unregistered_vehicle}}</p>
                                                         @else
                                                         <p class="table-cell__item__row"></p>
                                                         @endif
@@ -278,11 +278,11 @@
                                                 @endforeach
 
                                                 @for ($i = $pm_check_count; $i < $max_count; $i++)
-                                                <div class="table-cell__item">
-                                                    <p class="table-cell__item__row setHightElem"></p>
-                                                    <p class="table-cell__item__row"></p>
-                                                </div>
-                                            @endfor
+                                                    <div class="table-cell__item">
+                                                        <p class="table-cell__item__row setHightElem"></p>
+                                                        <p class="table-cell__item__row"></p>
+                                                    </div>
+                                                @endfor
                                             </td>
                                         @endforeach
                                     </tr>

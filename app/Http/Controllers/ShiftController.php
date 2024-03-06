@@ -28,6 +28,7 @@ class ShiftController extends Controller
 {
     public function index()
     {
+
         // 現在の日付を取得
         $date = Carbon::today();
         $holidays = $this->getHoliday($date->format('Y'));
@@ -569,7 +570,6 @@ class ShiftController extends Controller
 
                                                 // 従業員の詳細のデータを取得
                                                 $employeeInfo = $this->getEmployeeInfo($employeeIdTmp, $projectIdTmp);
-
 
                                                 $middleShift = ShiftProjectVehicle::create([
                                                     'shift_id' => $shift->id,

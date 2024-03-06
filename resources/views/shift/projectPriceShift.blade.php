@@ -238,7 +238,7 @@
                                                         @endif
                                                         <p class="table-cell__item__row">
                                                             @if ($spv->retail_price)
-                                                                {{$spv->retail_price}}
+                                                                {{number_format($spv->retail_price)}}
                                                             @endif
                                                             @php
                                                                 $weekly_total_retail += $spv->retail_price;
@@ -270,7 +270,7 @@
                                                         @endif
                                                         <p class="table-cell__item__row">
                                                             @if ($spv->retail_price)
-                                                                {{$spv->retail_price}}
+                                                                {{number_format($spv->retail_price)}}
                                                             @endif
                                                             @php
                                                                 $weekly_total_retail += $spv->retail_price;
@@ -365,7 +365,7 @@
                                                     @endif
                                                     <p class="table-cell__item__row">
                                                         @if ($spv->retail_price)
-                                                            {{$spv->retail_price}}
+                                                            {{number_format($spv->retail_price)}}
                                                         @endif
                                                         @php
                                                             $weekly_total_retail += $spv->retail_price;
@@ -397,7 +397,7 @@
                                                     @endif
                                                     <p class="table-cell__item__row">
                                                         @if ($spv->retail_price)
-                                                            {{$spv->retail_price}}
+                                                            {{number_format($spv->retail_price)}}
                                                         @endif
                                                         @php
                                                             $weekly_total_retail += $spv->retail_price;

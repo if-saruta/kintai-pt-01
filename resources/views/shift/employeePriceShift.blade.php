@@ -238,7 +238,7 @@
                                                         @endif
                                                         <p class="table-cell__item__row">
                                                             @if ($spv->driver_price)
-                                                                {{$spv->driver_price}}
+                                                                {{number_format($spv->driver_price)}}
                                                             @endif
                                                             @php
                                                                 $weekly_total_salary += $spv->driver_price;
@@ -270,7 +270,7 @@
                                                         @endif
                                                         <p class="table-cell__item__row">
                                                             @if ($spv->driver_price)
-                                                                {{$spv->driver_price}}
+                                                                {{number_format($spv->driver_price)}}
                                                             @endif
                                                             @php
                                                                 $weekly_total_salary += $spv->driver_price;
@@ -362,7 +362,7 @@
                                                         @endif
                                                         <p class="table-cell__item__row">
                                                             @if ($spv->driver_price)
-                                                                {{$spv->driver_price}}
+                                                                {{number_format($spv->driver_price)}}
                                                             @endif
                                                             @php
                                                                 $weekly_total_salary += $spv->driver_price;
@@ -394,7 +394,7 @@
                                                         @endif
                                                         <p class="table-cell__item__row">
                                                             @if ($spv->driver_price)
-                                                                {{$spv->driver_price}}
+                                                                {{number_format($spv->driver_price)}}
                                                             @endif
                                                             @php
                                                                 $weekly_total_salary += $spv->driver_price;

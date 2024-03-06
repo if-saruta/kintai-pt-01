@@ -70,7 +70,7 @@
                     </form>
 
                     <div class="">
-                        @if($shiftArray)
+                        @if($shiftArray || $unregisterProjectShift)
                         <form action="{{route('invoice.charter-calendar-pdf')}}" method="POST">
                             @csrf
                             <input hidden type="text" value="{{$getYear}}" name="year">

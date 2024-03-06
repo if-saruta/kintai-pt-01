@@ -6,6 +6,8 @@ use Exception;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
+use Illuminate\Auth\AuthenticationException;
+
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -34,11 +36,16 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         // 開発中は詳細なエラーを表示する
-        // if (app()->environment('local')) {
-        //     return parent::render($request, $exception);
-        // }
+        if (app()->environment('local')) {
+            return parent::render($request, $exception);
+        }
 
-        // 本番環境では全てのエラーで特定のルートにリダイレクトする
+        // 認証例外の場合はログイン画面にリダイレクトする
+        if ($exception instanceof AuthenticationException) {
+            return redirect()->guest(route('login'));
+        }
+
+        // それ以外のエラーで本番環境ではホーム画面にリダイレクトする
         return redirect()->route('home')->with('error', 'Sorry, something went wrong.');
     }
 
