@@ -585,6 +585,9 @@
             position: relative;
             height: 25px;
             border: 1px solid black;
+            input{
+                border: 0px;
+            }
         }
         .table-item-txt{
             position: absolute;
@@ -597,6 +600,9 @@
             height: 25px;
             text-align: center;
             border: 1px solid black;
+            input{
+                border: 0px;
+            }
         }
         .table-data-txt{
             position: absolute;
