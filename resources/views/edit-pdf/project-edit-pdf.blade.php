@@ -84,7 +84,7 @@
     </div>
                         </div>
                         <div class="amount">
-                            <p class="amount-txt"><span class="">ご請求金額</span><span class="amount-fee">¥{{ceil($total_retail + ($total_retail * 0.1))}}</span></p>
+                            <p class="amount-txt"><span class="">ご請求金額</span><span class="amount-fee">¥{{number_format(ceil($total_retail + ($total_retail * 0.1)))}}</span></p>
                         </div>
                         <div class="table-wrap">
                             <div class="plus project-edit-plus-btn">
@@ -101,32 +101,32 @@
                                 @foreach ($projectData as $projectName => $data)
                                 <tr>
                                     <td class="table-item w-500"><input type="text" name="item[]" value="{{ $projectName }} ({{ $data['dates'] }})" class="input project-table-input changeElem project-edit-pdf-text-left"></td>
-                                    <td class="table-data w-100"><input type="number" name="number[]" value="{{ $data['count'] }}" class="input project-table-input changeElem cntElem project-edit-pdf-text-right"></td>
-                                    <td class="table-data w-100"><input type="number" name="until[]" value="{{ $data['unit_price'] }}" class="input project-table-input changeElem untilElem project-edit-pdf-text-right"></td>
-                                    <td class="table-data w-110"><input type="number" name="amount[]" value="{{ $data['total_price'] }}" class="input project-table-input changeElem amountElem project-edit-pdf-text-right"></td>
+                                    <td class="table-data w-100"><input type="text" name="number[]" value="{{ $data['count'] }}" class="input project-table-input changeElem cntElem project-edit-pdf-text-right"></td>
+                                    <td class="table-data w-100"><input type="text" name="until[]" value="{{ $data['unit_price'] }}" class="input project-table-input changeElem untilElem project-edit-pdf-text-right commaInput"></td>
+                                    <td class="table-data w-110"><input type="text" name="amount[]" value="{{ $data['total_price'] }}" class="input project-table-input changeElem amountElem project-edit-pdf-text-right commaInput"></td>
                                 </tr>
                                 @endforeach
                                 @foreach ($expresswayData as $projectName => $data )
                                     <tr>
                                         <td class="table-item w-500"><input type="text" name="item[]" value="{{ $projectName }} 高速代 ({{ $data['dates'] }})" class="input project-table-input changeElem project-edit-pdf-text-left"></td>
-                                        <td class="table-data w-100"><input type="number" name="number[]" value="{{ $data['expressway_count'] }}" class="input project-table-input changeElem cntElem project-edit-pdf-text-right"></td>
-                                        <td class="table-data w-100"><input type="number" name="until[]" value="{{ $data['expressway_unit_price'] }}" class="input project-table-input changeElem untilElem project-edit-pdf-text-right"></td>
-                                        <td class="table-data w-110"><input type="number" name="amount[]" value="{{ $data['total_expressway_fee'] }}" class="input project-table-input changeElem amountElem project-edit-pdf-text-right"></td>
+                                        <td class="table-data w-100"><input type="text" name="number[]" value="{{ $data['expressway_count'] }}" class="input project-table-input changeElem cntElem project-edit-pdf-text-right"></td>
+                                        <td class="table-data w-100"><input type="text" name="until[]" value="{{ $data['expressway_unit_price'] }}" class="input project-table-input changeElem untilElem project-edit-pdf-text-right commaInput"></td>
+                                        <td class="table-data w-110"><input type="text" name="amount[]" value="{{ $data['total_expressway_fee'] }}" class="input project-table-input changeElem amountElem project-edit-pdf-text-right commaInput"></td>
                                     </tr>
                                 @endforeach
                                 @foreach ($parkingData as $projectName => $data)
                                     <tr>
                                         <td class="table-item w-500"><input type="text" name="item[]" value="{{ $projectName }} パーキング代 ({{ $data['dates'] }})" class="input project-table-input changeElem project-edit-pdf-text-left"></td>
-                                        <td class="table-data w-100"><input type="number" name="number[]" value="{{ $data['parking_count'] }}" class="input project-table-input changeElem cntElem project-edit-pdf-text-right"></td>
-                                        <td class="table-data w-100"><input type="number" name="until[]" value="{{ $data['parking_unit_price'] }}" class="input project-table-input changeElem untilElem project-edit-pdf-text-right"></td>
-                                        <td class="table-data w-110"><input type="number" name="amount[]" value="{{ $data['total_parking_fee'] }}" class="input project-table-input changeElem amountElem project-edit-pdf-text-right"></td>
+                                        <td class="table-data w-100"><input type="text" name="number[]" value="{{ $data['parking_count'] }}" class="input project-table-input changeElem cntElem project-edit-pdf-text-right"></td>
+                                        <td class="table-data w-100"><input type="text" name="until[]" value="{{ $data['parking_unit_price'] }}" class="input project-table-input changeElem untilElem project-edit-pdf-text-right commaInput"></td>
+                                        <td class="table-data w-110"><input type="text" name="amount[]" value="{{ $data['total_parking_fee'] }}" class="input project-table-input changeElem amountElem project-edit-pdf-text-right commaInput"></td>
                                     </tr>
                                 @endforeach
                                 <tr class="tableRow">
                                     <td class="table-item w-500"><input type="text" name="item[]" value="" class="input project-table-input changeElem project-edit-pdf-text-left"></td>
-                                    <td class="table-data w-100"><input type="number" name="number[]" value="" class="input project-table-input changeElem cntElem"></td>
-                                    <td class="table-data w-100"><input type="number" name="until[]" value="" class="input project-table-input changeElem untilElem"></td>
-                                    <td class="table-data w-110"><input type="number" name="amount[]" value="" class="input project-table-input changeElem amountElem"></td>
+                                    <td class="table-data w-100"><input type="text" name="number[]" value="" class="input project-table-input changeElem cntElem project-edit-pdf-text-right"></td>
+                                    <td class="table-data w-100"><input type="text" name="until[]" value="" class="input project-table-input changeElem untilElem project-edit-pdf-text-right commaInput"></td>
+                                    <td class="table-data w-110"><input type="text" name="amount[]" value="" class="input project-table-input changeElem amountElem project-edit-pdf-text-right commaInput"></td>
                                 </tr>
                             </table>
                         </div>
@@ -134,29 +134,29 @@
                             <tr>
                                 <td class="w-500 border-none"></td>
                                 <td class="mini-table-data w-201"><p class="mini-table-data-txt project-edit-pdf-text-left">小計</p></td>
-                                <td class="mini-table-data w-110"><input type="text" name="sub_total_retail" value="{{$total_retail}}" class="input project-table-input amountSubTotal project-edit-pdf-text-right"></td>
+                                <td class="mini-table-data w-110"><input type="text" name="sub_total_retail" value="{{$total_retail}}" class="input project-table-input amountSubTotal project-edit-pdf-text-right commaInput"></td>
                             </tr>
                             <tr>
                                 <td class="w-500 border-none"></td>
                                 <td class="mini-table-data w-201"><p class="mini-table-data-txt project-edit-pdf-text-left">消費税(10%)</p></td>
-                                <td class="mini-table-data w-110"><input type="text" name="tax" value="{{ceil($total_retail * 0.1)}}" class="input project-table-input taxElem project-edit-pdf-text-right"></td>
+                                <td class="mini-table-data w-110"><input type="text" name="tax" value="{{ceil($total_retail * 0.1)}}" class="input project-table-input taxElem project-edit-pdf-text-right commaInput"></td>
                             </tr>
                             <tr>
                                 <td class="w-500 border-none"></td>
                                 <td class="mini-table-data w-201"><p class="mini-table-data-txt project-edit-pdf-text-left"> 合計金額(内消費税)</p></td>
-                                <td class="mini-table-data w-110"><input type="text" name="total_retail" value="{{ceil($total_retail + ($total_retail * 0.1))}}" class="input project-table-input totalElem project-edit-pdf-text-right"></td>
+                                <td class="mini-table-data w-110"><input type="text" name="total_retail" value="{{ceil($total_retail + ($total_retail * 0.1))}}" class="input project-table-input totalElem project-edit-pdf-text-right commaInput"></td>
                             </tr>
                         </table>
                         <table class="tax-table">
                             <tr class="tax-table__row">
                                 <td class="tax-table__row__data"><input type="text" name="tax_table01[]" value="10%対象" class=""></td>
-                                <td class="tax-table__row__data"><input type="text" name="tax_table02[]" class="targetAmount"></td>
+                                <td class="tax-table__row__data"><input type="text" name="tax_table02[]" class="targetAmount commaInput"></td>
                                 <td class="tax-table__row__data"><input type="text" name="tax_table03[]" value="消費税" class=""></td>
-                                <td class="tax-table__row__data"><input type="text" name="tax_table04[]" class="targetAmountTax" readonly></td>
+                                <td class="tax-table__row__data"><input type="text" name="tax_table04[]" class="targetAmountTax commaInput" readonly></td>
                             </tr>
                             <tr class="tax-table__row">
                                 <td class="tax-table__row__data"><input type="text" name="tax_table01[]" value="対象外" class=""></td>
-                                <td class="tax-table__row__data"><input type="text" name="tax_table02[]" class="notTargetAmount" readonly></td>
+                                <td class="tax-table__row__data"><input type="text" name="tax_table02[]" class="notTargetAmount commaInput" readonly></td>
                                 <td class="tax-table__row__data"><input type="text" name="tax_table03[]" value="消費税" class=""></td>
                                 <td class="tax-table__row__data"><input type="text" name="tax_table04[]" class="" value="" readonly></td>
                             </tr>

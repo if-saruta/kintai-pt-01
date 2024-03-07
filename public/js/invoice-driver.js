@@ -400,11 +400,12 @@ window.addEventListener('load', () => {
             let tr = document.createElement('tr');
             tr.classList.add('info-table-row');
             tr.innerHTML = `
-                <th><input type="text" name="otherName[]" value=""></th>
-                <td><input type="text" name="otherAmount[]" value=""><div class="row-delete-btn"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                <th><input type="text" name="otherName[]" value="" class=""></th>
+                <td><input type="text" name="otherAmount[]" value="" class="commaInput"><div class="row-delete-btn"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
             `;
 
             bodyElem.appendChild(tr);
+            commmaActive();
         })
     }
     salaryTableRowActive();
@@ -417,11 +418,12 @@ window.addEventListener('load', () => {
             let tr = document.createElement('tr');
             tr.classList.add('info-table-row');
             tr.innerHTML = `
-                <th><input type="text" name="otherCostName[]" value=""></th>
-                <td><input type="text" name="otherCostAmont[]" value=""><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                <th><input type="text" name="otherCostName[]" value="" class=""></th>
+                <td><input type="text" name="otherCostAmont[]" value="" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
             `;
 
             bodyElem.appendChild(tr);
+            commmaActive();
         })
     }
     costTableRowActive();
@@ -476,5 +478,27 @@ window.addEventListener('load', () => {
         })
     }
     // formSubmit();
+
+    // カンマの制御
+    const commmaActive = () => {
+        const inputElem = document.querySelectorAll('.commaInput');
+        for(let i = 0; i < inputElem.length; i++){
+            inputElem[i].addEventListener('input', function(e) {
+                // 入力値からカンマを削除し、数値に変換
+                var value = e.target.value.replace(/,/g, '');
+                var numberValue = parseInt(value, 10);
+
+                // isNaN関数で数値かどうかをチェック
+                if (!isNaN(numberValue)) {
+                    // 数値をロケールに応じた文字列に変換（例: "1,234"）
+                    e.target.value = numberValue.toLocaleString();
+                } else {
+                    // 数値でない場合は入力を空にする
+                    e.target.value = '';
+                }
+            })
+        }
+    }
+    commmaActive();
 
 })

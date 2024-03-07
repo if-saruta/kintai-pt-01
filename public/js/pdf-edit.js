@@ -80,7 +80,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const salary = document.querySelectorAll('.salaryAmount');
 
             for(let i = 0; i < salary.length; i++){
-                salary[i].value = num[i].value * unit[i].value;
+                salary[i].value = num[i].value * removeCommasAndCastToInt(unit[i].value);
             }
         }
 
@@ -90,7 +90,7 @@ window.addEventListener('DOMContentLoaded', () => {
             let total = 0;
 
             for(let i = 0; i < salary.length; i++){
-                const salaryValue = parseInt(salary[i].value, 10);
+                const salaryValue = removeCommasAndCastToInt(salary[i].value);
                 if (!isNaN(salaryValue)) {
                     total += salaryValue;
                 }
@@ -117,7 +117,7 @@ window.addEventListener('DOMContentLoaded', () => {
             let tmpTotal = 0;
 
             for(let i = 0; i < etcElement.length; i++){
-                const etcValue = parseInt(etcElement[i].value, 10);
+                const etcValue = removeCommasAndCastToInt(etcElement[i].value);
                 if(!isNaN(etcValue)){
                     tmpTotal += etcValue;
                 }
@@ -139,7 +139,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const total = document.querySelectorAll('.costTotalByDriver');
 
             for(let i = 0; i < total.length; i++){
-                total[i].value = num[i].value * unit[i].value;
+                total[i].value = num[i].value * removeCommasAndCastToInt(unit[i].value);
             }
         }
 
@@ -149,7 +149,7 @@ window.addEventListener('DOMContentLoaded', () => {
             let tmp = 0;
 
             for(let i = 0; i < total.length; i++){
-                const totalValue = parseInt(total[i].value, 10)
+                const totalValue = removeCommasAndCastToInt(total[i].value)
                 if(!isNaN(totalValue)) {
                     tmp += totalValue;
                 }
@@ -166,8 +166,8 @@ window.addEventListener('DOMContentLoaded', () => {
             const salaryTotal = document.querySelector('.salaryTotal');
             const costAllTotal = document.querySelector('.costAllTotal');
 
-            const salaryAmount = parseInt(salaryTotal.value, 10);
-            const costAmount = parseInt(costAllTotal.value, 10);
+            const salaryAmount = removeCommasAndCastToInt(salaryTotal.value);
+            const costAmount = removeCommasAndCastToInt(costAllTotal.value);
 
             allCalcTotal.value = salaryAmount - costAmount;
             allCalcTotalView.textContent = '¥' + (salaryAmount - costAmount);
@@ -222,7 +222,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const unit = document.querySelectorAll('.costUnit');
 
             for(let i = 0; i < elem.length; i++){
-                elem[i].value = num[i].value * unit[i].value;
+                elem[i].value = num[i].value * removeCommasAndCastToInt(unit[i].value);
             }
         }
 
@@ -231,7 +231,7 @@ window.addEventListener('DOMContentLoaded', () => {
             let total = 0;
 
             for(let i = 0; i < elem.length; i++){
-                const elemValue = parseInt(elem[i].value, 10)
+                const elemValue = removeCommasAndCastToInt(elem[i].value)
                 if(!isNaN(elemValue)) {
                     total += elemValue;
                 }
@@ -259,7 +259,7 @@ window.addEventListener('DOMContentLoaded', () => {
             let totalValue = subTotal + tax;
 
             totalElem.value = totalValue;
-            totalView.textContent = '¥' + totalValue;
+            totalView.textContent = '¥' + addCommas(totalValue);
             totalByDriver.value = totalValue;
             unit.value = totalValue;
         }
@@ -271,7 +271,7 @@ window.addEventListener('DOMContentLoaded', () => {
             let tmp = 0;
 
             for(let i = 0; i < total.length; i++){
-                const totalValue = parseInt(total[i].value, 10)
+                const totalValue = removeCommasAndCastToInt(total[i].value)
                 if(!isNaN(totalValue)) {
                     tmp += totalValue;
                 }
@@ -288,11 +288,11 @@ window.addEventListener('DOMContentLoaded', () => {
             const salaryTotal = document.querySelector('.salaryTotal');
             const costAllTotal = document.querySelector('.costAllTotal');
 
-            const salaryAmount = parseInt(salaryTotal.value, 10);
-            const costAmount = parseInt(costAllTotal.value, 10);
+            const salaryAmount = removeCommasAndCastToInt(salaryTotal.value);
+            const costAmount = removeCommasAndCastToInt(costAllTotal.value);
 
             allCalcTotal.value = salaryAmount - costAmount;
-            allCalcTotalView.textContent = '¥' + (salaryAmount - costAmount);
+            allCalcTotalView.textContent = '¥' + addCommas(salaryAmount - costAmount);
         }
 
         for(let i = 0; i < changeElem.length; i++){
@@ -303,6 +303,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 costTotalCalc(resultSubTotal, resultTax);
                 costAllTotal();
                 lastCalc();
+                commmaActive();
             })
         }
 
@@ -324,6 +325,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 costTotalCalc(resultSubTotal, resultTax);
                 costAllTotal();
                 lastCalc();
+                commmaActive();
             });
         }
     }
@@ -340,6 +342,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 // tr要素が見つかった場合、それを削除
                 if (tr) {
                     tr.remove();
+                    commmaActive()
                 }
             });
         }
@@ -365,8 +368,8 @@ window.addEventListener('DOMContentLoaded', () => {
                 <td class="top-table-data w-260"><input type="text" name="salaryProject[]" class="input table-input changeElement"></td>
                 <td class="top-table-data w-70"><input type="text" name="salaryEtc[]" class="input table-input changeElement etcElement"></td>
                 <td class="top-table-data w-70"><input type="text" name="salaryCount[]" class="input table-input changeElement salaryNum"></td>
-                <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" class="input table-input changeElement salaryUnit"></td>
-                <td class="top-table-data w-70"><input type="number" name="salaryAmount[]" class="input table-input changeElement salaryAmount"></td>
+                <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" class="input table-input changeElement salaryUnit commaInput"></td>
+                <td class="top-table-data w-70"><input type="text" name="salaryAmount[]" class="input table-input changeElement salaryAmount commaInput"></td>
                 <div class="salaryRowDelete deleteRowBtn"><span class="deleteRowBtn__line"><span/><span class="deleteRowBtn__line"><span/><div/>
             `;
 
@@ -378,6 +381,7 @@ window.addEventListener('DOMContentLoaded', () => {
             salaryCalc();
             costCalc();
             deleteBtn();
+            commmaActive();
         })
     }
     salaryTableAddRow();
@@ -396,8 +400,8 @@ window.addEventListener('DOMContentLoaded', () => {
                 <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
                 <td class="top-table-data w-330"><input type="text" name="salaryCostName[]" class="input table-input changeElement"></td>
                 <td class="top-table-data w-70"><input type="text" name="salaryCostNum[]" class="input table-input changeElement costNumByDriver"></td>
-                <td class="top-table-data w-70"><input type="text" name="salaryCostUntil[]" class="input table-input changeElement costUnitByDriver"></td>
-                <td class="top-table-data w-100"><input type="text" name="salaryCostAmount[]" class="input table-input changeElement costTotalByDriver"></td>
+                <td class="top-table-data w-70"><input type="text" name="salaryCostUntil[]" class="input table-input changeElement amount costUnitByDriver commaInput"></td>
+                <td class="top-table-data w-100"><input type="text" name="salaryCostAmount[]" class="input table-input changeElement amount costTotalByDriver commaInput"></td>
                 <div class="salaryRowDelete deleteRowBtn"><span class="deleteRowBtn__line"><span/><span class="deleteRowBtn__line"><span/><div/>
             `;
 
@@ -408,6 +412,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
             salaryCalc();
             costCalc();
+            commmaActive();
         })
 
     }
@@ -425,8 +430,8 @@ window.addEventListener('DOMContentLoaded', () => {
             newRow.innerHTML = `
                 <td class="table-item w-400"><input type="text" name="costItem[]" value="" class="input table-input changeElement"></td>
                 <td class="table-data w-100"><input type="text" name="costNum[]" value="" class="input table-input changeElement costNum"></td>
-                <td class="table-data w-100"><input type="text" name="costUntil[]" value="" class="input table-input changeElement costUnit"></td>
-                <td class="table-data w-110"><input type="text" name="costAmount[]" value="" class="input table-input changeElement costElem"></td>
+                <td class="table-data w-100"><input type="text" name="costUntil[]" value="" class="input table-input changeElement costUnit commaInput"></td>
+                <td class="table-data w-110"><input type="text" name="costAmount[]" value="" class="input table-input changeElement costElem commaInput"></td>
                 <div class="salaryRowDelete deleteRowBtn"><span class="deleteRowBtn__line"><span/><span class="deleteRowBtn__line"><span/><div/>
             `;
 
@@ -437,9 +442,60 @@ window.addEventListener('DOMContentLoaded', () => {
 
             salaryCalc();
             costCalc();
+            commmaActive();
         })
     }
     costTableAddRow();
+
+    function removeCommasAndCastToInt(value) {
+        // Remove both full-width and half-width commas
+        var newValue = value.replace(/,|，/g, '');
+        // Cast to int
+        return parseInt(newValue, 10);
+    }
+
+    function addCommas(number) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    // カンマの制御
+    const commmaActive = () => {
+        const inputElem = document.querySelectorAll('.commaInput');
+
+        // イベントが発火した時にカンマの挙動を制御
+        for(let i = 0; i < inputElem.length; i++){
+            inputElem[i].addEventListener('input', function(e) {
+                // 入力値からカンマを削除し、数値に変換
+                var value = e.target.value.replace(/,/g, '');
+                var numberValue = parseInt(value, 10);
+
+                // isNaN関数で数値かどうかをチェック
+                if (!isNaN(numberValue)) {
+                    // 数値をロケールに応じた文字列に変換（例: "1,234"）
+                    e.target.value = numberValue.toLocaleString();
+                } else {
+                    // 数値でない場合は入力を空にする
+                    e.target.value = '';
+                }
+            })
+        }
+
+        // 読み込み時にカンマの挙動を制御
+        for(let i = 0; i < inputElem.length; i++){
+            var value = inputElem[i].value.replace(/,/g, '');
+            var numberValue = parseInt(value, 10);
+
+            // isNaN関数で数値かどうかをチェック
+            if (!isNaN(numberValue)) {
+                // 数値をロケールに応じた文字列に変換（例: "1,234"）
+                inputElem[i].value = numberValue.toLocaleString();
+            } else {
+                // 数値でない場合は入力を空にする
+                inputElem[i].value = '';
+            }
+        }
+    }
+    commmaActive();
 
     // 会社情報の挙動
     const companyChangeActive = () => {

@@ -147,15 +147,19 @@
                                                         @endif
 
                                                     </div>
+                                                    {{-- 上代 --}}
                                                     <div class="data__row__clm --common-amount --text-right">
-                                                        <input type="text" name="retail_price[{{$data['id']}}]" value="{{ ceil($data['retail_price']) }}" class="input charter-input">
+                                                        <input type="text" name="retail_price[{{$data['id']}}]" value="{{ number_format($data['retail_price']) }}" class="input charter-input commaInput">
                                                     </div>
+                                                    {{-- 高速代 --}}
                                                     <div class="data__row__clm --common-amount --text-right">
-                                                        <input type="text" name="expressway_fee[{{$data['id']}}]" value="{{ ceil($data['expressway_fee']) }}" class="input charter-input">
+                                                        <input type="text" name="expressway_fee[{{$data['id']}}]" value="{{ number_format($data['expressway_fee']) }}" class="input charter-input commaInput">
                                                     </div>
+                                                    {{-- 駐車台 --}}
                                                     <div class="data__row__clm --common-amount --text-right">
-                                                        <input type="text" name="parking_fee[{{$data['id']}}]" value="{{ ceil($data['parking_fee']) }}" class="input charter-input">
+                                                        <input type="text" name="parking_fee[{{$data['id']}}]" value="{{ number_format($data['parking_fee']) }}" class="input charter-input commaInput">
                                                     </div>
+                                                    {{-- 従業員 --}}
                                                     <div class="data__row__clm --common --text-center driverNameBox">
                                                         @if (isset($data['shift']['employee']['name']))
                                                             <input type="text" value="{{$data['shift']['employee']['name']}}" class="input charter-input" readonly>
@@ -179,9 +183,11 @@
                                                         @endif
 
                                                     </div>
+                                                    {{-- ドライバー価格 --}}
                                                     <div class="data__row__clm --common-amount --text-right">
-                                                        <input type="text" name="driver_price[{{$data['id']}}]" value="{{ ceil($data['driver_price']) }}" class="input charter-input">
+                                                        <input type="text" name="driver_price[{{$data['id']}}]" value="{{ number_format($data['driver_price']) }}" class="input charter-input commaInput">
                                                     </div>
+                                                    {{-- クライアント名 --}}
                                                     <div class="data__row__clm --common --text-center">
                                                         <input type="text" value="{{$data['project']['client']['name']}}" class="input charter-input" readonly>
                                                     </div>
@@ -219,15 +225,19 @@
                                                             @endif
 
                                                         </div>
+                                                        {{-- 上代 --}}
                                                         <div class="data__row__clm --common-amount --text-right">
-                                                            <input type="text" name="retail_price[{{$spv->id}}]" value="{{ ceil($spv->retail_price) }}" class="input charter-input">
+                                                            <input type="text" name="retail_price[{{$spv->id}}]" value="{{ number_format($spv->retail_price) }}" class="input charter-input commaInput">
                                                         </div>
+                                                        {{-- 高速代 --}}
                                                         <div class="data__row__clm --common-amount --text-right">
-                                                            <input type="text" name="expressway_fee[{{$spv->id}}]" value="{{ ceil($spv->expressway_fee) }}" class="input charter-input">
+                                                            <input type="text" name="expressway_fee[{{$spv->id}}]" value="{{ number_format($spv->expressway_fee) }}" class="input charter-input commaInput">
                                                         </div>
+                                                        {{-- 駐車台 --}}
                                                         <div class="data__row__clm --common-amount --text-right">
-                                                            <input type="text" name="parking_fee[{{$spv->id}}]" value="{{ ceil($spv->parking_fee) }}" class="input charter-input">
+                                                            <input type="text" name="parking_fee[{{$spv->id}}]" value="{{ number_format($spv->parking_fee) }}" class="input charter-input commaInput">
                                                         </div>
+                                                        {{-- 従業員 --}}
                                                         <div class="data__row__clm --common --text-center driverNameBox">
                                                             @if ($spv->shift->employee)
                                                             <input type="text" value="{{ $spv->shift->employee->name }}" class="input charter-input" readonly>
@@ -251,8 +261,9 @@
                                                             @endif
 
                                                         </div>
+                                                        {{-- ドライバー価格 --}}
                                                         <div class="data__row__clm --common-amount --text-right">
-                                                            <input type="text" name="driver_price[{{$spv->id}}]" value="{{ ceil($spv->driver_price) }}" class="input charter-input">
+                                                            <input type="text" name="driver_price[{{$spv->id}}]" value="{{ number_format($spv->driver_price) }}" class="input charter-input commaInput">
                                                         </div>
                                                         <div class="data__row__clm --common clientElem --text-center">
                                                             <input hidden type="text" value="{{$spv->id}}" class="input charter-input">

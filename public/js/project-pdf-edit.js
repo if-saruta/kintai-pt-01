@@ -10,7 +10,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const amount = document.querySelectorAll('.amountElem');
 
             for(let i = 0; i < cnt.length; i++){
-                amount[i].value = cnt[i].value * until[i].value;
+                amount[i].value = cnt[i].value * removeCommasAndCastToInt(until[i].value);
             }
         }
         // 小計の計算
@@ -19,7 +19,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const amountSubTotal = document.querySelector('.amountSubTotal');
             let total = 0;
             for(let i = 0; i < amount.length; i++){
-                const amountValue = parseInt(amount[i].value, 10);
+                const amountValue = removeCommasAndCastToInt(amount[i].value);
                 if (!isNaN(amountValue)) {
                     total += amountValue;
                 }
@@ -43,7 +43,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
             totalElem.value = subTotal + tax;
             let tmp = subTotal + tax;
-            setAmount.textContent = '¥' + tmp;
+            setAmount.textContent = '¥' + addCommas(tmp);
+            commmaActive();
         }
 
         // 消費税対象の計算
@@ -58,14 +59,19 @@ window.addEventListener('DOMContentLoaded', () => {
                 const totalElem = document.querySelector('.totalElem');
 
                 // 消費税の計算
-                tax.value = targetAmount.value * 0.1;
+                tax.value = removeCommasAndCastToInt(targetAmount.value) * 0.1;
                 // 対象外の計算
-                notTargetAmount.value = amountSubTotal.value - targetAmount.value;
+                notTargetAmount.value = removeCommasAndCastToInt(amountSubTotal.value) - removeCommasAndCastToInt(targetAmount.value);
 
-                const taxValue = targetAmount.value * 0.1;
+                let taxValue = removeCommasAndCastToInt(targetAmount.value) * 0.1;
+                // console.log(taxValue);
+                if(isNaN(taxValue)){
+                    taxValue = 0;
+                }
                 // メインテーブルに反映
                 taxElem.value = taxValue;
-                totalElem.value = parseInt(amountSubTotal.value, 10) + parseInt(taxValue, 10);
+                totalElem.value = removeCommasAndCastToInt(amountSubTotal.value) + taxValue;
+                commmaActive();
             })
         }
         targetAmountTaxCalc();
@@ -79,6 +85,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 const subTotal = amountSubTotal();
                 const tax = taxCalc(subTotal);
                 setTotalValue(subTotal, tax);
+                commmaActive();
             })
         }
         const btns = document.querySelectorAll('.deleteRowBtn');
@@ -88,6 +95,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 const subTotal = amountSubTotal();
                 const tax = taxCalc(subTotal);
                 setTotalValue(subTotal, tax);
+                commmaActive();
             });
         }
     }
@@ -106,6 +114,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 if (tr) {
                     tr.remove();
                 }
+                commmaActive();
             });
         }
     }
@@ -121,9 +130,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
             newRow.innerHTML = `
                 <td class="table-item w-400"><input type="text" name="item[]" value="" class="input project-table-input changeElem project-edit-pdf-text-left"></td>
-                <td class="table-data w-100"><input type="number" name="number[]" value="" class="input project-table-input changeElem cntElem project-edit-pdf-text-right"></td>
-                <td class="table-data w-100"><input type="number" name="until[]" value="" class="input project-table-input changeElem untilElem project-edit-pdf-text-right"></td>
-                <td class="table-data w-110"><input type="number" name="amount[]" value="" class="input project-table-input changeElem amountElem project-edit-pdf-text-right"></td>
+                <td class="table-data w-100"><input type="text" name="number[]" value="" class="input project-table-input changeElem cntElem project-edit-pdf-text-right"></td>
+                <td class="table-data w-100"><input type="text" name="until[]" value="" class="input project-table-input changeElem untilElem project-edit-pdf-text-right commaInput"></td>
+                <td class="table-data w-110"><input type="text" name="amount[]" value="" class="input project-table-input changeElem amountElem project-edit-pdf-text-right commaInput"></td>
                 <div class="salaryRowDelete deleteRowBtn"><span class="deleteRowBtn__line"><span/><span class="deleteRowBtn__line"><span/><div/>
             `;
             //最後の行を取得
@@ -134,7 +143,58 @@ window.addEventListener('DOMContentLoaded', () => {
 
             deleteRow();
             calc();
+            commmaActive();
         })
     }
     addRow();
+
+    function removeCommasAndCastToInt(value) {
+        // Remove both full-width and half-width commas
+        var newValue = value.replace(/,|，/g, '');
+        // Cast to int
+        return parseInt(newValue, 10);
+    }
+
+    function addCommas(number) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    // カンマの制御
+    const commmaActive = () => {
+        const inputElem = document.querySelectorAll('.commaInput');
+
+        // イベントが発火した時にカンマの挙動を制御
+        for(let i = 0; i < inputElem.length; i++){
+            inputElem[i].addEventListener('input', function(e) {
+                // 入力値からカンマを削除し、数値に変換
+                var value = e.target.value.replace(/,/g, '');
+                var numberValue = parseInt(value, 10);
+
+                // isNaN関数で数値かどうかをチェック
+                if (!isNaN(numberValue)) {
+                    // 数値をロケールに応じた文字列に変換（例: "1,234"）
+                    e.target.value = numberValue.toLocaleString();
+                } else {
+                    // 数値でない場合は入力を空にする
+                    e.target.value = '';
+                }
+            })
+        }
+
+        // 読み込み時にカンマの挙動を制御
+        for(let i = 0; i < inputElem.length; i++){
+            var value = inputElem[i].value.replace(/,/g, '');
+            var numberValue = parseInt(value, 10);
+
+            // isNaN関数で数値かどうかをチェック
+            if (!isNaN(numberValue)) {
+                // 数値をロケールに応じた文字列に変換（例: "1,234"）
+                inputElem[i].value = numberValue.toLocaleString();
+            } else {
+                // 数値でない場合は入力を空にする
+                inputElem[i].value = '';
+            }
+        }
+    }
+    commmaActive();
 })

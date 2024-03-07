@@ -81,6 +81,8 @@
                             </button>
                         </div>
                     </form>
+
+                    {{-- カレンダーメインエリア --}}
                     @if ($shifts !== null && !$shifts->isEmpty())
                         <div class="c-middle-head">
                             <div class="c-search-info">
@@ -225,9 +227,9 @@
                                         </div>
                                         <div class="active-box">
                                             {{-- 警告文 --}}
-                                            <p class="warning-txt shiftModalWarningTxt">
+                                            <p class="modal-warning-txt shiftModalWarningTxt">
                                                 <span class="unProjectTxt"></span>は未登録案件です。<br>
-                                                未登録案件を使用する場合は、<a href="{{ route('project.create') }}" class="warning-txt__link">クライアント管理</a> から登録が必要です。
+                                                未登録案件を使用する場合は、<a href="{{ route('project.create') }}" class="modal-warning-txt__link">クライアント管理</a> から登録が必要です。
                                             </p>
                                             {{-- 従業員情報 --}}
                                             <input hidden type="text" name="employeeId" value="{{ $findEmployee->id }}">
@@ -320,9 +322,6 @@
                         {{-- カレンダー --}}
                         <div class="driver-invoice-shift__calendar">
                             <form action="{{route('invoice.driverShiftUpdate')}}" method="POST" class="driver-invoice-shift__calendar__calendar-top-wrap" id="calendarForm">
-                                {{-- <button class="driver-invoice-shift__calendar__calendar-top-wrap__save-btn">
-                                    変更内容を保存
-                                </button> --}}
                                 @csrf
                                 <input hidden type="text" name="employeeId" value="{{$findEmployee->id}}">
                                 <input hidden type="text" name="year" value="{{$getYear}}">
@@ -369,6 +368,7 @@
                                                                         <td rowspan="{{ $needRowCount }}"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @endif
                                                                 @endif
+                                                                {{-- 案件名 --}}
                                                                 <td class="w-project shiftActive editShift">
                                                                     @if ($spv->project)
                                                                         <p class="">{{ $spv->project->name }}</p>
@@ -383,9 +383,11 @@
                                                                          data-vehicle-id="{{ $spv->vehicle_id }}" data-retail-price="{{ $spv->retail_price }}"
                                                                          data-driver-price="{{ $spv->driver_price }}" >
                                                                 </td>
-                                                                <td class="w-amount amountRow"><input type="text" value="{{ $spv->driver_price }}" name="driver_price[{{$spv->id}}]" class=""></td>
+                                                                {{-- ドライバー価格 --}}
+                                                                <td class="w-amount amountRow"><input type="text" value="{{ number_format($spv->driver_price) }}" name="driver_price[{{$spv->id}}]" class="commaInput"></td>
+                                                                {{-- 手当 --}}
                                                                 <td class="w-amount allowance-area allowanceRow">
-                                                                    <input type="text" value="{{ $spv->total_allowance }}" name="allowance[{{$spv->id}}]" class="allowance-input">
+                                                                    <input type="text" value="{{ number_format($spv->total_allowance) }}" name="allowance[{{$spv->id}}]" class="allowance-input commaInput" readonly>
                                                                     @if ($spv->project)
                                                                         @foreach ($allowanceProject as $value)
                                                                             @if ($value->project_id == $spv->project->id)
@@ -395,33 +397,37 @@
                                                                         @endforeach
                                                                     @endif
                                                                 </td>
-                                                                <td class="w-amount expresswayRow"><input type="text" value="{{ $spv->expressway_fee }}" name="expressway_fee[{{$spv->id}}]" class=""></td>
-                                                                <td class="w-amount parkingRow"><input type="text" value="{{ $spv->parking_fee }}" name="parking_fee[{{$spv->id}}]" class=""></td>
+                                                                {{-- 高速代 --}}
+                                                                <td class="w-amount expresswayRow"><input type="text" value="{{ number_format($spv->expressway_fee) }}" name="expressway_fee[{{$spv->id}}]" class="commaInput"></td>
+                                                                {{-- 駐車台 --}}
+                                                                <td class="w-amount parkingRow"><input type="text" value="{{ number_format($spv->parking_fee) }}" name="parking_fee[{{$spv->id}}]" class="commaInput"></td>
+                                                                {{-- 車両 --}}
                                                                 <td class="w-amount vehicleRow">
                                                                     {{-- 自車または月リースか判定 --}}
                                                                     @if ($spv->vehicle_rental_type == 0 || $spv->vehicle_rental_type == 1)
                                                                         @if ($spv->rental_vehicle_id == null) {{-- nullなら自車 --}}
                                                                             @if($spv->vehicle)
                                                                                 @if ($spv->vehicle->number != '自車')
-                                                                                    <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                    <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
                                                                                 @endif
                                                                             @else
                                                                                 @if ($spv->unregistered_vehicle)
-                                                                                    <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                    <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
                                                                                 @endif
                                                                             @endif
                                                                         @elseif($spv->vehicle_id != $spv->rental_vehicle_id) {{-- 契約車両と登録車両を比較 --}}
                                                                             @if($spv->vehicle)
-                                                                                <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
                                                                             @else
                                                                                 @if ($spv->unregistered_vehicle)
-                                                                                    <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                    <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
                                                                                 @endif
                                                                             @endif
                                                                         @endif
                                                                     @endif
                                                                 </td>
-                                                                <td class="w-amount overtimeRow"><input type="text" value="{{ $spv->overtime_fee }}" name="overtime_fee[{{$spv->id}}]" class=""></td>
+                                                                {{-- 残業代 --}}
+                                                                <td class="w-amount overtimeRow"><input type="text" value="{{ number_format($spv->overtime_fee) }}" name="overtime_fee[{{$spv->id}}]" class="commaInput"></td>
                                                                 @php
                                                                     $rowCount++;
                                                                     // 貸出形態と貸出車両を格納
@@ -557,6 +563,7 @@
                                                                         <td rowspan="{{ $needRowCount }}"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @endif
                                                                 @endif
+                                                                {{-- 案件名 --}}
                                                                 <td class="w-project shiftActive editShift">
                                                                     @if ($spv->project)
                                                                         <p class="">{{ $spv->project->name }}</p>
@@ -571,9 +578,11 @@
                                                                          data-vehicle-id="{{ $spv->vehicle_id }}" data-retail-price="{{ $spv->retail_price }}"
                                                                          data-driver-price="{{ $spv->driver_price }}" >
                                                                 </td>
-                                                                <td class="w-amount amountRow"><input type="text" value="{{ $spv->driver_price }}" name="driver_price[{{$spv->id}}]" class=""></td>
+                                                                {{-- ドライバー価格 --}}
+                                                                <td class="w-amount amountRow"><input type="text" value="{{ number_format($spv->driver_price) }}" name="driver_price[{{$spv->id}}]" class="commaInput"></td>
+                                                                {{-- 手当 --}}
                                                                 <td class="w-amount allowance-area allowanceRow">
-                                                                    <input type="text" value="{{ $spv->total_allowance }}" name="allowance[{{$spv->id}}]" class="allowance-input">
+                                                                    <input type="text" value="{{ number_format($spv->total_allowance) }}" name="allowance[{{$spv->id}}]" class="allowance-input commaInput" readonly>
                                                                     @if ($spv->project)
                                                                         @foreach ($allowanceProject as $value)
                                                                             @if ($value->project_id == $spv->project->id)
@@ -585,33 +594,36 @@
                                                                         @endforeach
                                                                     @endif
                                                                 </td>
-                                                                <td class="w-amount expresswayRow"><input type="text" value="{{ $spv->expressway_fee }}" name="expressway_fee[{{$spv->id}}]" class=""></td>
-                                                                <td class="w-amount parkingRow"><input type="text" value="{{ $spv->parking_fee }}" name="parking_fee[{{$spv->id}}]" class=""></td>
+                                                                {{-- 高速代 --}}
+                                                                <td class="w-amount expresswayRow"><input type="text" value="{{ number_format($spv->expressway_fee) }}" name="expressway_fee[{{$spv->id}}]" class="commaInput"></td>
+                                                                {{-- 駐車台 --}}
+                                                                <td class="w-amount parkingRow"><input type="text" value="{{ number_format($spv->parking_fee) }}" name="parking_fee[{{$spv->id}}]" class="commaInput"></td>
+                                                                {{-- 車両 --}}
                                                                 <td class="w-amount vehicleRow">
                                                                     {{-- 自車または月リースか判定 --}}
                                                                     @if ($spv->vehicle_rental_type == 0 || $spv->vehicle_rental_type == 1)
                                                                         @if ($spv->rental_vehicle_id == null) {{-- nullなら自車 --}}
                                                                             @if($spv->vehicle)
                                                                                 @if ($spv->vehicle->number != '自車')
-                                                                                    <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                    <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
                                                                                 @endif
                                                                             @else
                                                                                 @if ($spv->unregistered_vehicle)
-                                                                                    <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                    <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
                                                                                 @endif
                                                                             @endif
                                                                         @elseif($spv->vehicle_id != $spv->rental_vehicle_id) {{-- 契約車両と登録車両を比較 --}}
                                                                             @if($spv->vehicle)
-                                                                                <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
                                                                             @else
                                                                                 @if ($spv->unregistered_vehicle)
-                                                                                    <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle">
+                                                                                    <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
                                                                                 @endif
                                                                             @endif
                                                                         @endif
                                                                     @endif
                                                                 </td>
-                                                                <td class="w-amount overtimeRow"><input type="text" value="{{ $spv->overtime_fee }}" name="overtime_fee[{{$spv->id}}]" class="mainVehicle"></td>
+                                                                <td class="w-amount overtimeRow"><input type="text" value="{{ number_format($spv->overtime_fee) }}" name="overtime_fee[{{$spv->id}}]" class="commaInput"></td>
                                                                 @php
                                                                     $rowCount++;
                                                                     // 貸出形態と貸出車両を格納
@@ -744,27 +756,27 @@
                                                     <tbody id="totalSalaryTableBody">
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="totalSalary[name]" value="合計金額"></th>
-                                                            <td><input type="text" name="totalSalary[amount]" value="{{ $totalSalary }}"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            <td><input type="text" name="totalSalary[amount]" value="{{ number_format($totalSalary) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                         </tr>
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="allowance[name]" value="案件別手当"></th>
-                                                            <td><input type="text" name="allowance[amount]" value="{{ $totalAllowance }}"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            <td><input type="text" name="allowance[amount]" value="{{ number_format($totalAllowance) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                         </tr>
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="tax[name]" value="消費税"></th>
-                                                            <td><input type="text" name="tax[amount]" value="{{ ceil($totalSalary * 0.1) }}"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            <td><input type="text" name="tax[amount]" value="{{ number_format(ceil($totalSalary * 0.1)) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                         </tr>
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="parkingName" value="パーキング代"></th>
-                                                            <td><input type="text" name="parkingAmount" value="{{ $totalParking }}"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            <td><input type="text" name="parkingAmount" value="{{ number_format($totalParking) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                         </tr>
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="expressWayName" value="高速代"></th>
-                                                            <td><input type="text" name="expressWayAmount" value="{{ $totalExpressWay }}"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            <td><input type="text" name="expressWayAmount" value="{{ number_format($totalExpressWay) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                         </tr>
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="overtimeName" value="残業代"></th>
-                                                            <td><input type="text" name="overtimeAmount" value="{{ $totalOverTime }}"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            <td><input type="text" name="overtimeAmount" value="{{ number_format($totalOverTime) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -778,20 +790,20 @@
                                                     <tbody id="totalCostTableBody">
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="administrativeOutsourcing[name]" value="事務委託手数料(15%)"></th>
-                                                            <td><input type="text" name="administrativeOutsourcing[amount]" value="{{ ceil($totalSalary * 0.15) }}"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            <td><input type="text" name="administrativeOutsourcing[amount]" value="{{ number_format(ceil($totalSalary * 0.15)) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                         </tr>
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="administrative[name]" value="事務手数料"></th>
-                                                            <td><input type="text" name="administrative[amount]" value="10000"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            <td><input type="text" name="administrative[amount]" value="{{ number_format(10000) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                         </tr>
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="transfer[name]" value="振込手数料"></th>
-                                                            <td><input type="text" name="transfer[amount]" value="600"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            <td><input type="text" name="transfer[amount]" value="{{ number_format(600) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                         </tr>
                                                         @if ($vehicle_rantal_type == 1 || $vehicle_rantal_type == 2)
                                                             <tr class="info-table-row">
                                                                 <th><input type="text" name="monthLease[name]" value="リース代　月契約No.{{ $vehicle_rantal_number }}"></th>
-                                                                <td><input type="text" name="monthLease[amount]" value="30992"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                                <td><input type="text" name="monthLease[amount]" value="{{ number_format(30992) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                             </tr>
                                                         @endif
                                                         @if ($secondMachineCount != 0)
@@ -803,25 +815,25 @@
                                                             @endphp
                                                             <tr class="info-table-row">
                                                                 <th><input type="text" name="secondLease[name]" value="リース2台目(日割り)"></th>
-                                                                <td><input type="text" name="secondLease[amount]" value="{{ $secondMachineCount * $second_lease }}"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                                <td><input type="text" name="secondLease[amount]" value="{{ number_format($secondMachineCount * $second_lease) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                             </tr>
                                                         @endif
                                                         @if ($thirdMachineCount != 0)
                                                             <tr class="info-table-row">
                                                                 <th><input type="text" name="thirdLease[name]" value="リース3台目(日割り)"></th>
-                                                                <td><input type="text" name="thirdLease[amount]" value="{{ $thirdMachineCount * 1000 }}"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                                <td><input type="text" name="thirdLease[amount]" value="{{ number_format($thirdMachineCount * 1000) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                             </tr>
                                                         @endif
                                                         @if ($vehicle_rantal_type == 1 || $vehicle_rantal_type == 2)
                                                             <tr class="info-table-row">
                                                                 <th><input type="text" name="monthInsurance[name]" value="保険料　月契約No.{{ $vehicle_rantal_number }}"></th>
-                                                                <td><input type="text" name="monthInsurance[amount]" value="9818"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                                <td><input type="text" name="monthInsurance[amount]" value="{{ number_format(9818) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                             </tr>
                                                         @endif
                                                         @if ($secondMachineCount != 0)
                                                             <tr class="info-table-row">
                                                                 <th><input type="text" name="secondInsurance[name]" value="保険料 2台目(日割り)"></th>
-                                                                <td><input type="text" name="secondInsurance[amount]" value="{{ $secondMachineCount * 410 }}"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                                <td><input type="text" name="secondInsurance[amount]" value="{{ number_format($secondMachineCount * 410) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                             </tr>
                                                         @endif
                                                     </tbody>

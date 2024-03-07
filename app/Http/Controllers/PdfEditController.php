@@ -24,16 +24,22 @@ class PdfEditController extends Controller
         $invoiceVehicleCheck = $request->invoiceVehicleCheck;
         $invoiceOvertimeCheck = $request->invoiceOvertimeCheck;
 
+        // 半角および全角カンマを除去し、intにキャストする関数
+        $removeCommasAndCastToInt = function ($value) {
+            $valueWithoutCommas = str_replace([',', '，'], '', $value);
+            return (int)$valueWithoutCommas; // 文字列を整数型にキャスト
+        };
+
         // 合計テーブルのデータを受け取り
         $totalSalaryName = $request->input('totalSalary.name'); //給与合計
-        $totalSalaryAmount = $request->input('totalSalary.amount'); //給与合計
+        $totalSalaryAmount = $removeCommasAndCastToInt($request->input('totalSalary.amount')); //給与合計
         $allowanceName = $request->input('allowance.name'); //手当
-        $allowanceAmount = $request->input('allowance.amount'); //手当
+        $allowanceAmount = $removeCommasAndCastToInt($request->input('allowance.amount')); //手当
         $taxName = $request->input('tax.name'); //消費税
-        $taxAmount = $request->input('tax.amount'); //消費税
-        $expressWayAmount = $request->input('expressWayAmount'); //高速代
-        $parkingAmount = $request->input('parkingAmount'); //パーキング代
-        $overtimeAmount = $request->input('overtimeAmount'); //残業代
+        $taxAmount = $removeCommasAndCastToInt($request->input('tax.amount')); //消費税
+        $expressWayAmount = $removeCommasAndCastToInt($request->input('expressWayAmount')); //高速代
+        $parkingAmount = $removeCommasAndCastToInt($request->input('parkingAmount')); //パーキング代
+        $overtimeAmount = $removeCommasAndCastToInt($request->input('overtimeAmount')); //残業代
         $otherNames = $request->input('otherName', []); //追加項目名
         $otherAmounts = $request->input('otherAmount', []); //追加項目金額
         // 追加項目の空でない名前と金額のペアを新しい配列に追加
@@ -42,29 +48,29 @@ class PdfEditController extends Controller
             if (!empty($name) && !empty($otherAmounts[$index])) {
                 $others[] = [
                     'name' => $name,
-                    'amount' => $otherAmounts[$index]
+                    'amount' => $removeCommasAndCastToInt($otherAmounts[$index])
                 ];
             }
         }
 
         // 費用テーブルのデータを受け取り
         $administrativeOutsourcingName = $request->input('administrativeOutsourcing.name'); //業務委託手数料
-        $administrativeOutsourcingAmount = $request->input('administrativeOutsourcing.amount'); //業務委託手数料
+        $administrativeOutsourcingAmount = $removeCommasAndCastToInt($request->input('administrativeOutsourcing.amount')); //業務委託手数料
         $administrativeName = $request->input('administrative.name'); //事務手数料
-        $administrativeAmount = $request->input('administrative.amount'); //事務手数料
+        $administrativeAmount = $removeCommasAndCastToInt($request->input('administrative.amount')); //事務手数料
         $transferName = $request->input('transfer.name'); //振り込み手数料
-        $transferAmount = $request->input('transfer.amount'); //振り込み手数料
+        $transferAmount = $removeCommasAndCastToInt($request->input('transfer.amount')); //振り込み手数料
         // 条件に応じてリクエストから値を受け取る
         $monthLeaseName = $request->input('monthLease.name'); //月リース
-        $monthLeaseAmount = $request->input('monthLease.amount'); //月リース
+        $monthLeaseAmount = $removeCommasAndCastToInt($request->input('monthLease.amount')); //月リース
         $secondLeaseName = $request->input('secondLease.name'); //二代目りーす
-        $secondLeaseAmount = $request->input('secondLease.amount'); //二代目りーす
+        $secondLeaseAmount = $removeCommasAndCastToInt($request->input('secondLease.amount')); //二代目りーす
         $thirdLeaseName = $request->input('thirdLease.name'); //三台目リース
-        $thirdLeaseAmount = $request->input('thirdLease.amount'); //三台目リース
+        $thirdLeaseAmount = $removeCommasAndCastToInt($request->input('thirdLease.amount')); //三台目リース
         $monthInsuranceName = $request->input('monthInsurance.name'); //月保険料
-        $monthInsuranceAmount = $request->input('monthInsurance.amount'); //月保険料
+        $monthInsuranceAmount = $removeCommasAndCastToInt($request->input('monthInsurance.amount')); //月保険料
         $secondInsuranceName = $request->input('secondInsurance.name'); //二代目以降保険料
-        $secondInsuranceAmount = $request->input('secondInsurance.amount'); //二代目以降保険料
+        $secondInsuranceAmount = $removeCommasAndCastToInt($request->input('secondInsurance.amount')); //二代目以降保険料
         $otherCostNames = $request->input('otherCostName', []); //費用追加項目名
         $otherCostAmonts = $request->input('otherCostAmont', []); //費用追加項目金額
         // 追加項目の空でない名前と金額のペアを新しい配列に追加
@@ -73,7 +79,7 @@ class PdfEditController extends Controller
             if (!empty($name) && !empty($otherCostAmonts[$index])) {
                 $CostOthers[] = [
                     'name' => $name,
-                    'amount' => $otherCostAmonts[$index]
+                    'amount' => $removeCommasAndCastToInt($otherCostAmonts[$index])
                 ];
             }
         }
@@ -93,70 +99,12 @@ class PdfEditController extends Controller
 
         $today = Carbon::now();
 
-        // // シフトを検索・取得
-        // $shifts = Shift::with('employee', 'projectsVehicles.project', 'projectsVehicles.vehicle', 'projectsVehicles.rentalVehicle')
-        // ->where('employee_id', $employeeId)
-        // ->whereYear('date', $getYear)
-        // ->whereMonth('date', $getMonth)
-        // ->get();
-
-        // $rentalType = null;
-        // foreach($shifts as $shift){
-        //     foreach($shift->projectsVehicles as $spv){
-        //         $rentalType = $spv->vehicle_rental_type;
-        //     }
-        // }
-
-        // 絞り込み情報
-        // $clientsId = $request->input('invoiceClientsId', []);
-        // $projectsId = $request->input('invoiceProjectsId', []);
-        // $query = ShiftProjectVehicle::query()
-        // ->with(['shift','shift.employee', 'project', 'vehicle', 'rentalVehicle'])
-        // ->whereHas('shift', function ($query) use ($employeeId, $getYear, $getMonth) {
-        //     // Employee ID、年、月でフィルタリング
-        //     $query->where('employee_id', $employeeId)
-        //             ->whereYear('date', $getYear)
-        //             ->whereMonth('date', $getMonth);
-        // });
-
-
-        // $shiftProjectVehiclesByEmployee = $query->get();
-        // // コレクションのfilterメソッドを使用してフィルタリング
-        // $shiftProjectVehicles = $shiftProjectVehiclesByEmployee->filter(function ($spv) use ($projectsId, $clientsId) {
-        //     if(!empty($clientsId) || !empty($projectsId)){
-        //         if($spv->project){
-        //             return in_array($spv->project->id, $projectsId) || in_array($spv->project->client_id, $clientsId);
-        //         }
-        //     }else{
-        //         return $spv;
-        //     }
-        // });
-
-        // $invoiceController = new InvoiceController();
-        // // 全日にちを取得
-        // $dates = $invoiceController->createDate($getYear, $getMonth);
-        // // 集計表情報を取得
-        // [$totalSalary, $totalAllowance, $totalParking, $totalExpressWay, $totalOverTime] = $invoiceController->totallingInfoExtract($shiftProjectVehicles);
-        // // 二代目以降の情報を取得
-        // [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount] = $invoiceController->machineInfoExtract($shiftProjectVehicles, $dates);
-
-        // チェックボックスの判定の金額の制御
-        // if($invoiceAmountCheck == 1){
-        //     $totalSalary = 0;
-        // }
-        // if($invoiceAllowanceCheck == 1){
-        //     $totalAllowance = 0;
-        // }
         if($invoiceExpresswayCheck == 1){
             $totalExpressWay = 0;
         }
         if($invoiceParkingCheck == 1){
             $parkingAmount = 0;
         }
-        // if($invoiceVehicleCheck == 1){
-        //     $secondMachineCount = 0;
-        //     $thirdMachineCount = 0;
-        // }
         if($invoiceOvertimeCheck == 1){
             $overtimeAmount = 0;
         }

@@ -36,9 +36,9 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         // 開発中は詳細なエラーを表示する
-        // if (app()->environment('local')) {
-        //     return parent::render($request, $exception);
-        // }
+        if (app()->environment('local')) {
+            return parent::render($request, $exception);
+        }
 
         // 認証例外の場合はログイン画面にリダイレクトする
         if ($exception instanceof AuthenticationException) {

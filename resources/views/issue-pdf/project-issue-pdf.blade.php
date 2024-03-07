@@ -213,7 +213,7 @@
             </div>
         </div>
         <div class="amount">
-            <p class="amount-txt"><span class="">ご請求金額</span><span class="amount-fee">¥{{number_format($totalRetail)}}</span></p>
+            <p class="amount-txt"><span class="">ご請求金額</span><span class="amount-fee">¥{{$totalRetail}}</span></p>
         </div>
         <table class="table">
             <tr>
@@ -228,12 +228,12 @@
                     <td class="table-data w-100"><p class="table-data-txt --center">{{$number[$index]}}</p></td>
                     <td class="table-data w-100">
                         @if ($until[$index] != 0)
-                            <p class="table-data-txt --right">{{number_format($until[$index])}}</p>
+                            <p class="table-data-txt --right">{{$until[$index]}}</p>
                         @endif
                     </td>
                     <td class="table-data w-110">
                         @if ($amount[$index] != 0)
-                            <p class="table-data-txt --right">{{number_format($amount[$index])}}</p>
+                            <p class="table-data-txt --right">{{$amount[$index]}}</p>
                         @endif
                     </td>
                 </tr>
@@ -243,26 +243,26 @@
             <tr>
                 <td class="w-401"></td>
                 <td class="mini-table-data w-201"><p class="mini-table-data-txt --left">小計</p></td>
-                <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{number_format($subTotalRetail)}}</p></td>
+                <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{$subTotalRetail}}</p></td>
             </tr>
             <tr>
                 <td class="w-401"></td>
                 <td class="mini-table-data w-201"><p class="mini-table-data-txt --left">消費税(10%)</p></td>
-                <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{number_format($tax)}}</p></td>
+                <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{$tax}}</p></td>
             </tr>
             <tr>
                 <td class="w-401"></td>
                 <td class="mini-table-data w-201"><p class="mini-table-data-txt --left"> 合計金額(内消費税)</p></td>
-                <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{number_format($totalRetail)}}</p></td>
+                <td class="mini-table-data w-110"><p class="mini-table-data-txt --right">{{$totalRetail}}</p></td>
             </tr>
         </table>
         <table class="tax-table">
             @foreach ($taxTable01 as $index => $value)
             <tr class="tax-table__row">
                 <td class="tax-table__row__data"><input type="text" value="{{$taxTable01[$index]}}" class=""></td>
-                <td class="tax-table__row__data"><input type="text" value="{{number_format($taxTable02[$index])}}" class="targetAmount"></td>
+                <td class="tax-table__row__data"><input type="text" value="{{$taxTable02[$index]}}" class="targetAmount"></td>
                 <td class="tax-table__row__data"><input type="text" value="{{$taxTable03[$index]}}" class=""></td>
-                <td class="tax-table__row__data"><input type="text" value="{{number_format($taxTable04[$index])}}" class="targetAmountTax" readonly></td>
+                <td class="tax-table__row__data"><input type="text" value="{{$taxTable04[$index]}}" class="targetAmountTax" readonly></td>
             </tr>
             @endforeach
         </table>

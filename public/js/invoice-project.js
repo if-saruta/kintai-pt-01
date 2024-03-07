@@ -175,4 +175,26 @@ window.addEventListener('load', () => {
         }
     }
     shiftDeleteModal()
+
+    // カンマの制御
+    const commmaActive = () => {
+        const inputElem = document.querySelectorAll('.commaInput');
+        for(let i = 0; i < inputElem.length; i++){
+            inputElem[i].addEventListener('input', function(e) {
+                // 入力値からカンマを削除し、数値に変換
+                var value = e.target.value.replace(/,/g, '');
+                var numberValue = parseInt(value, 10);
+
+                // isNaN関数で数値かどうかをチェック
+                if (!isNaN(numberValue)) {
+                    // 数値をロケールに応じた文字列に変換（例: "1,234"）
+                    e.target.value = numberValue.toLocaleString();
+                } else {
+                    // 数値でない場合は入力を空にする
+                    e.target.value = '';
+                }
+            })
+        }
+    }
+    commmaActive();
 })

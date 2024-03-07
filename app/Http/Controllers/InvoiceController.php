@@ -109,11 +109,12 @@ class InvoiceController extends Controller
         foreach ($expressway as $id => $value) {
 
             $getShift = ShiftProjectVehicle::find($id);
-            $getShift->expressway_fee = $value;
-            $getShift->driver_price = $driverPrice[$id];
-            $getShift->parking_fee = $parking[$id];
-            $getShift->overtime_fee = $overtimeFee[$id];
-            $getShift->total_allowance = $allowance[$id];
+            // 全角・半角のカンマを除去
+            $getShift->expressway_fee = str_replace([',', '，'], '', $value);
+            $getShift->driver_price = str_replace([',', '，'], '', $driverPrice[$id]);
+            $getShift->parking_fee = str_replace([',', '，'], '', $parking[$id]);
+            $getShift->overtime_fee = str_replace([',', '，'], '', $overtimeFee[$id]);
+            $getShift->total_allowance = str_replace([',', '，'], '', $allowance[$id]);
 
             $getShift->save();
         }
@@ -200,15 +201,13 @@ class InvoiceController extends Controller
         // ShiftProjectVehicle モデルを使用して、特定の条件に一致するデータを取得
         $query = ShiftProjectVehicle::query()
         ->with(['shift','shift.employee', 'project', 'vehicle', 'rentalVehicle'])
+        ->whereNotNull('project_id')
         ->whereHas('shift', function ($query) use ($employeeId, $getYear, $getMonth) {
             // Employee ID、年、月でフィルタリング
             $query->where('employee_id', $employeeId)
                   ->whereYear('date', $getYear)
                   ->whereMonth('date', $getMonth);
         });
-        // ->whereHas('project', function ($query) {
-        //     $query->where('client_id', '!=', 1);
-        // });
 
 
         $shiftProjectVehiclesByEmployee = $query->get();
@@ -274,17 +273,17 @@ class InvoiceController extends Controller
 
         // 合計テーブルのデータを受け取り
         $totalSalaryName = $request->input('totalSalary.name'); //給与合計
-        $totalSalaryAmount = $request->input('totalSalary.amount'); //給与合計
+        $totalSalaryAmount = str_replace([',', '，'], '', $request->input('totalSalary.amount')); //給与合計
         $allowanceName = $request->input('allowance.name'); //手当
-        $allowanceAmount = $request->input('allowance.amount'); //手当
+        $allowanceAmount = str_replace([',', '，'], '', $request->input('allowance.amount')); //手当
         $taxName = $request->input('tax.name'); //消費税
-        $taxAmount = $request->input('tax.amount'); //消費税
+        $taxAmount = str_replace([',', '，'], '', $request->input('tax.amount')); //消費税
         $expressWayName = $request->input('expressWayName'); //高速代
-        $expressWayAmount = $request->input('expressWayAmount'); //高速代
+        $expressWayAmount = str_replace([',', '，'], '', $request->input('expressWayAmount')); //高速代
         $parkingName = $request->input('parkingName'); //パーキング代
-        $parkingAmount = $request->input('parkingAmount'); //パーキング代
+        $parkingAmount = str_replace([',', '，'], '', $request->input('parkingAmount')); //パーキング代
         $overtimeName = $request->input('overtimeName'); //残業代
-        $overtimeAmount = $request->input('overtimeAmount'); //残業代
+        $overtimeAmount = str_replace([',', '，'], '', $request->input('overtimeAmount')); //残業代
         $otherNames = $request->input('otherName', []); //追加項目名
         $otherAmounts = $request->input('otherAmount', []); //追加項目金額
         // 追加項目の空でない名前と金額のペアを新しい配列に追加
@@ -293,29 +292,29 @@ class InvoiceController extends Controller
             if (!empty($name) && !empty($otherAmounts[$index])) {
                 $others[] = [
                     'name' => $name,
-                    'amount' => $otherAmounts[$index]
+                    'amount' => str_replace([',', '，'], '', $otherAmounts[$index])
                 ];
             }
         }
 
         // 費用テーブルのデータを受け取り
         $administrativeOutsourcingName = $request->input('administrativeOutsourcing.name'); //業務委託手数料
-        $administrativeOutsourcingAmount = $request->input('administrativeOutsourcing.amount'); //業務委託手数料
+        $administrativeOutsourcingAmount = str_replace([',', '，'], '', $request->input('administrativeOutsourcing.amount')); //業務委託手数料
         $administrativeName = $request->input('administrative.name'); //事務手数料
-        $administrativeAmount = $request->input('administrative.amount'); //事務手数料
+        $administrativeAmount = str_replace([',', '，'], '', $request->input('administrative.amount')); //事務手数料
         $transferName = $request->input('transfer.name'); //振り込み手数料
-        $transferAmount = $request->input('transfer.amount'); //振り込み手数料
+        $transferAmount = str_replace([',', '，'], '', $request->input('transfer.amount')); //振り込み手数料
         // 条件に応じてリクエストから値を受け取る
         $monthLeaseName = $request->input('monthLease.name'); //月リース
-        $monthLeaseAmount = $request->input('monthLease.amount'); //月リース
+        $monthLeaseAmount = str_replace([',', '，'], '', $request->input('monthLease.amount')); //月リース
         $secondLeaseName = $request->input('secondLease.name'); //二代目りーす
-        $secondLeaseAmount = $request->input('secondLease.amount'); //二代目りーす
+        $secondLeaseAmount = str_replace([',', '，'], '', $request->input('secondLease.amount')); //二代目りーす
         $thirdLeaseName = $request->input('thirdLease.name'); //三台目リース
-        $thirdLeaseAmount = $request->input('thirdLease.amount'); //三台目リース
+        $thirdLeaseAmount = str_replace([',', '，'], '', $request->input('thirdLease.amount')); //三台目リース
         $monthInsuranceName = $request->input('monthInsurance.name'); //月保険料
-        $monthInsuranceAmount = $request->input('monthInsurance.amount'); //月保険料
+        $monthInsuranceAmount = str_replace([',', '，'], '', $request->input('monthInsurance.amount')); //月保険料
         $secondInsuranceName = $request->input('secondInsurance.name'); //二代目以降保険料
-        $secondInsuranceAmount = $request->input('secondInsurance.amount'); //二代目以降保険料
+        $secondInsuranceAmount = str_replace([',', '，'], '', $request->input('secondInsurance.amount')); //二代目以降保険料
         $otherCostNames = $request->input('otherCostName', []); //費用追加項目名
         $otherCostAmonts = $request->input('otherCostAmont', []); //費用追加項目金額
         // 追加項目の空でない名前と金額のペアを新しい配列に追加
@@ -324,7 +323,7 @@ class InvoiceController extends Controller
             if (!empty($name) && !empty($otherCostAmonts[$index])) {
                 $CostOthers[] = [
                     'name' => $name,
-                    'amount' => $otherCostAmonts[$index]
+                    'amount' => str_replace([',', '，'], '', $otherCostAmonts[$index])
                 ];
             }
         }
@@ -336,6 +335,7 @@ class InvoiceController extends Controller
         // ShiftProjectVehicle モデルを使用して、特定の条件に一致するデータを取得
         $query = ShiftProjectVehicle::query()
         ->with(['shift','shift.employee', 'project', 'vehicle', 'rentalVehicle'])
+        ->whereNotNull('project_id')
         ->whereHas('shift', function ($query) use ($employeeId, $getYear, $getMonth) {
             // Employee ID、年、月でフィルタリング
             $query->where('employee_id', $employeeId)
@@ -536,10 +536,10 @@ class InvoiceController extends Controller
 
         foreach ($expressway as $id => $value) {
             $getShift = ShiftProjectVehicle::find($id);
-            $getShift->expressway_fee = $value;
-            $getShift->parking_fee = $parking[$id];
-            $getShift->driver_price = $driverPrice[$id];
-            $getShift->retail_price = $retailPrice[$id];
+            $getShift->expressway_fee = str_replace([',', '，'], '', $value);
+            $getShift->parking_fee = str_replace([',', '，'], '', $parking[$id]);
+            $getShift->driver_price = str_replace([',', '，'], '', $driverPrice[$id]);
+            $getShift->retail_price = str_replace([',', '，'], '', $retailPrice[$id]);
             $getShift->save();
         }
 
@@ -784,10 +784,10 @@ class InvoiceController extends Controller
         foreach ($retail_price as $id => $value) {
             $getShift = ShiftProjectVehicle::find($id);
             if ($getShift !== null) { // $getShiftがnullでないことを確認
-                $getShift->retail_price = $retail_price[$id];
-                $getShift->expressway_fee = $expressway_fee[$id];
-                $getShift->parking_fee = $parking_fee[$id];
-                $getShift->driver_price = $driver_price[$id];
+                $getShift->retail_price = str_replace([',', '，'], '', $retail_price[$id]);
+                $getShift->expressway_fee = str_replace([',', '，'], '', $expressway_fee[$id]);
+                $getShift->parking_fee = str_replace([',', '，'], '', $parking_fee[$id]);
+                $getShift->driver_price = str_replace([',', '，'], '', $driver_price[$id]);
                 $getShift->save();
             }
         }

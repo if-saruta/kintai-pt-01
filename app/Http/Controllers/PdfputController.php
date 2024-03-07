@@ -49,6 +49,8 @@ class PdfputController extends Controller
         $salaryCostAmount = $request->input('salaryCostAmount');
         $salaryCostTotal = $request->salaryCostTotal;
 
+        $allTotal = $request->allTotal;
+
         // 共通項目
         $invoiceNumber = $request->driver_invoice_number;
         $employee = Employee::find($employeeId);
@@ -57,7 +59,7 @@ class PdfputController extends Controller
         // ファイル名指定
         $name = $employee->name;
 
-        $pdf = PDF::loadView('issue-pdf.driver-issue-pdf', compact('today', 'employee', 'textWithBreaks', 'invoiceNumber', 'bankName', 'bankAccountHolder', 'salaryNo', 'salaryMonth','salaryProject', 'salaryEtc', 'salaryCount', 'salaryUntil', 'salaryAmount', 'salarySubTotal', 'salaryTax', 'etcTotal', 'salaryTotal', 'getCostNum', 'getCostUntil', 'getCostAmount', 'salaryCostName', 'salaryCostNum', 'salaryCostUntil', 'salaryCostAmount', 'salaryCostTotal', 'color'));
+        $pdf = PDF::loadView('issue-pdf.driver-issue-pdf', compact('today', 'employee', 'textWithBreaks', 'invoiceNumber', 'bankName', 'bankAccountHolder', 'salaryNo', 'salaryMonth','salaryProject', 'salaryEtc', 'salaryCount', 'salaryUntil', 'salaryAmount', 'salarySubTotal', 'salaryTax', 'etcTotal', 'salaryTotal', 'getCostNum', 'getCostUntil', 'getCostAmount', 'salaryCostName', 'salaryCostNum', 'salaryCostUntil', 'salaryCostAmount', 'salaryCostTotal', 'allTotal', 'color'));
 
         $fileName = "{$today->format('Y-m-d')}_{$name}.pdf";
 

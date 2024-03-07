@@ -469,7 +469,7 @@
         </div>
         <div class="amount">
             <p class="amount-txt"><span class="">ご請求金額</span><span
-                    class="amount-fee">¥{{number_format($costTotal)}}</span></p>
+                    class="amount-fee">¥{{$costTotal}}</span></p>
         </div>
         <table class="table">
             <tr>
@@ -488,12 +488,12 @@
                 </td>
                 <td class="table-data w-100">
                     @if ($costUntil[$index] != 0)
-                        <p class="table-data-txt --right">{{number_format($costUntil[$index])}}</p>
+                        <p class="table-data-txt --right">{{$costUntil[$index]}}</p>
                     @endif
                 </td>
                 <td class="table-data w-110">
                     @if ($costAmount[$index] != 0)
-                        <p class="table-data-txt --right">{{number_format($costAmount[$index])}}</p>
+                        <p class="table-data-txt --right">{{$costAmount[$index]}}</p>
                     @endif
                 </td>
             </tr>
@@ -506,7 +506,7 @@
                     <p class="mini-table-data-txt --center">小計</p>
                 </td>
                 <td class="mini-table-data w-110">
-                    <p class="mini-table-data-txt --right">{{number_format($costSubTotal)}}</p>
+                    <p class="mini-table-data-txt --right">{{$costSubTotal}}</p>
                 </td>
             </tr>
             <tr>
@@ -515,7 +515,7 @@
                     <p class="mini-table-data-txt --center">消費税(10%)</p>
                 </td>
                 <td class="mini-table-data w-110">
-                    <p class="mini-table-data-txt --right">{{number_format(ceil($costTax))}}</p>
+                    <p class="mini-table-data-txt --right">{{$costTax}}</p>
                 </td>
             </tr>
             <tr>
@@ -524,7 +524,7 @@
                     <p class="mini-table-data-txt --center"> 合計金額(内消費税)</p>
                 </td>
                 <td class="mini-table-data w-110">
-                    <p class="mini-table-data-txt --right">{{number_format($costTotal)}}</p>
+                    <p class="mini-table-data-txt --right">{{$costTotal}}</p>
                 </td>
             </tr>
         </table>
