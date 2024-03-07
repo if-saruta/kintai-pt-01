@@ -84,15 +84,17 @@
                 left: 50%;
                 transform: translate(-50%,-50%);
                 width: math.div(700,1280) * 100vw;
-                height: math.div(500,800) * 100vh;
+                // height: math.div(500,800) * 100vh;
+                padding: 7rem 0;
                 border-radius: 1.5rem;
                 background-color: white;
                 &__inner{
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%,-50%);
+                    // position: absolute;
+                    // top: 50%;
+                    // left: 50%;
+                    // transform: translate(-50%,-50%);
                     width: math.div(600,1280) * 100vw;
+                    margin: 0 auto;
                     display: flex;
                     flex-direction: column;
                     .head{
