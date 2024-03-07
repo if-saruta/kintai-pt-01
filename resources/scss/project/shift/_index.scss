@@ -306,7 +306,7 @@
                 // z-index: 1000;
                 // top: 0;
                 // left: 0;
-                width: 3rem;
+                width: 2rem;
                 margin-top: 6.05rem;
                 display: flex;
                 flex-direction: column;
@@ -388,7 +388,7 @@
                         .table-employee-name{
                             position: sticky;
                             left: 0;
-                            font-size: 1rem;
+                            font-size: 1.4rem;
                             font-weight: $fw-bold;
                             letter-spacing: 0.1rem;
                             background-color: white;
@@ -396,7 +396,7 @@
                             // border-bottom: 1.5px solid black;
                             &__block{
                                 position: relative;
-                                min-width: 6rem;
+                                min-width: 7rem;
                                 height: 100%;
                                 display: flex;
                                 align-items: center;
