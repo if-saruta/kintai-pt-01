@@ -65,7 +65,6 @@
                             <p class="driver__name"><input type="text" name="name" value="{{$getClient->pdfName}} 様" class="input"></p>
                             <p class="f-s-13 driver__subject">
     <textarea name="subject" id="" cols="30" rows="10">
-    件名：{{ $today->format('n') }}月度の差引金額について
     下記の通りご請求申し上げます。
     </textarea>
                             </p>
@@ -73,11 +72,9 @@
                         <div class="company">
     <textarea name="company_info" id="" cols="30" rows="10">
     株式会社T.N.G
-
     〒124-0011
     東京都葛飾区四つ木2-3-11
     四つ木ハイム
-
     TEL:03-5875-7469
     FAX:03-5875-7469
     登録番号: T6011801035426
