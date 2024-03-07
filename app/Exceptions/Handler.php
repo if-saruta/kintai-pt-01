@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
 
 use Illuminate\Auth\AuthenticationException;
 
@@ -42,6 +43,11 @@ class Handler extends ExceptionHandler
 
         // 認証例外の場合はログイン画面にリダイレクトする
         if ($exception instanceof AuthenticationException) {
+            return redirect()->guest(route('login'));
+        }
+
+        // 419エラーを捕捉してログインページにリダイレクト
+        if ($exception instanceof TokenMismatchException) {
             return redirect()->guest(route('login'));
         }
 
