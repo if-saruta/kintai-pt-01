@@ -187,7 +187,7 @@
                                         <input type="checkbox" name="displayCheck[]" value="retailClm"
                                             class="viewClmCheck hasDisplayValue" data-check="one"
                                             @if(in_array('retailClm', $selectedDisplayCheck)) checked @endif>
-                                        上代
+                                        配送料金
                                     </lable>
                                     <lable class="check-item">
                                         <input type="checkbox" name="displayCheck[]" value="expressClm"
@@ -255,7 +255,7 @@
                                             <th colspan="{{$company_count}}" class="co-head">{{$project->name}}</th>
                                             @endforeach
                                             {{-- 上代合計ヘッド --}}
-                                            <th rowspan="2" class="project-table-w-amount retailClm numberBox">上代</th>
+                                            <th rowspan="2" class="project-table-w-amount retailClm numberBox">配送料金</th>
                                             {{-- 案件・所属先詳細ヘッド --}}
                                             @foreach ($narrowProjects as $project)
                                             <th colspan="{{$company_count * 4 }}" class="rightHead">{{$project->name}}
@@ -277,7 +277,7 @@
                                                 {{ $company->name }}</th>
                                             <th
                                                 class="project-table-w-amount retailClm company{{ $company->id }} clmHead numberBox">
-                                                上代</th>
+                                                配送料金</th>
                                             <th
                                                 class="project-table-w-amount expressClm company{{ $company->id }} clmHead numberBox">
                                                 高速代</th>

@@ -80,7 +80,7 @@
                     @endif
                 @endforeach
                 @if ($retailCheck == 1)
-                    <th rowspan="2">上代</th>
+                    <th rowspan="2">配送料金</th>
                 @endif
                 @foreach ($projects as $project)
                     @if (!$getCompanies->isEmpty())
@@ -100,7 +100,7 @@
                             <th>{{ $company->name }}</th>
                         @endif
                         @if ($retailCheck == 1)
-                            <th>上代</th>
+                            <th>配送料金</th>
                         @endif
                         @if ($expresswayCheck == 1)
                             <th>高速代</th>
