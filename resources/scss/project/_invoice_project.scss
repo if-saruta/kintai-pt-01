@@ -358,7 +358,10 @@
                                 background-color: rgba(0, 217, 255, 0.148);
                             }
                             .employee-name{
-                                margin: 3px 0;
+                                width: fit-content;
+                                margin: 0 auto;
+                                margin-top: 3px;
+                                margin-bottom: 3px;
                                 cursor: pointer;
                                 transition: 0.5s;
                             }
