@@ -113,31 +113,37 @@
                                 </button>
                             </form>
                         </div>
-                        {{-- カレンダーダウンロード --}}
-                        <form action="{{route('invoice.project-calendar-pdf')}}" method="POST" class="project-calendar-pdf-form">
-                            @csrf
-                            {{-- @foreach ($getCompanies as $company)
-                                <input hidden type="text" name="company[{{ $company->id }}]" value="" class="setDisplayCompanyByCalendar" id="" data-check="company">
-                            @endforeach --}}
-                            @foreach ($getCompanies as $company)
-                                <input hidden type="text" name="company[]" class="setArrowCompanyByCalendar">
-                            @endforeach
-                            <input hidden type="text" name="salaryCheck" value="1" class="setDisplayActiveByCalendar">
-                            <input hidden type="text" name="retailCheck" value="1" class="setDisplayActiveByCalendar">
-                            <input hidden type="text" name="expresswayCheck" value="1" class="setDisplayActiveByCalendar">
-                            <input hidden type="text" name="parkingCheck" value="1" class="setDisplayActiveByCalendar">
-                            @foreach ($narrowProjectIds as $narrowProjectId)
-                                <input hidden type="text" name="narrowProjectIds[]" value="{{ $narrowProjectId }}">
-                            @endforeach
-                            <input hidden type="text" name="client" value="{{$getClient->id}}">
-                            <input hidden type="text" name="year" value="{{$getYear}}">
-                            <input hidden type="text" name="month" value="{{$getMonth}}">
-                            <button>
-                                ダウンロード
-                            </button>
-                        </form>
-                        <div class="setting-btn" id="settingOpen">
-                            設定
+                        <div class="project-invoice-top-btn-area">
+                            {{-- カレンダーダウンロード --}}
+                            <form action="{{route('invoice.project-calendar-pdf')}}" method="POST" class="project-calendar-pdf-form">
+                                @csrf
+                                {{-- @foreach ($getCompanies as $company)
+                                    <input hidden type="text" name="company[{{ $company->id }}]" value="" class="setDisplayCompanyByCalendar" id="" data-check="company">
+                                @endforeach --}}
+                                @foreach ($getCompanies as $company)
+                                    <input hidden type="text" name="company[]" class="setArrowCompanyByCalendar">
+                                @endforeach
+                                <input hidden type="text" name="salaryCheck" value="1" class="setDisplayActiveByCalendar">
+                                <input hidden type="text" name="retailCheck" value="1" class="setDisplayActiveByCalendar">
+                                <input hidden type="text" name="expresswayCheck" value="1" class="setDisplayActiveByCalendar">
+                                <input hidden type="text" name="parkingCheck" value="1" class="setDisplayActiveByCalendar">
+                                @foreach ($narrowProjectIds as $narrowProjectId)
+                                    <input hidden type="text" name="narrowProjectIds[]" value="{{ $narrowProjectId }}">
+                                @endforeach
+                                <input hidden type="text" name="client" value="{{$getClient->id}}">
+                                <input hidden type="text" name="year" value="{{$getYear}}">
+                                <input hidden type="text" name="month" value="{{$getMonth}}">
+                                <button name="action" value="beside">
+                                    ダウンロード 横画面
+                                </button>
+                                <button name="action" value="vertical">
+                                    ダウンロード 縦画面
+                                </button>
+                            </form>
+                            {{-- 設定ボタン --}}
+                            <div class="setting-btn" id="settingOpen">
+                                設定
+                            </div>
                         </div>
                         {{-- 設定モーダル --}}
                         <form action="{{ route('invoice.searchProjectShift') }}" method="POST" class="setting-modal-wrap" id="settingModalWrap">
@@ -211,154 +217,156 @@
                         <div class="project-calendar-wrap">
                             <form action="{{route('invoice.projectShiftUpdate')}}" method="POST">
                                 @csrf
-                                <button class="">
+                                <button class="project-calendar-wrap__save-btn">
                                     変更内容を保存
                                 </button>
                                 {{-- リダイレクト先の検索用の情報 --}}
                                 <input hidden type="text" name="client" value="{{$getClient->id}}">
                                 <input hidden type="text" name="year" value="{{$getYear}}">
                                 <input hidden type="text" name="month" value="{{$getMonth}}">
-                                <table class="project-calendar-wrap__table" id="calendarTable">
-                                    {{-- ヘッダー --}}
-                                    <thead>
-                                        @if ($project_count >= 1 || $company_count >= 1) {{-- どちらか複数あれば --}}
-                                            <tr>
-                                                {{-- 日付ヘッド --}}
-                                                <th rowspan="2" class="project-table-date txtBox">----</th>
-                                                {{-- 従業員名ヘッド --}}
-                                                @foreach ($narrowProjects as $project)
-                                                    <th colspan="{{$company_count}}" class="co-head">{{$project->name}}</th>
-                                                @endforeach
-                                                {{-- 上代合計ヘッド --}}
-                                                <th rowspan="2" class="project-table-w-amount retailClm numberBox">上代</th>
-                                                {{-- 案件・所属先詳細ヘッド --}}
-                                                @foreach ($narrowProjects as $project)
-                                                    <th colspan="{{$company_count * 4 }}" class="rightHead">{{$project->name}}</th>
-                                                @endforeach
-                                            </tr>
-                                            <tr>
-                                                {{-- 案件・所属先詳細項目ヘッド --}}
-                                                @foreach ($narrowProjects as $project)
-                                                    @foreach ($getCompanies as $company)
-                                                        <th class="project-table-w-name company{{ $company->id }} coClmHead txtBox">{{ $company->name }}</th>
+                                <div class="project-calendar-wrap__scroll-wrap">
+                                    <table class="project-calendar-wrap__table" id="calendarTable">
+                                        {{-- ヘッダー --}}
+                                        <thead>
+                                            @if ($project_count >= 1 || $company_count >= 1) {{-- どちらか複数あれば --}}
+                                                <tr>
+                                                    {{-- 日付ヘッド --}}
+                                                    <th rowspan="2" class="project-table-date txtBox">----</th>
+                                                    {{-- 従業員名ヘッド --}}
+                                                    @foreach ($narrowProjects as $project)
+                                                        <th colspan="{{$company_count}}" class="co-head">{{$project->name}}</th>
                                                     @endforeach
-                                                @endforeach
-                                                @foreach ($narrowProjects as $project)
-                                                    @foreach ($getCompanies as $company)
-                                                        <th class="project-table-w-amount salaryClm company{{ $company->id }} clmHead numberBox">{{ $company->name }}</th>
-                                                        <th class="project-table-w-amount retailClm company{{ $company->id }} clmHead numberBox">上代</th>
-                                                        <th class="project-table-w-amount expressClm company{{ $company->id }} clmHead numberBox">高速代</th>
-                                                        <th class="project-table-w-amount parkingClm company{{ $company->id }} clmHead numberBox">パーキング代</th>
+                                                    {{-- 上代合計ヘッド --}}
+                                                    <th rowspan="2" class="project-table-w-amount retailClm numberBox">上代</th>
+                                                    {{-- 案件・所属先詳細ヘッド --}}
+                                                    @foreach ($narrowProjects as $project)
+                                                        <th colspan="{{$company_count * 4 }}" class="rightHead">{{$project->name}}</th>
                                                     @endforeach
-                                                @endforeach
-                                            </tr>
-                                        @endif
-                                    </thead>
-                                    <tbody>
-                                        @foreach ( $dates as $date )
-                                            <tr>
-                                                {{-- 日付 --}}
-                                                <td class="project-table-date">{{ $date->format('n') }}月{{ $date->format('j') }}日({{ $date->isoFormat('ddd') }})</td>
-                                                @php //1日ごとの上代の合計額の格納変数
-                                                    $tmp_total_retail_day = null;
-                                                @endphp
-                                                {{-- 従業員表示 --}}
-                                                @foreach ($narrowProjects as $project)
-                                                    @foreach ($getCompanies as $company)
-                                                        <td class="company{{ $company->id }} employee-show">
-                                                            @foreach ( $ShiftProjectVehicles as $spv )
-                                                                @if($spv->shift->date == $date->format('Y-m-d'))
-                                                                    @if ($spv->shift->employee)
-                                                                        @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
-                                                                        <p class="employee-name activeElem">
-                                                                            {{ $spv->shift->employee->name }}
-                                                                            <input hidden type="text" class="hasShiftInfo" data-shiftPv-id="{{ $spv->id }}"
-                                                                                data-shiftPv-year="{{ $date->format('Y') }}" data-shiftPv-month="{{ $date->format('n') }}" data-shiftPv-day="{{ $date->format('j') }}"
-                                                                                data-shiftPv-employee-name="{{ $spv->shift->employee->name }}"
-                                                                                data-shiftPv-project-name="{{ $spv->project->name }}">
-                                                                        </p>
-                                                                            @php
-                                                                                // 上代の計算
-                                                                                $tmp_total_retail_day += $spv->retail_price;
-                                                                            @endphp
-                                                                        @endif
-                                                                    @endif
-                                                                @endif
-                                                            @endforeach
-                                                        </td>
+                                                </tr>
+                                                <tr>
+                                                    {{-- 案件・所属先詳細項目ヘッド --}}
+                                                    @foreach ($narrowProjects as $project)
+                                                        @foreach ($getCompanies as $company)
+                                                            <th class="project-table-w-name company{{ $company->id }} coClmHead txtBox">{{ $company->name }}</th>
+                                                        @endforeach
                                                     @endforeach
-                                                @endforeach
-                                                {{-- 上代 --}}
-                                                <td class="retailClm txt-right">{{$tmp_total_retail_day}}</td>
-                                                {{-- 案件・所属先の詳細表示 --}}
-                                                @foreach ($narrowProjects as $project)
-                                                    @foreach ($getCompanies as $company)
-                                                        {{-- 給与 --}}
-                                                        <td class="salaryClm company{{ $company->id }}">
-                                                            @foreach ( $ShiftProjectVehicles as $spv )
-                                                                @if($spv->shift->date == $date->format('Y-m-d'))
-                                                                    @if ($spv->shift->employee)
-                                                                        @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
-                                                                        <input type="text" name="driver_price[{{$spv->id}}]"value="{{$spv->driver_price}}" class="txt-right-input">
-                                                                        @endif
-                                                                    @endif
-                                                                @endif
-                                                            @endforeach
-                                                        </td>
-                                                        {{-- 上代 --}}
-                                                        <td class="retailClm company{{ $company->id }}">
-                                                            @foreach ( $ShiftProjectVehicles as $spv )
-                                                                @if($spv->shift->date == $date->format('Y-m-d'))
-                                                                    @if ($spv->shift->employee)
-                                                                        @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
-                                                                        <input type="text" name="retail_price[{{$spv->id}}]" value="{{$spv->retail_price}}" class="txt-right-input">
-                                                                        @endif
-                                                                    @endif
-                                                                @endif
-                                                            @endforeach
-                                                        </td>
-                                                        {{-- 高速代 --}}
-                                                        <td class="expressClm company{{ $company->id }}">
-                                                            @foreach ( $ShiftProjectVehicles as $spv )
-                                                                @if($spv->shift->date == $date->format('Y-m-d'))
-                                                                    @if ($spv->shift->employee)
-                                                                        @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
-                                                                        <input type="text" name="expressway_fee[{{$spv->id}}]" value="{{$spv->expressway_fee}}" class="txt-right-input">
-                                                                        @endif
-                                                                    @endif
-                                                                @endif
-                                                            @endforeach
-                                                        </td>
-                                                        {{-- パーキング代 --}}
-                                                        <td class="parkingClm company{{ $company->id }}">
-                                                            @foreach ( $ShiftProjectVehicles as $spv )
-                                                                @if($spv->shift->date == $date->format('Y-m-d'))
-                                                                    @if ($spv->shift->employee)
-                                                                        @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
-                                                                        <input type="text" name="parking_fee[{{$spv->id}}]" value="{{$spv->parking_fee}}" class="txt-right-input">
-                                                                        @endif
-                                                                    @endif
-                                                                @endif
-                                                            @endforeach
-                                                        </td>
+                                                    @foreach ($narrowProjects as $project)
+                                                        @foreach ($getCompanies as $company)
+                                                            <th class="project-table-w-amount salaryClm company{{ $company->id }} clmHead numberBox">{{ $company->name }}</th>
+                                                            <th class="project-table-w-amount retailClm company{{ $company->id }} clmHead numberBox">上代</th>
+                                                            <th class="project-table-w-amount expressClm company{{ $company->id }} clmHead numberBox">高速代</th>
+                                                            <th class="project-table-w-amount parkingClm company{{ $company->id }} clmHead numberBox">パーキング代</th>
+                                                        @endforeach
                                                     @endforeach
-                                                @endforeach
-                                            </tr>
-                                        @endforeach
-                                        {{-- <tr>
-                                            <td></td>
-                                            @foreach ($narrowProjects as $project)
-                                                @php
-                                                    $retailSubTotal = 0;
-                                                @endphp
-                                                @foreach ($getCompanies as $company)
-                                                    <td>{{ number_format($retailSubTotal) }}</td>
-                                                @endforeach
+                                                </tr>
+                                            @endif
+                                        </thead>
+                                        <tbody>
+                                            @foreach ( $dates as $date )
+                                                <tr>
+                                                    {{-- 日付 --}}
+                                                    <td class="project-table-date">{{ $date->format('n') }}月{{ $date->format('j') }}日({{ $date->isoFormat('ddd') }})</td>
+                                                    @php //1日ごとの上代の合計額の格納変数
+                                                        $tmp_total_retail_day = null;
+                                                    @endphp
+                                                    {{-- 従業員表示 --}}
+                                                    @foreach ($narrowProjects as $project)
+                                                        @foreach ($getCompanies as $company)
+                                                            <td class="company{{ $company->id }} employee-show">
+                                                                @foreach ( $ShiftProjectVehicles as $spv )
+                                                                    @if($spv->shift->date == $date->format('Y-m-d'))
+                                                                        @if ($spv->shift->employee)
+                                                                            @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
+                                                                            <p class="employee-name activeElem">
+                                                                                {{ $spv->shift->employee->name }}
+                                                                                <input hidden type="text" class="hasShiftInfo" data-shiftPv-id="{{ $spv->id }}"
+                                                                                    data-shiftPv-year="{{ $date->format('Y') }}" data-shiftPv-month="{{ $date->format('n') }}" data-shiftPv-day="{{ $date->format('j') }}"
+                                                                                    data-shiftPv-employee-name="{{ $spv->shift->employee->name }}"
+                                                                                    data-shiftPv-project-name="{{ $spv->project->name }}">
+                                                                            </p>
+                                                                                @php
+                                                                                    // 上代の計算
+                                                                                    $tmp_total_retail_day += $spv->retail_price;
+                                                                                @endphp
+                                                                            @endif
+                                                                        @endif
+                                                                    @endif
+                                                                @endforeach
+                                                            </td>
+                                                        @endforeach
+                                                    @endforeach
+                                                    {{-- 上代 --}}
+                                                    <td class="retailClm txt-right">{{$tmp_total_retail_day}}</td>
+                                                    {{-- 案件・所属先の詳細表示 --}}
+                                                    @foreach ($narrowProjects as $project)
+                                                        @foreach ($getCompanies as $company)
+                                                            {{-- 給与 --}}
+                                                            <td class="salaryClm company{{ $company->id }}">
+                                                                @foreach ( $ShiftProjectVehicles as $spv )
+                                                                    @if($spv->shift->date == $date->format('Y-m-d'))
+                                                                        @if ($spv->shift->employee)
+                                                                            @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
+                                                                            <input type="text" name="driver_price[{{$spv->id}}]"value="{{$spv->driver_price}}" class="txt-right-input">
+                                                                            @endif
+                                                                        @endif
+                                                                    @endif
+                                                                @endforeach
+                                                            </td>
+                                                            {{-- 上代 --}}
+                                                            <td class="retailClm company{{ $company->id }}">
+                                                                @foreach ( $ShiftProjectVehicles as $spv )
+                                                                    @if($spv->shift->date == $date->format('Y-m-d'))
+                                                                        @if ($spv->shift->employee)
+                                                                            @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
+                                                                            <input type="text" name="retail_price[{{$spv->id}}]" value="{{$spv->retail_price}}" class="txt-right-input">
+                                                                            @endif
+                                                                        @endif
+                                                                    @endif
+                                                                @endforeach
+                                                            </td>
+                                                            {{-- 高速代 --}}
+                                                            <td class="expressClm company{{ $company->id }}">
+                                                                @foreach ( $ShiftProjectVehicles as $spv )
+                                                                    @if($spv->shift->date == $date->format('Y-m-d'))
+                                                                        @if ($spv->shift->employee)
+                                                                            @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
+                                                                            <input type="text" name="expressway_fee[{{$spv->id}}]" value="{{$spv->expressway_fee}}" class="txt-right-input">
+                                                                            @endif
+                                                                        @endif
+                                                                    @endif
+                                                                @endforeach
+                                                            </td>
+                                                            {{-- パーキング代 --}}
+                                                            <td class="parkingClm company{{ $company->id }}">
+                                                                @foreach ( $ShiftProjectVehicles as $spv )
+                                                                    @if($spv->shift->date == $date->format('Y-m-d'))
+                                                                        @if ($spv->shift->employee)
+                                                                            @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
+                                                                            <input type="text" name="parking_fee[{{$spv->id}}]" value="{{$spv->parking_fee}}" class="txt-right-input">
+                                                                            @endif
+                                                                        @endif
+                                                                    @endif
+                                                                @endforeach
+                                                            </td>
+                                                        @endforeach
+                                                    @endforeach
+                                                </tr>
                                             @endforeach
-                                            <td></td>
-                                        </tr> --}}
-                                    </tbody>
-                                </table>
+                                            {{-- <tr>
+                                                <td></td>
+                                                @foreach ($narrowProjects as $project)
+                                                    @php
+                                                        $retailSubTotal = 0;
+                                                    @endphp
+                                                    @foreach ($getCompanies as $company)
+                                                        <td>{{ number_format($retailSubTotal) }}</td>
+                                                    @endforeach
+                                                @endforeach
+                                                <td></td>
+                                            </tr> --}}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </form>
                             {{-- 削除モーダル --}}
                             <div class="shift-delete-modal shiftDeleteModal">

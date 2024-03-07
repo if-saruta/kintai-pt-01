@@ -195,8 +195,12 @@
                 <td class="top-table-data w-260"><p class="top-table-data-txt --center">{{$salaryProject[$index]}}</p></td>
                 <td class="top-table-data w-70"><p class="top-table-data-txt --center">{{$salaryEtc[$index]}}</p></td>
                 <td class="top-table-data w-70"><p class="top-table-data-txt --center">{{$salaryCount[$index]}}</p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --right">{{number_format($salaryUntil[$index])}}</p></td>
-                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{number_format($salaryAmount[$index])}}</p></td>
+                @php
+                    $until = ($salaryUntil[$index] != 0) ? number_format($salaryUntil[$index]) : '';
+                    $salary = ($salaryAmount[$index] != 0) ? number_format($salaryAmount[$index]) : '';
+                @endphp
+                <td class="top-table-data w-70"><p class="top-table-data-txt --right">{{ $until }}</p></td>
+                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{ $salary }}</p></td>
             </tr>
             @endforeach
             <tr>
@@ -263,8 +267,12 @@
                 <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
                 <td class="top-table-data w-330"><p class="top-table-data-txt --center f-s-10">{{$salaryCostName[$index]}}</p></td>
                 <td class="top-table-data w-70"><p class="top-table-data-txt --center">{{$salaryCostNum[$index]}}</p></td>
-                <td class="top-table-data w-70"><p class="top-table-data-txt --right">{{number_format($salaryCostUntil[$index])}}</p></td>
-                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{number_format($salaryCostAmount[$index])}}</p></td>
+                @php
+                    $costUntil = ($salaryCostUntil[$index] != 0) ? number_format($salaryCostUntil[$index]) : '';
+                    $costAmount = ($salaryCostAmount[$index] != 0) ? number_format($salaryCostAmount[$index]) : '';
+                @endphp
+                <td class="top-table-data w-70"><p class="top-table-data-txt --right">{{$costUntil}}</p></td>
+                <td class="top-table-data w-100"><p class="top-table-data-txt --right">{{$costAmount}}</p></td>
             </tr>
             @endforeach
         </table>

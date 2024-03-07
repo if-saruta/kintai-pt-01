@@ -1,5 +1,12 @@
 {
     "ipaexm": {
-        "normal": "ipaexm_normal_7e4fee3b7037002a0b183d9c21c228b1"
+        "normal": "ipaexm_normal_7e4fee3b7037002a0b183d9c21c228b1",
+        "bold": "\/var\/www\/html\/storage\/fonts\/ipaexm_bold_861c286e811b50a61db70864a180f84e"
+    },
+    "ipag": {
+        "normal": "ipag_normal_861c286e811b50a61db70864a180f84e"
+    },
+    "noto sans jp": {
+        "bold": "noto_sans_jp_bold_dd9c6ab769e39dacc1b63d9408b7aa20"
     }
 }

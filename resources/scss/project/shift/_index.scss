@@ -404,7 +404,7 @@
                             &__item{
                                 width: math.div(80,1280) * 100vw;
                                 position: relative;
-                                font-size: 1rem;
+                                font-size: 1.2rem;
                                 font-weight: $fw-bold;
                                 letter-spacing: 0.1rem;
                                 line-height: math.div(19,13);
@@ -524,6 +524,10 @@
                         }
                     }
                 }
+            }
+            .shift-count-table{
+                margin-left: 1rem;
+                border-left: 0.5px solid black;
             }
             .shift-calendar-table th::before{
                 content: '';

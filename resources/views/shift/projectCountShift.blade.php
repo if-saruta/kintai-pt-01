@@ -138,7 +138,7 @@
                 {{-- カレンダー表示 --}}
                 <div class="shift-calendar__main">
                     @if(!$shifts->isEmpty())
-                    <table class="shift-calendar-table">
+                    <table class="shift-calendar-table shift-count-table">
                         <thead class="shift-calendar-table__head">
                             <tr class="shift-calendar-table__head__day">
                                 <th></th>
@@ -200,7 +200,7 @@
                                                 }
                                             }
                                         @endphp
-                                        <td>{{$unProject_count}}</td>
+                                        <td class="--count-f-s">{{$unProject_count}}</td>
                                     @endforeach
                                 </tr>
                             @endforeach

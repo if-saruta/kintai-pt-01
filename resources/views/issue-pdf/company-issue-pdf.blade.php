@@ -303,7 +303,7 @@
             font-size: 13px;
         }
 
-        .company-info{
+        .company-info {
             position: relative;
             z-index: 2;
         }
@@ -314,7 +314,7 @@
             top: -15px;
             right: -30px;
             z-index: 1;
-            width: 150px;
+            width: 110px;
         }
 
         .company-stanp img {
@@ -487,10 +487,14 @@
                     <p class="table-data-txt --center">{{$costNum[$index]}}</p>
                 </td>
                 <td class="table-data w-100">
-                    <p class="table-data-txt --right">{{number_format($costUntil[$index])}}</p>
+                    @if ($costUntil[$index] != 0)
+                        <p class="table-data-txt --right">{{number_format($costUntil[$index])}}</p>
+                    @endif
                 </td>
                 <td class="table-data w-110">
-                    <p class="table-data-txt --right">{{number_format($costAmount[$index])}}</p>
+                    @if ($costAmount[$index] != 0)
+                        <p class="table-data-txt --right">{{number_format($costAmount[$index])}}</p>
+                    @endif
                 </td>
             </tr>
             @endforeach

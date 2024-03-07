@@ -226,8 +226,16 @@
                 <tr>
                     <td class="table-item w-400"><p class="table-item-txt">{{$value}}</p></td>
                     <td class="table-data w-100"><p class="table-data-txt --center">{{$number[$index]}}</p></td>
-                    <td class="table-data w-100"><p class="table-data-txt --right">{{number_format($until[$index])}}</p></td>
-                    <td class="table-data w-110"><p class="table-data-txt --right">{{number_format($amount[$index])}}</p></td>
+                    <td class="table-data w-100">
+                        @if ($until[$index] != 0)
+                            <p class="table-data-txt --right">{{number_format($until[$index])}}</p>
+                        @endif
+                    </td>
+                    <td class="table-data w-110">
+                        @if ($amount[$index] != 0)
+                            <p class="table-data-txt --right">{{number_format($amount[$index])}}</p>
+                        @endif
+                    </td>
                 </tr>
             @endforeach
         </table>

@@ -196,6 +196,7 @@ class InvoiceController extends Controller
         // // 絞り込み情報の取得
         $clientsId = $request->input('clientsId', []);
         $projectsId = $request->input('projectsId', []);
+
         // ShiftProjectVehicle モデルを使用して、特定の条件に一致するデータを取得
         $query = ShiftProjectVehicle::query()
         ->with(['shift','shift.employee', 'project', 'vehicle', 'rentalVehicle'])
@@ -204,10 +205,10 @@ class InvoiceController extends Controller
             $query->where('employee_id', $employeeId)
                   ->whereYear('date', $getYear)
                   ->whereMonth('date', $getMonth);
-        })
-        ->whereHas('project', function ($query) {
-            $query->where('client_id', '!=', 1);
-        });;
+        });
+        // ->whereHas('project', function ($query) {
+        //     $query->where('client_id', '!=', 1);
+        // });
 
 
         $shiftProjectVehiclesByEmployee = $query->get();
@@ -216,10 +217,20 @@ class InvoiceController extends Controller
         $shiftProjectVehicles = $shiftProjectVehiclesByEmployee->filter(function ($spv) use ($projectsId, $clientsId) {
             if(!empty($clientsId) || !empty($projectsId)){
                 if($spv->project){
-                    return in_array($spv->project->id, $projectsId) || in_array($spv->project->client_id, $clientsId);
+                    // client_idは排除
+                    if($spv->project->client_id != 1){
+                        return in_array($spv->project->id, $projectsId) || in_array($spv->project->client_id, $clientsId);
+                    }
                 }
             }else{
-                return $spv;
+                if($spv->project){
+                    // client_idは排除
+                    if($spv->project->client_id != 1){
+                        return $spv;
+                    }
+                }else{
+                    return $spv;
+                }
             }
         });
 
@@ -339,10 +350,20 @@ class InvoiceController extends Controller
         $shiftProjectVehicles = $shiftProjectVehiclesByEmployee->filter(function ($spv) use ($projectsId, $clientsId) {
             if(!empty($clientsId) || !empty($projectsId)){
                 if($spv->project){
-                    return in_array($spv->project->id, $projectsId) || in_array($spv->project->client_id, $clientsId);
+                    // client_idは排除
+                    if($spv->project->client_id != 1){
+                        return in_array($spv->project->id, $projectsId) || in_array($spv->project->client_id, $clientsId);
+                    }
                 }
             }else{
-                return $spv;
+                if($spv->project){
+                    // client_idは排除
+                    if($spv->project->client_id != 1){
+                        return $spv;
+                    }
+                }else{
+                    return $spv;
+                }
             }
         });
 
@@ -390,7 +411,16 @@ class InvoiceController extends Controller
         $pdf->setPaper('A4', 'portrait');
         return $pdf->download($fileName); //生成されるファイル名
 
-        return view('issue-calendar-pdf.driver-calendar', compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays', 'secondMachineArray', 'thirdMachineArray', 'secondMachineCount', 'thirdMachineCount', 'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking', 'totalExpressWay', 'totalOverTime', 'textarea', 'amountCheck', 'allowanceCheck', 'expresswayCheck', 'parkingCheck', 'vehicleCheck', 'overtimeCheck', 'setRowCount', 'shiftProjectVehicles'));
+        return view('issue-calendar-pdf.driver-calendar', compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays', 'secondMachineArray',
+                            'thirdMachineArray', 'secondMachineCount', 'thirdMachineCount', 'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking',
+                            'totalExpressWay', 'totalOverTime', 'textarea', 'amountCheck', 'allowanceCheck', 'expresswayCheck', 'parkingCheck', 'vehicleCheck', 'overtimeCheck',
+                            'setRowCount', 'shiftProjectVehicles',
+                            // ドライバー価格
+                            'totalSalaryName','totalSalaryAmount','allowanceName','allowanceAmount','taxName','taxAmount','expressWayAmount','parkingAmount','overtimeAmount','others',
+                            'parkingName', 'expressWayName', 'overtimeName',
+                            // 費用関連
+                            'administrativeOutsourcingName','administrativeOutsourcingAmount','administrativeName','administrativeAmount','transferName','transferAmount','monthLeaseName',
+                            'monthLeaseAmount','secondLeaseName','secondLeaseAmount','thirdLeaseName','thirdLeaseAmount','monthInsuranceName','monthInsuranceAmount','secondInsuranceName','secondInsuranceAmount','CostOthers'));
     }
 
     function addVehicle($vehicleNumber, &$secondMachineArray, &$thirdMachineArray, &$secondMachineCheck) {
@@ -650,12 +680,16 @@ class InvoiceController extends Controller
         }
         $getCompanies = Company::whereIn('id', $companyIds)->get();
 
-
         // 全日にちを取得
         $dates = $this->createDate($getYear, $getMonth);
 
         $clientName = $client->name;
-        $pdf =  PDF::loadView('issue-calendar-pdf.project-calendar', compact('projects', 'clients', 'client', 'ShiftProjectVehicles', 'getCompanies', 'getYear', 'getMonth', 'dates', 'retailCheck', 'salaryCheck', 'expresswayCheck', 'parkingCheck'))->setPaper('a4', 'landscape');
+        // pdfの向きの設定
+        $direction = '';
+        if($request->action == "beside" ){
+            $direction = 'landscape';
+        }
+        $pdf =  PDF::loadView('issue-calendar-pdf.project-calendar', compact('projects', 'clients', 'client', 'ShiftProjectVehicles', 'getCompanies', 'getYear', 'getMonth', 'dates', 'retailCheck', 'salaryCheck', 'expresswayCheck', 'parkingCheck'))->setPaper('a4', $direction);
         $fileName = "{$getMonth}月_{$clientName}.pdf";
 
         return $pdf->download($fileName); //生成されるファイル名

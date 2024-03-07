@@ -438,6 +438,16 @@ window.addEventListener('load', () => {
     }
     infoTableRowDelete()
 
+    // カレンダーの送信ボタンを連携
+    const calendarFormSubmit = () => {
+        const btn = document.getElementById('calendarSaveBtn');
+        const form = document.getElementById('calendarForm');
+        btn.addEventListener('click', () => {
+            form.submit();
+        })
+    }
+    calendarFormSubmit();
+
     const changeFormSubmit = () => {
         const form = document.getElementById('form');
         const submits = document.querySelectorAll('.formSubmit');

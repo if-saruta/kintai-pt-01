@@ -119,12 +119,18 @@
                             <input hidden type="text" name="month" value="{{$getMonth}}">
                             {{-- <textarea hidden name="textarea" id="setTextArea" cols="30" rows="10"></textarea> --}}
                         </div>
-                        <button class="c-middle-head__button pdf-form formSubmit">
-                            ダウンロード
-                        </button>
-                        {{-- 設定ボタン --}}
-                        <div class="setting-btn" id="settingBtn">
-                            設定
+                        <div class="driver-invoice-shift__top-btn-wrap">
+                            <button class="c-middle-head__button pdf-form formSubmit">
+                                ダウンロード
+                            </button>
+                            {{-- 設定ボタン --}}
+                            <div class="setting-btn" id="settingBtn">
+                                設定
+                            </div>
+                            {{-- カレンダー変更ボタン --}}
+                            <button class="driver-invoice-shift__calendar__calendar-top-wrap__save-btn" id="calendarSaveBtn">
+                                変更内容を保存
+                            </button>
                         </div>
                         {{-- 設定モーダル --}}
                         <form action="{{ route('invoice.searchShift') }}" method="POST" class="setting-modal-wrap" id="settingModalWrap">
@@ -313,10 +319,10 @@
                         <p class="">{{ $needRowCountWarning }}</p>
                         {{-- カレンダー --}}
                         <div class="driver-invoice-shift__calendar">
-                            <form action="{{route('invoice.driverShiftUpdate')}}" method="POST" class="driver-invoice-shift__calendar__calendar-top-wrap">
-                                <button class="driver-invoice-shift__calendar__calendar-top-wrap__save-btn">
+                            <form action="{{route('invoice.driverShiftUpdate')}}" method="POST" class="driver-invoice-shift__calendar__calendar-top-wrap" id="calendarForm">
+                                {{-- <button class="driver-invoice-shift__calendar__calendar-top-wrap__save-btn">
                                     変更内容を保存
-                                </button>
+                                </button> --}}
                                 @csrf
                                 <input hidden type="text" name="employeeId" value="{{$findEmployee->id}}">
                                 <input hidden type="text" name="year" value="{{$getYear}}">
@@ -333,9 +339,9 @@
                                             <th>案件名</th>
                                             <th class="amountRow">金額</th>
                                             <th class="allowanceRow">手当</th>
-                                            <th class="expresswayRow">高速代</th>
-                                            <th class="parkingRow">パーキング代</th>
-                                            <th class="vehicleRow">2台目以降</th>
+                                            <th class="expresswayRow">高速<br>料金</th>
+                                            <th class="parkingRow">駐車<br>料金</th>
+                                            <th class="vehicleRow">車両</th>
                                             <th class="overtimeRow">残業代</th>
                                         </tr>
                                     </thead>
@@ -521,9 +527,9 @@
                                             <th>案件名</th>
                                             <th class="amountRow">金額</th>
                                             <th class="allowanceRow">手当</th>
-                                            <th class="expresswayRow">高速代</th>
-                                            <th class="parkingRow">パーキング代</th>
-                                            <th class="vehicleRow">2台目以降</th>
+                                            <th class="expresswayRow">高速<br>料金</th>
+                                            <th class="parkingRow">駐車<br>料金</th>
+                                            <th class="vehicleRow">車両</th>
                                             <th class="overtimeRow">残業代</th>
                                         </tr>
                                     </thead>

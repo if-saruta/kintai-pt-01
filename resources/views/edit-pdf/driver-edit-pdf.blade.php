@@ -391,18 +391,18 @@
                                             <th class="top-table-head w-330 --bg-green colorChangeElem"><p class="top-table-data-txt --right">小計</p></th>
                                             <th class="top-table-head w-70"><p class="top-table-head-txt"></p></th>
                                             <th class="top-table-head w-70"><p class="top-table-head-txt"></p></th>
-                                            <th class="top-table-head w-70"><input type="text" name="salaryCostTotal" value="{{ceil($subTotalCost * 1.1)}}" class="input table-input changeElement costAllTotal" readonly></th>
+                                            <th class="top-table-head w-100"><input type="text" name="salaryCostTotal" value="{{ceil($subTotalCost * 1.1)}}" class="input table-input changeElement costAllTotal" readonly></th>
                                         </tr>
                                         <tr>
                                             <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
-                                            <td class="top-table-data w-330 --bg-green colorChangeElem"><p class="top-table-data-txt --center f-s-10">差引合計金額</p></td>
+                                            <td class="top-table-data w-330 --bg-green colorChangeElem"><p class="top-table-data-txt --center">差引合計金額</p></td>
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
                                             @if ($employeeInfo->is_invoice == 0)
-                                                <td class="top-table-data w-70"><input type="text" value="{{ ceil(((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) - ceil($subTotalCost * 1.1)) }}" class="inputn table-input allCalcTotal" readonly></td>
+                                                <td class="top-table-data w-100"><input type="text" value="{{ ceil(((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) - ceil($subTotalCost * 1.1)) }}" class="inputn table-input allCalcTotal" readonly></td>
                                             @else
-                                            <td class="top-table-data w-70"><input type="text" value="{{ ceil($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - ceil($totalSalaryAmount * 0.2) + $etc - ceil($subTotalCost * 1.1) }}" class="inputn table-input allCalcTotal" readonly></td>
+                                                <td class="top-table-data w-100"><input type="text" value="{{ ceil($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - ceil($totalSalaryAmount * 0.2) + $etc - ceil($subTotalCost * 1.1) }}" class="inputn table-input allCalcTotal" readonly></td>
                                             @endif
                                         </tr>
                                     </table>
@@ -530,17 +530,17 @@ FAX:03-5875-7469
                                 </div>
                                 <table class="mini-table">
                                     <tr>
-                                        <td class="w-401"></td>
+                                        <td class="w-401 border-none"></td>
                                         <td class="mini-table-data w-201"><p class="mini-table-data-txt --center">小計</p></td>
                                         <td class="table-data w-110"><input type="text" name="costSubTotal" value="{{$subTotalCost}}" class="input table-input costSubTotal" readonly></td>
                                     </tr>
                                     <tr>
-                                        <td class="w-401"></td>
+                                        <td class="w-401 border-none"></td>
                                         <td class="mini-table-data w-201"><p class="mini-table-data-txt --center">消費税(10%)</p></td>
                                         <td class="table-data w-110"><input type="text" name="costTax" value="{{ceil($subTotalCost * 0.1)}}" class="input table-input costTaxElem" readonly></td>
                                     </tr>
                                     <tr>
-                                        <td class="w-401"></td>
+                                        <td class="w-401 border-none"></td>
                                         <td class="mini-table-data w-201"><p class="mini-table-data-txt --center"> 合計金額(内消費税)</p></td>
                                         <td class="table-data w-110"><input type="text" name="costTotal" value="{{ceil($subTotalCost * 1.1)}}" class="input table-input costTotalElem" readonly></td>
                                     </tr>

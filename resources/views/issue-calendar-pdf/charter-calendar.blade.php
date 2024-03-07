@@ -29,7 +29,7 @@
         table td{
           border: 0.5px solid black;
           text-align: center;
-          padding: 1.5px 5px;
+          padding: 1px 5px;
         }
         .project{
             text-align: left;

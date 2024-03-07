@@ -4,8 +4,14 @@
 
 .--invoice-white-board{
     .project-invoice-shift{
+        .project-invoice-top-btn-area{
+            display: flex;
+            gap: 3rem;
+        }
         .project-calendar-pdf-form{
-            margin-top: 3rem;
+            margin-top: 0rem;
+            display: flex;
+            gap: 3rem;
             .check-area{
                 display: flex;
                 gap: 2rem;
@@ -245,10 +251,14 @@
         }
         .project-calendar-wrap{
             position: relative;
-            overflow: scroll;
-            // width: math.div(980,1280) * 100vw;
+            // overflow: scroll;
+            width: math.div(980,1280) * 100vw;
             width: 100%;
-            height: math.div(390,800) * 100vh;
+            &__save-btn{
+                position: absolute;
+                top: -6.6rem;
+                left: 45rem;
+            }
             button{
                 width: 15rem;
                 height: 3rem;
@@ -263,6 +273,11 @@
                 letter-spacing: 0.1rem;
                 color: #4F9FD1;
                 transition: 0.5s;
+            }
+            &__scroll-wrap{
+                position: relative;
+                overflow: scroll;
+                height: math.div(460,800) * 100vh;
             }
             &__table{
                 width: 200%;

@@ -14,13 +14,22 @@
             font-family: ipaexm;
             font-style: normal;
             font-weight: normal;
-            src: url('{{ storage_path('fonts/ipaexm.ttf') }}');
+            src: url('{{ storage_path('fonts/ipag.ttf') }}');
+        }
+        @font-face{
+            font-family: Noto Sans JP;
+            font-style: normal;
+            font-weight: bold;
+            src:url('{{ storage_path('fonts/NotoSansJP-Bold.ttf')}}');
         }
         /* 全てのHTML要素に適用 */
-        html, body, textarea {font-family: ipaexm, sans-serif;}html {line-height: 1.15;-webkit-text-size-adjust: 100%;-webkit-tap-highlight-color: transparent;}body {margin: 0;}main {display: block;}p,table,blockquote,address,pre,iframe,form,figure,dl {margin: 0;}h1,h2,h3,h4,h5,h6 {font-size: inherit; font-weight: inherit; margin: 0; } ul, ol { margin: 0; padding: 0; list-style: none; } dt { font-weight: 700; } dd { margin-left: 0; } hr { box-sizing: content-box; height: 0; overflow: visible; border-top-width: 1px; margin: 0; clear: both; color: inherit; } pre { font-family: monospace, monospace; font-size: inherit; } address { font-style: inherit; } a { background-color: transparent; text-decoration: none; color: inherit; } abbr[title] { text-decoration: underline dotted; } b, strong { font-weight: bolder; } code, kbd, samp { font-family: monospace, monospace; font-size: inherit; } small { font-size: 80%; } sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; } sub { bottom: -0.25em; } sup { top: -0.5em; } svg, img, embed, object, iframe { vertical-align: center; } button, input, optgroup, select, textarea { -webkit-appearance: none; appearance: none; vertical-align: middle; color: inherit; font: inherit; background: transparent; padding: 0; margin: 0; border-radius: 0; text-align: inherit; text-transform: inherit; } [type="checkbox"] { -webkit-appearance: checkbox; appearance: checkbox; } [type="radio"] { -webkit-appearance: radio; appearance: radio; } button, [type="button"], [type="reset"], [type="submit"] { cursor: pointer; } button:disabled, [type="button"]:disabled, [type="reset"]:disabled, [type="submit"]:disabled { cursor: default; } :-moz-focusring { outline: auto; } select:disabled { opacity: inherit; } option { padding: 0; } fieldset { margin: 0; padding: 0; min-width: 0; } legend { padding: 0; } progress { vertical-align: baseline; } textarea { overflow: auto; } [type="number"]::-webkit-inner-spin-button, [type="number"]::-webkit-outer-spin-button { height: auto; } [type="search"] { outline-offset: -2px; } [type="search"]::-webkit-search-decoration { -webkit-appearance: none; } ::-webkit-file-upload-button { -webkit-appearance: button; font: inherit; } label[for] { cursor: pointer; } details { display: block; } summary { display: list-item; } [contenteditable]:focus { outline: auto; } table { border-color: inherit; } caption { text-align: left; } td, th { vertical-align: top; padding: 0; } th { text-align: left; font-weight: 700; } th{ font-weight: normal; }
+        html, body, textarea {font-family: ipaexm;}html {line-height: 1.15;-webkit-text-size-adjust: 100%;-webkit-tap-highlight-color: transparent;}body {margin: 0;}main {display: block;}p,table,blockquote,address,pre,iframe,form,figure,dl {margin: 0;}h1,h2,h3,h4,h5,h6 {font-size: inherit; font-weight: inherit; margin: 0; } ul, ol { margin: 0; padding: 0; list-style: none; } dt { font-weight: 700; } dd { margin-left: 0; } hr { box-sizing: content-box; height: 0; overflow: visible; border-top-width: 1px; margin: 0; clear: both; color: inherit; } pre { font-family: monospace, monospace; font-size: inherit; } address { font-style: inherit; } a { background-color: transparent; text-decoration: none; color: inherit; } abbr[title] { text-decoration: underline dotted; } b, strong { font-weight: bolder; } code, kbd, samp { font-family: monospace, monospace; font-size: inherit; } small { font-size: 80%; } sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; } sub { bottom: -0.25em; } sup { top: -0.5em; } svg, img, embed, object, iframe { vertical-align: center; } button, input, optgroup, select, textarea { -webkit-appearance: none; appearance: none; vertical-align: middle; color: inherit; font: inherit; background: transparent; padding: 0; margin: 0; border-radius: 0; text-align: inherit; text-transform: inherit; } [type="checkbox"] { -webkit-appearance: checkbox; appearance: checkbox; } [type="radio"] { -webkit-appearance: radio; appearance: radio; } button, [type="button"], [type="reset"], [type="submit"] { cursor: pointer; } button:disabled, [type="button"]:disabled, [type="reset"]:disabled, [type="submit"]:disabled { cursor: default; } :-moz-focusring { outline: auto; } select:disabled { opacity: inherit; } option { padding: 0; } fieldset { margin: 0; padding: 0; min-width: 0; } legend { padding: 0; } progress { vertical-align: baseline; } textarea { overflow: auto; } [type="number"]::-webkit-inner-spin-button, [type="number"]::-webkit-outer-spin-button { height: auto; } [type="search"] { outline-offset: -2px; } [type="search"]::-webkit-search-decoration { -webkit-appearance: none; } ::-webkit-file-upload-button { -webkit-appearance: button; font: inherit; } label[for] { cursor: pointer; } details { display: block; } summary { display: list-item; } [contenteditable]:focus { outline: auto; } table { border-color: inherit; } caption { text-align: left; } td, th { vertical-align: top; padding: 0; } th { text-align: left; font-weight: 700; } th{ font-weight: normal; }
 
         @page {
             margin: 20px; /* 余白の制御はbodyタグ側で行いたいのでページ単位のマージンをキャンセルする */
+            margin-left: 40px;
+            margin-top: 5px;
+            margin-bottom: 5px;
         }
         .top-table{
           /* width: 500px; */
@@ -28,40 +37,44 @@
         table{
           font-size: 7px;
           border-collapse: collapse;
+          table-layout: fixed;
         }
         table th,
         table td{
           border: 0.5px solid black;
           /* text-align: center; */
-          padding: 1.5px 0px;
+          /* padding: 1.5px 0px; */
+          word-break: break-word;
         }
         .main-table{
           width: 50%;
           float: left;
-          margin-top: 10px;
+          margin-top: 5px;
         }
         .other-table th{
-          padding: 1.5px 5px;
+            font-size: 10px;
+          padding: 0.5px 5px;
         }
         .other-table td{
-          padding: 1.5px 5px;
+            font-size: 10px;
+          padding: 0.5px 5px;
         }
         .date{
-          width: 5.5%;
+          width: 6.5%;
           vertical-align: middle;
           text-align: center;
         }
         .center-txt{
-            padding: 2px 0px;
+            /* padding: 2px 0px; */
+            font-size: 9px;
             text-align: center;
             vertical-align: middle;
         }
         .project-head-txt{
-            font-size: 8px
+            /* font-size: 8px */
         }
         .project{
           width: 39.6%;
-          padding: 4px 0px;
           padding-left: 5px;
           box-sizing: border-box;
           text-align: start;
@@ -69,61 +82,84 @@
         .driver-price{
           width: 7.7%;
           text-align: right;
-          padding: 4px 0px;
+            height: 15.5px;
+            vertical-align: middle;
           padding-right: 1px;
           box-sizing: border-box;
         }
         .allowance-fee{
           width: 7.7%;
           text-align: right;
-          padding: 4px 0px;
+            height: 15.5px;
+            vertical-align: middle;
           padding-right: 1px;
           box-sizing: border-box;
         }
         .expressway-fee{
           width: 8.1%;
           text-align: right;
-          padding: 4px 0px;
+            height: 15.5px;
+            vertical-align: middle;
           padding-right: 1px;
           box-sizing: border-box;
         }
         .parking-fee{
           width: 7.7%;
           text-align: right;
-          padding: 4px 0px;
+            height: 15.5px;
+            vertical-align: middle;
           padding-right: 1px;
           box-sizing: border-box;
         }
         .vehicle{
-          width: 11%;
+          width: 10%;
           text-align: right;
-          padding: 4px 0px;
+            height: 15.5px;
+            vertical-align: middle;
           padding-right: 1px;
           box-sizing: border-box;
         }
         .overtime{
             width: 7.7%;
           text-align: right;
-          padding: 4px 0px;
+             height: 15.5px;
+            vertical-align: middle;
           padding-right: 1px;
           box-sizing: border-box;
         }
-        p{
-          font-size: 7px;
+        .project{
+            height: 15.5px;
+            vertical-align: middle;
+        }
+        .project p{
+            /* font-size: 10px;
+          line-height: 1; */
+        }
+        /* p{
+          font-size: 10px;
+          line-height: 1;
+        } */
+        .date p{
+            font-size: 8px;
+            font-family: Noto Sans JP;
+            font-weight: bold;
         }
         .memo-box{
-            width: 45%;
-            height: 100px;
-            /* padding: 10px; */
+            width: 50%;
+            height: 200px;
+            font-size: 10px;
             box-sizing: border-box;
             border: 1px solid black;
             clear: left;
-            margin-top: -40px;
+            margin-top: -98px;
+        }
+        .memo-box p{
+            padding: 5px;
         }
         .amount-total{
-          width: 45%;
+          width: 48%;
           float: right;
-          margin-top: -110px;
+          margin-top: -204px;
           /* clear: left; */
           /* margin-top: 10px; */
           /* margin-left: 10px; */
@@ -141,10 +177,26 @@
             box-sizing: border-box;
         }
         .name{
-            font-size: 10px;
+            font-size: 12px;
         }
         .date-info{
             margin-top: 3px;
+            font-size: 12px
+        }
+        .basic-legth{
+            display: block;
+            font-size: 10px;
+            line-height: 1;
+            /* padding: 3px 0px; */
+        }
+        .over-legth{
+            display: block;
+            font-size: 7px;
+            line-height: 1;
+            padding: 0px 0px;
+        }
+        .f-s-9{
+            font-size: 9px;
         }
         /* .project-count-table{
           margin-top: 20px;
@@ -220,13 +272,13 @@
                 <th class="center-txt">手当</th>
             @endif
             @if ($expresswayCheck != 1)
-                <th class="center-txt">高速代</th>
+                <th class="center-txt">高速<br>料金</th>
             @endif
             @if ($parkingCheck != 1)
-                <th class="center-txt">パーキン<br>グ代</th>
+                <th class="center-txt">駐車<br>料金</th>
             @endif
             @if ($vehicleCheck != 1)
-                <th class="center-txt">2台目</th>
+                <th class="center-txt">車両</th>
             @endif
             @if ($overtimeCheck != 1)
                 <th class="center-txt">残業代</th>
@@ -263,41 +315,56 @@
                   @endphp
                     <td class="project">
                         <p class="">
-                        @if ($spv->project)
+                            @if ($spv->project)
                             @if($spv->project->name != '休み')
-                                {{$spv->project->name}}
+                                @php
+                                    $str_length = mb_strlen($spv->project->name);
+                                @endphp
+                                @if ($str_length >= 14)
+                                    <span class="over-legth">{{$spv->project->name}}</span>
+                                @else
+                                    <span class="basic-legth">{{$spv->project->name}}</span>
+                                @endif
+                            @endif
+                        @elseif($spv->unregistered_project)
+                            @if ($spv->unregistered_project != '休み')
+                                @php
+                                    $str_length = mb_strlen($spv->unregistered_project);
+                                @endphp
+                                @if ($str_length >= 14)
+                                    <span class="over-legth">{{$spv->unregistered_project}}</span>
+                                @else
+                                    <span class="basic-legth">{{$spv->unregistered_project}}</span>
+                                @endif
                             @endif
                         @else
-                            @if ($spv->unregistered_project != '休み')
-                                {{$spv->unregistered_project}}
-                            @endif
+                            <span class="basic-legth">&nbsp;</span>
                         @endif
-                        &nbsp;
                         </p>
-                    </td>
+                     </td>
                   @if ($amountCheck != 1)
                     @php
                         $amount = $spv->driver_price ? number_format($spv->driver_price) : '';
                     @endphp
-                     <td class="driver-price"><p class="">{{ $amount }}</p></td>
+                     <td class="driver-price"><p class="f-s-9">{{ $amount }}</p></td>
                   @endif
                   @if ($allowanceCheck != 1)
                      @php
                         $amount = $spv->total_allowance ? number_format($spv->total_allowance) : '';
                     @endphp
-                     <td class="allowance-fee"><p class="">{{ $amount }}</p></td>
+                     <td class="allowance-fee"><p class="f-s-9">{{ $amount }}</p></td>
                   @endif
                   @if ($expresswayCheck != 1)
                     @php
                         $amount = $spv->expressway_fee ? number_format($spv->expressway_fee) : '';
                     @endphp
-                      <td class="expressway-fee"><p class="">{{ $amount }}</p></td>
+                      <td class="expressway-fee"><p class="f-s-9">{{ $amount }}</p></td>
                   @endif
                   @if ($parkingCheck != 1)
                     @php
                         $amount = $spv->parking_fee ? number_format($spv->parking_fee) : '';
                     @endphp
-                     <td class="parking-fee"><p class="">{{ $amount }}</p></td>
+                     <td class="parking-fee"><p class="f-s-9">{{ $amount }}</p></td>
                   @endif
                   @if ($vehicleCheck != 1)
                     <td class="vehicle">
@@ -308,12 +375,12 @@
                             @if ($spv->vehicle)
                                 @if($spv->vehicle->number != '自車')
                                     @if ($spv->vehicle->id != $spv->rental_vehicle_id)
-                                        <p>No.{{ $spv->vehicle->number }}</p>
+                                        <p class="f-s-9">No.{{ $spv->vehicle->number }}</p>
                                     @endif
                                 @endif
                             @else
                                 @if ($spv->unregistered_vehicle)
-                                    <p>No.{{ $spv->unregistered_vehicle }}</p>
+                                    <p class="f-s-9">No.{{ $spv->unregistered_vehicle }}</p>
                                 @endif
                             @endif
                         @endif
@@ -324,7 +391,7 @@
                     @php
                         $amount = $spv->overtime_fee ? number_format($spv->overtime_fee) : '';
                     @endphp
-                    <td class="overtime"><p class="">{{ $amount }}</p></td>
+                    <td class="overtime"><p class="f-s-9">{{ $amount }}</p></td>
                   @endif
                 </tr>
             @endif
@@ -336,24 +403,24 @@
                 @if ($count == 0)
                   <td rowspan="{{ $setRowCount }}" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                 @endif
-                <td class="project">&nbsp;</td>
+                <td class="project"><p><span class="basic-legth">&nbsp;</span></p></td>
                 @if ($amountCheck != 1)
-                    <td class="driver-price">&nbsp;</td>
+                    <td class="driver-price"><p>&nbsp;</p></td>
                 @endif
                 @if ($allowanceCheck != 1)
-                    <td class="allowance-fee">&nbsp;</td>
+                    <td class="allowance-fee"><p>&nbsp;</p></td>
                 @endif
                 @if ($expresswayCheck != 1)
-                    <td class="expressway-fee">&nbsp;</td>
+                    <td class="expressway-fee"><p>&nbsp;</p></td>
                 @endif
                 @if ($parkingCheck != 1)
-                    <td class="parking-fee">&nbsp;</td>
+                    <td class="parking-fee"><p>&nbsp;</p></td>
                 @endif
                 @if ($vehicleCheck != 1)
-                    <td class="vehicle">&nbsp;</td>
+                    <td class="vehicle"><p>&nbsp;</p></td>
                 @endif
                 @if ($overtimeCheck != 1)
-                    <td class="overtime">&nbsp;</td>
+                    <td class="overtime"><p>&nbsp;</p></td>
                 @endif
               </tr>
           @endfor
@@ -364,24 +431,24 @@
             @if ($count == 0)
                 <td rowspan="{{ $setRowCount }}" class="date"><p class=""></p></td>
             @endif
-            <td class="project">&nbsp;</td>
+            <td class="project"><p><span class="basic-legth">&nbsp;</span></p></td>
             @if ($amountCheck != 1)
-                <td class="driver-price">&nbsp;</td>
+                <td class="driver-price"><p>&nbsp;</p></td>
             @endif
             @if ($allowanceCheck != 1)
-                <td class="allowance-fee">&nbsp;</td>
+                <td class="allowance-fee"><p>&nbsp;</p></td>
             @endif
             @if ($expresswayCheck != 1)
-                <td class="expressway-fee">&nbsp;</td>
+                <td class="expressway-fee"><p>&nbsp;</p></td>
             @endif
             @if ($parkingCheck != 1)
-                <td class="parking-fee">&nbsp;</td>
+                <td class="parking-fee"><p>&nbsp;</p></td>
             @endif
             @if ($vehicleCheck != 1)
-                <td class="vehicle">&nbsp;</td>
+                <td class="vehicle"><p>&nbsp;</p></td>
             @endif
             @if ($overtimeCheck != 1)
-                <td class="overtime">&nbsp;</td>
+                <td class="overtime"><p>&nbsp;</p></td>
             @endif
         </tr>
      @endfor
@@ -402,13 +469,13 @@
                 <th class="center-txt">手当</th>
             @endif
             @if ($expresswayCheck != 1)
-                <th class="center-txt">高速代</th>
+                <th class="center-txt">高速<br>料金</th>
             @endif
             @if ($parkingCheck != 1)
-                <th class="center-txt">パーキン<br>グ代</th>
+                <th class="center-txt">駐車<br>料金</th>
             @endif
             @if ($vehicleCheck != 1)
-                <th class="center-txt">2台目</th>
+                <th class="center-txt">車両</th>
             @endif
             @if ($overtimeCheck != 1)
                 <th class="center-txt">残業代</th>
@@ -450,41 +517,56 @@
                   @endphp
                   <td class="project">
                     <p class="">
-                    @if ($spv->project)
+                        @if ($spv->project)
                         @if($spv->project->name != '休み')
-                            {{$spv->project->name}}
+                            @php
+                                $str_length = mb_strlen($spv->project->name);
+                            @endphp
+                            @if ($str_length >= 14)
+                                <span class="over-legth">{{$spv->project->name}}</span>
+                            @else
+                                <span class="basic-legth">{{$spv->project->name}}</span>
+                            @endif
+                        @endif
+                    @elseif($spv->unregistered_project)
+                        @if ($spv->unregistered_project != '休み')
+                            @php
+                                $str_length = mb_strlen($spv->unregistered_project);
+                            @endphp
+                            @if ($str_length >= 14)
+                                <span class="over-legth">{{$spv->unregistered_project}}</span>
+                            @else
+                                <span class="basic-legth">{{$spv->unregistered_project}}</span>
+                            @endif
                         @endif
                     @else
-                        @if ($spv->unregistered_project != '休み')
-                            {{$spv->unregistered_project}}
-                        @endif
+                        <span class="basic-legth">&nbsp;</span>
                     @endif
-                    &nbsp;
                     </p>
                  </td>
                   @if ($amountCheck != 1)
                     @php
                         $amount = $spv->driver_price ? number_format($spv->driver_price) : '';
                     @endphp
-                     <td class="driver-price"><p class="">{{$amount}}</p></td>
+                     <td class="driver-price"><p class="f-s-9">{{$amount}}</p></td>
                   @endif
                   @if ($allowanceCheck != 1)
                     @php
                         $amount = $spv->total_allowance ? number_format($spv->total_allowance) : '';
                     @endphp
-                     <td class="allowance-fee"><p class="">{{$amount}}</p></td>
+                     <td class="allowance-fee"><p class="f-s-9">{{$amount}}</p></td>
                   @endif
                   @if ($expresswayCheck != 1)
                      @php
                         $amount = $spv->expressway_fee ? number_format($spv->expressway_fee) : '';
                     @endphp
-                      <td class="expressway-fee"><p class="">{{$amount}}</p></td>
+                      <td class="expressway-fee"><p class="f-s-9">{{$amount}}</p></td>
                   @endif
                   @if ($parkingCheck != 1)
                      @php
                         $amount = $spv->parking_fee ? number_format($spv->parking_fee) : '';
                     @endphp
-                     <td class="parking-fee"><p class="">{{$amount}}</p></td>
+                     <td class="parking-fee"><p class="f-s-9">{{$amount}}</p></td>
                   @endif
                   @if ($vehicleCheck != 1)
                     <td class="vehicle">
@@ -495,12 +577,12 @@
                             @if ($spv->vehicle)
                                 @if($spv->vehicle->number != '自車')
                                     @if ($spv->vehicle->id != $spv->rental_vehicle_id)
-                                        <p>No.{{ $spv->vehicle->number }}</p>
+                                        <p class="f-s-9">No.{{ $spv->vehicle->number }}</p>
                                     @endif
                                 @endif
                             @else
                                 @if ($spv->unregistered_vehicle)
-                                    <p>No.{{ $spv->unregistered_vehicle }}</p>
+                                    <p class="f-s-9">No.{{ $spv->unregistered_vehicle }}</p>
                                 @endif
                             @endif
                         @endif
@@ -529,7 +611,7 @@
                     @php
                         $amount = $spv->overtime_fee ? number_format($spv->overtime_fee) : '';
                     @endphp
-                    <td class="overtime"><p class="">{{ $amount }}</p></td>
+                    <td class="overtime"><p class="f-s-9">{{ $amount }}</p></td>
                   @endif
                 </tr>
             @endif
@@ -541,24 +623,24 @@
                 @if ($count == 0)
                   <td rowspan="{{ $setRowCount }}" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                 @endif
-                <td class="project">&nbsp;</td>
+                <td class="project"><span class="basic-legth">&nbsp;</span></td>
                 @if ($amountCheck != 1)
-                    <td class="driver-price">&nbsp;</td>
+                    <td class="driver-price"><p>&nbsp;</p></td>
                 @endif
                 @if ($allowanceCheck != 1)
-                    <td class="allowance-fee">&nbsp;</td>
+                    <td class="allowance-fee"><p>&nbsp;</p></td>
                 @endif
                 @if ($expresswayCheck != 1)
-                    <td class="expressway-fee">&nbsp;</td>
+                    <td class="expressway-fee"><p>&nbsp;</p></td>
                 @endif
                 @if ($parkingCheck != 1)
-                    <td class="parking-fee">&nbsp;</td>
+                    <td class="parking-fee"><p>&nbsp;</p></td>
                 @endif
                 @if ($vehicleCheck != 1)
-                    <td class="vehicle">&nbsp;</td>
+                    <td class="vehicle"><p>&nbsp;</p></td>
                 @endif
                 @if ($overtimeCheck != 1)
-                    <td class="overtime">&nbsp;</td>
+                    <td class="overtime"><p>&nbsp;</p></td>
                 @endif
               </tr>
           @endfor
@@ -571,24 +653,24 @@
                 @if ($count == 0)
                     <td rowspan="{{ $setRowCount }}" class="date"><p class=""></p></td>
                 @endif
-                <td class="project">&nbsp;</td>
+                <td class="project"><p><span class="basic-legth">&nbsp;</span></p></td>
                 @if ($amountCheck != 1)
-                    <td class="driver-price">&nbsp;</td>
+                    <td class="driver-price"><p>&nbsp;</p></td>
                 @endif
                 @if ($allowanceCheck != 1)
-                    <td class="allowance-fee">&nbsp;</td>
+                    <td class="allowance-fee"><p>&nbsp;</p></td>
                 @endif
                 @if ($expresswayCheck != 1)
-                    <td class="expressway-fee">&nbsp;</td>
+                    <td class="expressway-fee"><p>&nbsp;</p></td>
                 @endif
                 @if ($parkingCheck != 1)
-                    <td class="parking-fee">&nbsp;</td>
+                    <td class="parking-fee"><p>&nbsp;</p></td>
                 @endif
                 @if ($vehicleCheck != 1)
-                    <td class="vehicle">&nbsp;</td>
+                    <td class="vehicle"><p>&nbsp;</p></td>
                 @endif
                 @if ($overtimeCheck != 1)
-                    <td class="overtime">&nbsp;</td>
+                    <td class="overtime"><p>&nbsp;</p></td>
                 @endif
             </tr>
         @endfor
@@ -733,8 +815,6 @@
     </tbody>
   </table>
 </div>
-
-
 
 </body>
 </html>

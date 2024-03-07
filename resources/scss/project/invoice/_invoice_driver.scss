@@ -6,7 +6,7 @@
 
     .driver-invoice-shift{
         &__check-area{
-            margin-top: 3.9rem;
+            // margin-top: 3.9rem;
             display: flex;
             flex-direction: column;
             gap: 3rem;
@@ -37,19 +37,25 @@
                 color: $cGreen;
             }
         }
+        &__top-btn-wrap{
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
         &__calendar{
             position: relative;
             overflow: scroll;
             width: 99.9%;
-            height: math.div(360,800) * 100vh;
+            height: math.div(460,800) * 100vh;
             margin-top: 2rem;
             &__calendar-top-wrap{
                 display: flex;
                 align-items: flex-start;
-                padding-top: 5rem;
+                // padding-top: 1rem;
                 &__save-btn{
-                    position: absolute;
-                    top: 0rem;
+                    // position: absolute;
+                    // top: 0rem;
                     width: 15rem;
                     height: 3rem;
                     display: flex;
@@ -248,7 +254,7 @@
         .setting-btn{
             width: 5rem;
             height: 5rem;
-            margin-top: 2rem;
+            // margin-top: 2rem;
             border: 2px solid $cGray02;
             border-radius: 1rem;
             display: flex;
@@ -543,7 +549,7 @@
         position: relative;
         overflow: scroll;
         width: 100%;
-        height: math.div(550,800) * 100vh;
+        height: math.div(490,800) * 100vh;
     }
 
 }

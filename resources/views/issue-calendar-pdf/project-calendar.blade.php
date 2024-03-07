@@ -12,14 +12,14 @@
       /* dompdf日本語文字化け対策 */
       /* 基本の文字 */
       @font-face {
-              font-family: ipaexm;
-              font-style: normal;
-              font-weight: normal;
-              src: url('{{ storage_path('fonts/ipaexm.ttf') }}');
-      }
+            font-family: ipaexm;
+            font-style: normal;
+            font-weight: normal;
+            src: url('{{ storage_path('fonts/ipag.ttf') }}');
+        }
 
       /* 全てのHTML要素に適用 */
-      html, body, textarea {font-family: ipaexm, sans-serif;}html {line-height: 1.15;-webkit-text-size-adjust: 100%;-webkit-tap-highlight-color: transparent;}body {margin: 0;}main {display: block;}p,table,blockquote,address,pre,iframe,form,figure,dl {margin: 0;}h1,h2,h3,h4,h5,h6 {font-size: inherit; font-weight: inherit; margin: 0; } ul, ol { margin: 0; padding: 0; list-style: none; } dt { font-weight: 700; } dd { margin-left: 0; } hr { box-sizing: content-box; height: 0; overflow: visible; border-top-width: 1px; margin: 0; clear: both; color: inherit; } pre { font-family: monospace, monospace; font-size: inherit; } address { font-style: inherit; } a { background-color: transparent; text-decoration: none; color: inherit; } abbr[title] { text-decoration: underline dotted; } b, strong { font-weight: bolder; } code, kbd, samp { font-family: monospace, monospace; font-size: inherit; } small { font-size: 80%; } sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; } sub { bottom: -0.25em; } sup { top: -0.5em; } svg, img, embed, object, iframe { vertical-align: center; } button, input, optgroup, select, textarea { -webkit-appearance: none; appearance: none; vertical-align: middle; color: inherit; font: inherit; background: transparent; padding: 0; margin: 0; border-radius: 0; text-align: inherit; text-transform: inherit; } [type="checkbox"] { -webkit-appearance: checkbox; appearance: checkbox; } [type="radio"] { -webkit-appearance: radio; appearance: radio; } button, [type="button"], [type="reset"], [type="submit"] { cursor: pointer; } button:disabled, [type="button"]:disabled, [type="reset"]:disabled, [type="submit"]:disabled { cursor: default; } :-moz-focusring { outline: auto; } select:disabled { opacity: inherit; } option { padding: 0; } fieldset { margin: 0; padding: 0; min-width: 0; } legend { padding: 0; } progress { vertical-align: baseline; } textarea { overflow: auto; } [type="number"]::-webkit-inner-spin-button, [type="number"]::-webkit-outer-spin-button { height: auto; } [type="search"] { outline-offset: -2px; } [type="search"]::-webkit-search-decoration { -webkit-appearance: none; } ::-webkit-file-upload-button { -webkit-appearance: button; font: inherit; } label[for] { cursor: pointer; } details { display: block; } summary { display: list-item; } [contenteditable]:focus { outline: auto; } table { border-color: inherit; } caption { text-align: left; } td, th { vertical-align: top; padding: 0; } th { text-align: left; font-weight: 700; } th{ font-weight: normal; }
+      html, body, textarea {font-family: ipaexm;}html {line-height: 1.15;-webkit-text-size-adjust: 100%;-webkit-tap-highlight-color: transparent;}body {margin: 0;}main {display: block;}p,table,blockquote,address,pre,iframe,form,figure,dl {margin: 0;}h1,h2,h3,h4,h5,h6 {font-size: inherit; font-weight: inherit; margin: 0; } ul, ol { margin: 0; padding: 0; list-style: none; } dt { font-weight: 700; } dd { margin-left: 0; } hr { box-sizing: content-box; height: 0; overflow: visible; border-top-width: 1px; margin: 0; clear: both; color: inherit; } pre { font-family: monospace, monospace; font-size: inherit; } address { font-style: inherit; } a { background-color: transparent; text-decoration: none; color: inherit; } abbr[title] { text-decoration: underline dotted; } b, strong { font-weight: bolder; } code, kbd, samp { font-family: monospace, monospace; font-size: inherit; } small { font-size: 80%; } sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; } sub { bottom: -0.25em; } sup { top: -0.5em; } svg, img, embed, object, iframe { vertical-align: center; } button, input, optgroup, select, textarea { -webkit-appearance: none; appearance: none; vertical-align: middle; color: inherit; font: inherit; background: transparent; padding: 0; margin: 0; border-radius: 0; text-align: inherit; text-transform: inherit; } [type="checkbox"] { -webkit-appearance: checkbox; appearance: checkbox; } [type="radio"] { -webkit-appearance: radio; appearance: radio; } button, [type="button"], [type="reset"], [type="submit"] { cursor: pointer; } button:disabled, [type="button"]:disabled, [type="reset"]:disabled, [type="submit"]:disabled { cursor: default; } :-moz-focusring { outline: auto; } select:disabled { opacity: inherit; } option { padding: 0; } fieldset { margin: 0; padding: 0; min-width: 0; } legend { padding: 0; } progress { vertical-align: baseline; } textarea { overflow: auto; } [type="number"]::-webkit-inner-spin-button, [type="number"]::-webkit-outer-spin-button { height: auto; } [type="search"] { outline-offset: -2px; } [type="search"]::-webkit-search-decoration { -webkit-appearance: none; } ::-webkit-file-upload-button { -webkit-appearance: button; font: inherit; } label[for] { cursor: pointer; } details { display: block; } summary { display: list-item; } [contenteditable]:focus { outline: auto; } table { border-color: inherit; } caption { text-align: left; } td, th { vertical-align: top; padding: 0; } th { text-align: left; font-weight: 700; } th{ font-weight: normal; }
 
       @page{
         margin: 15px;
@@ -27,7 +27,7 @@
 
       table{
         width: 100%;
-        font-size: 5px;
+        font-size: 10px;
         border-collapse: collapse;
         /* transform: rotate(90deg);
         transform-origin: 27% 77%; */
@@ -37,7 +37,8 @@
         position: relative;
           border: 0.5px solid black;
           text-align: center;
-          padding: 1.5px 2px;
+          vertical-align: middle;
+          padding: 1px 2px;
       }
       table td{
         height: 2%;
@@ -56,7 +57,6 @@
       p{
         font-size: 10px
       }
-
 
 	</style>
 
@@ -112,35 +112,34 @@
                 @endforeach
             </tr>
         @endif
-        {{-- @if ($project_count == 1 && $company_count == 1)
-            <tr>
-                日付ヘッド
-                <th rowspan="1" class="project-table-date">----</th>
-                @foreach ($getCompanies as $company)
-                <th class="company{{ $company->id }}">{{ $company->name }}</th>
-                @endforeach
-                @if ($retailCheck == 1)
-                <th class="retailClm">上代</th>
-                @endif
-                @foreach ($getCompanies as $company)
-                    @if ($salaryCheck == 1)
-                        <th class="company{{ $company->id }} salaryClm">{{ $company->name }}</th>
-                    @endif
-                    @if ($retailCheck == 1)
-                        <th class="retailClm company{{ $company->id }} retailClm">上代</th>
-                    @endif
-                    @if ($expresswayCheck == 1)
-                        <th class="company{{ $company->id }} expressClm">高速代</th>
-                    @endif
-                    @if ($parkingCheck == 1)
-                        <th class="company{{ $company->id }} parkingClm">パーキング代</th>
-                    @endif
-                @endforeach
-            </tr>
-        @endif --}}
     </thead>
     <tbody>
         @foreach ( $dates as $date )
+            {{-- 案件数をカウント --}}
+            @php
+                $projectEmployeeCount = [];
+                foreach ($projects as $project) {
+                    foreach ($getCompanies as $company) {
+                        $count = 0; // 従業員のカウンタを初期化
+
+                        foreach ($ShiftProjectVehicles as $spv) {
+                            // 日付、会社ID、プロジェクトIDが一致するレコードの数を数える
+                            if ($spv->shift->date == $date->format('Y-m-d') &&
+                                $spv->shift->employee &&
+                                $spv->shift->employee->company_id == $company->id &&
+                                $spv->project_id == $project->id) {
+                                $count++;
+                            }
+                        }
+
+                        // 従業員が一人以上いる場合にのみ結果を格納
+                        if ($count > 0) {
+                            $projectEmployeeCount[$project->id][$company->id] = $count;
+                        }
+                    }
+                }
+            @endphp
+
             <tr>
                 <td>{{ $date->format('n') }}月{{ $date->format('j') }}日({{ $date->isoFormat('ddd') }})</td>
                 @foreach ($projects as $project)
@@ -150,7 +149,7 @@
                                 @if($spv->shift->date == $date->format('Y-m-d'))
                                     @if ($spv->shift->employee)
                                         @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
-                                            {{ $spv->shift->employee->name }}<br>
+                                            <span @if(isset($projectEmployeeCount[$project->id][$company->id]) && $projectEmployeeCount[$project->id][$company->id] >= 2) style="font-size: 8px;" @endif>{{ $spv->shift->employee->name }}</span><br>
                                         @endif
                                     @endif
                                 @endif
