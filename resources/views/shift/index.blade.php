@@ -4,7 +4,7 @@
             {{ __('シフト') }}
         </h2>
     </x-slot>
-
+    
     <main class="main --shift-main">
         <div class="main__link-block --shift-link-block">
             <div class="main__link-block__tags">
