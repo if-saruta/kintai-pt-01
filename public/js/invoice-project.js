@@ -24,7 +24,7 @@ window.addEventListener('load', () => {
         const numberBoxLength = document.querySelectorAll('.numberBox').length;
         let totalWidth = (txtBoxLength * 80) + (numberBoxLength * 50);
 
-        table.style.width = totalWidth + 'px';
+        table.style.width = totalWidth + 600 + 'px';
     }
     tableWidthSet();
 

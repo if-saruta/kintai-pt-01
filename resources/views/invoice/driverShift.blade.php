@@ -888,6 +888,8 @@
                                 </div>
                             </div>
                         </div>
+                    @else
+                        <p class="warning-txt">{{ $warning }}</p>
                     @endif
                 </div>
             </div>

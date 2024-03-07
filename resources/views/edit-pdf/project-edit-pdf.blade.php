@@ -49,7 +49,7 @@
                         <p class="">ダウンロード</p>
                     </button>
                 </div>
-                <a href="{{route('invoice.projectShift')}}" class="btn --back --pdf-back" onclick='return confirm("入力したデータは失われます。")'>
+                <a href="javascript:history.back()" class="btn --back --pdf-back" onclick='return confirm("入力したデータは失われます。")'>
                     戻る
                 </a>
                 <div class="project-edit-pdf">

@@ -4,6 +4,11 @@
 
 .--invoice-white-board{
     .project-invoice-shift{
+        .warning-txt{
+            margin-top: 3rem;
+            font-size: 1.3rem;
+            font-weight: $fw-bold;
+        }
         .project-invoice-top-btn-area{
             display: flex;
             gap: 3rem;
@@ -284,6 +289,8 @@
                 overflow: auto;
                 // table-layout: fixed!important;
                 margin-top: 2rem;
+                font-size: 1.4rem;
+                font-weight: 700;
                 thead{
                     position: sticky;
                     z-index: 999;
@@ -342,6 +349,8 @@
                         td{
                             input{
                                 width: 100%;
+                                font-size: 1.4rem;
+                                font-weight: 700;
                                 padding: 0;
                                 border: 0;
                                 background-color: rgba(0, 217, 255, 0.148);
@@ -358,13 +367,13 @@
                     }
                 }
                 .project-table-date{
-                    width: 8rem;
+                    width: 11rem;
                 }
                 .project-table-w-name{
                     width: 8rem;
                 }
                 .project-table-w-amount{
-                    width: 5rem;
+                    width: 8rem;
                 }
                 .txt-right{
                     text-align: right;

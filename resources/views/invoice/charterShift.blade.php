@@ -70,7 +70,7 @@
                     </form>
 
                     <div class="">
-                        @if($shiftArray || $unregisterProjectShift)
+                        @if(!empty($shiftArray) || $unregisterProjectShift)
                         <form action="{{route('invoice.charter-calendar-pdf')}}" method="POST">
                             @csrf
                             <input hidden type="text" value="{{$getYear}}" name="year">
@@ -105,13 +105,13 @@
                                                 <p class="">高速代</p>
                                             </div>
                                             <div class="head__clm --common-amount">
-                                                <p class="">パーキング代</p>
+                                                <p class="">パーキング<br>代</p>
                                             </div>
                                             <div class="head__clm --common">
                                                 <p class="">ドライバー</p>
                                             </div>
                                             <div class="head__clm --common-amount">
-                                                <p class="">ドライバー価格</p>
+                                                <p class="">ドライバー<br>価格</p>
                                             </div>
                                             <div class="head__clm --common">
                                                 <p class="">クライアント名</p>

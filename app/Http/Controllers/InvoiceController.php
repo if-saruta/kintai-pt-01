@@ -977,7 +977,7 @@ class InvoiceController extends Controller
         // dd($shiftArray);
 
         $warning = null;
-        if (!$shiftArray && !$unregisterProjectShift) {
+        if (!empty($shiftArray) && !$unregisterProjectShift) {
             $warning = "選択されたシフトは登録されていません";
         }
 

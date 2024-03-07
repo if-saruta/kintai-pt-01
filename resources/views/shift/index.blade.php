@@ -4,7 +4,7 @@
             {{ __('シフト') }}
         </h2>
     </x-slot>
-    
+
     <main class="main --shift-main">
         <div class="main__link-block --shift-link-block">
             <div class="main__link-block__tags">
@@ -144,7 +144,7 @@
                         <table class="shift-calendar-table">
                             <thead class="shift-calendar-table__head">
                                 <tr class="shift-calendar-table__head__day">
-                                    <th rowspan="2"></th>
+                                    <th rowspan="2" class="date-empty-box"></th>
                                     @foreach ( $convertedDates as $date )
                                     <th colspan="2" class="txt">
                                         @if ($holidays->isHoliday($date))

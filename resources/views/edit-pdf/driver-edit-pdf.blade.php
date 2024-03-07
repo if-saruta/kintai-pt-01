@@ -55,7 +55,7 @@
                             <p class="">{{$employeeInfo->name}}</p>
                         </div>
                     </div>
-                    <a href="{{route('invoice.driverShift')}}" class="btn --back" onclick='return confirm("入力したデータは失われます。")'>
+                    <a href="javascript:history.back()" class="btn --back" onclick='return confirm("入力したデータは失われます。")'>
                         戻る
                     </a>
                 </div>
@@ -179,7 +179,6 @@
 東京都葛飾区四つ木2-3-11
 </textarea>
                                     <br>
-                                    <br>
                                     <p class="">下記の通りご請求申し上げます。</p>
                                 </div>
                                 {{-- 請求金額 --}}
@@ -216,23 +215,23 @@
                                         <td class="top-table-data w-70"><input type="text" name="salaryEtc[]" value="{{$etc}}" class="input table-input changeElement etcElement"></td>
                                         <td class="top-table-data w-70"><input type="text" name="salaryCount[]" value="1" class="input table-input changeElement salaryNum"></td>
                                         @if ($employeeInfo->is_invoice == 1)
-                                            <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{$totalSalaryAmount}}" class="input table-input changeElement salaryUnit"></td>
-                                            <td class="top-table-data w-100"><input type="number" name="salaryAmount[]" value="{{$totalSalaryAmount}}" class="input table-input changeElement salaryAmount"></td>
+                                            <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{$totalSalaryAmount}}" class="input table-input amount changeElement salaryUnit"></td>
+                                            <td class="top-table-data w-100"><input type="number" name="salaryAmount[]" value="{{$totalSalaryAmount}}" class="input table-input amount changeElement salaryAmount"></td>
                                         @else
-                                            <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{ ceil($totalSalaryAmount * 1.1) }}" class="input table-input changeElement salaryUnit"></td>
-                                            <td class="top-table-data w-100"><input type="number" name="salaryAmount[]" value="{{ceil($totalSalaryAmount * 1.1)}}" class="input table-input changeElement salaryAmount"></td>
+                                            <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{ ceil($totalSalaryAmount * 1.1) }}" class="input table-input amount changeElement salaryUnit"></td>
+                                            <td class="top-table-data w-100"><input type="number" name="salaryAmount[]" value="{{ceil($totalSalaryAmount * 1.1)}}" class="input table-input amount changeElement salaryAmount"></td>
                                         @endif
                                     </tr>
                                     {{-- 手当 --}}
-                                    @if ($invoiceAllowanceCheck != 1 && $allowanceName)
+                                    @if ($invoiceAllowanceCheck != 1 && $allowanceName && $allowanceAmount != 0)
                                         <tr class="salaryBasicRow">
                                             <td class="top-table-data w-70"><input type="text" name="salaryNo[]" class="input table-input changeElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryMonth[]" class="input table-input changeElement"></td>
                                             <td class="top-table-data w-260"><input type="text" name="salaryProject[]" value="{{ $allowanceName }}" class="input table-input changeElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryEtc[]" class="input table-input changeElement etcElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryCount[]" @if($allowanceAmount != 0) value="1" @endif  class="input table-input changeElement salaryNum"></td>
-                                            <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{$allowanceAmount}}" class="input table-input changeElement salaryUnit"></td>
-                                            <td class="top-table-data w-100"><input type="number" name="salaryAmount[]" value="{{$allowanceAmount}}" class="input table-input changeElement salaryAmount"></td>
+                                            <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{$allowanceAmount}}" class="input table-input amount changeElement salaryUnit"></td>
+                                            <td class="top-table-data w-100"><input type="number" name="salaryAmount[]" value="{{$allowanceAmount}}" class="input table-input amount changeElement salaryAmount"></td>
                                         </tr>
                                     @endif
                                     @if ($employeeInfo->is_invoice != 1)
@@ -242,8 +241,8 @@
                                             <td class="top-table-data w-260"><input type="text" name="salaryProject[]" value="値引き分" class="input table-input changeElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryEtc[]" class="input table-input changeElement etcElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryCount[]" value="1" class="input table-input changeElement salaryNum"></td>
-                                            <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{ -ceil($totalSalaryAmount * 0.2) }}" class="input table-input changeElement salaryUnit"></td>
-                                            <td class="top-table-data w-70"><input type="number" name="salaryAmount[]" value="{{ -ceil($totalSalaryAmount * 0.2) }}" class="input table-input changeElement salaryAmount"></td>
+                                            <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{ -ceil($totalSalaryAmount * 0.2) }}" class="input table-input amount changeElement salaryUnit"></td>
+                                            <td class="top-table-data w-70"><input type="number" name="salaryAmount[]" value="{{ -ceil($totalSalaryAmount * 0.2) }}" class="input table-input amount changeElement salaryAmount"></td>
                                         </tr>
                                     @endif
                                     {{-- 追加分項目 --}}
@@ -254,8 +253,8 @@
                                             <td class="top-table-data w-260"><input type="text" name="salaryProject[]" value="{{ $other['name'] }}" class="input table-input changeElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryEtc[]" class="input table-input changeElement etcElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryCount[]" value="1" class="input table-input changeElement salaryNum"></td>
-                                            <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{ $other['amount'] }}" class="input table-input changeElement salaryUnit"></td>
-                                            <td class="top-table-data w-70"><input type="number" name="salaryAmount[]" value="{{ $other['amount'] }}" class="input table-input changeElement salaryAmount"></td>
+                                            <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{ $other['amount'] }}" class="input table-input amount changeElement salaryUnit"></td>
+                                            <td class="top-table-data w-70"><input type="number" name="salaryAmount[]" value="{{ $other['amount'] }}" class="input table-input amount changeElement salaryAmount"></td>
                                         </tr>
                                         @php
                                             $otherTotal += $other['amount'];
@@ -267,8 +266,8 @@
                                         <td class="top-table-data w-260"><input type="text" name="salaryProject[]" class="input table-input changeElement"></td>
                                         <td class="top-table-data w-70"><input type="text" name="salaryEtc[]" class="input table-input changeElement etcElement"></td>
                                         <td class="top-table-data w-70"><input type="text" name="salaryCount[]" class="input table-input changeElement salaryNum"></td>
-                                        <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" class="input table-input changeElement salaryUnit"></td>
-                                        <td class="top-table-data w-70"><input type="number" name="salaryAmount[]" class="input table-input changeElement salaryAmount"></td>
+                                        <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" class="input table-input amount changeElement salaryUnit"></td>
+                                        <td class="top-table-data w-70"><input type="number" name="salaryAmount[]" class="input table-input amount changeElement salaryAmount"></td>
                                     </tr>
                                     <tr class="salaryBasicRow">
                                         <td class="top-table-data w-70"><input type="text" name="salaryNo[]" class="input table-input changeElement"></td>
@@ -276,8 +275,8 @@
                                         <td class="top-table-data w-260"><input type="text" name="salaryProject[]" class="input table-input changeElement"></td>
                                         <td class="top-table-data w-70"><input type="text" name="salaryEtc[]" class="input table-input changeElement etcElement"></td>
                                         <td class="top-table-data w-70"><input type="text" name="salaryCount[]" class="input table-input changeElement salaryNum"></td>
-                                        <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" class="input table-input changeElement salaryUnit"></td>
-                                        <td class="top-table-data w-70"><input type="number" name="salaryAmount[]" class="input table-input changeElement salaryAmount"></td>
+                                        <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" class="input table-input amount changeElement salaryUnit"></td>
+                                        <td class="top-table-data w-70"><input type="number" name="salaryAmount[]" class="input table-input amount changeElement salaryAmount"></td>
                                     </tr>
                                     @if ($employeeInfo->is_invoice == 1)
                                         <tr>
@@ -287,7 +286,7 @@
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                                            <td class="top-table-data w-100"><input type="number" name="salarySubTotal" value="{{$totalSalaryAmount + $allowanceAmount + $otherTotal}}" class="input table-input salarySubTotal" readonly></td>
+                                            <td class="top-table-data w-100"><input type="number" name="salarySubTotal" value="{{$totalSalaryAmount + $allowanceAmount + $otherTotal}}" class="input table-input amount salarySubTotal" readonly></td>
                                         </tr>
                                     @else
                                         <tr>
@@ -297,7 +296,7 @@
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                                            <td class="top-table-data w-100"><input type="number" name="salarySubTotal" value="{{ceil($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - ceil($totalSalaryAmount * 0.2) }}" class="input table-input salarySubTotal" readonly></td>
+                                            <td class="top-table-data w-100"><input type="number" name="salarySubTotal" value="{{ceil($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - ceil($totalSalaryAmount * 0.2) }}" class="input table-input amount salarySubTotal" readonly></td>
                                         </tr>
                                     @endif
                                     @if ($employeeInfo->is_invoice == 1)
@@ -308,7 +307,7 @@
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                                        <td class="top-table-data w-100"><input type="number" name="salaryTax" value="{{ceil($taxAmount)}}" id="salaryTax" class="input table-input" readonly></td>
+                                        <td class="top-table-data w-100"><input type="number" name="salaryTax" value="{{ceil($taxAmount)}}" id="salaryTax" class="input amount table-input" readonly></td>
                                     </tr>
                                     @endif
                                     <tr>
@@ -318,7 +317,7 @@
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                                        <td class="top-table-data w-100"><input type="text" name="etcTotal" value="{{ $etc }}" class="input table-input etcTotal"></td>
+                                        <td class="top-table-data w-100"><input type="text" name="etcTotal" value="{{ $etc }}" class="input amount table-input etcTotal"></td>
                                     </tr>
                                     <tr>
                                         <td class="top-table-data w-70 --bg-green colorChangeElem"><p class="top-table-data-txt --center"></p></td>
@@ -328,9 +327,9 @@
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
                                         @if ($employeeInfo->is_invoice == 1)
-                                        <td class="top-table-data w-100"><input type="text" name="salaryTotal" value="{{ ceil((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) }}" class="input table-input salaryTotal" readonly></td>
+                                        <td class="top-table-data w-100"><input type="text" name="salaryTotal" value="{{ ceil((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) }}" class="input amount table-input salaryTotal" readonly></td>
                                         @else
-                                            <td class="top-table-data w-100"><input type="text" name="salaryTotal" value="{{ ceil($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - ceil($totalSalaryAmount * 0.2) + $etc }}" class="input table-input salaryTotal" readonly></td>
+                                            <td class="top-table-data w-100"><input type="text" name="salaryTotal" value="{{ ceil($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - ceil($totalSalaryAmount * 0.2) + $etc }}" class="input amount table-input salaryTotal" readonly></td>
                                         @endif
                                     </tr>
 
@@ -356,32 +355,32 @@
                                             <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-330"><p class="top-table-data-txt --center f-s-10">㈱T.N.G 請求書NO.{{ $employeeInfo->initials }}<input class="invoice-number --invoice-number02 --common-data" value="{{ $today->format('Y') }}{{ $today->format('m') }}15" readonly>({{ $today->format('Y') }}年 {{ $today->format('m') }}月 15日発行)相殺</㈱T.N.G></p></td>
                                             <td class="top-table-data w-70"><input type="text" name="getCostNum" value="1" class="input table-input changeElement costNumByDriver"></td>
-                                            <td class="top-table-data w-70"><input type="text" name="getCostUntil" value="{{ceil($subTotalCost * 1.1)}}" class="input table-input changeElement costUnitByDriver costUnitByDriver-C"></td>
-                                            <td class="top-table-data w-100"><input type="text" name="getCostAmount" value="{{ceil($subTotalCost * 1.1)}}" class="input table-input changeElement costTotalByDriver" readonly></td>
+                                            <td class="top-table-data w-70"><input type="text" name="getCostUntil" value="{{ceil($subTotalCost * 1.1)}}" class="input table-input amount changeElement costUnitByDriver costUnitByDriver-C"></td>
+                                            <td class="top-table-data w-100"><input type="text" name="getCostAmount" value="{{ceil($subTotalCost * 1.1)}}" class="input table-input amount changeElement costTotalByDriver" readonly></td>
                                         </tr>
                                         <tr class="salaryCostBasicRow">
                                             <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-330"><input type="text" name="salaryCostName[]" class="input table-input changeElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryCostNum[]" class="input table-input changeElement costNumByDriver"></td>
-                                            <td class="top-table-data w-70"><input type="text" name="salaryCostUntil[]" class="input table-input changeElement costUnitByDriver"></td>
-                                            <td class="top-table-data w-100"><input type="text" name="salaryCostAmount[]" class="input table-input changeElement costTotalByDriver"></td>
+                                            <td class="top-table-data w-70"><input type="text" name="salaryCostUntil[]" class="input table-input amount changeElement costUnitByDriver"></td>
+                                            <td class="top-table-data w-100"><input type="text" name="salaryCostAmount[]" class="input table-input amount changeElement costTotalByDriver"></td>
                                         </tr>
                                         <tr class="salaryCostBasicRow">
                                             <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-330"><input type="text" name="salaryCostName[]" class="input table-input changeElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryCostNum[]" class="input table-input changeElement costNumByDriver"></td>
-                                            <td class="top-table-data w-70"><input type="text" name="salaryCostUntil[]" class="input table-input changeElement costUnitByDriver"></td>
-                                            <td class="top-table-data w-100"><input type="text" name="salaryCostAmount[]" class="input table-input changeElement costTotalByDriver"></td>
+                                            <td class="top-table-data w-70"><input type="text" name="salaryCostUntil[]" class="input table-input amount changeElement costUnitByDriver"></td>
+                                            <td class="top-table-data w-100"><input type="text" name="salaryCostAmount[]" class="input table-input amount changeElement costTotalByDriver"></td>
                                         </tr>
                                         <tr class="salaryCostBasicRow">
                                             <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-330"><input type="text" name="salaryCostName[]" class="input table-input changeElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryCostNum[]" class="input table-input changeElement costNumByDriver"></td>
-                                            <td class="top-table-data w-70"><input type="text" name="salaryCostUntil[]" class="input table-input changeElement costUnitByDriver"></td>
-                                            <td class="top-table-data w-100"><input type="text" name="salaryCostAmount[]" class="input table-input changeElement costTotalByDriver"></td>
+                                            <td class="top-table-data w-70"><input type="text" name="salaryCostUntil[]" class="input table-input amount changeElement costUnitByDriver"></td>
+                                            <td class="top-table-data w-100"><input type="text" name="salaryCostAmount[]" class="input table-input amount changeElement costTotalByDriver"></td>
                                         </tr>
                                     </table>
                                     <table class="top-table --no-margin">
@@ -391,7 +390,7 @@
                                             <th class="top-table-head w-330 --bg-green colorChangeElem"><p class="top-table-data-txt --right">小計</p></th>
                                             <th class="top-table-head w-70"><p class="top-table-head-txt"></p></th>
                                             <th class="top-table-head w-70"><p class="top-table-head-txt"></p></th>
-                                            <th class="top-table-head w-100"><input type="text" name="salaryCostTotal" value="{{ceil($subTotalCost * 1.1)}}" class="input table-input changeElement costAllTotal" readonly></th>
+                                            <th class="top-table-head w-100"><input type="text" name="salaryCostTotal" value="{{ceil($subTotalCost * 1.1)}}" class="input table-input amount changeElement costAllTotal" readonly></th>
                                         </tr>
                                         <tr>
                                             <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
@@ -400,9 +399,9 @@
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
                                             @if ($employeeInfo->is_invoice == 1)
-                                                <td class="top-table-data w-100"><input type="text" value="{{ ceil(((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) - ceil($subTotalCost * 1.1)) }}" class="input table-input allCalcTotal" readonly></td>
+                                                <td class="top-table-data w-100"><input type="text" value="{{ ceil(((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) - ceil($subTotalCost * 1.1)) }}" class="input table-input amount allCalcTotal" readonly></td>
                                             @else
-                                                <td class="top-table-data w-100"><input type="text" value="{{ ceil($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - ceil($totalSalaryAmount * 0.2) + $etc - ceil($subTotalCost * 1.1) }}" class="input table-input allCalcTotal" readonly></td>
+                                                <td class="top-table-data w-100"><input type="text" value="{{ ceil($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - ceil($totalSalaryAmount * 0.2) + $etc - ceil($subTotalCost * 1.1) }}" class="input table-input amount allCalcTotal" readonly></td>
                                             @endif
                                         </tr>
                                     </table>
@@ -492,61 +491,61 @@ FAX:03-5875-7469
                                         <tr class="costBasicRow">
                                             <td class="table-item w-400"><input type="text" name="costItem[]" value="{{ $administrativeOutsourcingName }}" class="input table-input changeElement"></td>
                                             <td class="table-data w-100"><input type="text" name="costNum[]" value="1" class="input table-input changeElement costNum"></td>
-                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $administrativeOutsourcingAmount }}" class="input table-input changeElement costUnit"></td>
-                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $administrativeOutsourcingAmount }}" class="input table-input changeElement costElem"></td>
+                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $administrativeOutsourcingAmount }}" class="input table-input cost-amount changeElement costUnit"></td>
+                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $administrativeOutsourcingAmount }}" class="input table-input cost-amount changeElement costElem"></td>
                                         </tr>
                                         @endif
                                         @if ($totalLease)
                                         <tr class="costBasicRow">
                                             <td class="table-item w-400"><input type="text" name="costItem[]" value="車両リース代" class="input table-input changeElement"></td>
                                             <td class="table-data w-100"><input type="text" name="costNum[]" value="1" class="input table-input changeElement costNum"></td>
-                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $totalLease }}" class="input table-input changeElement costUnit"></td>
-                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $totalLease }}" class="input table-input changeElement costElem"></td>
+                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $totalLease }}" class="input table-input cost-amount changeElement costUnit"></td>
+                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $totalLease }}" class="input table-input cost-amount changeElement costElem"></td>
                                         </tr>
                                         @endif
                                         @if ($totalInsurance)
                                         <tr class="costBasicRow">
                                             <td class="table-item w-400"><input type="text" name="costItem[]" value="保険代" class="input table-input changeElement"></td>
                                             <td class="table-data w-100"><input type="text" name="costNum[]" value="1" class="input table-input changeElement costNum"></td>
-                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $totalInsurance }}" class="input table-input changeElement costUnit"></td>
-                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $totalInsurance }}" class="input table-input changeElement costElem"></td>
+                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $totalInsurance }}" class="input table-input cost-amount changeElement costUnit"></td>
+                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $totalInsurance }}" class="input table-input cost-amount changeElement costElem"></td>
                                         </tr>
                                         @endif
                                         @if ($administrativeName)
                                         <tr class="costBasicRow">
                                             <td class="table-item w-400"><input type="text" name="costItem[]" value="{{ $administrativeName }}" class="input table-input changeElement"></td>
                                             <td class="table-data w-100"><input type="text" name="costNum[]" value="1" class="input table-input changeElement costNum"></td>
-                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $administrativeAmount }}" class="input table-input changeElement costUnit"></td>
-                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $administrativeAmount }}" class="input table-input changeElement costElem"></td>
+                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $administrativeAmount }}" class="input table-input cost-amount changeElement costUnit"></td>
+                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $administrativeAmount }}" class="input table-input cost-amount changeElement costElem"></td>
                                         </tr>
                                         @endif
                                         @if ($transferName)
                                         <tr class="costBasicRow">
                                             <td class="table-item w-400"><input type="text" name="costItem[]" value="{{ $transferName }}" class="input table-input changeElement"></td>
                                             <td class="table-data w-100"><input type="text" name="costNum[]" value="1" class="input table-input changeElement costNum"></td>
-                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $transferAmount }}" class="input table-input changeElement costUnit"></td>
-                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $transferAmount }}" class="input table-input changeElement costElem"></td>
+                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $transferAmount }}" class="input table-input cost-amount changeElement costUnit"></td>
+                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $transferAmount }}" class="input table-input cost-amount changeElement costElem"></td>
                                         </tr>
                                         @endif
                                         @foreach ($CostOthers as $CostOther)
                                             <tr class="costBasicRow">
                                                 <td class="table-item w-400"><input type="text" name="costItem[]" value="{{ $CostOther['name'] }}" class="input table-input changeElement"></td>
                                                 <td class="table-data w-100"><input type="text" name="costNum[]" value="1" class="input table-input changeElement costNum"></td>
-                                                <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $CostOther['amount'] }}" class="input table-input changeElement costUnit"></td>
-                                                <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $CostOther['amount'] }}" class="input table-input changeElement costElem"></td>
+                                                <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $CostOther['amount'] }}" class="input table-input cost-amount changeElement costUnit"></td>
+                                                <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $CostOther['amount'] }}" class="input table-input cost-amount changeElement costElem"></td>
                                             </tr>
                                         @endforeach
                                         <tr class="costBasicRow">
                                             <td class="table-item w-400"><input type="text" name="costItem[]" value="" class="input table-input changeElement"></td>
                                             <td class="table-data w-100"><input type="text" name="costNum[]" value="" class="input table-input changeElement costNum"></td>
-                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="" class="input table-input changeElement costUnit"></td>
-                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="" class="input table-input changeElement costElem"></td>
+                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="" class="input table-input cost-amount changeElement costUnit"></td>
+                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="" class="input table-input cost-amount changeElement costElem"></td>
                                         </tr>
                                         <tr class="costBasicRow">
                                             <td class="table-item w-400"><input type="text" name="costItem[]" value="" class="input table-input changeElement"></td>
                                             <td class="table-data w-100"><input type="text" name="costNum[]" value="" class="input table-input changeElement costNum"></td>
-                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="" class="input table-input changeElement costUnit"></td>
-                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="" class="input table-input changeElement costElem"></td>
+                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="" class="input table-input cost-amount changeElement costUnit"></td>
+                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="" class="input table-input cost-amount changeElement costElem"></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -554,17 +553,17 @@ FAX:03-5875-7469
                                     <tr>
                                         <td class="w-401 border-none"></td>
                                         <td class="mini-table-data w-201"><p class="mini-table-data-txt --center">小計</p></td>
-                                        <td class="table-data w-110"><input type="text" name="costSubTotal" value="{{$subTotalCost}}" class="input table-input costSubTotal" readonly></td>
+                                        <td class="table-data w-110"><input type="text" name="costSubTotal" value="{{$subTotalCost}}" class="input table-input cost-amount costSubTotal" readonly></td>
                                     </tr>
                                     <tr>
                                         <td class="w-401 border-none"></td>
                                         <td class="mini-table-data w-201"><p class="mini-table-data-txt --center">消費税(10%)</p></td>
-                                        <td class="table-data w-110"><input type="text" name="costTax" value="{{ceil($subTotalCost * 0.1)}}" class="input table-input costTaxElem" readonly></td>
+                                        <td class="table-data w-110"><input type="text" name="costTax" value="{{ceil($subTotalCost * 0.1)}}" class="input table-input cost-amount costTaxElem" readonly></td>
                                     </tr>
                                     <tr>
                                         <td class="w-401 border-none"></td>
                                         <td class="mini-table-data w-201"><p class="mini-table-data-txt --center"> 合計金額(内消費税)</p></td>
-                                        <td class="table-data w-110"><input type="text" name="costTotal" value="{{ceil($subTotalCost * 1.1)}}" class="input table-input costTotalElem" readonly></td>
+                                        <td class="table-data w-110"><input type="text" name="costTotal" value="{{ceil($subTotalCost * 1.1)}}" class="input table-input cost-amount costTotalElem" readonly></td>
                                     </tr>
                                 </table>
                                 <div class="bank">

@@ -5,6 +5,11 @@
 .--invoice-white-board{
 
     .driver-invoice-shift{
+        .warning-txt{
+            margin-top: 3rem;
+            font-size: 1.3rem;
+            font-weight: $fw-bold;
+        }
         &__check-area{
             // margin-top: 3.9rem;
             display: flex;
@@ -75,7 +80,7 @@
                 }
                 &__table{
                     width: 49.8%;
-                    font-size: 1.2rem;
+                    font-size: 1.4rem;
                     font-weight: $fw-bold;
                     flex-shrink: 0;
                     border-right: 0.5px solid black;
