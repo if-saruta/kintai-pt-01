@@ -29,6 +29,7 @@
         width: 100%;
         font-size: 10px;
         border-collapse: collapse;
+        /* table-layout: fixed; */
         /* transform: rotate(90deg);
         transform-origin: 27% 77%; */
       }
@@ -57,6 +58,15 @@
       p{
         font-size: 10px
       }
+      .date-w-60{
+        width: 60px;
+      }
+      .name-w-60{
+        width: 60px;
+      }
+      .amount-w-60{
+        width: 60px;
+      }
 
 	</style>
 
@@ -64,16 +74,22 @@
         $project_count = $projects->count();
         $company_count = $getCompanies->count();
         $item_count = $retailCheck + $salaryCheck + $expresswayCheck + $parkingCheck;
+        // テーブルの横幅を計算 1は日付の固定分
+        $clmCount = 1 + ($project_count * $company_count) + $retailCheck + ($project_count * ($company_count * $item_count));
+        $clmWidth = 60;
+        $tableWidth = $clmCount * $clmWidth;
 	@endphp
 
 <p class="">{{ $client->name }}</p>
 <p class="">{{ $getYear }}年{{ $getMonth }}月度</p>
-<table>
+
+
+<table style="width: {{ $tableWidth }}px;">
     {{-- ヘッダー --}}
     <thead>
         @if ($project_count >= 1 || $company_count >= 1) {{-- どちらか複数あれば --}}
             <tr>
-                <th rowspan="2">----</th>
+                <th rowspan="2" class="date-w-60">----</th>
                 @foreach ($projects as $project)
                     @if (!$getCompanies->isEmpty())
                         <th colspan="{{$company_count}}">{{$project->name}}</th>
@@ -97,7 +113,7 @@
                 @foreach ($projects as $project)
                     @foreach ($getCompanies as $company)
                         @if ($salaryCheck == 1)
-                            <th>{{ $company->name }}</th>
+                            <th class="name-w-60">{{ $company->name }}</th>
                         @endif
                         @if ($retailCheck == 1)
                             <th>配送料金</th>
@@ -141,10 +157,10 @@
             @endphp
 
             <tr>
-                <td>{{ $date->format('n') }}月{{ $date->format('j') }}日({{ $date->isoFormat('ddd') }})</td>
+                <td class="date-w-60">{{ $date->format('n') }}月{{ $date->format('j') }}日({{ $date->isoFormat('ddd') }})</td>
                 @foreach ($projects as $project)
                     @foreach ($getCompanies as $company)
-                        <td>
+                        <td class="name-w-60">
                             @foreach ( $ShiftProjectVehicles as $spv )
                                 @if($spv->shift->date == $date->format('Y-m-d'))
                                     @if ($spv->shift->employee)
@@ -173,13 +189,13 @@
                     @php
                         $amount = $tmp_total_retail_day ? number_format($tmp_total_retail_day) : '';
                     @endphp
-                    <td class="right-txt">{{$amount}}</td>
+                    <td class="right-txt amount-w-60">{{$amount}}</td>
                 @endif
                 @foreach ($projects as $project)
                     @foreach ($getCompanies as $company)
                         {{-- 給与 --}}
                         @if ($salaryCheck)
-                            <td class="right-txt">
+                            <td class="right-txt amount-w-60">
                                 @foreach ( $ShiftProjectVehicles as $spv )
                                     @if($spv->shift->date == $date->format('Y-m-d'))
                                         @if ($spv->shift->employee)
@@ -196,7 +212,7 @@
                         @endif
                         {{-- 上代 --}}
                         @if ($retailCheck == 1)
-                            <td class="right-txt">
+                            <td class="right-txt amount-w-60">
                                 @foreach ( $ShiftProjectVehicles as $spv )
                                     @if($spv->shift->date == $date->format('Y-m-d'))
                                         @if ($spv->shift->employee)
@@ -213,7 +229,7 @@
                         @endif
                         {{-- 高速代 --}}
                         @if ($expresswayCheck == 1)
-                            <td class="right-txt">
+                            <td class="right-txt amount-w-60">
                                 @foreach ( $ShiftProjectVehicles as $spv )
                                     @if($spv->shift->date == $date->format('Y-m-d'))
                                         @if ($spv->shift->employee)
@@ -230,7 +246,7 @@
                         @endif
                         {{-- パーキング代 --}}
                         @if ($parkingCheck == 1)
-                            <td class="right-txt">
+                            <td class="right-txt amount-w-60">
                                 @foreach ( $ShiftProjectVehicles as $spv )
                                     @if($spv->shift->date == $date->format('Y-m-d'))
                                         @if ($spv->shift->employee)
