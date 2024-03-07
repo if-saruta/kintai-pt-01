@@ -186,7 +186,7 @@
                                 <table class="request-table">
                                     <tr>
                                         <td class="request-table-data --bg-green colorChangeElem"><p class="request-table-data-txt">ご請求金額</p></td>
-                                        @if($employeeInfo->is_invoice == 0)
+                                        @if($employeeInfo->is_invoice == 1)
                                             <td class="request-table-data"><p class="request-table-data-txt allCalcTotalView">¥{{ceil(((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) - ceil($subTotalCost * 1.1))}}</p></td>
                                         @else
                                             <td class="request-table-data"><p class="request-table-data-txt allCalcTotalView">¥{{ ceil($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - ceil($totalSalaryAmount * 0.2) + $etc - ceil($subTotalCost * 1.1) }}</p></td>
@@ -215,7 +215,7 @@
                                         <td class="top-table-data w-260"><input type="text" name="salaryProject[]" value="外注費" class="input table-input changeElement"></td>
                                         <td class="top-table-data w-70"><input type="text" name="salaryEtc[]" value="{{$etc}}" class="input table-input changeElement etcElement"></td>
                                         <td class="top-table-data w-70"><input type="text" name="salaryCount[]" value="1" class="input table-input changeElement salaryNum"></td>
-                                        @if ($employeeInfo->is_invoice == 0)
+                                        @if ($employeeInfo->is_invoice == 1)
                                             <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{$totalSalaryAmount}}" class="input table-input changeElement salaryUnit"></td>
                                             <td class="top-table-data w-100"><input type="number" name="salaryAmount[]" value="{{$totalSalaryAmount}}" class="input table-input changeElement salaryAmount"></td>
                                         @else
@@ -235,7 +235,7 @@
                                             <td class="top-table-data w-100"><input type="number" name="salaryAmount[]" value="{{$allowanceAmount}}" class="input table-input changeElement salaryAmount"></td>
                                         </tr>
                                     @endif
-                                    @if ($employeeInfo->is_invoice != 0)
+                                    @if ($employeeInfo->is_invoice != 1)
                                         <tr class="salaryBasicRow">
                                             <td class="top-table-data w-70"><input type="text" name="salaryNo[]" class="input table-input changeElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryMonth[]" value="{{ $today->format('n') }}月度" class="input table-input changeElement"></td>
@@ -279,7 +279,7 @@
                                         <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" class="input table-input changeElement salaryUnit"></td>
                                         <td class="top-table-data w-70"><input type="number" name="salaryAmount[]" class="input table-input changeElement salaryAmount"></td>
                                     </tr>
-                                    @if ($employeeInfo->is_invoice == 0)
+                                    @if ($employeeInfo->is_invoice == 1)
                                         <tr>
                                             <td class="top-table-data w-70 --bg-green colorChangeElem"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-70 --bg-green colorChangeElem"><p class="top-table-data-txt --center"></p></td>
@@ -300,7 +300,7 @@
                                             <td class="top-table-data w-100"><input type="number" name="salarySubTotal" value="{{ceil($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - ceil($totalSalaryAmount * 0.2) }}" class="input table-input salarySubTotal" readonly></td>
                                         </tr>
                                     @endif
-                                    @if ($employeeInfo->is_invoice == 0)
+                                    @if ($employeeInfo->is_invoice == 1)
                                     <tr>
                                         <td class="top-table-data w-70 --bg-green colorChangeElem"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70 --bg-green colorChangeElem"><p class="top-table-data-txt --center"></p></td>
@@ -327,7 +327,7 @@
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                                        @if ($employeeInfo->is_invoice == 0)
+                                        @if ($employeeInfo->is_invoice == 1)
                                         <td class="top-table-data w-100"><input type="text" name="salaryTotal" value="{{ ceil((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) }}" class="input table-input salaryTotal" readonly></td>
                                         @else
                                             <td class="top-table-data w-100"><input type="text" name="salaryTotal" value="{{ ceil($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - ceil($totalSalaryAmount * 0.2) + $etc }}" class="input table-input salaryTotal" readonly></td>
@@ -399,7 +399,7 @@
                                             <td class="top-table-data w-330 --bg-green colorChangeElem"><p class="top-table-data-txt --center">差引合計金額</p></td>
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                                            @if ($employeeInfo->is_invoice == 0)
+                                            @if ($employeeInfo->is_invoice == 1)
                                                 <td class="top-table-data w-100"><input type="text" value="{{ ceil(((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) - ceil($subTotalCost * 1.1)) }}" class="input table-input allCalcTotal" readonly></td>
                                             @else
                                                 <td class="top-table-data w-100"><input type="text" value="{{ ceil($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - ceil($totalSalaryAmount * 0.2) + $etc - ceil($subTotalCost * 1.1) }}" class="input table-input allCalcTotal" readonly></td>
