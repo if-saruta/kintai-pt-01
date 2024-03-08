@@ -3,8 +3,8 @@
 @use "sass:math";
 
 .--shift-main{
-    width: math.div(1235.2,1280) * 100vw;
-    margin-left: math.div(44.8,1280) * 100vw;
+    // width: math.div(1235.2,1280) * 100vw;
+    // margin-left: math.div(44.8,1280) * 100vw;
     .--shift-link-block{
         position: relative;
         gap: math.div(180,1280) * 100vw;
