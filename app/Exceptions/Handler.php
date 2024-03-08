@@ -54,7 +54,6 @@ class Handler extends ExceptionHandler
         // それ以外のエラーで本番環境ではホーム画面にリダイレクトする
         return redirect()->route('home')->with('error', 'Sorry, something went wrong.');
 
-        return parent::render($request, $exception);
     }
 
 

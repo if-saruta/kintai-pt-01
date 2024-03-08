@@ -308,7 +308,10 @@
                                         border: 2px solid $cGreen;
                                         border-radius: 1rem;
                                         .inner{
+                                            position: relative;
+                                            overflow-x: scroll;
                                             width: math.div(740,1280) * 100vw;
+                                            height: 25rem;
                                             margin: 0 auto;
                                             padding: 1.5rem;
                                             .employee-list{
@@ -342,8 +345,8 @@
                             .--project-btn-area{
                                 width: fit-content;
                                 margin: 0 auto;
-                                margin-top: 3rem;
-                                padding-bottom: 4rem;
+                                // margin-top: 3rem;
+                                padding-bottom: 2rem;
                             }
                         }
                     }
