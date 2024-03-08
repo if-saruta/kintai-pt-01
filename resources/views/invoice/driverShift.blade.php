@@ -337,11 +337,11 @@
                                             <th>日付</th>
                                             <th>案件名</th>
                                             <th class="amountRow">金額</th>
+                                            <th class="overtimeRow">残業代</th>
                                             <th class="allowanceRow">手当</th>
                                             <th class="expresswayRow">高速<br>料金</th>
                                             <th class="parkingRow">駐車<br>料金</th>
                                             <th class="vehicleRow">車両</th>
-                                            <th class="overtimeRow">残業代</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -385,6 +385,8 @@
                                                                 </td>
                                                                 {{-- ドライバー価格 --}}
                                                                 <td class="w-amount amountRow"><input type="text" value="{{ number_format($spv->driver_price) }}" name="driver_price[{{$spv->id}}]" class="commaInput"></td>
+                                                                {{-- 残業代 --}}
+                                                                <td class="w-amount overtimeRow"><input type="text" value="{{ number_format($spv->overtime_fee) }}" name="overtime_fee[{{$spv->id}}]" class="commaInput"></td>
                                                                 {{-- 手当 --}}
                                                                 <td class="w-amount allowance-area allowanceRow">
                                                                     <input type="text" value="{{ number_format($spv->total_allowance) }}" name="allowance[{{$spv->id}}]" class="allowance-input commaInput" readonly>
@@ -426,8 +428,6 @@
                                                                         @endif
                                                                     @endif
                                                                 </td>
-                                                                {{-- 残業代 --}}
-                                                                <td class="w-amount overtimeRow"><input type="text" value="{{ number_format($spv->overtime_fee) }}" name="overtime_fee[{{$spv->id}}]" class="commaInput"></td>
                                                                 @php
                                                                     $rowCount++;
                                                                     // 貸出形態と貸出車両を格納
@@ -462,11 +462,11 @@
                                                             </p>
                                                         </td>
                                                         <td class="w-amount amountRow"><p class=""></p></td>
+                                                        <td class="w-amount overtimeRow"><p class=""></p></td>
                                                         <td class="w-amount allowanceRow"><p class=""></p></td>
                                                         <td class="w-amount expresswayRow"><p class=""></p></td>
                                                         <td class="w-amount parkingRow"><p class=""></p></td>
                                                         <td class="w-amount vehicleRow"><p class=""></p></td>
-                                                        <td class="w-amount overtimeRow"><p class=""></p></td>
                                                         @php
                                                             // $rowCount++;
                                                             $count++;
@@ -495,11 +495,11 @@
                                                                 </p>
                                                             </td>
                                                             <td class="w-amount amountRow"><p class=""></p></td>
+                                                            <td class="w-amount overtimeRow"><p class=""></p></td>
                                                             <td class="w-amount allowanceRow"><p class=""></p></td>
                                                             <td class="w-amount expresswayRow"><p class=""></p></td>
                                                             <td class="w-amount parkingRow"><p class=""></p></td>
                                                             <td class="w-amount vehicleRow"><p class=""></p></td>
-                                                            <td class="w-amount overtimeRow"><p class=""></p></td>
                                                             @php
                                                                 $count++;
                                                             @endphp
@@ -516,11 +516,11 @@
                                                 @endif
                                                 <td class="w-project"><p class=""></p></td>
                                                 <td class="w-amount amountRow"></td>
+                                                <td class="w-amount overtimeRow"></td>
                                                 <td class="w-amount allowanceRow"></td>
                                                 <td class="w-amount expresswayRow"></td>
                                                 <td class="w-amount parkingRow"></td>
                                                 <td class="w-amount vehicleRow"></td>
-                                                <td class="w-amount overtimeRow"></td>
                                             </tr>
                                         @endfor
                                     </tbody>
@@ -532,11 +532,11 @@
                                             <th>日付</th>
                                             <th>案件名</th>
                                             <th class="amountRow">金額</th>
+                                            <th class="overtimeRow">残業代</th>
                                             <th class="allowanceRow">手当</th>
                                             <th class="expresswayRow">高速<br>料金</th>
                                             <th class="parkingRow">駐車<br>料金</th>
                                             <th class="vehicleRow">車両</th>
-                                            <th class="overtimeRow">残業代</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -580,6 +580,8 @@
                                                                 </td>
                                                                 {{-- ドライバー価格 --}}
                                                                 <td class="w-amount amountRow"><input type="text" value="{{ number_format($spv->driver_price) }}" name="driver_price[{{$spv->id}}]" class="commaInput"></td>
+                                                                {{-- 残業代 --}}
+                                                                <td class="w-amount overtimeRow"><input type="text" value="{{ number_format($spv->overtime_fee) }}" name="overtime_fee[{{$spv->id}}]" class="commaInput"></td>
                                                                 {{-- 手当 --}}
                                                                 <td class="w-amount allowance-area allowanceRow">
                                                                     <input type="text" value="{{ number_format($spv->total_allowance) }}" name="allowance[{{$spv->id}}]" class="allowance-input commaInput" readonly>
@@ -623,7 +625,6 @@
                                                                         @endif
                                                                     @endif
                                                                 </td>
-                                                                <td class="w-amount overtimeRow"><input type="text" value="{{ number_format($spv->overtime_fee) }}" name="overtime_fee[{{$spv->id}}]" class="commaInput"></td>
                                                                 @php
                                                                     $rowCount++;
                                                                     // 貸出形態と貸出車両を格納
@@ -658,11 +659,11 @@
                                                             </p>
                                                         </td>
                                                         <td class="w-amount amountRow"><p class=""></p></td>
+                                                        <td class="w-amount overtimeRow"><p class=""></p></td>
                                                         <td class="w-amount allowanceRow"><p class=""></p></td>
                                                         <td class="w-amount expresswayRow"><p class=""></p></td>
                                                         <td class="w-amount parkingRow"><p class=""></p></td>
                                                         <td class="w-amount vehicleRow"><p class=""></p></td>
-                                                        <td class="w-amount overtimeRow"><p class=""></p></td>
                                                         @php
                                                             // $rowCount++;
                                                             $count++;
@@ -691,11 +692,11 @@
                                                                 </p>
                                                             </td>
                                                             <td class="w-amount amountRow"><p class=""></p></td>
+                                                            <td class="w-amount overtimeRow"><p class=""></p></td>
                                                             <td class="w-amount allowanceRow"><p class=""></p></td>
                                                             <td class="w-amount expresswayRow"><p class=""></p></td>
                                                             <td class="w-amount parkingRow"><p class=""></p></td>
                                                             <td class="w-amount vehicleRow"><p class=""></p></td>
-                                                            <td class="w-amount overtimeRow"><p class=""></p></td>
                                                             @php
                                                                 $count++;
                                                             @endphp
@@ -712,12 +713,12 @@
                                                     <td rowspan="{{ $needRowCount }}" class="w-amount"></td>
                                                     @endif
                                                     <td class="w-project"><p class=""></p></td>
+                                                    <td class="w-amount overtimeRow"></td>
                                                     <td class="w-amount amountRow"></td>
                                                     <td class="w-amount allowanceRow"></td>
                                                     <td class="w-amount expresswayRow"></td>
                                                     <td class="w-amount parkingRow"></td>
                                                     <td class="w-amount vehicleRow"></td>
-                                                    <td class="w-amount overtimeRow"></td>
                                                 </tr>
                                             @endfor
                                         @endfor

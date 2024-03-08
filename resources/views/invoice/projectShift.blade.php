@@ -193,13 +193,13 @@
                                         <input type="checkbox" name="displayCheck[]" value="expressClm"
                                             class="viewClmCheck hasDisplayValue" data-check="one"
                                             @if(in_array('expressClm', $selectedDisplayCheck)) checked @endif>
-                                        高速代
+                                        高速料金
                                     </lable>
                                     <lable class="check-item">
                                         <input type="checkbox" name="displayCheck[]" value="parkingClm"
                                             class="viewClmCheck hasDisplayValue" data-check="one"
                                             @if(in_array('parkingClm', $selectedDisplayCheck)) checked @endif>
-                                        パーキング代
+                                        駐車料金
                                     </lable>
                                 </div>
                                 <p class="title">案件絞り込み</p>
@@ -280,10 +280,10 @@
                                                     配送料金</th>
                                                 <th
                                                     class="project-table-w-amount expressClm company{{ $company->id }} clmHead numberBox">
-                                                    高速代</th>
+                                                    高速料金</th>
                                                 <th
                                                     class="project-table-w-amount parkingClm company{{ $company->id }} clmHead numberBox">
-                                                    パーキング代</th>
+                                                    駐車料金</th>
                                                 @endforeach
                                             @endforeach
                                         </tr>
@@ -376,7 +376,7 @@
                                                     @endif
                                                 @endforeach
                                             </td>
-                                            {{-- パーキング代 --}}
+                                            {{-- 駐車料金 --}}
                                             <td class="parkingClm company{{ $company->id }}">
                                                 @foreach ( $ShiftProjectVehicles as $spv )
                                                     @if($spv->shift->date == $date->format('Y-m-d'))
@@ -393,18 +393,33 @@
                                             @endforeach
                                         </tr>
                                         @endforeach
-                                        {{-- <tr>
+                                        <tr>
                                             <td></td>
-                                            @foreach ($narrowProjects as $project)
                                             @php
-                                            $retailSubTotal = 0;
+                                                $retailTotal = 0;
                                             @endphp
-                                            @foreach ($getCompanies as $company)
-                                            <td>{{ number_format($retailSubTotal) }}</td>
+                                            @foreach ($narrowProjects as $project)
+                                                @php
+                                                    $retailSubTotal = 0;
+                                                @endphp
+                                                @foreach ( $ShiftProjectVehicles as $spv )
+                                                    @if ($spv->shift->employee)
+                                                        @if ($spv->project_id == $project->id)
+                                                            @php
+                                                                $retailSubTotal += $spv->retail_price;
+                                                                $retailTotal += $spv->retail_price;
+                                                            @endphp
+                                                        @endif
+                                                    @endif
+                                                @endforeach
+                                                {{-- 計算した上代の表示 --}}
+                                                <td colspan="{{ $company_count }}">{{ number_format($retailSubTotal) }}</td>
                                             @endforeach
-                                            @endforeach
+                                        </tr>
+                                        <tr>
                                             <td></td>
-                                        </tr> --}}
+                                            <td colspan="{{ $company_count * $project_count }}">{{ number_format($retailTotal) }}</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>

@@ -52,10 +52,15 @@
             }
         }
     }
+    .--info-white-board{
+        height: math.div(745,800) * 100vh;
+        margin-top: 4rem;
+    }
     &__white-board{
         .info-wrap{
+            width: fit-content;
+            margin: 0 auto;
             padding-top: 4rem;
-            padding-left: 2rem;
             display: flex;
             gap: 3rem;
             &__create-btn{
@@ -65,13 +70,13 @@
             &__register-item{
                 position: relative;
                 width: math.div(360,1280) * 100vw;
-                height: math.div(640,800) * 100vh;
+                height: math.div(675,800) * 100vh;
                 border: 2px solid $cGreen;
                 border-radius: 1rem;
                 &__inner{
                     position: relative;
                     width: math.div(330,1280) * 100vw;
-                    height: math.div(620,800) * 100vh;
+                    height: math.div(655,800) * 100vh;
                     margin: 0 auto;
                     margin-top: 1.5rem;
                     display: flex;
@@ -83,7 +88,7 @@
                         display: flex;
                         flex-direction: column;
                         gap: 1rem;
-                        height: math.div(600,800) * 100vh;
+                        height: math.div(630,800) * 100vh;
                         padding-bottom: 2rem;
                     }
                     .client-scroll-y{
@@ -354,7 +359,7 @@
                     position: relative;
                     overflow-y: scroll;
                     width: 100%;
-                    height: math.div(555,800) * 100vh;
+                    height: math.div(590,800) * 100vh;
                     margin: 0 auto;
                     &__row{
                         position: relative;

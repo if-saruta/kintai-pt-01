@@ -14,7 +14,7 @@
             font-family: ipaexm;
             font-style: normal;
             font-weight: normal;
-            src: url('{{ storage_path('fonts/ipag.ttf') }}');
+            src: url('{{ storage_path('fonts/ipaexm.ttf') }}');
         }
         @font-face{
             font-family: Noto Sans JP;
@@ -74,13 +74,13 @@
             /* font-size: 8px */
         }
         .project{
-          width: 39.6%;
+          width: 35.6%;
           padding-left: 5px;
           box-sizing: border-box;
           text-align: start;
         }
         .driver-price{
-          width: 7.7%;
+          width: 8%;
           text-align: right;
             height: 15.5px;
             vertical-align: middle;
@@ -88,7 +88,7 @@
           box-sizing: border-box;
         }
         .allowance-fee{
-          width: 7.7%;
+          width: 8%;
           text-align: right;
             height: 15.5px;
             vertical-align: middle;
@@ -104,7 +104,7 @@
           box-sizing: border-box;
         }
         .parking-fee{
-          width: 7.7%;
+          width: 8%;
           text-align: right;
             height: 15.5px;
             vertical-align: middle;
@@ -120,7 +120,7 @@
           box-sizing: border-box;
         }
         .overtime{
-            width: 7.7%;
+            width: 8%;
           text-align: right;
              height: 15.5px;
             vertical-align: middle;
@@ -141,8 +141,8 @@
         } */
         .date p{
             font-size: 8px;
-            font-family: Noto Sans JP;
-            font-weight: bold;
+            /* font-family: Noto Sans JP;
+            font-weight: bold; */
         }
         .memo-box{
             width: 50%;
@@ -268,6 +268,9 @@
             @if ($amountCheck != 1)
                 <th class="center-txt">金額</th>
             @endif
+            @if ($overtimeCheck != 1)
+                <th class="center-txt">残業代</th>
+            @endif
             @if ($allowanceCheck != 1)
                 <th class="center-txt">手当</th>
             @endif
@@ -279,9 +282,6 @@
             @endif
             @if ($vehicleCheck != 1)
                 <th class="center-txt">車両</th>
-            @endif
-            @if ($overtimeCheck != 1)
-                <th class="center-txt">残業代</th>
             @endif
         </tr>
     </thead>
@@ -348,6 +348,12 @@
                     @endphp
                      <td class="driver-price"><p class="f-s-9">{{ $amount }}</p></td>
                   @endif
+                    @if ($overtimeCheck != 1)
+                    @php
+                        $amount = $spv->overtime_fee ? number_format($spv->overtime_fee) : '';
+                    @endphp
+                    <td class="overtime"><p class="f-s-9">{{ $amount }}</p></td>
+                  @endif
                   @if ($allowanceCheck != 1)
                      @php
                         $amount = $spv->total_allowance ? number_format($spv->total_allowance) : '';
@@ -387,12 +393,6 @@
                         </p>
                     </td>
                   @endif
-                  @if ($overtimeCheck != 1)
-                    @php
-                        $amount = $spv->overtime_fee ? number_format($spv->overtime_fee) : '';
-                    @endphp
-                    <td class="overtime"><p class="f-s-9">{{ $amount }}</p></td>
-                  @endif
                 </tr>
             @endif
           @endforeach
@@ -407,6 +407,9 @@
                 @if ($amountCheck != 1)
                     <td class="driver-price"><p>&nbsp;</p></td>
                 @endif
+                @if ($overtimeCheck != 1)
+                    <td class="overtime"><p>&nbsp;</p></td>
+                @endif
                 @if ($allowanceCheck != 1)
                     <td class="allowance-fee"><p>&nbsp;</p></td>
                 @endif
@@ -418,9 +421,6 @@
                 @endif
                 @if ($vehicleCheck != 1)
                     <td class="vehicle"><p>&nbsp;</p></td>
-                @endif
-                @if ($overtimeCheck != 1)
-                    <td class="overtime"><p>&nbsp;</p></td>
                 @endif
               </tr>
           @endfor
@@ -435,6 +435,9 @@
             @if ($amountCheck != 1)
                 <td class="driver-price"><p>&nbsp;</p></td>
             @endif
+            @if ($overtimeCheck != 1)
+                <td class="overtime"><p>&nbsp;</p></td>
+            @endif
             @if ($allowanceCheck != 1)
                 <td class="allowance-fee"><p>&nbsp;</p></td>
             @endif
@@ -446,9 +449,6 @@
             @endif
             @if ($vehicleCheck != 1)
                 <td class="vehicle"><p>&nbsp;</p></td>
-            @endif
-            @if ($overtimeCheck != 1)
-                <td class="overtime"><p>&nbsp;</p></td>
             @endif
         </tr>
      @endfor
@@ -465,6 +465,9 @@
             @if ($amountCheck != 1)
                 <th class="center-txt">金額</th>
             @endif
+            @if ($overtimeCheck != 1)
+                <th class="center-txt">残業代</th>
+            @endif
             @if ($allowanceCheck != 1)
                 <th class="center-txt">手当</th>
             @endif
@@ -476,9 +479,6 @@
             @endif
             @if ($vehicleCheck != 1)
                 <th class="center-txt">車両</th>
-            @endif
-            @if ($overtimeCheck != 1)
-                <th class="center-txt">残業代</th>
             @endif
         </tr>
     </thead>
@@ -550,6 +550,12 @@
                     @endphp
                      <td class="driver-price"><p class="f-s-9">{{$amount}}</p></td>
                   @endif
+                  @if ($overtimeCheck != 1)
+                    @php
+                        $amount = $spv->overtime_fee ? number_format($spv->overtime_fee) : '';
+                    @endphp
+                    <td class="overtime"><p class="f-s-9">{{ $amount }}</p></td>
+                  @endif
                   @if ($allowanceCheck != 1)
                     @php
                         $amount = $spv->total_allowance ? number_format($spv->total_allowance) : '';
@@ -607,12 +613,6 @@
                         </p>
                     </td>
                   @endif
-                  @if ($overtimeCheck != 1)
-                    @php
-                        $amount = $spv->overtime_fee ? number_format($spv->overtime_fee) : '';
-                    @endphp
-                    <td class="overtime"><p class="f-s-9">{{ $amount }}</p></td>
-                  @endif
                 </tr>
             @endif
           @endforeach
@@ -627,6 +627,9 @@
                 @if ($amountCheck != 1)
                     <td class="driver-price"><p>&nbsp;</p></td>
                 @endif
+                @if ($overtimeCheck != 1)
+                    <td class="overtime"><p>&nbsp;</p></td>
+                @endif
                 @if ($allowanceCheck != 1)
                     <td class="allowance-fee"><p>&nbsp;</p></td>
                 @endif
@@ -638,9 +641,6 @@
                 @endif
                 @if ($vehicleCheck != 1)
                     <td class="vehicle"><p>&nbsp;</p></td>
-                @endif
-                @if ($overtimeCheck != 1)
-                    <td class="overtime"><p>&nbsp;</p></td>
                 @endif
               </tr>
           @endfor
@@ -657,6 +657,9 @@
                 @if ($amountCheck != 1)
                     <td class="driver-price"><p>&nbsp;</p></td>
                 @endif
+                @if ($overtimeCheck != 1)
+                    <td class="overtime"><p>&nbsp;</p></td>
+                @endif
                 @if ($allowanceCheck != 1)
                     <td class="allowance-fee"><p>&nbsp;</p></td>
                 @endif
@@ -668,9 +671,6 @@
                 @endif
                 @if ($vehicleCheck != 1)
                     <td class="vehicle"><p>&nbsp;</p></td>
-                @endif
-                @if ($overtimeCheck != 1)
-                    <td class="overtime"><p>&nbsp;</p></td>
                 @endif
             </tr>
         @endfor

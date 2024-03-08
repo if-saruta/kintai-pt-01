@@ -349,6 +349,8 @@
                         background-color: white;
                         .txt{
                             padding: 0.8rem 0;
+                            border-bottom: 1px solid black;
+                            border-right: 1px solid black;
                         }
                         // th:nth-child(1){
                         //     border-bottom: 0.5px solid transparent;
@@ -377,6 +379,12 @@
                         .txt{
                             padding: 0.5rem 0;
                         }
+                        .txt:nth-child(2n){
+                            border-right: 1px solid black;
+                        }
+                        .txt:nth-child(2n+1){
+                            border-right: 1px dashed $cGray;
+                        }
                     }
                 }
                 &__body{
@@ -389,11 +397,12 @@
                             position: sticky;
                             left: 0;
                             font-size: 1.4rem;
-                            font-weight: $fw-bold;
+                            font-weight: $fw-medium;
                             letter-spacing: 0.1rem;
                             background-color: white;
                             z-index: 1000;
-                            // border-bottom: 1.5px solid black;
+                            border-right: 1px solid black;
+                            border-bottom: 1px solid black;
                             &__block{
                                 position: relative;
                                 min-width: 7rem;
@@ -404,11 +413,12 @@
                             }
                         }
                         .table-cell{
+                            border-right: 1px dashed rgb(214, 214, 214);
                             &__item{
                                 width: math.div(80,1280) * 100vw;
                                 position: relative;
                                 font-size: 1.2rem;
-                                font-weight: $fw-bold;
+                                font-weight: $fw-medium;
                                 letter-spacing: 0.1rem;
                                 line-height: math.div(19,13);
                                 cursor: pointer;
@@ -500,6 +510,9 @@
                             .create-project:last-child{
                                 border-bottom: 0px;
                             }
+                        }
+                        .--table-cell-pm{
+                            border-right: 1px solid black;
                         }
                         .total-salary{
                             padding: 0px 3rem;
@@ -693,6 +706,7 @@
           border-left: 0px;
           text-align: center;
           vertical-align: middle;
+          font-weight: $fw-medium;
       }
       table th{
         position: relative;
@@ -701,6 +715,7 @@
         text-align: center;
         vertical-align: middle;
         border-left: 0px;
+        font-weight: $fw-medium;
       }
 }
 

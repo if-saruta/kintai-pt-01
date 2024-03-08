@@ -81,12 +81,36 @@
                 &__table{
                     width: 49.8%;
                     font-size: 1.4rem;
-                    font-weight: $fw-bold;
+                    font-weight: $fw-regular;
                     flex-shrink: 0;
                     border-right: 0.5px solid black;
                     thead{
+                        position: sticky;
+                        z-index: 1000;
+                        top: 0;
+                        left: 0;
+                        background-color: white;
+                        &::before{
+                            content: "";
+                            position: absolute;
+                            top: 0;
+                            width: 100%;
+                            height: 0.5px;
+                            background-color: black;
+                        }
+                        &::after{
+                            content: "";
+                            position: absolute;
+                            bottom: 0;
+                            width: 100%;
+                            height: 0.5px;
+                            background-color: black;
+                        }
                         th{
                             padding: 0.5rem 0;
+                            border-top: 0px;
+                            border-bottom: 0px;
+                            font-weight: $fw-medium;
                         }
                     }
                     tbody{
@@ -104,12 +128,12 @@
                         tr:nth-child(3n+1){
                             border-top: 0.5px solid black;
                         }
+                        tr:first-child{
+                            border-top: 0;
+                        }
                         tr:last-child{
                             border-bottom: 0.5px solid black;
                         }
-                        // .createShift:hover{
-                        //     border: 1px solid $cBlue02;
-                        // }
                     }
                     .w-amount{
                         width: 10.2%;
@@ -204,7 +228,7 @@
                             }
                         }
                         .txt{
-                            font-weight: $fw-bold;
+                            font-weight: $fw-medium;
                             margin: 3px 0px;
                         }
                     }
@@ -214,6 +238,7 @@
                             width: 50%;
                             text-align: start;
                             border: 0.5px solid black;
+                            font-weight: $fw-medium;
                             input{
                                 width: 100%;
                                 height: 100%;
@@ -299,15 +324,13 @@
                 left: 50%;
                 transform: translate(-50%,-50%);
                 width: math.div(700,1280) * 100vw;
-                height: math.div(650,800) * 100vh;
+                // height: math.div(650,800) * 100vh;
+                padding: 5rem;
                 border-radius: 1.5rem;
                 background-color: white;
                 &__inner{
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%,-50%);
                     width: math.div(600,1280) * 100vw;
+                    margin: 0 auto;
                     display: flex;
                     flex-direction: column;
                     .head{
@@ -548,6 +571,7 @@
           border-left: 0.5px solid black;
           text-align: center;
           vertical-align: middle;
+          font-weight: $fw-medium;
       }
       table th{
         position: relative;
@@ -557,6 +581,7 @@
         border-right: 0.5px solid black;
         text-align: center;
         vertical-align: middle;
+        font-weight: $fw-medium;
       }
     .pdf-wrap{
         position: relative;

@@ -45,11 +45,18 @@
                     <span class="nav-item__txt navTxt">{{ __('請求書') }}</span>
                 </a>
                 <a href="{{ route('company.') }}"
-                    class="{{ request()->routeIs('vehicle.*', 'company.*') ? 'active' : '' }} nav-item">
+                    class="{{ request()->routeIs('company.*') ? 'active' : '' }} nav-item">
                     <div class="icon-wrap">
-                        <i class="fa-solid fa-circle-info"></i>
+                        <i class="fa-solid fa-building"></i>
                     </div>
-                    <span class="nav-item__txt navTxt">{{ __('情報管理') }}</span>
+                    <span class="nav-item__txt navTxt">{{ __('所属先') }}</span>
+                </a>
+                <a href="{{ route('vehicle.') }}"
+                    class="{{ request()->routeIs('vehicle.*') ? 'active' : '' }} nav-item">
+                    <div class="icon-wrap">
+                        <i class="fa-solid fa-car"></i>
+                    </div>
+                    <span class="nav-item__txt navTxt">{{ __('車両') }}</span>
                 </a>
                 <a href="{{ route('profile.edit') }}"
                     class="{{ request()->routeIs('profile.*') ? 'active' : '' }} nav-item">

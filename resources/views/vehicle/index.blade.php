@@ -6,23 +6,7 @@
     </x-slot>
 
     <main class="main">
-        <div class="main__link-block --info-link-block">
-            <div class="main__link-block__tags">
-                <div class="main__link-block__item --info-link-block__item">
-                    <a href="{{route('company.')}}"
-                        class="{{ request()->routeIs('company*.') ? 'active' : '' }} link">
-                        <span class="">所属先</span>
-                    </a>
-                </div>
-                <div class="main__link-block__item --info-link-block__item">
-                    <a href="{{route('vehicle.')}}"
-                        class="{{ request()->routeIs('vehicle*.') ? 'active' : '' }} link">
-                        <span class="">車両</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="main__white-board">
+        <div class="main__white-board --info-white-board">
             <div class="info-wrap">
                 <div class="info-wrap__register-item">
                     {{-- デフォルトの画面 --}}

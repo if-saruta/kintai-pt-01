@@ -257,7 +257,7 @@
                                                 @endfor
                                             </td>
                                             {{-- 午後 --}}
-                                            <td class="table-cell">
+                                            <td class="table-cell --table-cell-pm">
                                                 @foreach ( $shift->projectsVehicles as $spv )
                                                     @if ($spv->time_of_day == 1)
                                                     <div class="table-cell__item">
@@ -384,7 +384,7 @@
                                             @endfor
                                         </td>
                                         {{-- 午後 --}}
-                                        <td class="table-cell">
+                                        <td class="table-cell --table-cell-pm">
                                             @foreach ( $shift->projectsVehicles as $spv )
                                                 @if ($spv->time_of_day == 1)
                                                 <div class="table-cell__item">

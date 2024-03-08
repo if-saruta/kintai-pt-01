@@ -15,7 +15,7 @@
             font-family: ipaexm;
             font-style: normal;
             font-weight: normal;
-            src: url('{{ storage_path('fonts/ipag.ttf') }}');
+            src: url('{{ storage_path('fonts/ipaexm.ttf') }}');
         }
 
       /* 全てのHTML要素に適用 */
@@ -66,6 +66,27 @@
       }
       .amount-w-60{
         width: 60px;
+      }
+      .retail-sub-total-td:last-child::after{
+        content: "";
+        position: absolute;
+        top: 0;
+        right: -0.5px;
+        width: 0.5px;
+        height: 100%;
+        background-color: black;
+      }
+      .border-right{
+        position: relative;
+      }
+      .border-right::after{
+        content: "";
+        position: absolute;
+        top: 0;
+        right: -0.5px;
+        width: 0.5px;
+        height: 100%;
+        background-color: black;
       }
 
 	</style>
@@ -119,10 +140,10 @@
                             <th>配送料金</th>
                         @endif
                         @if ($expresswayCheck == 1)
-                            <th>高速代</th>
+                            <th>高速料金</th>
                         @endif
                         @if ($parkingCheck == 1)
-                            <th>パーキング代</th>
+                            <th>駐車料金</th>
                         @endif
                     @endforeach
                 @endforeach
@@ -265,6 +286,33 @@
                 @endforeach
             </tr>
         @endforeach
+        <tr>
+            <td></td>
+            @php
+                $retailTotal = 0;
+            @endphp
+            @foreach ($projects as $project)
+                @php
+                    $retailSubTotal = 0;
+                @endphp
+                @foreach ( $ShiftProjectVehicles as $spv )
+                    @if ($spv->shift->employee)
+                        @if ($spv->project_id == $project->id)
+                            @php
+                                $retailSubTotal += $spv->retail_price;
+                                $retailTotal += $spv->retail_price;
+                            @endphp
+                        @endif
+                    @endif
+                @endforeach
+                {{-- 計算した上代の表示 --}}
+                <td colspan="{{ $company_count }}" class="retail-sub-total-td">{{ number_format($retailSubTotal) }}</td>
+            @endforeach
+        </tr>
+        <tr>
+            <td></td>
+            <td colspan="{{ $company_count * $project_count }}" class="border-right">{{ number_format($retailTotal) }}</td>
+        </tr>
     </tbody>
 </table>
 </body>
