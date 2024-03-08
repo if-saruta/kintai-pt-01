@@ -300,7 +300,7 @@
                     left: 0;
                     background-color: white;
                     th{
-                        font-weight: $fw-medium;
+                        font-weight: $fw-regular;
                     }
                     &::before{
                         content: "";
@@ -355,7 +355,7 @@
                             input{
                                 width: 100%;
                                 font-size: 1.4rem;
-                                font-weight: $fw-medium;
+                                font-weight: $fw-regular;
                                 padding: 0;
                                 border: 0;
                                 background-color: rgba(0, 217, 255, 0.148);

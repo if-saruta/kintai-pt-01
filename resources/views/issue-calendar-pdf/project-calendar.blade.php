@@ -88,6 +88,10 @@
         height: 100%;
         background-color: black;
       }
+      .empty-clm{
+        border: 0px;
+        border-bottom: 0.5px solid black;
+      }
 
 	</style>
 
@@ -177,7 +181,7 @@
                 }
             @endphp
 
-            <tr>
+            <tr class="tr">
                 <td class="date-w-60">{{ $date->format('n') }}月{{ $date->format('j') }}日({{ $date->isoFormat('ddd') }})</td>
                 @foreach ($projects as $project)
                     @foreach ($getCompanies as $company)
@@ -210,7 +214,7 @@
                     @php
                         $amount = $tmp_total_retail_day ? number_format($tmp_total_retail_day) : '';
                     @endphp
-                    <td class="right-txt amount-w-60">{{$amount}}</td>
+                    <td class="right-txt amount-w-60 retail-clm">{{$amount}}</td>
                 @endif
                 @foreach ($projects as $project)
                     @foreach ($getCompanies as $company)
@@ -307,6 +311,27 @@
                 @endforeach
                 {{-- 計算した上代の表示 --}}
                 <td colspan="{{ $company_count }}" class="retail-sub-total-td">{{ number_format($retailSubTotal) }}</td>
+            @endforeach
+            <td class="empty-clm"></td>
+            @foreach ($projects as $project)
+                @foreach ($getCompanies as $company)
+                    {{-- 給与 --}}
+                    @if ($salaryCheck)
+                        <td class="empty-clm"></td>
+                    @endif
+                    {{-- 上代 --}}
+                    @if ($retailCheck == 1)
+                        <td class="empty-clm"></td>
+                    @endif
+                    {{-- 高速代 --}}
+                    @if ($expresswayCheck == 1)
+                        <td class="empty-clm"></td>
+                    @endif
+                    {{-- パーキング代 --}}
+                    @if ($parkingCheck == 1)
+                        <td class="empty-clm"></td>
+                    @endif
+                @endforeach
             @endforeach
         </tr>
         <tr>

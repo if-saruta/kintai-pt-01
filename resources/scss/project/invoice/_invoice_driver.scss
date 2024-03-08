@@ -110,7 +110,7 @@
                             padding: 0.5rem 0;
                             border-top: 0px;
                             border-bottom: 0px;
-                            font-weight: $fw-medium;
+                            font-weight: $fw-regular;
                         }
                     }
                     tbody{
@@ -228,7 +228,7 @@
                             }
                         }
                         .txt{
-                            font-weight: $fw-medium;
+                            font-weight: $fw-regular;
                             margin: 3px 0px;
                         }
                     }
@@ -238,7 +238,7 @@
                             width: 50%;
                             text-align: start;
                             border: 0.5px solid black;
-                            font-weight: $fw-medium;
+                            font-weight: $fw-regular;
                             input{
                                 width: 100%;
                                 height: 100%;
@@ -571,7 +571,7 @@
           border-left: 0.5px solid black;
           text-align: center;
           vertical-align: middle;
-          font-weight: $fw-medium;
+          font-weight: $fw-regular;
       }
       table th{
         position: relative;
@@ -581,7 +581,7 @@
         border-right: 0.5px solid black;
         text-align: center;
         vertical-align: middle;
-        font-weight: $fw-medium;
+        font-weight: $fw-regular;
       }
     .pdf-wrap{
         position: relative;
