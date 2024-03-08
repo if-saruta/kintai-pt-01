@@ -172,34 +172,61 @@
                                                 <div class="employee-salary__list__body">
                                                     <div class="inner">
                                                         <div class="employee-list employee-list-open employeeList01">
+                                                            @php
+                                                                $isEmployee = false;
+                                                            @endphp
                                                             @foreach ($employees as $employee)
                                                                 @if ($employee->employment_status == '正社員')
                                                                 <div class="item">
                                                                     <p class="">{{$employee->name}}</p>
                                                                     <input type="text" name="projects[0][employeePayments][{{$employee->id}}]" class="c-input" placeholder="000">
                                                                 </div>
+                                                                @php
+                                                                    $isEmployee = true;
+                                                                @endphp
                                                                 @endif
                                                             @endforeach
+                                                            @if (!$isEmployee)
+                                                                <p class="">正社員は登録されていません</p>
+                                                            @endif
                                                         </div>
                                                         <div class="employee-list employeeList02">
+                                                            @php
+                                                                $isEmployee = false;
+                                                            @endphp
                                                             @foreach ($employees as $employee)
                                                                 @if ($employee->employment_status == '個人事業主')
                                                                 <div class="item">
                                                                     <p class="">{{$employee->name}}</p>
                                                                     <input type="text" name="projects[0][employeePayments][{{$employee->id}}]" class="c-input" placeholder="000">
                                                                 </div>
+                                                                @php
+                                                                    $isEmployee = true;
+                                                                @endphp
                                                                 @endif
                                                             @endforeach
+                                                            @if (!$isEmployee)
+                                                                <p class="">個人事業主は登録されていません</p>
+                                                            @endif
                                                         </div>
                                                         <div class="employee-list employeeList03">
+                                                            @php
+                                                                $isEmployee = false;
+                                                            @endphp
                                                             @foreach ($employees as $employee)
                                                                 @if ($employee->employment_status == 'アルバイト')
                                                                 <div class="item">
                                                                     <p class="">{{$employee->name}}</p>
                                                                     <input type="text" name="projects[0][employeePayments][{{$employee->id}}]" class="c-input" placeholder="000">
                                                                 </div>
+                                                                @php
+                                                                    $isEmployee = true;
+                                                                @endphp
                                                                 @endif
                                                             @endforeach
+                                                            @if (!$isEmployee)
+                                                                <p class="">アルバイトは登録されていません</p>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </div>
