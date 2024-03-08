@@ -316,6 +316,10 @@
                                             padding: 1.5rem;
                                             .employee-list{
                                                 display: none;
+                                                &__warning-txt{
+                                                    font-size: 1.2rem;
+                                                    font-weight: $fw-bold;
+                                                }
                                             }
                                             .employee-list-open{
                                                 display: block;

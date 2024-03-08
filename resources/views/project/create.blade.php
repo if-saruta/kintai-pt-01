@@ -187,7 +187,7 @@
                                                                 @endif
                                                             @endforeach
                                                             @if (!$isEmployee)
-                                                                <p class="">正社員は登録されていません</p>
+                                                                <p class="employee-list__warning-txt">正社員は登録されていません</p>
                                                             @endif
                                                         </div>
                                                         <div class="employee-list employeeList02">
@@ -206,7 +206,7 @@
                                                                 @endif
                                                             @endforeach
                                                             @if (!$isEmployee)
-                                                                <p class="">個人事業主は登録されていません</p>
+                                                                <p class="employee-list__warning-txt">個人事業主は登録されていません</p>
                                                             @endif
                                                         </div>
                                                         <div class="employee-list employeeList03">
@@ -225,7 +225,7 @@
                                                                 @endif
                                                             @endforeach
                                                             @if (!$isEmployee)
-                                                                <p class="">アルバイトは登録されていません</p>
+                                                                <p class="employee-list__warning-txt">アルバイトは登録されていません</p>
                                                             @endif
                                                         </div>
                                                     </div>

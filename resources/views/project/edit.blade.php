@@ -173,6 +173,9 @@
                                                 <div class="employee-salary__list__body">
                                                     <div class="inner">
                                                         <div class="employee-list employee-list-open employeeList01">
+                                                            @php
+                                                                $isEmployee = false;
+                                                            @endphp
                                                             @foreach ($employees as $employee)
                                                                 @if ($employee->employment_status == '正社員')
                                                                     @foreach ( $project->payments as $record )
@@ -181,12 +184,21 @@
                                                                             <p class="">{{$employee->name}}</p>
                                                                             <input type="text" name="editProjects[{{$project->id}}][employeePayments][{{$employee->id}}]" class="c-input" value="{{$record->amount}}">
                                                                         </div>
+                                                                        @php
+                                                                            $isEmployee = true;
+                                                                        @endphp
                                                                         @endif
                                                                     @endforeach
                                                                 @endif
                                                             @endforeach
+                                                            @if (!$isEmployee)
+                                                                <p class="employee-list__warning-txt">正社員は登録されていません</p>
+                                                            @endif
                                                         </div>
                                                         <div class="employee-list employeeList02">
+                                                            @php
+                                                                $isEmployee = false;
+                                                            @endphp
                                                             @foreach ($employees as $employee)
                                                                 @if ($employee->employment_status == '個人事業主')
                                                                     @foreach ( $project->payments as $record )
@@ -195,12 +207,21 @@
                                                                             <p class="">{{$employee->name}}</p>
                                                                             <input type="text" name="editProjects[{{$project->id}}][employeePayments][{{$employee->id}}]" class="c-input" value="{{$record->amount}}">
                                                                         </div>
+                                                                        @php
+                                                                            $isEmployee = true;
+                                                                        @endphp
                                                                         @endif
                                                                     @endforeach
                                                                 @endif
                                                             @endforeach
+                                                            @if (!$isEmployee)
+                                                                <p class="employee-list__warning-txt">個人事業主は登録されていません</p>
+                                                            @endif
                                                         </div>
                                                         <div class="employee-list employeeList03">
+                                                            @php
+                                                                $isEmployee = false;
+                                                            @endphp
                                                             @foreach ($employees as $employee)
                                                                 @if ($employee->employment_status == 'アルバイト')
                                                                     @foreach ( $project->payments as $record )
@@ -209,10 +230,16 @@
                                                                             <p class="">{{$employee->name}}</p>
                                                                             <input type="text" name="editProjects[{{$project->id}}][employeePayments][{{$employee->id}}]" class="c-input" value="{{$record->amount}}">
                                                                         </div>
+                                                                        @php
+                                                                            $isEmployee = true;
+                                                                        @endphp
                                                                         @endif
                                                                     @endforeach
                                                                 @endif
                                                             @endforeach
+                                                            @if (!$isEmployee)
+                                                                <p class="employee-list__warning-txt">アルバイトは登録されていません</p>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </div>
