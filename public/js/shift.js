@@ -367,7 +367,7 @@ window.addEventListener('DOMContentLoaded', () => {
             let newElem = document.createElement('div');
             let txtElem = document.createElement('p');
             newElem.classList.add('company-view__item');
-            newElem.style.height = (companyHeightArray[i] - 1) + 'px';
+            newElem.style.height = (companyHeightArray[i]) + 'px';
             txtElem.textContent = companyKind[i];
             newElem.appendChild(txtElem);
             companyView.appendChild(newElem);
