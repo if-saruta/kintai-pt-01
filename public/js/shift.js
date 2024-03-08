@@ -357,7 +357,9 @@ window.addEventListener('DOMContentLoaded', () => {
         for(let i = 0; i < companyKind.length; i++){
             for(let j = 0; j < companyInfo.length; j++){
                 if(companyKind[i] == companyInfo[j].getAttribute('data-company-name')){
-                    companyHeightArray[i] += companyInfo[j].closest('.getRow').clientHeight - 0.5;
+                    // companyHeightArray[i] += companyInfo[j].closest('.getRow').clientHeight - 0.5;
+                    console.log(companyInfo[j].closest('.getRow').offsetHeight)
+                    companyHeightArray[i] += companyInfo[j].closest('.getRow').offsetHeight - 0.5;
                 }
             }
         }
@@ -367,7 +369,7 @@ window.addEventListener('DOMContentLoaded', () => {
             let newElem = document.createElement('div');
             let txtElem = document.createElement('p');
             newElem.classList.add('company-view__item');
-            newElem.style.height = (companyHeightArray[i]) + 'px';
+            newElem.style.height = companyHeightArray[i] + 'px';
             txtElem.textContent = companyKind[i];
             newElem.appendChild(txtElem);
             companyView.appendChild(newElem);
