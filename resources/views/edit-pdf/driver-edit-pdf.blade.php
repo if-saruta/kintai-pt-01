@@ -55,7 +55,7 @@
                             <p class="">{{$employeeInfo->name}}</p>
                         </div>
                     </div>
-                    <a href="javascript:history.back()" class="btn --back" onclick='return confirm("入力したデータは失われます。")'>
+                    <a href="{{ route('invoice.driverShift') }}" class="btn --back" onclick='return confirm("入力したデータは失われます。")'>
                         戻る
                     </a>
                 </div>
@@ -186,9 +186,9 @@
                                     <tr>
                                         <td class="request-table-data --bg-green colorChangeElem"><p class="request-table-data-txt">ご請求金額</p></td>
                                         @if($employeeInfo->is_invoice == 1)
-                                            <td class="request-table-data"><p class="request-table-data-txt allCalcTotalView">¥{{number_format(ceil(((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) - ceil($subTotalCost * 1.1)))}}</p></td>
+                                            <td class="request-table-data"><p class="request-table-data-txt allCalcTotalView">¥{{number_format(round(((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) - round($subTotalCost * 1.1)))}}</p></td>
                                         @else
-                                            <td class="request-table-data"><p class="request-table-data-txt allCalcTotalView">¥{{ number_format(ceil($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - ceil($totalSalaryAmount * 0.2) + $etc - ceil($subTotalCost * 1.1)) }}</p></td>
+                                            <td class="request-table-data"><p class="request-table-data-txt allCalcTotalView">¥{{ number_format(round($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - round($totalSalaryAmount * 0.2) + $etc - round($subTotalCost * 1.1)) }}</p></td>
                                         @endif
                                     </tr>
                                 </table>
@@ -218,8 +218,8 @@
                                             <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{ number_format($totalSalaryAmount) }}" class="input table-input amount changeElement salaryUnit commaInput"></td>
                                             <td class="top-table-data w-100"><input type="text" name="salaryAmount[]" value="{{ number_format($totalSalaryAmount) }}" class="input table-input amount changeElement salaryAmount commaInput"></td>
                                         @else
-                                            <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{ number_format(ceil($totalSalaryAmount * 1.1)) }}" class="input table-input amount changeElement salaryUnit commaInput"></td>
-                                            <td class="top-table-data w-100"><input type="text" name="salaryAmount[]" value="{{ number_format(ceil($totalSalaryAmount * 1.1)) }}" class="input table-input amount changeElement salaryAmount commaInput"></td>
+                                            <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{ number_format(round($totalSalaryAmount * 1.1)) }}" class="input table-input amount changeElement salaryUnit commaInput"></td>
+                                            <td class="top-table-data w-100"><input type="text" name="salaryAmount[]" value="{{ number_format(round($totalSalaryAmount * 1.1)) }}" class="input table-input amount changeElement salaryAmount commaInput"></td>
                                         @endif
                                     </tr>
                                     {{-- 手当 --}}
@@ -241,8 +241,8 @@
                                             <td class="top-table-data w-260"><input type="text" name="salaryProject[]" value="値引き分" class="input table-input changeElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryEtc[]" class="input table-input changeElement etcElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryCount[]" value="1" class="input table-input changeElement salaryNum"></td>
-                                            <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{ number_format(-ceil($totalSalaryAmount * 0.2)) }}" class="input table-input amount changeElement salaryUnit commaInput"></td>
-                                            <td class="top-table-data w-70"><input type="text" name="salaryAmount[]" value="{{ number_format(-ceil($totalSalaryAmount * 0.2)) }}" class="input table-input amount changeElement salaryAmount commaInput"></td>
+                                            <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{ number_format(-round($totalSalaryAmount * 0.2)) }}" class="input table-input amount changeElement salaryUnit commaInput"></td>
+                                            <td class="top-table-data w-70"><input type="text" name="salaryAmount[]" value="{{ number_format(-round($totalSalaryAmount * 0.2)) }}" class="input table-input amount changeElement salaryAmount commaInput"></td>
                                         </tr>
                                     @endif
                                     {{-- 追加分項目 --}}
@@ -296,7 +296,7 @@
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                                            <td class="top-table-data w-100"><input type="text" name="salarySubTotal" value="{{ number_format(ceil($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - ceil($totalSalaryAmount * 0.2)) }}" class="input table-input amount salarySubTotal commaInput" readonly></td>
+                                            <td class="top-table-data w-100"><input type="text" name="salarySubTotal" value="{{ number_format(round($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - round($totalSalaryAmount * 0.2)) }}" class="input table-input amount salarySubTotal commaInput" readonly></td>
                                         </tr>
                                     @endif
                                     @if ($employeeInfo->is_invoice == 1)
@@ -307,7 +307,7 @@
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                                        <td class="top-table-data w-100"><input type="text" name="salaryTax" value="{{ number_format(ceil($taxAmount)) }}" id="salaryTax" class="input amount table-input commaInput" readonly></td>
+                                        <td class="top-table-data w-100"><input type="text" name="salaryTax" value="{{ number_format(round($taxAmount)) }}" id="salaryTax" class="input amount table-input commaInput" readonly></td>
                                     </tr>
                                     @endif
                                     <tr>
@@ -327,9 +327,9 @@
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
                                         @if ($employeeInfo->is_invoice == 1)
-                                        <td class="top-table-data w-100"><input type="text" name="salaryTotal" value="{{ number_format(ceil((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc)) }}" class="input amount table-input salaryTotal commaInput" readonly></td>
+                                        <td class="top-table-data w-100"><input type="text" name="salaryTotal" value="{{ number_format(round((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc)) }}" class="input amount table-input salaryTotal commaInput" readonly></td>
                                         @else
-                                            <td class="top-table-data w-100"><input type="text" name="salaryTotal" value="{{ number_format(ceil($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - ceil($totalSalaryAmount * 0.2) + $etc) }}" class="input amount table-input salaryTotal commaInput" readonly></td>
+                                            <td class="top-table-data w-100"><input type="text" name="salaryTotal" value="{{ number_format(round($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - round($totalSalaryAmount * 0.2) + $etc) }}" class="input amount table-input salaryTotal commaInput" readonly></td>
                                         @endif
                                     </tr>
 
@@ -355,8 +355,8 @@
                                             <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-330"><p class="top-table-data-txt --center f-s-10">㈱T.N.G 請求書NO.{{ $employeeInfo->initials }}<input class="invoice-number --invoice-number02 --common-data" value="{{ $today->format('Y') }}{{ $today->format('m') }}15" readonly>({{ $today->format('Y') }}年 {{ $today->format('m') }}月 15日発行)相殺</㈱T.N.G></p></td>
                                             <td class="top-table-data w-70"><input type="text" name="getCostNum" value="1" class="input table-input changeElement costNumByDriver"></td>
-                                            <td class="top-table-data w-70"><input type="text" name="getCostUntil" value="{{ number_format(ceil($subTotalCost * 1.1))}}" class="input table-input amount changeElement costUnitByDriver costUnitByDriver-C commaInput"></td>
-                                            <td class="top-table-data w-100"><input type="text" name="getCostAmount" value="{{ number_format(ceil($subTotalCost * 1.1))}}" class="input table-input amount changeElement costTotalByDriver commaInput" readonly></td>
+                                            <td class="top-table-data w-70"><input type="text" name="getCostUntil" value="{{ number_format(round($subTotalCost * 1.1))}}" class="input table-input amount changeElement costUnitByDriver costUnitByDriver-C commaInput"></td>
+                                            <td class="top-table-data w-100"><input type="text" name="getCostAmount" value="{{ number_format(round($subTotalCost * 1.1))}}" class="input table-input amount changeElement costTotalByDriver commaInput" readonly></td>
                                         </tr>
                                         <tr class="salaryCostBasicRow">
                                             <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
@@ -390,7 +390,7 @@
                                             <th class="top-table-head w-330 --bg-green colorChangeElem"><p class="top-table-data-txt --right">小計</p></th>
                                             <th class="top-table-head w-70"><p class="top-table-head-txt"></p></th>
                                             <th class="top-table-head w-70"><p class="top-table-head-txt"></p></th>
-                                            <th class="top-table-head w-100"><input type="text" name="salaryCostTotal" value="{{number_format(ceil($subTotalCost * 1.1))}}" class="input table-input amount changeElement costAllTotal commaInput" readonly></th>
+                                            <th class="top-table-head w-100"><input type="text" name="salaryCostTotal" value="{{number_format(round($subTotalCost * 1.1))}}" class="input table-input amount changeElement costAllTotal commaInput" readonly></th>
                                         </tr>
                                         <tr>
                                             <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
@@ -399,9 +399,9 @@
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
                                             @if ($employeeInfo->is_invoice == 1)
-                                                <td class="top-table-data w-100"><input name="allTotal" type="text" value="{{ number_format(ceil(((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) - ceil($subTotalCost * 1.1))) }}" class="input table-input amount allCalcTotal commaInput" readonly></td>
+                                                <td class="top-table-data w-100"><input name="allTotal" type="text" value="{{ number_format(round(((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) - round($subTotalCost * 1.1))) }}" class="input table-input amount allCalcTotal commaInput" readonly></td>
                                             @else
-                                                <td class="top-table-data w-100"><input name="allTotal" type="text" value="{{ number_format(ceil($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - ceil($totalSalaryAmount * 0.2) + $etc - ceil($subTotalCost * 1.1)) }}" class="input table-input amount allCalcTotal commaInput" readonly></td>
+                                                <td class="top-table-data w-100"><input name="allTotal" type="text" value="{{ number_format(round($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - round($totalSalaryAmount * 0.2) + $etc - round($subTotalCost * 1.1)) }}" class="input table-input amount allCalcTotal commaInput" readonly></td>
                                             @endif
                                         </tr>
                                     </table>
@@ -412,7 +412,7 @@
                                             <th class="top-table-head w-330 --bg-green colorChangeElem"><p class="top-table-data-txt --right">小計</p></th>
                                             <th class="top-table-head w-70"><p class="top-table-head-txt"></p></th>
                                             <th class="top-table-head w-70"><p class="top-table-head-txt"></p></th>
-                                            <th class="top-table-head w-100"><input type="text" name="salaryCostTotal" value="{{ceil($subTotalCost * 1.1)}}" class="input table-input changeElement costAllTotal" readonly></th>
+                                            <th class="top-table-head w-100"><input type="text" name="salaryCostTotal" value="{{round($subTotalCost * 1.1)}}" class="input table-input changeElement costAllTotal" readonly></th>
                                         </tr>
                                         <tr>
                                             <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
@@ -421,9 +421,9 @@
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
                                             @if ($employeeInfo->is_invoice == 0)
-                                                <td class="top-table-data w-100"><input type="text" value="{{ ceil(((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) - ceil($subTotalCost * 1.1)) }}" class="inputn table-input allCalcTotal" readonly></td>
+                                                <td class="top-table-data w-100"><input type="text" value="{{ round(((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) - round($subTotalCost * 1.1)) }}" class="inputn table-input allCalcTotal" readonly></td>
                                             @else
-                                                <td class="top-table-data w-100"><input type="text" value="{{ ceil($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - ceil($totalSalaryAmount * 0.2) + $etc - ceil($subTotalCost * 1.1) }}" class="inputn table-input allCalcTotal" readonly></td>
+                                                <td class="top-table-data w-100"><input type="text" value="{{ round($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - round($totalSalaryAmount * 0.2) + $etc - round($subTotalCost * 1.1) }}" class="inputn table-input allCalcTotal" readonly></td>
                                             @endif
                                         </tr>
                                     </table> --}}
@@ -473,7 +473,7 @@ FAX:03-5875-7469
 </div>
                                 </div>
                                 <div class="amount">
-                                    <p class="amount-txt"><span class="">ご請求金額</span><span class="amount-fee costTotalView">¥{{number_format(ceil($subTotalCost * 1.1))}}</span></p>
+                                    <p class="amount-txt"><span class="">ご請求金額</span><span class="amount-fee costTotalView">¥{{number_format(round($subTotalCost * 1.1))}}</span></p>
                                 </div>
                                 <div class="parent">
                                     <div class="plus costAddBtn">
@@ -558,12 +558,12 @@ FAX:03-5875-7469
                                     <tr>
                                         <td class="w-401 border-none"></td>
                                         <td class="mini-table-data w-201"><p class="mini-table-data-txt --center">消費税(10%)</p></td>
-                                        <td class="table-data w-110"><input type="text" name="costTax" value="{{ceil($subTotalCost * 0.1)}}" class="input table-input cost-amount costTaxElem commaInput" readonly></td>
+                                        <td class="table-data w-110"><input type="text" name="costTax" value="{{round($subTotalCost * 0.1)}}" class="input table-input cost-amount costTaxElem commaInput" readonly></td>
                                     </tr>
                                     <tr>
                                         <td class="w-401 border-none"></td>
                                         <td class="mini-table-data w-201"><p class="mini-table-data-txt --center"> 合計金額(内消費税)</p></td>
-                                        <td class="table-data w-110"><input type="text" name="costTotal" value="{{ceil($subTotalCost * 1.1)}}" class="input table-input cost-amount costTotalElem commaInput" readonly></td>
+                                        <td class="table-data w-110"><input type="text" name="costTotal" value="{{round($subTotalCost * 1.1)}}" class="input table-input cost-amount costTotalElem commaInput" readonly></td>
                                     </tr>
                                 </table>
                                 <div class="bank">

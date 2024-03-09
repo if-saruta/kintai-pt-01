@@ -765,7 +765,7 @@
                                                         </tr>
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="tax[name]" value="消費税"></th>
-                                                            <td><input type="text" name="tax[amount]" value="{{ number_format(ceil($totalSalary * 0.1)) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            <td><input type="text" name="tax[amount]" value="{{ number_format(round($totalSalary * 0.1)) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                         </tr>
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="parkingName" value="パーキング代"></th>
@@ -791,7 +791,7 @@
                                                     <tbody id="totalCostTableBody">
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="administrativeOutsourcing[name]" value="事務委託手数料(15%)"></th>
-                                                            <td><input type="text" name="administrativeOutsourcing[amount]" value="{{ number_format(ceil($totalSalary * 0.15)) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            <td><input type="text" name="administrativeOutsourcing[amount]" value="{{ number_format(round($totalSalary * 0.15)) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                         </tr>
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="administrative[name]" value="事務手数料"></th>

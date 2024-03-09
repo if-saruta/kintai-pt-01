@@ -196,12 +196,12 @@
                 }
                 &__top{
                     display: flex;
-                    gap: math.div(30,1280) * 100vw;
+                    gap: 5%;
                     textarea{
                         padding-top: 1rem;
                         padding-left: 1rem;
                         box-sizing: border-box;
-                        width: math.div(400,1280) * 100vw;
+                        width: 40%;
                         height: 20rem;
                         resize: none;
                         font-size: 1.4rem;

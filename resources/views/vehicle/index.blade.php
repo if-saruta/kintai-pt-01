@@ -59,7 +59,7 @@
                                 入力内容を登録
                             </button>
                             <button class="btn --delete" type="submit" name="action" value="delete" onclick='return confirm("本当に削除しますか?")'>
-                                所属先を削除
+                                車両を削除
                             </button>
                             <div class="btn --back closeBtn" onclick='return confirm("入力したデータは失われます。")'>
                                 戻る

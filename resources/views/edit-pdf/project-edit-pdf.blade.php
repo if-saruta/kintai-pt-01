@@ -49,7 +49,7 @@
                         <p class="">ダウンロード</p>
                     </button>
                 </div>
-                <a href="javascript:history.back()" class="btn --back --pdf-back" onclick='return confirm("入力したデータは失われます。")'>
+                <a href="{{ route('invoice.projectShift') }}" class="btn --back --pdf-back" onclick='return confirm("入力したデータは失われます。")'>
                     戻る
                 </a>
                 <div class="project-edit-pdf">
@@ -84,7 +84,7 @@
     </div>
                         </div>
                         <div class="amount">
-                            <p class="amount-txt"><span class="">ご請求金額</span><span class="amount-fee">¥{{number_format(ceil($total_retail + ($total_retail * 0.1)))}}</span></p>
+                            <p class="amount-txt"><span class="">ご請求金額</span><span class="amount-fee">¥{{number_format(round($total_retail + ($total_retail * 0.1)))}}</span></p>
                         </div>
                         <div class="table-wrap">
                             <div class="plus project-edit-plus-btn">
@@ -139,12 +139,12 @@
                             <tr>
                                 <td class="w-500 border-none"></td>
                                 <td class="mini-table-data w-201"><p class="mini-table-data-txt project-edit-pdf-text-left">消費税(10%)</p></td>
-                                <td class="mini-table-data w-110"><input type="text" name="tax" value="{{ceil($total_retail * 0.1)}}" class="input project-table-input taxElem project-edit-pdf-text-right commaInput"></td>
+                                <td class="mini-table-data w-110"><input type="text" name="tax" value="{{round($total_retail * 0.1)}}" class="input project-table-input taxElem project-edit-pdf-text-right commaInput"></td>
                             </tr>
                             <tr>
                                 <td class="w-500 border-none"></td>
                                 <td class="mini-table-data w-201"><p class="mini-table-data-txt project-edit-pdf-text-left"> 合計金額(内消費税)</p></td>
-                                <td class="mini-table-data w-110"><input type="text" name="total_retail" value="{{ceil($total_retail + ($total_retail * 0.1))}}" class="input project-table-input totalElem project-edit-pdf-text-right commaInput"></td>
+                                <td class="mini-table-data w-110"><input type="text" name="total_retail" value="{{round($total_retail + ($total_retail * 0.1))}}" class="input project-table-input totalElem project-edit-pdf-text-right commaInput"></td>
                             </tr>
                         </table>
                         <table class="tax-table">
