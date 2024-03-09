@@ -375,7 +375,17 @@
                     }
                 }
                 .project-table-date{
+                    position: relative;
                     width: 11rem;
+                    &::after{
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 0.5px;
+                        height: 100%;
+                        background-color: black;
+                    }
                 }
                 .project-table-w-name{
                     width: 8rem;

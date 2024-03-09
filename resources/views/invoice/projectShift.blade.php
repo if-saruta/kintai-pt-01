@@ -394,7 +394,7 @@
                                         </tr>
                                         @endforeach
                                         <tr>
-                                            <td></td>
+                                            <td class="project-table-date"></td>
                                             @php
                                                 $retailTotal = 0;
                                             @endphp
@@ -416,7 +416,7 @@
                                                 <td colspan="{{ $company_count }}">{{ number_format($retailSubTotal) }}</td>
                                             @endforeach
                                         </tr>
-                                        <tr>
+                                        <tr class="project-table-date">
                                             <td></td>
                                             <td colspan="{{ $company_count * $project_count }}">{{ number_format($retailTotal) }}</td>
                                         </tr>
