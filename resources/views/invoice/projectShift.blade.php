@@ -249,7 +249,7 @@
                                         @if ($project_count >= 1 || $company_count >= 1) {{-- どちらか複数あれば --}}
                                         <tr>
                                             {{-- 日付ヘッド --}}
-                                            <th rowspan="2" class="project-table-date txtBox">----</th>
+                                            <th rowspan="2" class="project-table-date">----</th>
                                             {{-- 従業員名ヘッド --}}
                                             @foreach ($narrowProjects as $project)
                                             <th colspan="{{$company_count}}" class="co-head">{{$project->name}}</th>

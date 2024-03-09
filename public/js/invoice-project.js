@@ -22,9 +22,10 @@ window.addEventListener('load', () => {
         const table = document.getElementById('calendarTable');
         const txtBoxLength = document.querySelectorAll('.txtBox').length;
         const numberBoxLength = document.querySelectorAll('.numberBox').length;
-        let totalWidth = (txtBoxLength * 80) + (numberBoxLength * 50);
+        let totalWidth = 100 + (txtBoxLength * 110) + (numberBoxLength * 60);
 
-        table.style.width = totalWidth + 600 + 'px';
+        // table.style.width = totalWidth + 600 + 'px';
+        table.style.width = totalWidth + 'px';
     }
     tableWidthSet();
 
