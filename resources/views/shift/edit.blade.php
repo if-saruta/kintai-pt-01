@@ -802,12 +802,12 @@
                     {{-- 上代 --}}
                     <div class="form-block__item">
                         <p class="item-title">上代</p>
-                        <input type="text" class="c-input" id="retailInput" name="retailInput">
+                        <input type="text" class="c-input commaInput" id="retailInput" name="retailInput">
                     </div>
                     {{-- 給与 --}}
                     <div class="form-block__item">
                         <p class="item-title">給与</p>
-                        <input type="text" class="c-input" id="salaryInput" name="salaryInput">
+                        <input type="text" class="c-input commaInput" id="salaryInput" name="salaryInput">
                     </div>
                 </div>
                 {{-- ボタン --}}
@@ -902,12 +902,12 @@
                     {{-- 上代 --}}
                     <div class="form-block__item">
                         <p class="item-title">上代</p>
-                        <input type="text" class="c-input" id="createRetailInput" name="retailInput" placeholder="0000">
+                        <input type="text" class="c-input commaInput" id="createRetailInput" name="retailInput" placeholder="0000">
                     </div>
                     {{-- 給与 --}}
                     <div class="form-block__item">
                         <p class="item-title">給与</p>
-                        <input type="text" class="c-input" id="createSalaryInput" name="salaryInput" placeholder="0000">
+                        <input type="text" class="c-input commaInput" id="createSalaryInput" name="salaryInput" placeholder="0000">
                     </div>
                 </div>
                 {{-- ボタン --}}

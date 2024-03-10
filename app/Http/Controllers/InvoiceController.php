@@ -811,14 +811,14 @@ class InvoiceController extends Controller
         $driver_price = $request->input('driver_price');
         $unregistered_project = $request->input('unregistered_project');
 
-
+// dd($parking_fee);
         foreach ($retail_price as $id => $value) {
             $getShift = ShiftProjectVehicle::find($id);
             if ($getShift !== null) { // $getShiftがnullでないことを確認
-                $getShift->retail_price = str_replace([',', '，'], '', $retail_price[$id]);
-                $getShift->expressway_fee = str_replace([',', '，'], '', $expressway_fee[$id]);
-                $getShift->parking_fee = str_replace([',', '，'], '', $parking_fee[$id]);
-                $getShift->driver_price = str_replace([',', '，'], '', $driver_price[$id]);
+                $getShift->retail_price = isset($retail_price[$id]) ? str_replace([',', '，'], '', $retail_price[$id]) : $getShift->retail_price;
+                $getShift->expressway_fee = isset($expressway_fee[$id]) ? str_replace([',', '，'], '', $expressway_fee[$id]) : $getShift->expressway_fee;
+                $getShift->parking_fee = isset($parking_fee[$id]) ? str_replace([',', '，'], '', $parking_fee[$id]) : $getShift->parking_fee;
+                $getShift->driver_price = isset($driver_price[$id]) ? str_replace([',', '，'], '', $driver_price[$id]) : $getShift->driver_price;
                 $getShift->save();
             }
         }

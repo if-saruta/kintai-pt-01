@@ -189,7 +189,7 @@
                                                     }
                                                 }
                                             @endphp
-                                            <input type="text" name="employeePrice[{{$project->id}}]" value="{{$amount}}" class="c-input" placeholder="1,000">
+                                            <input type="text" name="employeePrice[{{$project->id}}]" value="{{$amount}}" class="c-input commaInput" placeholder="1,000">
                                         @else
                                             <div class="read-only">
                                                 <input type="text" class="c-input" placeholder="1,000" readonly>
@@ -206,7 +206,7 @@
                                                     </div>
                                                     <div class="allowance__amount">
                                                         <p class="">手当金額</p>
-                                                        <input type="text" name="allowanceAmountByEdit[{{$allowanceProject->id}}]" value="{{ceil($allowanceProject->amount)}}" class="c-input" placeholder="1,000">
+                                                        <input type="text" name="allowanceAmountByEdit[{{$allowanceProject->id}}]" value="{{ceil($allowanceProject->amount)}}" class="c-input commaInput" placeholder="1,000">
                                                     </div>
                                                     <i class="fa-solid fa-circle-minus delete-circle projectAllowanecDelete tmpProjectAllowance" data-project-all-id="{{$allowanceProject->id}}"></i>
                                                 </div>
@@ -230,7 +230,7 @@
                                 </div>
                                 <div class="input-item allowance-amount">
                                     <p class="">手当金額</p>
-                                    <input type="text" name="allowanceOtherAmountEdit[{{$allowanceOther->id}}]" value="{{$allowanceOther->amount}}" class="c-input" placeholder="1,000">
+                                    <input type="text" name="allowanceOtherAmountEdit[{{$allowanceOther->id}}]" value="{{$allowanceOther->amount}}" class="c-input commaInput" placeholder="1,000">
                                 </div>
                                 <i class="fa-solid fa-circle-minus delete-circle otherAllowanceDelete tmpOtherAllowance" data-other-all-id="{{$allowanceOther->id}}"></i>
                             </div>

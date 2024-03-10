@@ -246,8 +246,14 @@ class ShiftController extends Controller
             $shiftMiddle->time_of_day = 1;
         }
 
-        $shiftMiddle->retail_price = $request->retailInput;
-        $shiftMiddle->driver_price = $request->salaryInput;
+        // 半角および全角カンマを除去し、intにキャストする関数
+        $removeCommasAndCastToInt = function ($value) {
+            $valueWithoutCommas = str_replace([',', '，'], '', $value);
+            return (int)$valueWithoutCommas; // 文字列を整数型にキャスト
+        };
+
+        $shiftMiddle->retail_price = $removeCommasAndCastToInt($request->retailInput);
+        $shiftMiddle->driver_price = $removeCommasAndCastToInt($request->salaryInput);
         $shiftMiddle->save();
 
 
@@ -288,8 +294,14 @@ class ShiftController extends Controller
                 $shiftMiddle->vehicle_id = null;
             }
 
-            $shiftMiddle->retail_price = $request->retailInput;
-            $shiftMiddle->driver_price = $request->salaryInput;
+            // 半角および全角カンマを除去し、intにキャストする関数
+            $removeCommasAndCastToInt = function ($value) {
+                $valueWithoutCommas = str_replace([',', '，'], '', $value);
+                return (int)$valueWithoutCommas; // 文字列を整数型にキャスト
+            };
+
+            $shiftMiddle->retail_price = $removeCommasAndCastToInt($request->retailInput);
+            $shiftMiddle->driver_price = $removeCommasAndCastToInt($request->salaryInput);
             $shiftMiddle->save();
         } elseif ($request->input('action') == 'delete') {
             // 「削除」ボタンがクリックされた時の処理

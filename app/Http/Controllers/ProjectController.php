@@ -40,6 +40,12 @@ class ProjectController extends Controller
             'pdfName' => $request->input('clientNameByPDF')
         ]);
 
+        // 半角および全角カンマを除去し、intにキャストする関数
+        $removeCommasAndCastToInt = function ($value) {
+            $valueWithoutCommas = str_replace([',', '，'], '', $value);
+            return (int)$valueWithoutCommas; // 文字列を整数型にキャスト
+        };
+
         // 各案件と休日情報の保存
         foreach ($request->input('projects', []) as $projectData) {
             //チャーター情報の初期化
@@ -54,8 +60,8 @@ class ProjectController extends Controller
                 'name' => $projectData['name'],
                 'is_charter' => $is_charter,
                 'payment_type' => $projectData['payment_type'],
-                'retail_price' => $projectData['retail_price'],
-                'driver_price' => $projectData['driver_price'],
+                'retail_price' => $removeCommasAndCastToInt($projectData['retail_price']),
+                'driver_price' => $removeCommasAndCastToInt($projectData['driver_price']),
                 'estimated_overtime_hours' => $projectData['estimated_overtime_hours'],
                 'overtime_hourly_wage' => $projectData['overtime_hourly_wage']
             ]);
@@ -89,7 +95,7 @@ class ProjectController extends Controller
                     ProjectEmployeePayment::create([
                         'employee_id' => $employeeId,
                         'project_id' => $project->id,
-                        'amount' => $amount
+                        'amount' => $removeCommasAndCastToInt($amount)
                     ]);
                 }
             }
@@ -119,6 +125,11 @@ class ProjectController extends Controller
         $client->pdfName = $request->clientNameByPDF;
         $client->save();
 
+        // 半角および全角カンマを除去し、intにキャストする関数
+        $removeCommasAndCastToInt = function ($value) {
+            $valueWithoutCommas = str_replace([',', '，'], '', $value);
+            return (int)$valueWithoutCommas; // 文字列を整数型にキャスト
+        };
 
         // プロジェクト情報の更新
         foreach ($request->input('editProjects', []) as $projectId => $projectData) {
@@ -134,8 +145,8 @@ class ProjectController extends Controller
                 'is_charter' => $is_charter,
                 'name' => $projectData['name'],
                 'payment_type' => $projectData['payment_type'],
-                'retail_price' => $projectData['retail_price'],
-                'driver_price' => $projectData['driver_price'],
+                'retail_price' => $removeCommasAndCastToInt($projectData['retail_price']),
+                'driver_price' => $removeCommasAndCastToInt($projectData['driver_price']),
                 'estimated_overtime_hours' => $projectData['estimated_overtime_hours'],
                 'overtime_hourly_wage' => $projectData['overtime_hourly_wage']
             ]);

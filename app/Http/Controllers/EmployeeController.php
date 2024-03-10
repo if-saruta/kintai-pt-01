@@ -44,6 +44,12 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
 
+        // 半角および全角カンマを除去し、intにキャストする関数
+        $removeCommasAndCastToInt = function ($value) {
+            $valueWithoutCommas = str_replace([',', '，'], '', $value);
+            return (int)$valueWithoutCommas; // 文字列を整数型にキャスト
+        };
+
         if($request->rental_type == 1){
             $employee = Employee::create([
                 'register_number' => $request->register_number,
@@ -84,7 +90,7 @@ class EmployeeController extends Controller
                 ProjectEmployeePayment::create([
                     'employee_id' => $employee->id,
                     'project_id' => $projectId,
-                    'amount' => $price,
+                    'amount' => $removeCommasAndCastToInt($price),
                 ]);
             }
         }
@@ -102,7 +108,7 @@ class EmployeeController extends Controller
                         'employee_id' => $employee->id,
                         'project_id' => $projectId,
                         'allowanceName' => $name,
-                        'amount' => $amount,
+                        'amount' => $removeCommasAndCastToInt($amount),
                     ]);
                 }
             }
@@ -119,7 +125,7 @@ class EmployeeController extends Controller
                 AllowanceByOther::create([
                     'employee_id' => $employee->id,
                     'allowanceName' => $name,
-                    'amount' => $amount,
+                    'amount' => $removeCommasAndCastToInt($amount),
                 ]);
             }
         }
@@ -158,6 +164,13 @@ class EmployeeController extends Controller
 
     public function update(Request $request, $id)
     {
+
+        // 半角および全角カンマを除去し、intにキャストする関数
+        $removeCommasAndCastToInt = function ($value) {
+            $valueWithoutCommas = str_replace([',', '，'], '', $value);
+            return (int)$valueWithoutCommas; // 文字列を整数型にキャスト
+        };
+
         $employee = Employee::find($id);
 
         // 従業員データを更新
@@ -190,7 +203,7 @@ class EmployeeController extends Controller
             foreach ($employeePrices as $projectId => $price) {
                 ProjectEmployeePayment::updateOrCreate(
                     ['project_id' => $projectId, 'employee_id' => $employee->id],
-                    ['amount' => $price]
+                    ['amount' => $removeCommasAndCastToInt($price)]
                 );
             }
         }
@@ -204,7 +217,7 @@ class EmployeeController extends Controller
                 ->first();
 
                 $allowanceProject->allowanceName = $value;
-                $allowanceProject->amount = $allowanceProjectAmountsEdit[$id];
+                $allowanceProject->amount = $removeCommasAndCastToInt($allowanceProjectAmountsEdit[$id]);
 
                 $allowanceProject->save();
             }
@@ -223,7 +236,7 @@ class EmployeeController extends Controller
                         'employee_id' => $employee->id,
                         'project_id' => $projectId,
                         'allowanceName' => $name,
-                        'amount' => $amount,
+                        'amount' => $removeCommasAndCastToInt($amount),
                     ]);
                 }
             }
@@ -247,7 +260,7 @@ class EmployeeController extends Controller
                 ->first();
 
                 $allowanceOther->allowanceName = $value;
-                $allowanceOther->amount = $allowanceOtherAmountsEdit[$id];
+                $allowanceOther->amount = $removeCommasAndCastToInt($allowanceOtherAmountsEdit[$id]);
 
                 $allowanceOther->save();
             }
@@ -264,7 +277,7 @@ class EmployeeController extends Controller
                 AllowanceByOther::create([
                     'employee_id' => $employee->id,
                     'allowanceName' => $name,
-                    'amount' => $amount,
+                    'amount' => $removeCommasAndCastToInt($amount),
                 ]);
             }
         }

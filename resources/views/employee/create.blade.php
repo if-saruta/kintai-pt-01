@@ -177,7 +177,7 @@
                                     <div class="salary">
                                         <p class="">ドライバー価格</p>
                                         @if ($project->payment_type == 1)
-                                        <input type="text" name="employeePrice[{{$project->id}}]" class="c-input" placeholder="1,000">
+                                        <input type="text" name="employeePrice[{{$project->id}}]" class="c-input commaInput" placeholder="1,000">
                                         @else
                                         <div class="read-only">
                                             <input type="text" class="c-input" placeholder="1,000" readonly>
@@ -192,7 +192,7 @@
                                             </div>
                                             <div class="allowance__amount">
                                                 <p class="">手当金額</p>
-                                                <input type="text" name="allowanceAmount[{{$project->id}}][]" class="c-input" placeholder="1,000">
+                                                <input type="text" name="allowanceAmount[{{$project->id}}][]" class="c-input commaInput" placeholder="1,000">
                                             </div>
                                             <i class="fa-solid fa-circle-minus delete-circle projectAllowanecDelete"></i>
                                         </div>
@@ -213,7 +213,7 @@
                             </div>
                             <div class="input-item allowance-amount">
                                 <p class="">手当金額</p>
-                                <input type="text" name="allowanceOtherAmount[]" class="c-input" placeholder="1,000">
+                                <input type="text" name="allowanceOtherAmount[]" class="c-input commaInput" placeholder="1,000">
                             </div>
                             <i class="fa-solid fa-circle-minus delete-circle otherAllowanceDelete"></i>
                         </div>

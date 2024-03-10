@@ -33,6 +33,47 @@ window.addEventListener('load', () => {
     }
     widthSet();
 
+    // カンマの制御
+    const commmaActive = () => {
+        const inputElem = document.querySelectorAll('.commaInput');
+        for(let i = 0; i < inputElem.length; i++){
+            inputElem[i].addEventListener('input', function(e) {
+                // 入力値からカンマを削除し、数値に変換
+                var value = e.target.value.replace(/,/g, '');
+                var numberValue = parseInt(value, 10);
+
+                // isNaN関数で数値かどうかをチェック
+                if (!isNaN(numberValue)) {
+                    // 数値をロケールに応じた文字列に変換（例: "1,234"）
+                    e.target.value = numberValue.toLocaleString();
+                } else {
+                    // 数値でない場合は入力を空にする
+                    e.target.value = '';
+                }
+            })
+        }
+    }
+    commmaActive();
+
+    const loadCommmaActive = () => {
+        const inputElem = document.querySelectorAll('.commaInput');
+        for(let i = 0; i < inputElem.length; i++){
+            // 入力値からカンマを削除し、数値に変換
+            var value = inputElem[i].value.replace(/,/g, '');
+            var numberValue = parseInt(value, 10);
+
+            // isNaN関数で数値かどうかをチェック
+            if (!isNaN(numberValue)) {
+                // 数値をロケールに応じた文字列に変換（例: "1,234"）
+                inputElem[i].value = numberValue.toLocaleString();
+            } else {
+                // 数値でない場合は入力を空にする
+                inputElem[i].value = '';
+            }
+        }
+    }
+    loadCommmaActive();
+
     const projectByAllowance = () => {
         const addBtn = document.querySelectorAll('.projectAllowanceAdd');
         const container = document.querySelectorAll('.projectAllowanceContainer');
@@ -50,11 +91,12 @@ window.addEventListener('load', () => {
                     </div>
                     <div class="allowance__amount">
                         <p class="">手当金額</p>
-                        <input type="text" name="allowanceAmount[${projectId}][]" class="c-input" placeholder="1,000">
+                        <input type="text" name="allowanceAmount[${projectId}][]" class="c-input commaInput" placeholder="1,000">
                     </div>
                     <i class="fa-solid fa-circle-minus delete-circle projectAllowanecDelete"></i>
                 `;
                 container[i].insertBefore(createElem, addBtn[i]);
+                commmaActive();
             })
         }
 
@@ -98,11 +140,12 @@ window.addEventListener('load', () => {
                     </div>
                     <div class="input-item allowance-amount">
                         <p class="">手当金額</p>
-                        <input type="text" name="allowanceOtherAmount[]" class="c-input" placeholder="1,000">
+                        <input type="text" name="allowanceOtherAmount[]" class="c-input commaInput" placeholder="1,000">
                     </div>
                     <i class="fa-solid fa-circle-minus delete-circle otherAllowanceDelete"></i>
                 `;
                 container.insertBefore(createElem, addBtn);
+                commmaActive();
             })
         }
     }
@@ -153,5 +196,6 @@ window.addEventListener('load', () => {
         }
     }
     vehicleSelectActive();
+
 
 })

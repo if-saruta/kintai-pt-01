@@ -1,5 +1,61 @@
 window.addEventListener('DOMContentLoaded', () => {
 
+    // カンマの制御
+    const commmaActive = () => {
+        const inputElem = document.querySelectorAll('.commaInput');
+        for(let i = 0; i < inputElem.length; i++){
+            inputElem[i].addEventListener('input', function(e) {
+                // 入力値からカンマを削除し、数値に変換
+                var value = e.target.value.replace(/,/g, '');
+                var numberValue = parseInt(value, 10);
+
+                // isNaN関数で数値かどうかをチェック
+                if (!isNaN(numberValue)) {
+                    // 数値をロケールに応じた文字列に変換（例: "1,234"）
+                    e.target.value = numberValue.toLocaleString();
+                } else {
+                    // 数値でない場合は入力を空にする
+                    e.target.value = '';
+                }
+            })
+        }
+    }
+    commmaActive();
+
+    const loadCommmaActive = () => {
+        const inputElem = document.querySelectorAll('.commaInput');
+        for(let i = 0; i < inputElem.length; i++){
+            // 入力値からカンマを削除し、数値に変換
+            var value = inputElem[i].value.replace(/,/g, '');
+            var numberValue = parseInt(value, 10);
+
+            // isNaN関数で数値かどうかをチェック
+            if (!isNaN(numberValue)) {
+                // 数値をロケールに応じた文字列に変換（例: "1,234"）
+                inputElem[i].value = numberValue.toLocaleString();
+            } else {
+                // 数値でない場合は入力を空にする
+                inputElem[i].value = '';
+            }
+        }
+    }
+    loadCommmaActive();
+
+    const inputCommma = (target) => {
+            // 入力値からカンマを削除し、数値に変換
+            var value = target.replace(/,/g, '');
+            var numberValue = parseInt(value, 10);
+
+            // isNaN関数で数値かどうかをチェック
+            if (!isNaN(numberValue)) {
+                // 数値をロケールに応じた文字列に変換（例: "1,234"）
+                return numberValue.toLocaleString();
+            } else {
+                // 数値でない場合は入力を空にする
+                return target.value = '';
+            }
+    }
+
     const modalActive = () => {
         const modal = document.getElementById('shiftModal');
         const target = document.querySelectorAll('.targetShift');
@@ -11,12 +67,14 @@ window.addEventListener('DOMContentLoaded', () => {
                 modal.style.display = 'block';
                 setValue(target[i]);
                 changeRadio();
+                commmaActive();
             })
         }
         for(let i = 0; i < closeElem.length; i++){
             closeElem[i].addEventListener('click', () => {
                 modal.style.display = 'none';
                 returnInitialState();
+                commmaActive();
             })
         }
     }
@@ -40,8 +98,8 @@ window.addEventListener('DOMContentLoaded', () => {
         setId.value = target.querySelector('.shiftId').value;
         setProject.placeholder = target.querySelector('.projectName').value;
         setVehicle.placeholder = target.querySelector('.vehicleNumber').value;
-        setRetail.value = target.querySelector('.retailPrice').value;
-        setSalary.value = target.querySelector('.salaryPrice').value;
+        setRetail.value = inputCommma(target.querySelector('.retailPrice').value);
+        setSalary.value = inputCommma(target.querySelector('.salaryPrice').value);
         setEmployee.innerHTML = target.querySelector('.employeeName').value;
         setYear.innerHTML = target.querySelector('.findYear').value;
         setMonth.innerHTML = target.querySelector('.findMonth').value;
@@ -357,8 +415,6 @@ window.addEventListener('DOMContentLoaded', () => {
         for(let i = 0; i < companyKind.length; i++){
             for(let j = 0; j < companyInfo.length; j++){
                 if(companyKind[i] == companyInfo[j].getAttribute('data-company-name')){
-                    // companyHeightArray[i] += companyInfo[j].closest('.getRow').clientHeight - 0.5;
-                    console.log(companyInfo[j].closest('.getRow').offsetHeight)
                     companyHeightArray[i] += companyInfo[j].closest('.getRow').offsetHeight - 0.5;
                 }
             }
@@ -378,4 +434,5 @@ window.addEventListener('DOMContentLoaded', () => {
 
     }
     companyClmCreate();
+
 })

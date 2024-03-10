@@ -103,13 +103,13 @@
                                             <div class="amount-box__item">
                                                 <p class="input-head">上代</p>
                                                 <div class="amount-input-wrap amountInputWrap retailInput">
-                                                    <input type="text" name="projects[0][retail_price]" class="c-input" placeholder="1,000" required>
+                                                    <input type="text" name="projects[0][retail_price]" class="c-input commaInput" placeholder="1,000" required>
                                                 </div>
                                             </div>
                                             <div class="amount-box__item">
                                                 <p class="input-head">ドライバー価格</p>
                                                 <div class="amount-input-wrap amountInputWrap salaryInput">
-                                                    <input type="text" name="projects[0][driver_price]" class="c-input" placeholder="1,000" required>
+                                                    <input type="text" name="projects[0][driver_price]" class="c-input commaInput" placeholder="1,000" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -187,7 +187,7 @@
                                                                 @if ($employee->employment_status == '正社員')
                                                                 <div class="item">
                                                                     <p class="">{{$employee->name}}</p>
-                                                                    <input type="text" name="projects[0][employeePayments][{{$employee->id}}]" class="c-input" placeholder="000">
+                                                                    <input type="text" name="projects[0][employeePayments][{{$employee->id}}]" class="c-input commaInput" placeholder="000">
                                                                 </div>
                                                                 @php
                                                                     $isEmployee = true;
@@ -206,7 +206,7 @@
                                                                 @if ($employee->employment_status == '個人事業主')
                                                                 <div class="item">
                                                                     <p class="">{{$employee->name}}</p>
-                                                                    <input type="text" name="projects[0][employeePayments][{{$employee->id}}]" class="c-input" placeholder="000">
+                                                                    <input type="text" name="projects[0][employeePayments][{{$employee->id}}]" class="c-input commaInput" placeholder="000">
                                                                 </div>
                                                                 @php
                                                                     $isEmployee = true;
@@ -225,7 +225,7 @@
                                                                 @if ($employee->employment_status == 'アルバイト')
                                                                 <div class="item">
                                                                     <p class="">{{$employee->name}}</p>
-                                                                    <input type="text" name="projects[0][employeePayments][{{$employee->id}}]" class="c-input" placeholder="000">
+                                                                    <input type="text" name="projects[0][employeePayments][{{$employee->id}}]" class="c-input commaInput" placeholder="000">
                                                                 </div>
                                                                 @php
                                                                     $isEmployee = true;
@@ -318,13 +318,13 @@
                             <div class="amount-box__item">
                                 <p class="input-head">上代</p>
                                 <div class="amount-input-wrap amountInputWrap retailInput">
-                                    <input type="text" name="projects[${newProjectIndex}][retail_price]" class="c-input" placeholder="1,000" required>
+                                    <input type="text" name="projects[${newProjectIndex}][retail_price]" class="c-input commaInput" placeholder="1,000" required>
                                 </div>
                             </div>
                             <div class="amount-box__item">
                                 <p class="input-head">ドライバー価格</p>
                                 <div class="amount-input-wrap amountInputWrap salaryInput">
-                                    <input type="text" name="projects[${newProjectIndex}][driver_price]" class="c-input" placeholder="1,000" required>
+                                    <input type="text" name="projects[${newProjectIndex}][driver_price]" class="c-input commaInput" placeholder="1,000" required>
                                 </div>
                             </div>
                         </div>
@@ -420,7 +420,7 @@
                         employeeItem01 = `
                             <div class="item">
                                 <p class="">${employee.name}</p>
-                                <input type="text" name="projects[${newProjectIndex}][employeePayments][${employee.id}]" class="c-input" placeholder="000">
+                                <input type="text" name="projects[${newProjectIndex}][employeePayments][${employee.id}]" class="c-input commaInput" placeholder="000">
                             </div>
                         `;
                     }
@@ -436,7 +436,7 @@
                         employeeItem02 = `
                             <div class="item">
                                 <p class="">${employee.name}</p>
-                                <input type="text" name="projects[${newProjectIndex}][employeePayments][${employee.id}]" class="c-input" placeholder="000">
+                                <input type="text" name="projects[${newProjectIndex}][employeePayments][${employee.id}]" class="c-input commaInput" placeholder="000">
                             </div>
                         `;
                     }
@@ -452,7 +452,7 @@
                         employeeItem03 = `
                             <div class="item">
                                 <p class="">${employee.name}</p>
-                                <input type="text" name="projects[${newProjectIndex}][employeePayments][${employee.id}]" class="c-input" placeholder="000">
+                                <input type="text" name="projects[${newProjectIndex}][employeePayments][${employee.id}]" class="c-input commaInput" placeholder="000">
                             </div>
                         `;
                     }
