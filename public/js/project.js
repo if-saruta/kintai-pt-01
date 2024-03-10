@@ -61,44 +61,76 @@ window.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-
+        // チャーターのトグルの制御
         const toggle = e.target;
         if(toggle.classList.contains('toggle')){
             toggle.classList.toggle('checked');
+            // 親要素を取得
+            const listItem = toggle.closest('.list-item');
+            // 取得した親要素の上代・ドライバー価格のinputを取得
+            const retailInput = listItem.querySelector('.retailInput');
+            const salaryInput = listItem.querySelector('.salaryInput');
+
             if(toggle.classList.contains('checked')){
                 toggle.querySelector('.toggle-input').checked = true;
+                // 歩合日給と被らないように
+                retailInput.classList.add('charterActive');
             }else{
                 toggle.querySelector('.toggle-input').checked = false;
+                // 歩合日給と被らないように
+                retailInput.classList.remove('charterActive');
+            }
+
+            if(!retailInput.classList.contains('not-input')){
+                if(toggle.classList.contains('checked')){
+                    retailInput.querySelector('.c-input').removeAttribute('required');
+                    salaryInput.querySelector('.c-input').removeAttribute('required');
+                }else{
+                    retailInput.querySelector('.c-input').setAttribute('required', '');
+                    salaryInput.querySelector('.c-input').setAttribute('required', '');
+                }
             }
         }
 
+        // 追加した案件の削除
+        const createDeleteBtn = e.target;
+        if(createDeleteBtn.classList.contains('create-delete-btn')){
+            const projectItem = createDeleteBtn.closest('.list-item');
+            projectItem.remove();
+        }
+
+        // 歩合が選択時の上代とドライバー価格のinputを制御
+        const commission = e.target;
+        if(commission.classList.contains('commission')){
+            // 親要素を取得
+            const listItem = commission.closest('.list-item');
+            // 取得した親要素の上代・ドライバー価格のinputを取得
+            const retailInput = listItem.querySelector('.retailInput');
+            const salaryInput = listItem.querySelector('.salaryInput');
+
+            if(commission.value == 0){
+                retailInput.classList.add('not-input');
+                salaryInput.classList.add('not-input');
+                retailInput.querySelector('.c-input').removeAttribute('required');
+                salaryInput.querySelector('.c-input').removeAttribute('required');
+            }else{
+                retailInput.classList.remove('not-input');
+                salaryInput.classList.remove('not-input');
+                if(!retailInput.classList.contains('charterActive')){
+                    retailInput.querySelector('.c-input').setAttribute('required', '');
+                    salaryInput.querySelector('.c-input').setAttribute('required', '');
+                }
+            }
+        }
+
+        // // チャーター選択時の上代とドライバー価格のinputのrequiredを制御
+        // const isCharter = e.target;
+        // if(isCharter.classList.contains('isCharter')){
+        //     console.log(isCharter.value);
+        // }
+
     })
 
-    const toggle = () => {
-        const toggle = document.querySelectorAll('.toggle');
-
-        for(let i = 0; i < toggle.length; i++){
-            toggle[i].addEventListener('click', () => {
-                toggle[i].classList.toggle('checked');
-            })
-        }
-        // document.querySelectorAll('.toggle').forEach(function(toggle) {
-
-        //     toggle.addEventListener('click', function() {
-        //       // クラス 'checked' の追加・削除を切り替える
-        //       toggle.classList.toggle('checked');
-
-        //       // input要素のchecked状態を切り替える
-        //       var input = toggle.querySelector('.toggle-input');
-        //       if(toggle.classList.contains('checked')) {
-        //         input.checked = true;
-        //       }else{
-        //         input.checked = false;
-        //       }
-        //     });
-        //   });
-    }
-    // toggle();
 
     //   従業員別給与切り替え
     const employeeSalaryChange = () => {

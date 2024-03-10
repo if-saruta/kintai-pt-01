@@ -286,6 +286,32 @@
                 overflow: scroll;
                 height: math.div(460,800) * 100vh;
             }
+            .holiday-table{
+                width: fit-content;
+                font-size: 1.4rem;
+                margin-top: 1.5rem;
+                &__body{
+                    display: flex;
+                    &__project-item{
+                        width: 10rem;
+                        display: flex;
+                        flex-direction: column;
+                        border: 0.5px solid black;
+                        &__box{
+                            height: 7rem;
+                            border-top: 0.5px solid black;
+                            text-align: center;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                        .--holiday-box{
+                            gap: 0.5rem;
+                            height: 5rem;
+                        }
+                    }
+                }
+            }
             &__table{
                 // width: 200%;
                 overflow: auto;
@@ -323,6 +349,9 @@
                     tr{
                         height: 4rem;
                     }
+                }
+                .border-right-bold{
+                    border-right: 1.5px solid black;
                 }
                 .co-head{
                     position: relative;

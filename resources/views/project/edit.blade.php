@@ -90,11 +90,11 @@
                                             </div>
                                             <div class="salary-type-box__input-area">
                                                 <div class="input-item flex-10">
-                                                    <input type="radio" name="editProjects[{{$project->id}}][payment_type]" value="0" @if($project->payment_type == 0) checked @endif id="salary-type-1">
+                                                    <input type="radio" name="editProjects[{{$project->id}}][payment_type]" value="0" @if($project->payment_type == 0) checked @endif class="commission" id="salary-type-1">
                                                     <label for="salary-type-1" class="label-txt">歩合</label>
                                                 </div>
                                                 <div class="input-item flex-10">
-                                                    <input type="radio" name="editProjects[{{$project->id}}][payment_type]" value="1" @if($project->payment_type == 1) checked @endif id="salary-type-2">
+                                                    <input type="radio" name="editProjects[{{$project->id}}][payment_type]" value="1" @if($project->payment_type == 1) checked @endif class="commission" id="salary-type-2">
                                                     <label for="salary-type-2" class="label-txt">日給</label>
                                                 </div>
                                             </div>
@@ -103,11 +103,15 @@
                                         <div class="amount-box">
                                             <div class="amount-box__item">
                                                 <p class="input-head">上代</p>
-                                                <input type="text" name="editProjects[{{$project->id}}][retail_price]" value="{{$project->retail_price}}" class="c-input" placeholder="1,000" required>
+                                                <div class="amount-input-wrap amountInputWrap retailInput @if($project->payment_type == 0) not-input @endif @if($project->is_charter == 1) charterActive  @endif">
+                                                    <input type="text" name="editProjects[{{$project->id}}][retail_price]" value="{{$project->retail_price}}" class="c-input" placeholder="1,000" @if($project->payment_type == 1) required @endif>
+                                                </div>
                                             </div>
                                             <div class="amount-box__item">
                                                 <p class="input-head">ドライバー価格</p>
-                                                <input type="text" name="editProjects[{{$project->id}}][driver_price]" value="{{$project->driver_price}}" class="c-input" placeholder="1,000" required>
+                                                <div class="amount-input-wrap amountInputWrap salaryInput @if($project->payment_type == 0) not-input @endif @if($project->is_charter == 1) charterActive  @endif">
+                                                    <input type="text" name="editProjects[{{$project->id}}][driver_price]" value="{{$project->driver_price}}" class="c-input" placeholder="1,000" @if($project->payment_type == 1) required @endif>
+                                                </div>
                                             </div>
                                         </div>
                                         {{-- 休日 --}}
@@ -144,6 +148,10 @@
                                                 <div class="input-item flex-10">
                                                     <input type="checkbox" @if($project->holiday->sunday ==  1) checked @endif name="editProjects[{{$project->id}}][holidays][sunday]" value="1" id="day-of-week-7">
                                                     <label for="day-of-week-7" class="label-txt">日曜日</label>
+                                                </div>
+                                                <div class="input-item flex-10">
+                                                    <input type="checkbox" @if($project->holiday->public_holiday ==  1) checked @endif name="editProjects[{{$project->id}}][holidays][public_holiday]" value="1" id="day-of-week-8">
+                                                    <label for="day-of-week-8" class="label-txt">祝日</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -305,11 +313,11 @@
                         </div>
                         <div class="salary-type-box__input-area">
                             <div class="input-item flex-10">
-                                <input type="radio" name="projects[${newProjectIndex}][payment_type]" value="0" id="salary-type-1${newProjectIndex}">
+                                <input type="radio" name="projects[${newProjectIndex}][payment_type]" value="0" class="commission" id="salary-type-1${newProjectIndex}">
                                 <label for="salary-type-1${newProjectIndex}" class="label-txt">歩合</label>
                             </div>
                             <div class="input-item flex-10">
-                                <input checked type="radio" name="projects[${newProjectIndex}][payment_type]" value="1" id="salary-type-2${newProjectIndex}">
+                                <input checked type="radio" name="projects[${newProjectIndex}][payment_type]" value="1" class="commission" id="salary-type-2${newProjectIndex}">
                                 <label for="salary-type-2${newProjectIndex}" class="label-txt">日給</label>
                             </div>
                         </div>
@@ -318,11 +326,15 @@
                     <div class="amount-box">
                         <div class="amount-box__item">
                             <p class="input-head">上代</p>
-                            <input type="text" name="projects[${newProjectIndex}][retail_price]" class="c-input" placeholder="1,000" required>
+                            <div class="amount-input-wrap amountInputWrap retailInput">
+                                <input type="text" name="projects[${newProjectIndex}][retail_price]" class="c-input" placeholder="1,000" required>
+                            </div>
                         </div>
                         <div class="amount-box__item">
                             <p class="input-head">ドライバー価格</p>
-                            <input type="text" name="projects[${newProjectIndex}][driver_price]" class="c-input" placeholder="1,000" required>
+                            <div class="amount-input-wrap amountInputWrap salaryInput">
+                                <input type="text" name="projects[${newProjectIndex}][driver_price]" class="c-input" placeholder="1,000" required>
+                            </div>
                         </div>
                     </div>
                     {{-- 休日 --}}
@@ -360,6 +372,10 @@
                                 <input type="checkbox" name="projects[${newProjectIndex}][holidays][sunday]" value="1" id="day-of-week-7">
                                 <label for="day-of-week-7" class="label-txt">日曜日</label>
                             </div>
+                            <div class="input-item flex-10">
+                                <input type="checkbox" name="projects[${newProjectIndex}][holidays][public_holiday]" value="1" id="day-of-week-8">
+                                <label for="day-of-week-8" class="label-txt">祝日</label>
+                            </div>
                         </div>
                     </div>
                     {{-- 残業 --}}
@@ -394,10 +410,10 @@
                     </div>
                     {{-- ボタン --}}
                     <div class="btn-area --project-btn-area">
-                        <button class="btn --delete" type="submit" name="action" value="delete"
+                        <div class="btn --delete create-delete-btn"
                             onclick='return confirm("本当に削除しますか?")'>
                             案件を削除
-                        </button>
+                        </div>
                     </div>
                 </div>
             </div>

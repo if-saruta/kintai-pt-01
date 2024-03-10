@@ -17,6 +17,7 @@ class ProjectHoliday extends Model
         'wednesday',
         'thursday',
         'friday',
-        'saturday'
+        'saturday',
+        'public_holiday'
         ];
 }

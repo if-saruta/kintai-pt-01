@@ -43,7 +43,7 @@ class InvoiceController extends Controller
         $getYear = $request->year;
         $getMonth = $request->month;
 
-        $date = $request->createDate;
+        $getDate = $request->createDate;
         $employeeId = $request->employeeId;
         $shiftPvId = $request->shiftPvId;
         $dayOfPart = $request->dayOfPart;
@@ -52,11 +52,36 @@ class InvoiceController extends Controller
         $retailPrice = $request->createRetail;
         $salaryPrice = $request->createSalary;
 
-        $attributes = ['date' => $date, 'employee_id' => $employeeId];
-        $values = ['date' => $date, 'employee_id' => $employeeId];
+
+        // 日付がシフトに登録されていなければその日付週すべのドライバーを登録
+        $carbonDate = new Carbon($getDate);
+        // 週の始まり（月曜日）と終わり（日曜日）を取得
+        $startOfWeek = $carbonDate->copy()->startOfWeek();
+        $endOfWeek = $carbonDate->copy()->endOfWeek();
+
+        $weekDates = [];
+        for ($date = $startOfWeek; $date->lte($endOfWeek); $date->addDay()) {
+            $weekDates[] = $date->toDateString();
+        }
+
+        // $weekDatesには、週の始まりから終わりまでの日付が入っています
+        $employees = Employee::all();
+        foreach ($weekDates as $day) {
+            foreach($employees as $employee){
+                Shift::updateOrCreate(
+                    ['date' => $day, 'employee_id' => $employee->id],
+                    ['date' => $day, 'employee_id' => $employee->id],
+                );
+            }
+        }
+
+        $findEmployee = Employee::find($employeeId);
+
+        $attributes = ['date' => $getDate, 'employee_id' => $employeeId];
+        $values = ['date' => $getDate, 'employee_id' => $employeeId];
         $shift = Shift::updateOrCreate($attributes, $values);
 
-        if($shiftPvId != ''){
+        if($shiftPvId != null){
              $shiftPv = ShiftProjectVehicle::find($shiftPvId);
              if ($request->input('action') == 'update') {
                 // 更新処理
@@ -68,6 +93,8 @@ class InvoiceController extends Controller
                         'unregistered_vehicle' => null,
                         'retail_price' => $retailPrice,
                         'driver_price' => $salaryPrice,
+                        'vehicle_rental_type' => $findEmployee->vehicle_rental_type,
+                        'rental_vehicle_id' => $findEmployee->vehicle_id,
                      ];
                     $shiftPv->update($valuesByPvShift);
                  }
@@ -82,7 +109,9 @@ class InvoiceController extends Controller
                 'vehicle_id' => $vehicleId,
                 'retail_price' => $retailPrice,
                 'driver_price' => $salaryPrice,
-                'time_of_day' => $dayOfPart
+                'time_of_day' => $dayOfPart,
+                'vehicle_rental_type' => $findEmployee->vehicle_rental_type,
+                'rental_vehicle_id' => $findEmployee->vehicle_id,
              ];
             ShiftProjectVehicle::create($valuesByPvShift);
         }
@@ -97,12 +126,12 @@ class InvoiceController extends Controller
     public function driverShiftUpdate(Request $request)
     {
 
-        $expressway = $request->expressway_fee;
-        $parking = $request->parking_fee;
-        $overtimeFee = $request->overtime_fee;
-        $driverPrice = $request->driver_price;
-        $allowance = $request->allowance;
-        $getVehicle = $request->vehicle;
+        $expressway = $request->expressway_fee ?? [];
+        $parking = $request->parking_fee ?? [];
+        $overtimeFee = $request->overtime_fee ?? [];
+        $driverPrice = $request->driver_price ?? [];
+        $allowance = $request->allowance ?? [];
+        $getVehicle = $request->vehicle ?? [];
 
         $vehicles = Vehicle::all();
 
@@ -164,7 +193,7 @@ class InvoiceController extends Controller
         $employees = Employee::all();
         $findEmployee = Employee::find($employeeId);
 
-        $projects = Project::all();
+        $projects = Project::where('client_id', '!=', '1')->get();
         $allowanceProject = AllowanceByProject::where('employee_id', $findEmployee->id)->get();
 
         $vehicles = Vehicle::all();
@@ -432,10 +461,12 @@ class InvoiceController extends Controller
                 $secondMachineCheck = false;
                 return 1; // 2台目カウント増加
             } else {
-                if (!in_array($vehicleNumber, $thirdMachineArray)) {
-                    $thirdMachineArray[] = $vehicleNumber;
+                if(!in_array($vehicleNumber, $secondMachineArray)){
+                    if (!in_array($vehicleNumber, $thirdMachineArray)) {
+                        $thirdMachineArray[] = $vehicleNumber;
+                    }
+                    return 1; // 3台目カウント増加不要
                 }
-                return 1; // 3台目カウント増加不要
             }
         }
     }
@@ -451,7 +482,7 @@ class InvoiceController extends Controller
             $secondMachineCheck = true;
             foreach($shiftProjectVehicles as $spv){
                 if($spv->shift->date == $date->format('Y-m-d')){
-                    if(in_array($spv->vehicle_rental_type, [0, 1])){
+                    if(in_array($spv->vehicle_rental_type, [0, 1, 3])){
                         $vehicleNumber = $spv->vehicle ? $spv->vehicle->number : $spv->unregistered_vehicle;
                         if($vehicleNumber != null){
                             if(!$spv->rental_vehicle_id || $spv->vehicle_id != $spv->rental_vehicle_id){
@@ -478,10 +509,10 @@ class InvoiceController extends Controller
             $projectName = $spv->project ? $spv->project->name : $spv->unregistered_project;
             if($projectName != null){
                 if($projectName != '休み'){
-                    if(isset($projectInfoArray[$projectName][$spv->retail_price])){
-                        $projectInfoArray[$projectName][$spv->retail_price]++;
+                    if(isset($projectInfoArray[$projectName][$spv->driver_price])){
+                        $projectInfoArray[$projectName][$spv->driver_price]++;
                     }else{
-                        $projectInfoArray[$projectName][$spv->retail_price] = 1;
+                        $projectInfoArray[$projectName][$spv->driver_price] = 1;
                     }
                 }
             }
@@ -991,7 +1022,6 @@ class InvoiceController extends Controller
     {
         $getYear = $request->year;
         $getMonth = $request->month;
-
 
         // チャーター案件が含まれるシフト
         $ShiftProjectVehicles = ShiftProjectVehicle::with('shift', 'shift.employee', 'project', 'project.client')

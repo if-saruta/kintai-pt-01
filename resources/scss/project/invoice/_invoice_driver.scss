@@ -48,6 +48,11 @@
             align-items: center;
             gap: 3rem;
         }
+        .need-row-count-warning-txt{
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            color: red;
+        }
         &__calendar{
             position: relative;
             overflow: scroll;
@@ -86,7 +91,7 @@
                     border-right: 0.5px solid black;
                     thead{
                         position: sticky;
-                        z-index: 1000;
+                        z-index: 900;
                         top: 0;
                         left: 0;
                         background-color: white;
@@ -125,7 +130,7 @@
                             }
                             cursor: pointer;
                         }
-                        tr:nth-child(3n+1){
+                        .dayInfirst{
                             border-top: 0.5px solid black;
                         }
                         tr:first-child{

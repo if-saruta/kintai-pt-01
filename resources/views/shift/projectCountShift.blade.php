@@ -98,8 +98,8 @@
                                 <p class="fs-14">{{$monday->format('Y')}}<span class="fs-10">年</span></p>
                             </div>
                             <div class="date__txt">
-                                <p class="fs-16">{{$monday->format('m')}}<span
-                                        class="fs-10">月</span>{{$monday->format('d')}}<span class="fs-10">日</span></p>
+                                <p class="fs-16">{{$monday->format('n')}}<span
+                                        class="fs-10">月</span>{{$monday->format('j')}}<span class="fs-10">日</span></p>
                             </div>
                         </div>
                         <div class="date">
@@ -107,8 +107,8 @@
                                 <p class="fs-14">{{$sunday->format('Y')}}<span class="fs-10">年</span></p>
                             </div>
                             <div class="date__txt">
-                                <p class="fs-16">{{$sunday->format('m')}}<span
-                                        class="fs-10">月</span>{{$sunday->format('d')}}<span class="fs-10">日</span></p>
+                                <p class="fs-16">{{$sunday->format('n')}}<span
+                                        class="fs-10">月</span>{{$sunday->format('j')}}<span class="fs-10">日</span></p>
                             </div>
                         </div>
                     </div>
@@ -145,13 +145,13 @@
                                 @foreach ( $convertedDates as $date )
                                     <th class="txt">
                                         @if ($holidays->isHoliday($date))
-                                            <p class="" style="color: red;">{{$date->format('d')}}日({{ $date->isoFormat('ddd') }})</p>
+                                            <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                         @elseif ($date->isSaturday())
-                                            <p class="" style="color: skyblue;">{{$date->format('d')}}日({{ $date->isoFormat('ddd') }})</p>
+                                            <p class="" style="color: skyblue;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                         @elseif($date->isSunday())
-                                            <p class="" style="color: red;">{{$date->format('d')}}日({{ $date->isoFormat('ddd') }})</p>
+                                            <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                         @else
-                                            <p class="">{{$date->format('d')}}日({{ $date->isoFormat('ddd') }})</p>
+                                            <p class="">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                         @endif
                                     </th>
                                 @endforeach
@@ -204,7 +204,7 @@
                                     @endforeach
                                 </tr>
                             @endforeach
-                            <tr class="shift-calendar-table__body__row --count-row">
+                            <tr class="shift-calendar-table__body__row --count-row --total-row-count">
                                 <td class="">合計</td>
                                 @foreach ( $convertedDates as $date )
                                     @php

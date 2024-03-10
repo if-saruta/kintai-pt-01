@@ -113,7 +113,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="invoice">
+                <div class="invoice-check">
                     <div class="head">
                         <p class="input-head">インボイス登録</p>
                         <p class="required">必須</p>

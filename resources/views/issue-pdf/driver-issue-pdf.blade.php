@@ -444,7 +444,9 @@
             <p class="">
                 〒{{$employee->post_code}} <br>
                 {{$employee->address}} <br>
+                @if ($employee->is_invoice == 1)
                 登録番号　{{$employee->register_number}} <br>
+                @endif
                 {{$bankName}} <br>
                 振込先名 {{$bankAccountHolder}}
             </p>

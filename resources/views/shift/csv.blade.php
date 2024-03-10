@@ -35,7 +35,7 @@
                     @csrf
                     <input hidden name="witch" value="page03" type="text">
                     <button class="{{ request()->routeIs('shift.employeePriceShift*') ? 'active' : '' }} link">
-                        <span class="">従業員給与</span>
+                        <span class="">ドライバー価格</span>
                     </button>
                 </form>
                 <form action="{{route('shift.projectPriceShift')}}" method="POST"

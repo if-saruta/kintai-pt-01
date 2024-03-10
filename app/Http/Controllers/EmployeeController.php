@@ -33,7 +33,7 @@ class EmployeeController extends Controller
     public function create()
     {
         $companies = Company::all();
-        $projects = Project::all();
+        $projects = Project::where('client_id', '!=', 1)->get();
         $vehicles = Vehicle::all();
         // 日給登録してある案件を取得
         $projectPayments = Project::where('payment_type', 1)->get();
@@ -44,10 +44,6 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
 
-        // $validated = $request->validate([
-        //     'name' => 'required'
-        // ]);
-// dd($request->initial);
         if($request->rental_type == 1){
             $employee = Employee::create([
                 'register_number' => $request->register_number,
@@ -149,7 +145,7 @@ class EmployeeController extends Controller
     {
         $employee = Employee::find($id);
         $companies = Company::all();
-        $projects = Project::all();
+        $projects = Project::where('client_id', '!=', 1)->get();
         $vehicles = Vehicle::all();
         // 日給登録してある案件を取得
         $projectPayments = Project::where('payment_type', 1)->get();

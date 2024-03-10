@@ -162,7 +162,9 @@
                                     <div class="">
                                         〒{{$employeeInfo->post_code}} <br>
                                         {{$employeeInfo->address}} <br>
-                                        登録番号　{{$employeeInfo->register_number}} <br>
+                                        @if ($employeeInfo->is_invoice == 1)
+                                            登録番号　{{$employeeInfo->register_number}} <br>
+                                        @endif
                                         <div class="employee-info__bank" id="bankArea">
                                             <div class="employee-info__bank__top">
                                                 <div class=""><input type="text" name="bank_name" class="input setBankName" value="{{$employeeInfo->bankAccounts->first()->bank_name}}" readonly></div>
@@ -226,7 +228,7 @@
                                     @if ($invoiceAllowanceCheck != 1 && $allowanceName && $allowanceAmount != 0)
                                         <tr class="salaryBasicRow">
                                             <td class="top-table-data w-70"><input type="text" name="salaryNo[]" class="input table-input changeElement"></td>
-                                            <td class="top-table-data w-70"><input type="text" name="salaryMonth[]" class="input table-input changeElement"></td>
+                                            <td class="top-table-data w-70"><input type="text" name="salaryMonth[]" value="{{ $today->format('n') }}月度" class="input table-input changeElement"></td>
                                             <td class="top-table-data w-260"><input type="text" name="salaryProject[]" value="{{ $allowanceName }}" class="input table-input changeElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryEtc[]" class="input table-input changeElement etcElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryCount[]" @if($allowanceAmount != 0) value="1" @endif  class="input table-input changeElement salaryNum"></td>

@@ -195,6 +195,9 @@
                                             @endforeach
                                         </div>
                                         <div class="data --unregister-data">
+                                            <div class="unregister-message">
+                                                <p class="">以下は未登録案件です　※以下のリストはPDFに反映されません</p>
+                                            </div>
                                             @foreach ($unregisterProjectShift as $spv)
                                                 @if ($spv->unregistered_project != '休み')
                                                     <div class="data__row">

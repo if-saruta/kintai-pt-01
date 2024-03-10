@@ -5,7 +5,7 @@
 .--client-white-board{
     margin-top: 4rem;
     padding-top: 0.5rem;
-    padding-bottom: 4.5rem;
+    padding-bottom: 2rem;
     height: auto!important;
     min-height: math.div(745,800) * 100vh!important;
     box-sizing: border-box;
@@ -154,7 +154,7 @@
                                         color: $cBlack;
                                     }
                                     input{
-                                        width: 22.3rem;
+                                        width: 35rem;
                                     }
                                 }
                                 i{
@@ -240,6 +240,19 @@
                                     display: flex;
                                     flex-direction: column;
                                     gap: 0.6rem;
+                                    .not-input{
+                                        position: relative;
+                                        &::after{
+                                            content: "";
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            height: 100%;
+                                            border-radius: 0.5rem;
+                                            background-color: rgba(0, 0, 0, 0.286);
+                                        }
+                                    }
                                 }
                             }
                             .holiday-box{
@@ -250,7 +263,7 @@
                                     margin-left: 1.5rem;
                                     display: flex;
                                     align-items: center;
-                                    gap: 4rem;
+                                    gap: 3rem;
                                 }
                             }
                             .over-time-box{
@@ -404,6 +417,9 @@
         .btn:hover{
             opacity: 1;
             color: white;
+        }
+        .create-delete-btn{
+            cursor: pointer;
         }
     }
 }

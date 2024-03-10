@@ -318,7 +318,7 @@
                                 }
                             }
                         @endphp
-                        <p class="">{{ $needRowCountWarning }}</p>
+                        <p class="need-row-count-warning-txt">{{ $needRowCountWarning }}</p>
                         {{-- カレンダー --}}
                         <div class="driver-invoice-shift__calendar">
                             <form action="{{route('invoice.driverShiftUpdate')}}" method="POST" class="driver-invoice-shift__calendar__calendar-top-wrap" id="calendarForm">
@@ -356,7 +356,7 @@
                                                 @foreach ( $shiftProjectVehicles as $spv )
                                                     @if ($spv->shift->date == $date->format('Y-m-d'))
                                                         {{-- @foreach ( $shift->projectsVehicles as $spv ) --}}
-                                                            <tr class="">
+                                                            <tr @if($count == 0) class="dayInfirst" @endif>
                                                                 @if ($count == 0)
                                                                     @if ($holidays->isHoliday($date))
                                                                         <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
@@ -426,6 +426,16 @@
                                                                                 @endif
                                                                             @endif
                                                                         @endif
+                                                                    @elseif($spv->vehicle_rental_type == 3)
+                                                                        @if($spv->vehicle)
+                                                                            @if ($spv->vehicle->number != '自車')
+                                                                                <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
+                                                                            @endif
+                                                                        @else
+                                                                            @if ($spv->unregistered_vehicle != '自車')
+                                                                                <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
+                                                                            @endif
+                                                                        @endif
                                                                     @endif
                                                                 </td>
                                                                 @php
@@ -443,7 +453,7 @@
                                                 @endforeach
                                                 {{-- 行数が足りない時のため --}}
                                                 @for ($rowCount; $rowCount < $needRowCount; $rowCount++)
-                                                    <tr class="shiftActive createShift">
+                                                    <tr class="shiftActive createShift @if($count == 0) dayInfirst @endif">
                                                         @if ($count == 0)
                                                             @if ($holidays->isHoliday($date))
                                                                 <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
@@ -476,7 +486,7 @@
                                                 {{-- シフトがない時のため --}}
                                                 @if ($rowCount == 0)
                                                     @for ($rowCount; $rowCount < $needRowCount; $rowCount++)
-                                                        <tr class="shiftActive createShift">
+                                                        <tr class="shiftActive createShift @if($count == 0) dayInfirst @endif">
                                                             @if ($count == 0)
                                                                 @if ($holidays->isHoliday($date))
                                                                     <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
@@ -510,7 +520,7 @@
                                         @endforeach
                                         {{-- 16行に合わせるため --}}
                                         @for ($i = 0; $i < $needRowCount; $i++)
-                                            <tr class="">
+                                            <tr @if($count == 0) class="dayInfirst" @endif>
                                                 @if ($i == 0)
                                                 <td rowspan="{{ $needRowCount }}" class="w-amount"></td>
                                                 @endif
@@ -551,7 +561,7 @@
                                                 @foreach ( $shiftProjectVehicles as $spv )
                                                     @if ($spv->shift->date == $date->format('Y-m-d'))
                                                         {{-- @foreach ( $shift->projectsVehicles as $spv ) --}}
-                                                            <tr>
+                                                            <tr @if($count == 0) class="dayInfirst" @endif>
                                                                 @if ($count == 0)
                                                                     @if ($holidays->isHoliday($date))
                                                                         <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
@@ -623,6 +633,16 @@
                                                                                 @endif
                                                                             @endif
                                                                         @endif
+                                                                    @elseif($spv->vehicle_rental_type == 3)
+                                                                        @if($spv->vehicle)
+                                                                            @if ($spv->vehicle->number != '自車')
+                                                                                <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
+                                                                            @endif
+                                                                        @else
+                                                                            @if ($spv->unregistered_vehicle != '自車')
+                                                                                <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
+                                                                            @endif
+                                                                        @endif
                                                                     @endif
                                                                 </td>
                                                                 @php
@@ -640,7 +660,7 @@
                                                 @endforeach
                                                 {{-- 行数が足りない時のため --}}
                                                 @for ($rowCount; $rowCount < $needRowCount; $rowCount++)
-                                                    <tr class="shiftActive createShift">
+                                                    <tr class="shiftActive createShift @if($count == 0) dayInfirst @endif">
                                                         @if ($count == 0)
                                                             @if ($holidays->isHoliday($date))
                                                                 <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
@@ -673,7 +693,7 @@
                                                 {{-- シフトがない時のため --}}
                                                 @if ($rowCount == 0)
                                                     @for ($rowCount; $rowCount < $needRowCount; $rowCount++)
-                                                        <tr class="shiftActive createShift">
+                                                        <tr class="shiftActive createShift @if($count == 0) dayInfirst @endif">
                                                             @if ($count == 0)
                                                                 @if ($holidays->isHoliday($date))
                                                                     <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
@@ -765,7 +785,7 @@
                                                         </tr>
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="tax[name]" value="消費税"></th>
-                                                            <td><input type="text" name="tax[amount]" value="{{ number_format(round($totalSalary * 0.1)) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            <td><input type="text" name="tax[amount]" value="{{ number_format(round(($totalSalary + $totalAllowance) * 0.1)) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                         </tr>
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="parkingName" value="パーキング代"></th>
@@ -803,7 +823,7 @@
                                                         </tr>
                                                         @if ($vehicle_rantal_type == 1 || $vehicle_rantal_type == 2)
                                                             <tr class="info-table-row">
-                                                                <th><input type="text" name="monthLease[name]" value="リース代　月契約No.{{ $vehicle_rantal_number }}"></th>
+                                                                <th><input type="text" name="monthLease[name]" value="リース代　@if($vehicle_rantal_type == 1) 月契約No.{{ $vehicle_rantal_number }} @endif"></th>
                                                                 <td><input type="text" name="monthLease[amount]" value="{{ number_format(30992) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                             </tr>
                                                         @endif
@@ -827,7 +847,7 @@
                                                         @endif
                                                         @if ($vehicle_rantal_type == 1 || $vehicle_rantal_type == 2)
                                                             <tr class="info-table-row">
-                                                                <th><input type="text" name="monthInsurance[name]" value="保険料　月契約No.{{ $vehicle_rantal_number }}"></th>
+                                                                <th><input type="text" name="monthInsurance[name]" value="保険料　@if($vehicle_rantal_type == 1) 月契約No.{{ $vehicle_rantal_number }} @endif"></th>
                                                                 <td><input type="text" name="monthInsurance[amount]" value="{{ number_format(9818) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                             </tr>
                                                         @endif

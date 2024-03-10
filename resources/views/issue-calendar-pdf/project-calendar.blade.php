@@ -29,6 +29,10 @@
         width: 100%;
         font-size: 10px;
         border-collapse: collapse;
+        table-layout: fixed;
+        overflow-wrap : break-word;
+        /* IE11 にも改行させる場合 */
+        word-wrap: break-word;
         /* table-layout: fixed; */
         /* transform: rotate(90deg);
         transform-origin: 27% 77%; */
@@ -92,6 +96,21 @@
         border: 0px;
         border-bottom: 0.5px solid black;
       }
+      .holiday-table{
+        table-layout: fixed;
+        overflow-wrap : break-word;
+        /* IE11 にも改行させる場合 */
+        word-wrap: break-word;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+      .holiday-table th{
+        width: 60px;
+        white-space: wrap;
+      }
+      .holiday-table td{
+        width: 60px;
+      }
 
 	</style>
 
@@ -101,32 +120,105 @@
         $item_count = $retailCheck + $salaryCheck + $expresswayCheck + $parkingCheck;
         // テーブルの横幅を計算 1は日付の固定分
         $clmCount = 1 + ($project_count * $company_count) + $retailCheck + ($project_count * ($company_count * $item_count));
-        $clmWidth = 60;
+        $clmWidth = 50;
         $tableWidth = $clmCount * $clmWidth;
+        $dataWidth = (70 / $tableWidth) * 100;
+
+        // 休日テーブルの横幅
+        $holidayTableWidth = $clmWidth * $project_count;
 	@endphp
 
 <p class="">{{ $client->name }}</p>
 <p class="">{{ $getYear }}年{{ $getMonth }}月度</p>
-
+{{-- <div class="" style="width: {{ $tableWidth }}px;">
+    <div style="width: {{ round($dataWidth) }}%; background-color: red;"></div>
+</div> --}}
+{{-- <table class="holiday-table" style="width: {{ $holidayTableWidth }}px;">
+    <tr>
+        @foreach ( $projects as $project )
+            <th><p>{{ $project->name }}</p></th>
+        @endforeach
+    </tr>
+    <tr>
+        @foreach ( $projects as $project )
+            <td>
+                @if ($project->holiday->monday == 1)
+                    月
+                @endif
+                @if ($project->holiday->tuesday == 1)
+                    火
+                @endif
+                @if ($project->holiday->wednesday == 1)
+                    水
+                @endif
+                @if ($project->holiday->thursday == 1)
+                    木
+                @endif
+                @if ($project->holiday->firday == 1)
+                    金
+                @endif
+                @if ($project->holiday->saturday == 1)
+                    土
+                @endif
+                @if ($project->holiday->sunday == 1)
+                    日
+                @endif
+                @if ($project->holiday->public_holiday == 1)
+                    祝
+                @endif
+            </td>
+        @endforeach
+    </tr>
+</table> --}}
 
 <table style="width: {{ $tableWidth }}px;">
     {{-- ヘッダー --}}
     <thead>
         @if ($project_count >= 1 || $company_count >= 1) {{-- どちらか複数あれば --}}
             <tr>
-                <th rowspan="2" class="date-w-60">----</th>
+                <th rowspan="3" style="width: {{ round($dataWidth) }}%;">----</th>
                 @foreach ($projects as $project)
                     @if (!$getCompanies->isEmpty())
                         <th colspan="{{$company_count}}">{{$project->name}}</th>
                     @endif
                 @endforeach
                 @if ($retailCheck == 1)
-                    <th rowspan="2">配送料金</th>
+                    <th rowspan="3">配送料金</th>
                 @endif
                 @foreach ($projects as $project)
                     @if (!$getCompanies->isEmpty())
-                        <th colspan="{{$company_count * $item_count }}">{{$project->name}}</th>
+                        <th colspan="{{$company_count * $item_count }}" rowspan="2">{{$project->name}}</th>
                     @endif
+                @endforeach
+            </tr>
+            <tr>
+                @foreach ($projects as $project)
+                    <th colspan="{{$company_count}}">
+                        @if ($project->holiday->monday == 1)
+                            月
+                        @endif
+                        @if ($project->holiday->tuesday == 1)
+                            火
+                        @endif
+                        @if ($project->holiday->wednesday == 1)
+                            水
+                        @endif
+                        @if ($project->holiday->thursday == 1)
+                            木
+                        @endif
+                        @if ($project->holiday->friday == 1)
+                            金
+                        @endif
+                        @if ($project->holiday->saturday == 1)
+                            土
+                        @endif
+                        @if ($project->holiday->sunday == 1)
+                            日
+                        @endif
+                        @if ($project->holiday->public_holiday == 1)
+                            祝
+                        @endif
+                    </th>
                 @endforeach
             </tr>
             <tr>
@@ -182,7 +274,7 @@
             @endphp
 
             <tr class="tr">
-                <td class="date-w-60">{{ $date->format('n') }}月{{ $date->format('j') }}日({{ $date->isoFormat('ddd') }})</td>
+                <td style="width: {{ round($dataWidth) }}%;">{{ $date->format('n') }}月{{ $date->format('j') }}日({{ $date->isoFormat('ddd') }})</td>
                 @foreach ($projects as $project)
                     @foreach ($getCompanies as $company)
                         <td class="name-w-60">
@@ -290,8 +382,27 @@
                 @endforeach
             </tr>
         @endforeach
+        @for ($i = $dates[count($dates) - 1]->format('d'); $i < 31; $i++)
+            <tr>
+                <td></td>
+                @foreach ($projects as $project)
+                    @foreach ($getCompanies as $company)
+                        <td></td>
+                    @endforeach
+                @endforeach
+                <td></td>
+                @foreach ($projects as $project)
+                    @foreach ($getCompanies as $company)
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    @endforeach
+                @endforeach
+            </tr>
+        @endfor
         <tr>
-            <td></td>
+            <td>小計</td>
             @php
                 $retailTotal = 0;
             @endphp
@@ -335,7 +446,7 @@
             @endforeach
         </tr>
         <tr>
-            <td></td>
+            <td>合計</td>
             <td colspan="{{ $company_count * $project_count }}" class="border-right">{{ number_format($retailTotal) }}</td>
         </tr>
     </tbody>

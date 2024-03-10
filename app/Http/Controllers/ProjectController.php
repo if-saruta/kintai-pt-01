@@ -69,7 +69,8 @@ class ProjectController extends Controller
                 'wednesday' => false,
                 'thursday' => false,
                 'friday' => false,
-                'saturday' => false
+                'saturday' => false,
+                'public_holiday' => false
             ];
 
             // 選択された休日を true に設定
@@ -148,7 +149,8 @@ class ProjectController extends Controller
                 'wednesday' => false,
                 'thursday' => false,
                 'friday' => false,
-                'saturday' => false
+                'saturday' => false,
+                'public_holiday' => false
             ];
             // 選択された休日を true に設定
             foreach ($projectData['holidays'] ?? [] as $day => $value) {
@@ -198,7 +200,8 @@ class ProjectController extends Controller
                 'wednesday' => false,
                 'thursday' => false,
                 'friday' => false,
-                'saturday' => false
+                'saturday' => false,
+                'public_holiday' => false
             ];
 
             // 選択された休日を true に設定

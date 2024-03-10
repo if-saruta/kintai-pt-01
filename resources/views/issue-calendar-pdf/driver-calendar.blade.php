@@ -146,12 +146,12 @@
         }
         .memo-box{
             width: 50%;
-            height: 200px;
+            height: 265px;
             font-size: 10px;
             box-sizing: border-box;
             border: 1px solid black;
             clear: left;
-            margin-top: -98px;
+            margin-top: -130px;
         }
         .memo-box p{
             padding: 5px;
@@ -159,7 +159,7 @@
         .amount-total{
           width: 48%;
           float: right;
-          margin-top: -204px;
+          margin-top: -267px;
           /* clear: left; */
           /* margin-top: 10px; */
           /* margin-left: 10px; */
@@ -389,6 +389,16 @@
                                     <p class="f-s-9">No.{{ $spv->unregistered_vehicle }}</p>
                                 @endif
                             @endif
+                        @elseif(in_array($rental_type, [3]))
+                            @if ($spv->vehicle)
+                                @if($spv->vehicle->number != '自車')
+                                    <p class="f-s-9">No.{{ $spv->vehicle->number }}</p>
+                                @endif
+                            @else
+                                @if ($spv->unregistered_vehicle != '自車')
+                                    <p class="f-s-9">No.{{ $spv->unregistered_vehicle }}</p>
+                                @endif
+                            @endif
                         @endif
                         </p>
                     </td>
@@ -588,6 +598,16 @@
                                 @endif
                             @else
                                 @if ($spv->unregistered_vehicle)
+                                    <p class="f-s-9">No.{{ $spv->unregistered_vehicle }}</p>
+                                @endif
+                            @endif
+                        @elseif(in_array($rental_type, [3]))
+                            @if ($spv->vehicle)
+                                @if($spv->vehicle->number != '自車')
+                                    <p class="f-s-9">No.{{ $spv->vehicle->number }}</p>
+                                @endif
+                            @else
+                                @if ($spv->unregistered_vehicle != '自車')
                                     <p class="f-s-9">No.{{ $spv->unregistered_vehicle }}</p>
                                 @endif
                             @endif

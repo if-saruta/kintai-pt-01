@@ -105,9 +105,9 @@ window.addEventListener('DOMContentLoaded', () => {
             let tax = 0;
             if(getTaxElement){
                 tax = salarySubTotal * 0.1;
-                getTaxElement.value = Math.ceil(tax);
+                getTaxElement.value = Math.round(tax);
             }
-            return Math.ceil(tax);
+            return Math.round(tax);
         }
 
         // 高速代他計算
@@ -245,9 +245,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
             const tax = total * 0.1;
 
-            costTaxElem.value = Math.ceil(tax);
+            costTaxElem.value = Math.round(tax);
 
-            return Math.ceil(tax);
+            return Math.round(tax);
         }
 
         const costTotalCalc = (subTotal, tax) => {

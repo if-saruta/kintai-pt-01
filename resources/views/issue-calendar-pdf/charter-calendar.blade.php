@@ -41,7 +41,15 @@
             padding-right: 5px;
             box-sizing: border-box;
         }
+        .top-date-txt{
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
     </style>
+
+    <div class="">
+        <p class="top-date-txt">{{ $getYear }}年{{ $getMonth }}月度</p>
+    </div>
 
     <table>
         <thead>

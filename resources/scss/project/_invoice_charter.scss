@@ -114,6 +114,12 @@
                 .data{
                     width: 99.9%;
                     border-bottom: 1px solid $cBlack;
+                    .unregister-message{
+                        padding: 2rem 0;
+                        border-top: 2px solid black;
+                        font-size: 1.4rem;
+                        font-weight: $fw-bold;
+                    }
                     &__row{
                         position: relative;
                         width: 100%;
@@ -175,7 +181,7 @@
                     }
                 }
                 .--unregister-data{
-                    margin-top: 50px;
+                    margin-top: 30px;
                 }
             }
         }

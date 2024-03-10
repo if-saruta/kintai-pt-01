@@ -98,8 +98,8 @@
                                 <p class="fs-14">{{$monday->format('Y')}}<span class="fs-10">年</span></p>
                             </div>
                             <div class="date__txt">
-                                <p class="fs-16">{{$monday->format('m')}}<span
-                                        class="fs-10">月</span>{{$monday->format('d')}}<span class="fs-10">日</span></p>
+                                <p class="fs-16">{{$monday->format('n')}}<span
+                                        class="fs-10">月</span>{{$monday->format('j')}}<span class="fs-10">日</span></p>
                             </div>
                         </div>
                         <div class="date">
@@ -107,8 +107,8 @@
                                 <p class="fs-14">{{$sunday->format('Y')}}<span class="fs-10">年</span></p>
                             </div>
                             <div class="date__txt">
-                                <p class="fs-16">{{$sunday->format('m')}}<span
-                                        class="fs-10">月</span>{{$sunday->format('d')}}<span class="fs-10">日</span></p>
+                                <p class="fs-16">{{$sunday->format('n')}}<span
+                                        class="fs-10">月</span>{{$sunday->format('j')}}<span class="fs-10">日</span></p>
                             </div>
                         </div>
                     </div>
@@ -144,17 +144,17 @@
                     <table class="shift-calendar-table">
                         <thead class="shift-calendar-table__head">
                             <tr class="shift-calendar-table__head__day">
-                                <th rowspan="2"></th>
+                                <th rowspan="2" class="date-empty-box"></th>
                                 @foreach ( $convertedDates as $date )
                                     <th colspan="2" class="txt">
                                         @if ($holidays->isHoliday($date))
-                                            <p class="" style="color: red;">{{$date->format('d')}}日({{ $date->isoFormat('ddd') }})</p>
+                                            <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                         @elseif ($date->isSaturday())
-                                            <p class="" style="color: skyblue;">{{$date->format('d')}}日({{ $date->isoFormat('ddd') }})</p>
+                                            <p class="" style="color: skyblue;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                         @elseif($date->isSunday())
-                                            <p class="" style="color: red;">{{$date->format('d')}}日({{ $date->isoFormat('ddd') }})</p>
+                                            <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                         @else
-                                            <p class="">{{$date->format('d')}}日({{ $date->isoFormat('ddd') }})</p>
+                                            <p class="">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                         @endif
                                     </th>
                                     @endforeach
@@ -234,11 +234,17 @@
                                                         @endif
                                                         {{-- 車両 --}}
                                                         @if ($spv->vehicle)
-                                                        <p class="table-cell__item__row">No.{{$spv->vehicle->number}}</p>
+                                                            <p class="table-cell__item__row">No.{{$spv->vehicle->number}}</p>
                                                         @elseif($spv->unregistered_vehicle)
-                                                        <p class="table-cell__item__row" style="color: red;">No.{{$spv->unregistered_vehicle}}</p>
+                                                            @if ($spv->unregistered_vehicle != '自車')
+                                                                <p class="table-cell__item__row" style="color: red;">
+                                                                    No.{{$spv->unregistered_vehicle}}</p>
+                                                            @else
+                                                                <p class="table-cell__item__row">
+                                                                    No.{{$spv->unregistered_vehicle}}</p>
+                                                            @endif
                                                         @else
-                                                        <p class="table-cell__item__row"></p>
+                                                            <p class="table-cell__item__row"></p>
                                                         @endif
                                                     </div>
                                                     @php $am_check_count++; @endphp
@@ -258,19 +264,25 @@
                                                     @if ($spv->time_of_day == 1)
                                                     <div class="table-cell__item">
                                                         @if ($spv->project)
-                                                        <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                                            <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
                                                         @elseif($spv->unregistered_project)
-                                                        <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
+                                                            <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
                                                         @else
-                                                        <p class="table-cell__item__row setHightElem"></p>
+                                                            <p class="table-cell__item__row setHightElem"></p>
                                                         @endif
                                                         {{-- 車両 --}}
                                                         @if ($spv->vehicle)
-                                                        <p class="table-cell__item__row">No.{{$spv->vehicle->number}}</p>
+                                                            <p class="table-cell__item__row">No.{{$spv->vehicle->number}}</p>
                                                         @elseif($spv->unregistered_vehicle)
-                                                        <p class="table-cell__item__row" style="color: red;">No.{{$spv->unregistered_vehicle}}</p>
+                                                            @if ($spv->unregistered_vehicle != '自車')
+                                                                <p class="table-cell__item__row" style="color: red;">
+                                                                    No.{{$spv->unregistered_vehicle}}</p>
+                                                            @else
+                                                                <p class="table-cell__item__row">
+                                                                    No.{{$spv->unregistered_vehicle}}</p>
+                                                            @endif
                                                         @else
-                                                        <p class="table-cell__item__row"></p>
+                                                            <p class="table-cell__item__row"></p>
                                                         @endif
                                                     </div>
                                                     @php $pm_check_count++; @endphp
@@ -354,11 +366,17 @@
                                                     @endif
                                                     {{-- 車両 --}}
                                                     @if ($spv->vehicle)
-                                                    <p class="table-cell__item__row">{{$spv->vehicle->number}}</p>
+                                                        <p class="table-cell__item__row">{{$spv->vehicle->number}}</p>
                                                     @elseif($spv->unregistered_vehicle)
-                                                    <p class="table-cell__item__row" style="color: red;">{{$spv->unregistered_vehicle}}</p>
+                                                        @if ($spv->unregistered_vehicle != '自車')
+                                                            <p class="table-cell__item__row" style="color: red;">
+                                                                No.{{$spv->unregistered_vehicle}}</p>
+                                                        @else
+                                                            <p class="table-cell__item__row">
+                                                                No.{{$spv->unregistered_vehicle}}</p>
+                                                        @endif
                                                     @else
-                                                    <p class="table-cell__item__row"></p>
+                                                        <p class="table-cell__item__row"></p>
                                                     @endif
                                                 </div>
                                                 @php $am_check_count++; @endphp
@@ -386,11 +404,17 @@
                                                     @endif
                                                     {{-- 車両 --}}
                                                     @if ($spv->vehicle)
-                                                    <p class="table-cell__item__row">{{$spv->vehicle->number}}</p>
+                                                        <p class="table-cell__item__row">{{$spv->vehicle->number}}</p>
                                                     @elseif($spv->unregistered_vehicle)
-                                                    <p class="table-cell__item__row" style="color: red;">{{$spv->unregistered_vehicle}}</p>
+                                                        @if ($spv->unregistered_vehicle != '自車')
+                                                            <p class="table-cell__item__row" style="color: red;">
+                                                                No.{{$spv->unregistered_vehicle}}</p>
+                                                        @else
+                                                            <p class="table-cell__item__row">
+                                                                No.{{$spv->unregistered_vehicle}}</p>
+                                                        @endif
                                                     @else
-                                                    <p class="table-cell__item__row"></p>
+                                                        <p class="table-cell__item__row"></p>
                                                     @endif
                                                 </div>
                                                 @php $pm_check_count++; @endphp

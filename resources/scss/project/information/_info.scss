@@ -92,7 +92,7 @@
                         padding-bottom: 2rem;
                     }
                     .client-scroll-y{
-                        height: math.div(800,800) * 100vh;
+                        height: math.div(800,450) * 100vh;
                     }
                     .info-row{
                         .flex-10{
@@ -186,7 +186,7 @@
                     }
                 }
                 .client-inner{
-                    height: math.div(700,800) * 100vh;
+                    height: math.div(670,800) * 100vh;
                 }
                 .--vehicle-default-view{
                     width: 100%;
