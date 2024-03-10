@@ -99,13 +99,13 @@
                                                 <p class="">案件名</p>
                                             </div>
                                             <div class="head__clm --common-amount">
-                                                <p class="">上代</p>
+                                                <p class="">配送料金</p>
                                             </div>
                                             <div class="head__clm --common-amount">
-                                                <p class="">高速代</p>
+                                                <p class="">高速料金</p>
                                             </div>
                                             <div class="head__clm --common-amount">
-                                                <p class="">パーキング<br>代</p>
+                                                <p class="">駐車料金</p>
                                             </div>
                                             <div class="head__clm --common">
                                                 <p class="">ドライバー</p>
