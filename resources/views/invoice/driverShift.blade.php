@@ -421,7 +421,7 @@
                                                                             @if($spv->vehicle)
                                                                                 <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
                                                                             @else
-                                                                                @if ($spv->unregistered_vehicle)
+                                                                                @if ($spv->unregistered_vehicle != '自車')
                                                                                     <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
                                                                                 @endif
                                                                             @endif
@@ -620,7 +620,7 @@
                                                                                     <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
                                                                                 @endif
                                                                             @else
-                                                                                @if ($spv->unregistered_vehicle)
+                                                                                @if ($spv->unregistered_vehicle != '自車')
                                                                                     <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
                                                                                 @endif
                                                                             @endif
@@ -628,7 +628,7 @@
                                                                             @if($spv->vehicle)
                                                                                 <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
                                                                             @else
-                                                                                @if ($spv->unregistered_vehicle)
+                                                                                @if ($spv->unregistered_vehicle != '自車')
                                                                                     <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
                                                                                 @endif
                                                                             @endif
