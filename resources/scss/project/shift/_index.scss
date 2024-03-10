@@ -463,6 +463,12 @@
                                 &__row:last-child{
                                     border-bottom: 1px solid $cBlack;
                                 }
+                                .--retail-back-ground-color{
+                                    background-color: rgba(255, 0, 0, 0.087);
+                                }
+                                .--driver-back-ground-color{
+                                    background-color: rgba(0, 0, 255, 0.087);
+                                }
                             }
                             &__item:last-child{
                                 border-bottom: 1px solid black;
@@ -563,7 +569,7 @@
                     }
                     .--total-row-count{
                         td{
-                            border-top: 1.5px solid black;
+                            border-top: 2px solid black;
                         }
                     }
                 }

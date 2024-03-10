@@ -571,12 +571,12 @@
                                                         @else
                                                             <p class="table-cell__item__row"></p>
                                                         @endif
-                                                        <p class="table-cell__item__row">
+                                                        <p class="table-cell__item__row --retail-back-ground-color">
                                                             @if ($spv->retail_price)
                                                                 {{number_format($spv->retail_price)}}
                                                             @endif
                                                         </p>
-                                                        <p class="table-cell__item__row">
+                                                        <p class="table-cell__item__row --driver-back-ground-color">
                                                             @if ($spv->driver_price)
                                                                 {{number_format($spv->driver_price)}}
                                                             @endif
@@ -672,12 +672,12 @@
                                                         @else
                                                             <p class="table-cell__item__row"></p>
                                                         @endif
-                                                        <p class="table-cell__item__row">
+                                                        <p class="table-cell__item__row --retail-back-ground-color">
                                                             @if ($spv->retail_price)
                                                                 {{number_format($spv->retail_price)}}
                                                             @endif
                                                         </p>
-                                                        <p class="table-cell__item__row">
+                                                        <p class="table-cell__item__row --driver-back-ground-color">
                                                             @if ($spv->driver_price)
                                                                 {{number_format($spv->driver_price)}}
                                                             @endif
