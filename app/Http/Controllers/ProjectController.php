@@ -176,7 +176,7 @@ class ProjectController extends Controller
                 foreach ($projectData['employeePayments'] as $employeeId => $amount) {
                     ProjectEmployeePayment::updateOrCreate(
                         ['project_id' => $projectId, 'employee_id' => $employeeId],
-                        ['amount' => $amount]
+                        ['amount' => $removeCommasAndCastToInt($amount)]
                     );
                 }
             }
@@ -196,8 +196,8 @@ class ProjectController extends Controller
                 'name' => $projectData['name'],
                 'is_charter' => $is_charter,
                 'payment_type' => $projectData['payment_type'],
-                'retail_price' => $projectData['retail_price'],
-                'driver_price' => $projectData['driver_price'],
+                'retail_price' => $removeCommasAndCastToInt($projectData['retail_price']),
+                'driver_price' => $removeCommasAndCastToInt($projectData['driver_price']),
                 'estimated_overtime_hours' => $projectData['estimated_overtime_hours'],
                 'overtime_hourly_wage' => $projectData['overtime_hourly_wage']
             ]);
@@ -231,7 +231,7 @@ class ProjectController extends Controller
                     ProjectEmployeePayment::create([
                         'employee_id' => $employeeId,
                         'project_id' => $project->id,
-                        'amount' => $amount
+                        'amount' => $removeCommasAndCastToInt($amount)
                     ]);
                 }
             }
