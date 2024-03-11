@@ -5,6 +5,13 @@
 .--shift-main{
     // width: math.div(1235.2,1280) * 100vw;
     // margin-left: math.div(44.8,1280) * 100vw;
+    .shift-warning-txt{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        font-size: 1.4rem;
+    }
     .--shift-link-block{
         position: relative;
         gap: math.div(180,1280) * 100vw;

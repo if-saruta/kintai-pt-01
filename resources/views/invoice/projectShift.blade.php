@@ -224,10 +224,10 @@
                         </div>
                     </form>
                     @php
-                    // 案件数
-                    $project_count = $narrowProjects->count();
-                    // 所属先数
-                    $company_count = $getCompanies->count();
+                        // 案件数
+                        $project_count = $narrowProjects->count();
+                        // 所属先数
+                        $company_count = $getCompanies->count();
 
                     @endphp
                     <input hidden type="text" value="{{ $project_count }}" id="projectCount">
@@ -287,37 +287,45 @@
                                             <th rowspan="2" class="project-table-date">----</th>
                                             {{-- 従業員名ヘッド --}}
                                             @foreach ($narrowProjects as $project)
-                                            <th colspan="{{$company_count}}" class="co-head">{{$project->name}}</th>
+                                            <th colspan="{{$company_count}}" class="co-head border-right-bold">{{$project->name}}</th>
                                             @endforeach
                                             {{-- 上代合計ヘッド --}}
                                             <th rowspan="2" class="project-table-w-amount retailClm numberBox border-right-bold">配送料金</th>
                                             {{-- 案件・所属先詳細ヘッド --}}
                                             @foreach ($narrowProjects as $project)
-                                            <th colspan="{{$company_count * 4 }}" class="rightHead">{{$project->name}}
+                                            <th colspan="{{$company_count * 4 }}" class="rightHead projectInfoHead" data-company-count="{{$company_count}}">{{$project->name}}
                                             </th>
                                             @endforeach
                                         </tr>
-                                        <tr>
+                                        <tr class="head-bottom">
                                             {{-- 案件・所属先詳細項目ヘッド --}}
                                             @foreach ($narrowProjects as $project)
+                                                @php
+                                                    $isCountCheck = 1;
+                                                @endphp
                                                 @foreach ($getCompanies as $company)
-                                                    <th class="project-table-w-name company{{ $company->id }} coClmHead txtBox">
-                                                    {{ $company->name }}</th>
+                                                    <th class="project-table-w-name company{{ $company->id }} coClmHead txtBox @if($isCountCheck == $company_count) border-right-bold @endif">{{ $company->name }}</th>
+                                                    @php
+                                                        $isCountCheck++;
+                                                    @endphp
                                                 @endforeach
                                             @endforeach
                                             @foreach ($narrowProjects as $project)
+                                                @php
+                                                    
+                                                @endphp
                                                 @foreach ($getCompanies as $company)
                                                 <th
-                                                    class="project-table-w-amount salaryClm company{{ $company->id }} clmHead numberBox">
+                                                    class="project-table-w-amount salaryClm company{{ $company->id }} clmHead numberBox head-bottom-clm">
                                                     {{ $company->name }}</th>
                                                 <th
-                                                    class="project-table-w-amount retailClm company{{ $company->id }} clmHead numberBox">
+                                                    class="project-table-w-amount retailClm company{{ $company->id }} clmHead numberBox head-bottom-clm">
                                                     配送料金</th>
                                                 <th
-                                                    class="project-table-w-amount expressClm company{{ $company->id }} clmHead numberBox">
+                                                    class="project-table-w-amount expressClm company{{ $company->id }} clmHead numberBox head-bottom-clm">
                                                     高速料金</th>
                                                 <th
-                                                    class="project-table-w-amount parkingClm company{{ $company->id }} clmHead">
+                                                    class="project-table-w-amount parkingClm company{{ $company->id }} clmHead head-bottom-clm">
                                                     駐車料金</th>
                                                 @endforeach
                                             @endforeach
@@ -336,8 +344,11 @@
                                                 @endphp
                                             {{-- 従業員表示 --}}
                                             @foreach ($narrowProjects as $project)
+                                                @php
+                                                    $isCountCheck = 1;
+                                                @endphp
                                                 @foreach ($getCompanies as $company)
-                                                    <td class="company{{ $company->id }} employee-show">
+                                                    <td class="company{{ $company->id }} employee-show @if($isCountCheck == $company_count) border-right-bold @endif">
                                                         @foreach ( $ShiftProjectVehicles as $spv )
                                                             @if($spv->shift->date == $date->format('Y-m-d'))
                                                                 @if ($spv->shift->employee)
@@ -365,6 +376,9 @@
                                                         <p class="employee-name"></p>
                                                         @endif
                                                     </td>
+                                                    @php
+                                                        $isCountCheck++;
+                                                    @endphp
                                                 @endforeach
                                             @endforeach
                                             {{-- 上代 --}}

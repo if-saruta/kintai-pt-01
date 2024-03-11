@@ -180,7 +180,7 @@
                             </tr>
                         </thead>
                         <tbody class="shift-calendar-table__body">
-                            @foreach ( $shiftDataByEmployee as $employeeId => $shiftData )
+                            @foreach ( $sortedShiftDataByEmployee as $employeeId => $shiftData )
                                 @php
                                     // 一周目だけ従業員表示
                                     $is_employee_open = true;
@@ -498,7 +498,6 @@
                                                 @endphp
                                             @endif
                                             @php
-
                                                 $am_check_count = 0;
                                                 $pm_check_count = 0;
 
@@ -724,7 +723,7 @@
                     </tbody>
                 </table>
             @else
-            <p>{{$startOfWeek}}〜{{$endOfWeek}}のシフトはありません</p>
+            <p class="shift-warning-txt">{{$startOfWeek}}〜{{$endOfWeek}}のシフトはありません</p>
             @endif
         </div>
         </div>

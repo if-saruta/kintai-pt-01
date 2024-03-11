@@ -221,7 +221,7 @@ class InvoiceController extends Controller
         }
         // Projectモデルを使用して、$projectArrayに含まれるIDのプロジェクトを取得
         $findProjects = Project::whereIn('id', $projectArray)->get();
-        $findClients = Client::whereIn('id', $clientArray)->get();
+        $findClients = Client::whereIn('id', $clientArray)->where('id', '!=', 1)->get();
 
         // // 絞り込み情報の取得
         $clientsId = $request->input('clientsId', []);
@@ -811,7 +811,6 @@ class InvoiceController extends Controller
         $driver_price = $request->input('driver_price');
         $unregistered_project = $request->input('unregistered_project');
 
-// dd($parking_fee);
         foreach ($retail_price as $id => $value) {
             $getShift = ShiftProjectVehicle::find($id);
             if ($getShift !== null) { // $getShiftがnullでないことを確認

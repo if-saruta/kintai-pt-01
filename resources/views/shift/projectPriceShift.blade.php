@@ -422,7 +422,7 @@
                         </tbody>
                     </table>
                     @else
-                    <p>{{$startOfWeek}}〜{{$endOfWeek}}のシフトはありません</p>
+                    <p class="shift-warning-txt">{{$startOfWeek}}〜{{$endOfWeek}}のシフトはありません</p>
                     @endif
                 </div>
             </div>

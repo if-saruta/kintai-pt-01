@@ -173,12 +173,12 @@
                             <tbody class="shift-calendar-table__body">
                                 @foreach ( $sortedShiftDataByEmployee as $employeeId => $shiftData )
                                     @php
-                                    // 一周目だけ従業員表示
-                                    $is_employee_open = true;
-                                    // 1日ごとの最大案件数
-                                    $max_count = 1;
-                                    @endphp
-                                    {{-- 最大案件数の計算 --}}
+                                        // 一周目だけ従業員表示
+                                        $is_employee_open = true;
+                                        // 1日ごとの最大案件数
+                                        $max_count = 1;
+                                        @endphp
+                                        {{-- 最大案件数の計算 --}}
                                     @php
                                         foreach ($shiftData as $shift) {
                                             $am_count = 0;
@@ -485,7 +485,7 @@
                             </tbody>
                         </table>
                     @else
-                        <p>{{$startOfWeek}}〜{{$endOfWeek}}のシフトはありません</p>
+                        <p class="shift-warning-txt">{{$startOfWeek}}〜{{$endOfWeek}}のシフトはありません</p>
                     @endif
                 </div>
             </div>

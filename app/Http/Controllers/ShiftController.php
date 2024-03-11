@@ -138,7 +138,6 @@ class ShiftController extends Controller
                 return PHP_INT_MAX;
             }
         }, $preserveKeys = true);
-        // dd($shifts);
 
         // 未登録従業員シフト抽出
         $unShifts = Shift::with('employee', 'projectsVehicles.project', 'projectsVehicles.vehicle')
@@ -149,9 +148,6 @@ class ShiftController extends Controller
         $shiftDataByUnEmployee = $unShifts->groupBy(function ($unShift) {
             return $unShift->unregistered_employee;
         });
-        // dd($shiftDataByUnEmployee);
-
-
 
         $dates = [];
         foreach ($shifts as $shift) {
@@ -168,8 +164,6 @@ class ShiftController extends Controller
         $payments = ProjectEmployeePayment::all();
 
         $page = $request->input('witch') ?? session('page');
-
-        // dd($shiftDataByEmployee);
 
         if ($page) {
             if ($page == 'page01') {

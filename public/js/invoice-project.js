@@ -198,4 +198,26 @@ window.addEventListener('load', () => {
         }
     }
     commmaActive();
+
+    // ボーダー区切り線の制御
+    const borderActive = () => {
+        const headBottom = document.querySelector('.head-bottom');
+        const clm = headBottom.querySelectorAll('.head-bottom-clm');
+        const headTop = document.querySelector('.projectInfoHead');
+        // colspan属性の値を取得
+        var colspanValue = headTop.getAttribute('colspan');
+        var companyCount = headTop.getAttribute('data-company-count');
+        var separatorIndex = (colspanValue / companyCount);
+
+        for(let i = 0; i < clm.length; i++){
+            if(i == 0) continue;
+            if(i % separatorIndex == 0){
+                if(clm[i - 1].classList.contains()){
+
+                }
+                clm[i - 1].classList.add('border-right-bold');
+            }
+        }
+    }
+    borderActive();
 })
