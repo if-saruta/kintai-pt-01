@@ -23,9 +23,11 @@
 
       @page{
         margin: 15px;
+        margin-left: 40px;
       }
 
       table{
+        margin-top: 5px;
         width: 100%;
         font-size: 10px;
         border-collapse: collapse;
@@ -130,46 +132,6 @@
 
 <p class="">{{ $client->name }}</p>
 <p class="">{{ $getYear }}年{{ $getMonth }}月度</p>
-{{-- <div class="" style="width: {{ $tableWidth }}px;">
-    <div style="width: {{ round($dataWidth) }}%; background-color: red;"></div>
-</div> --}}
-{{-- <table class="holiday-table" style="width: {{ $holidayTableWidth }}px;">
-    <tr>
-        @foreach ( $projects as $project )
-            <th><p>{{ $project->name }}</p></th>
-        @endforeach
-    </tr>
-    <tr>
-        @foreach ( $projects as $project )
-            <td>
-                @if ($project->holiday->monday == 1)
-                    月
-                @endif
-                @if ($project->holiday->tuesday == 1)
-                    火
-                @endif
-                @if ($project->holiday->wednesday == 1)
-                    水
-                @endif
-                @if ($project->holiday->thursday == 1)
-                    木
-                @endif
-                @if ($project->holiday->firday == 1)
-                    金
-                @endif
-                @if ($project->holiday->saturday == 1)
-                    土
-                @endif
-                @if ($project->holiday->sunday == 1)
-                    日
-                @endif
-                @if ($project->holiday->public_holiday == 1)
-                    祝
-                @endif
-            </td>
-        @endforeach
-    </tr>
-</table> --}}
 
 <table style="width: {{ $tableWidth }}px;">
     {{-- ヘッダー --}}

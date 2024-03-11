@@ -55,7 +55,7 @@
                 <div class="project-edit-pdf">
                     <div class="project-edit-pdf__inner">
                         <div class="date">
-                            <p class="">{{ $today->format('Y') }}年 {{ $today->format('m') }}月 {{ $today->format('d') }}日</p>
+                            <p class="">{{ $today->format('Y') }}年 {{ $today->format('n') }}月 {{ $today->format('j') }}日</p>
                             <p class="date__invoice-number">請求書番号 : <input type="text" name="invoice_number" class="input" value="{{ $today->format('Y') }}{{ $today->format('m') }}{{ $today->format('d') }}"></p>
                         </div>
                         <div class="title">

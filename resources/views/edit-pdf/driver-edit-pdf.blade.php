@@ -154,7 +154,7 @@
                                     <p class="">請求書</p>
                                 </div>
                                 <div class="line colorChangeElem"></div>
-                                <div class="date"><p class="">{{ $today->format('Y') }}年 {{ $today->format('m') }}月 20日</p></div>
+                                <div class="date"><p class="">{{ $today->format('Y') }}年 {{ $today->format('n') }}月 20日</p></div>
                                 {{-- 従業員情報 --}}
                                 <div class="employee-info">
                                     <input type="text" hidden name="employeeId" value="{{$employeeInfo->id}}">
@@ -355,7 +355,7 @@
                                         <tr class="salaryCostBasicRow">
                                             <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
-                                            <td class="top-table-data w-330"><p class="top-table-data-txt --center f-s-10">㈱T.N.G 請求書NO.{{ $employeeInfo->initials }}<input class="invoice-number --invoice-number02 --common-data" value="{{ $today->format('Y') }}{{ $today->format('m') }}15" readonly>({{ $today->format('Y') }}年 {{ $today->format('m') }}月 15日発行)相殺</㈱T.N.G></p></td>
+                                            <td class="top-table-data w-330"><p class="top-table-data-txt --center f-s-10">㈱T.N.G 請求書NO.{{ $employeeInfo->initials }}<input class="invoice-number --invoice-number02 --common-data" value="{{ $today->format('Y') }}{{ $today->format('n') }}15" readonly>({{ $today->format('Y') }}年 {{ $today->format('n') }}月 15日発行)相殺</㈱T.N.G></p></td>
                                             <td class="top-table-data w-70"><input type="text" name="getCostNum" value="1" class="input table-input changeElement costNumByDriver"></td>
                                             <td class="top-table-data w-70"><input type="text" name="getCostUntil" value="{{ number_format(round($subTotalCost * 1.1))}}" class="input table-input amount changeElement costUnitByDriver costUnitByDriver-C commaInput"></td>
                                             <td class="top-table-data w-100"><input type="text" name="getCostAmount" value="{{ number_format(round($subTotalCost * 1.1))}}" class="input table-input amount changeElement costTotalByDriver commaInput" readonly></td>
@@ -443,7 +443,7 @@
                         <div class="pdf --company-issue">
                             <div class="pdf-main">
                                 <div class="date">
-                                    <p class="">{{ $today->format('Y') }}年 {{ $today->format('m') }}月 15日</p>
+                                    <p class="">{{ $today->format('Y') }}年 {{ $today->format('n') }}月 15日</p>
                                     <div class="date__invoice-number">
                                         <p class="">請求書番号　：　{{ $employeeInfo->initials }}</p>
                                         <input name="invoice_number" class="invoice-number --invoice-number03 --common-data" value="{{ $today->format('Y') }}{{ $today->format('m') }}15" readonly>

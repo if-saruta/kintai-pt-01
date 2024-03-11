@@ -194,7 +194,7 @@
 
     <div class="project-edit-pdf">
         <div class="date">
-            <p class="">{{ $today->format('Y') }}年 {{ $today->format('m') }}月 {{ $today->format('d') }}日</p>
+            <p class="">{{ $today->format('Y') }}年 {{ $today->format('n') }}月 {{ $today->format('j') }}日</p>
             <p class="">請求書番号　：　{{$invoiceNumber}}</p>
         </div>
         <div class="title">

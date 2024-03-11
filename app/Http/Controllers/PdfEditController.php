@@ -237,7 +237,7 @@ class PdfEditController extends Controller
                         if($containsHikitori || !$spv->charter_project_name){
                             $formattedDate = $date->format('j'); // 日付のみ
                             if (empty($projectData[$projectName]['dates'])) {
-                                $formattedDate = $date->format('m/d'); // 最初の日付は月/日
+                                $formattedDate = $date->format('n/j'); // 最初の日付は月/日
                             }
                             if (!str_contains($projectData[$projectName]['dates'], $formattedDate)) {
                                 $projectData[$projectName]['dates'] .= (empty($projectData[$projectName]['dates']) ? '' : ',') . $formattedDate;

@@ -448,7 +448,7 @@
     ?> --}}
     <div class="">
         <div class="date">
-            <p class="">{{ $today->format('Y') }}年 {{ $today->format('m') }}月 15日</p>
+            <p class="">{{ $today->format('Y') }}年 {{ $today->format('n') }}月 15日</p>
             <p class="">請求書番号　：　{{ $employee->initials }}{{$invoiceNumber}}</p>
         </div>
         <div class="title">

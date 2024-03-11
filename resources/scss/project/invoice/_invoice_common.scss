@@ -219,6 +219,7 @@
         select{
             padding-left: 0;
             text-align-last: center;
+            cursor: pointer;
         }
         .year-select{
             width: 9rem;
@@ -257,6 +258,7 @@
         font-weight: $fw-bold;
         letter-spacing: 0.1rem;
         color: $cBlack;
+        cursor: auto;
     }
 }
 .c-middle-head{

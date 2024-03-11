@@ -437,7 +437,7 @@
         </div>
         <div class="line" style="background-color:{{$color}};"></div>
         <div class="date">
-            <p class="">{{ $today->format('Y') }}年 {{ $today->format('m') }}月 20日</p>
+            <p class="">{{ $today->format('Y') }}年 {{ $today->format('n') }}月 20日</p>
         </div>
         <div class="employee-info">
             <p class="employee-name">{{$employee->name}}</p>
@@ -649,7 +649,7 @@
                 </td>
                 <td class="top-table-data w-330">
                     <p class="top-table-data-txt --center f-s-10">㈱T.N.G 請求書NO.{{ $employee->initials
-                        }}{{$invoiceNumber}}({{ $today->format('Y') }}年 {{ $today->format('m') }}月 15日発行)相殺</㈱T.N.G>
+                        }}{{$invoiceNumber}}({{ $today->format('Y') }}年 {{ $today->format('n') }}月 15日発行)相殺</㈱T.N.G>
                     </p>
                 </td>
                 <td class="top-table-data w-70">
