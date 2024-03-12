@@ -219,5 +219,5 @@ window.addEventListener('load', () => {
             }
         }
     }
-    borderActive();
+    // borderActive();
 })

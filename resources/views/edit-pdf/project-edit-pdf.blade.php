@@ -40,6 +40,13 @@
             </div>
         </div>
         <div class="main__white-board --project-pdf-edit-board">
+            <form action="{{ route('invoice.searchProjectShift') }}" method="POST" class="--pdf-back" onclick='return confirm("入力したデータは失われます。")'>
+                @csrf
+                <input hidden type="text" name="client" value="{{ $getClient->id }}">
+                <input hidden type="text" name="year" value="{{ $getYear }}">
+                <input hidden type="text" name="month" value="{{ $getMonth }}">
+                <button class="btn --back">戻る</button>
+            </form>
             <form action="{{route('invoice.project-issue-pdf')}}" method="POST">
                 @csrf
                 {{-- 隠しフィールド --}}
@@ -49,9 +56,6 @@
                         <p class="">ダウンロード</p>
                     </button>
                 </div>
-                <a href="{{ route('invoice.projectShift') }}" class="btn --back --pdf-back" onclick='return confirm("入力したデータは失われます。")'>
-                    戻る
-                </a>
                 <div class="project-edit-pdf">
                     <div class="project-edit-pdf__inner">
                         <div class="date">

@@ -344,6 +344,6 @@ class PdfEditController extends Controller
             }
         }
 
-        return view('edit-pdf.project-edit-pdf', compact('total_retail', 'total_count', 'today', 'projectData', 'expresswayData', 'parkingData', 'clientId', 'getClient', 'getCompanies'));
+        return view('edit-pdf.project-edit-pdf', compact('total_retail', 'total_count', 'today', 'projectData', 'expresswayData', 'parkingData', 'clientId', 'getClient', 'getCompanies','getYear', 'getMonth'));
     }
 }

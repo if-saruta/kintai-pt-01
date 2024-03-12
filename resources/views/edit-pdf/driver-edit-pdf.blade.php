@@ -55,9 +55,13 @@
                             <p class="">{{$employeeInfo->name}}</p>
                         </div>
                     </div>
-                    <a href="{{ route('invoice.driverShift') }}" class="btn --back" onclick='return confirm("入力したデータは失われます。")'>
-                        戻る
-                    </a>
+                    <form action="{{ route('invoice.searchShift') }}" method="POST" class="" onclick='return confirm("入力したデータは失われます。")'>
+                        @csrf
+                        <input hidden type="text" name="employeeId" value="{{ $employeeInfo->id }}">
+                        <input hidden type="text" name="year" value="{{ $getYear }}">
+                        <input hidden type="text" name="month" value="{{ $getMonth }}">
+                        <button class="btn --back">戻る</button>
+                    </form>
                 </div>
                 <div class="common__select-area">
                     {{-- <div class="common__block">
