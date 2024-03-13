@@ -58,6 +58,7 @@
                     </div>
                     <span class="nav-item__txt navTxt">{{ __('車両') }}</span>
                 </a>
+                @can('admin-higher')
                 <a href="{{ route('profile.edit') }}"
                     class="{{ request()->routeIs('profile.*') ? 'active' : '' }} nav-item">
                     <div class="icon-wrap">
@@ -65,18 +66,13 @@
                     </div>
                     <span class="nav-item__txt navTxt">{{ __('設定') }}</span>
                 </a>
+                @endcan
                 <div class="nav-item --close-nav-item open" id="navToggle">
                     <div class="icon-wrap">
                         <i class="fa-solid fa-caret-left"></i>
                     </div>
                     <span class="nav-item__txt --close-nav-item__txt navTxt">メニューを閉じる</span>
                 </div>
-                {{-- <a href="{{ route('company.') }}" class="{{ request()->routeIs('company.*') ? 'active' : '' }}">
-                    {{ __('所属先') }}
-                </a> --}}
-                {{-- <a href="{{ route('vehicle.') }}" class="{{ request()->routeIs('vehicle.*') ? 'active' : '' }}">
-                    {{ __('車両') }}
-                </a> --}}
             </div>
         </div>
 

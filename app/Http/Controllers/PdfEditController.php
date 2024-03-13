@@ -221,12 +221,14 @@ class PdfEditController extends Controller
                         $projectName = $spv->project->name; // プロジェクト名
                         $date = Carbon::parse($spv->shift->date); // シフトの日付
                         $retailPrice = $spv->retail_price; // 上代単価
+                        $key = $projectName . '|' . round($retailPrice); // プロジェクト名と上代単価をキーとして結合
 
-                        if (!isset($projectData[$projectName])) {
-                            $projectData[$projectName] = [
+                        if (!isset($projectData[$key])) {
+                            $projectData[$key] = [
+                                'project_name' => $projectName,
                                 'dates' => '',
                                 'count' => 0,
-                                'unit_price' => ceil($retailPrice),
+                                'unit_price' => round($retailPrice),
                                 'total_price' => 0
                             ];
                         }
@@ -236,24 +238,23 @@ class PdfEditController extends Controller
                         // 日付を文字列として追加
                         if($containsHikitori || !$spv->charter_project_name){
                             $formattedDate = $date->format('j'); // 日付のみ
-                            if (empty($projectData[$projectName]['dates'])) {
+                            if (empty($projectData[$key]['dates'])) {
                                 $formattedDate = $date->format('n/j'); // 最初の日付は月/日
                             }
-                            if (!str_contains($projectData[$projectName]['dates'], $formattedDate)) {
-                                $projectData[$projectName]['dates'] .= (empty($projectData[$projectName]['dates']) ? '' : ',') . $formattedDate;
+                            if (!str_contains($projectData[$key]['dates'], $formattedDate)) {
+                                $projectData[$key]['dates'] .= (empty($projectData[$key]['dates']) ? '' : ',') . $formattedDate;
                             }
                         }
 
                         // 案件数と上代の合計を更新
-                        $projectData[$projectName]['count']++;
-                        $projectData[$projectName]['total_price'] += $retailPrice;
+                        $projectData[$key]['count']++;
+                        $projectData[$key]['total_price'] += $retailPrice;
 
                         $total_retail += $retailPrice;
                     }
                 }
             }
         }
-        // dd($projectData);
 
         $expresswayData = [];
 
@@ -271,7 +272,7 @@ class PdfEditController extends Controller
                                     'dates' => '',
                                     'expressway_dates' => '', // 高速代の日付
                                     'expressway_count' => 0, // 高速代の数量
-                                    'expressway_unit_price' => ceil($expresswayFee), // 高速代の単価
+                                    'expressway_unit_price' => round($expresswayFee), // 高速代の単価
                                     'total_expressway_fee' => 0 // 高速代の合計
                                 ];
                             }
@@ -279,7 +280,7 @@ class PdfEditController extends Controller
                             // 日付を文字列として追加
                             $formattedDate = $date->format('j'); // 日付のみ
                             if (empty($expresswayData[$projectName]['dates'])) {
-                                $formattedDate = $date->format('m/d'); // 最初の日付は月/日
+                                $formattedDate = $date->format('n/j'); // 最初の日付は月/日
                             }
                             if (!str_contains($expresswayData[$projectName]['dates'], $formattedDate)) {
                                 $expresswayData[$projectName]['dates'] .= (empty($expresswayData[$projectName]['dates']) ? '' : ',') . $formattedDate;
@@ -316,7 +317,7 @@ class PdfEditController extends Controller
                                     'dates' => '',
                                     'parking_dates' => '', // パーキング料金の日付
                                     'parking_count' => 0, // パーキング料金の数量
-                                    'parking_unit_price' => ceil($parkingFee), // パーキング料金の単価
+                                    'parking_unit_price' => round($parkingFee), // パーキング料金の単価
                                     'total_parking_fee' => 0 // パーキング料金の合計
                                 ];
                             }
@@ -324,7 +325,7 @@ class PdfEditController extends Controller
                             // 日付を文字列として追加
                             $formattedDate = $date->format('j'); // 日付のみ
                             if (empty($parkingData[$projectName]['dates'])) {
-                                $formattedDate = $date->format('m/d'); // 最初の日付は月/日
+                                $formattedDate = $date->format('n/j'); // 最初の日付は月/日
                             }
                             if (!str_contains($parkingData[$projectName]['dates'], $formattedDate)) {
                                 $parkingData[$projectName]['dates'] .= (empty($parkingData[$projectName]['dates']) ? '' : ',') . $formattedDate;

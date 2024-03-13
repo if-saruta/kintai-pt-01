@@ -28,13 +28,25 @@ window.addEventListener('DOMContentLoaded', () => {
             return total;
         }
         // 消費税の計算
-        const taxCalc = (subTotal) => {
+        const taxCalc = () => {
             const taxElem = document.querySelector('.taxElem');
 
-            const tax = subTotal * 0.1;
-            taxElem.value = Math.ceil(tax);
+            const taxCheckBox = document.querySelectorAll('.row-check-box');
+            let targetAmountTotal = 0; //税率の対象の変数
+            // checkBoxの確認
+            for(let i = 0; i < taxCheckBox.length; i++){
+                if(taxCheckBox[i].checked){ //チェックがついてる行
+                    let trParent = taxCheckBox[i].parentNode.parentNode; //親要素の行を取得
+                    let targetAmount = removeCommasAndCastToInt(trParent.querySelector('.amountElem').value); //金額のinputの値を取得
+                    if(!isNaN(targetAmount)){ //カンマを除去した値が数値か判断
+                        targetAmountTotal += targetAmount;
+                    }
+                }
+            }
+            const tax = targetAmountTotal * 0.1;
+            taxElem.value = Math.round(tax);
 
-            return Math.ceil(tax);
+            return Math.round(tax);
         }
         // 合計の計算
         const setTotalValue = (subTotal, tax) => {
@@ -64,7 +76,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 notTargetAmount.value = removeCommasAndCastToInt(amountSubTotal.value) - removeCommasAndCastToInt(targetAmount.value);
 
                 let taxValue = removeCommasAndCastToInt(targetAmount.value) * 0.1;
-                // console.log(taxValue);
+
                 if(isNaN(taxValue)){
                     taxValue = 0;
                 }
@@ -76,6 +88,16 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         targetAmountTaxCalc();
 
+        const mainTableChangeTaxCalc = (subtotalValue,taxValue) => {
+            const targetAmount = document.querySelector('.targetAmount');
+            const tax = document.querySelector('.targetAmountTax');
+            const notTargetAmount = document.querySelector('.notTargetAmount');
+
+            targetAmount.value = subtotalValue;
+            tax.value = taxValue;
+            commmaActive();
+        }
+
 
         // 入力があった場合の関数発火プログラム
         const changeElem = document.querySelectorAll('.changeElem');
@@ -83,23 +105,62 @@ window.addEventListener('DOMContentLoaded', () => {
             changeElem[i].addEventListener('change', () => {
                 rowCalc();
                 const subTotal = amountSubTotal();
-                const tax = taxCalc(subTotal);
+                const tax = taxCalc();
                 setTotalValue(subTotal, tax);
                 commmaActive();
+                mainTableChangeTaxCalc(subTotal,tax);
             })
         }
+        // 行が削除された時の関数発火
         const btns = document.querySelectorAll('.deleteRowBtn');
         for (let i = 0; i < btns.length; i++) {
             btns[i].addEventListener('click', function() {
                 rowCalc();
                 const subTotal = amountSubTotal();
-                const tax = taxCalc(subTotal);
+                const tax = taxCalc();
                 setTotalValue(subTotal, tax);
                 commmaActive();
             });
         }
+        // checkboxにactionがあった時の税金のプログラム
+        const checkBoxActiveTaxCalc = () => {
+            const taxCheckBox = document.querySelectorAll('.row-check-box');
+            const taxElem = document.querySelector('.taxElem');
+            const totalElem = document.querySelector('.totalElem');
+            const subTotalElem = document.querySelector('.amountSubTotal');
+
+            for(let i = 0; i < taxCheckBox.length; i++){
+                taxCheckBox[i].addEventListener('change', () => {
+                    // メインテーブルの変更
+                    let targetAmountTotal = 0; //税率の対象の変数
+                    for(let j = 0; j < taxCheckBox.length; j++){
+                        if(taxCheckBox[j].checked){ //チェックがついてる行
+                            let trParent = taxCheckBox[j].parentNode.parentNode; //親要素の行を取得
+                            let targetAmount = removeCommasAndCastToInt(trParent.querySelector('.amountElem').value); //金額のinputの値を取得
+                            if(!isNaN(targetAmount)){ //カンマを除去した値が数値か判断
+                                targetAmountTotal += targetAmount;
+                            }
+                        }
+                    }
+                    const tax = targetAmountTotal * 0.1;
+                    taxElem.value = addCommas(Math.round(tax));
+                    totalElem.value = addCommas(removeCommasAndCastToInt(subTotalElem.value) + tax);
+
+                    // 税金対象テーブルの変更
+                    const targetAmount = document.querySelector('.targetAmount');
+                    const targetTax = document.querySelector('.targetAmountTax');
+                    const notTargetAmount = document.querySelector('.notTargetAmount');
+
+                    targetAmount.value = addCommas(targetAmountTotal); //10%対象の変更
+                    targetTax.value = addCommas(tax); //税金の変更
+                    notTargetAmount.value = addCommas(removeCommasAndCastToInt(subTotalElem.value) - targetAmountTotal);
+                })
+            }
+        }
+        checkBoxActiveTaxCalc();
     }
     calc();
+
 
     // 追加行の削除
     const deleteRow = () => {
@@ -129,7 +190,7 @@ window.addEventListener('DOMContentLoaded', () => {
             newRow.classList.add('tableRow');
 
             newRow.innerHTML = `
-                <td class="table-item w-400"><input type="text" name="item[]" value="" class="input project-table-input changeElem project-edit-pdf-text-left"></td>
+                <td class="table-item w-400"><input type="text" name="item[]" value="" class="input project-table-input changeElem project-edit-pdf-text-left"> <input checked type="checkbox" class="row-check-box"></td>
                 <td class="table-data w-100"><input type="text" name="number[]" value="" class="input project-table-input changeElem cntElem project-edit-pdf-text-right"></td>
                 <td class="table-data w-100"><input type="text" name="until[]" value="" class="input project-table-input changeElem untilElem project-edit-pdf-text-right commaInput"></td>
                 <td class="table-data w-110"><input type="text" name="amount[]" value="" class="input project-table-input changeElem amountElem project-edit-pdf-text-right commaInput"></td>
@@ -149,8 +210,10 @@ window.addEventListener('DOMContentLoaded', () => {
     addRow();
 
     function removeCommasAndCastToInt(value) {
+        // 確認または変換されたvalueが常に文字列であることを保証
+        var stringValue = String(value);
         // Remove both full-width and half-width commas
-        var newValue = value.replace(/,|，/g, '');
+        var newValue = stringValue.replace(/,|，/g, '');
         // Cast to int
         return parseInt(newValue, 10);
     }

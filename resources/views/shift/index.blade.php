@@ -8,6 +8,7 @@
     <main class="main --shift-main">
         <div class="main__link-block --shift-link-block">
             <div class="main__link-block__tags">
+                @can('admin-higher')
                 <form action="{{route('shift.')}}" method="POST"
                     class="main__link-block__item --shift-link-block__item">
                     @csrf
@@ -17,6 +18,7 @@
                         <span class="">全表示</span>
                     </button>
                 </form>
+                @endcan
                 <form action="{{route('shift.employeeShowShift')}}" method="POST"
                     class="main__link-block__item --shift-link-block__item">
                     @csrf
