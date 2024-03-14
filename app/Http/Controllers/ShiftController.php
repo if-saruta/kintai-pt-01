@@ -507,8 +507,9 @@ class ShiftController extends Controller
                                         $isProjectCheck = false;
                                         $projectIdTmp = null;
                                         foreach ($projects as $project) {
-                                            $projectName = '';
-                                            $projectName = $this->removeSpaces($project->name);
+                                            $projectName = ''; //登録されている案件名を格納する変数
+                                            $projectName = $this->removeSpaces($project->name); //案件名のスペースを除去
+                                            // tmpProjectNameには、【】が除去された案件名・charterProjectNameは【】が含まれていれば【】が含まれた案件名、そうでなければNULL
                                             [$tmpProjectName, $charterProjectName] = $this->isCharterCheck($recordData);
                                             if ($tmpProjectName === $projectName) {
                                                 $projectIdTmp = $project->id;
@@ -735,9 +736,9 @@ class ShiftController extends Controller
     {
         $string = null;
         $modifiedVariableMixed = $CheckProjectName;
-        // 半角または全角コロンが含まれているかチェック
-        if (1 === preg_match('/[:：]/u', $CheckProjectName)) {
-            $modifiedVariableMixed = preg_replace('/[:：].*?[:：]/u', '', $CheckProjectName);
+        // 【】が含まれているかチェック
+        if (1 === preg_match('/[【】]/u', $CheckProjectName)) {
+            $modifiedVariableMixed = preg_replace('/[【].*?[】]/u', '', $CheckProjectName);
             $string = $CheckProjectName;
         }
         return [$modifiedVariableMixed, $string];
