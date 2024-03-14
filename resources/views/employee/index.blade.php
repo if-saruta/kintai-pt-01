@@ -24,12 +24,21 @@
                                     <p class="w-name txt">{{$employee->name}}</p>
                                     <p class="w-status txt">{{$employee->employment_status}}</p>
                                     <p class="w-Affiliation txt">{{$employee->company->name}}</p>
-                                    <a href="{{route('employee.edit', ["id" => $employee->id])}}" class="edit-btn action-btn">
-                                        <div class="edit-btn__inner">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                            <p class="edit-btn-txt">編集</p>
-                                        </div>
-                                    </a>
+                                    @can('admin-higher')
+                                        <a href="{{route('employee.edit', ["id" => $employee->id])}}" class="edit-btn action-btn">
+                                            <div class="edit-btn__inner">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                                <p class="edit-btn-txt">編集</p>
+                                            </div>
+                                        </a>
+                                    @else
+                                        <a href="{{route('employee.show', ["id" => $employee->id])}}" class="edit-btn action-btn">
+                                            <div class="edit-btn__inner">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                                <p class="edit-btn-txt">詳細</p>
+                                            </div>
+                                        </a>
+                                    @endcan
                                 </div>
                             @endforeach
                         </div>
@@ -40,12 +49,14 @@
                         <p class="w-name txt">Name</p>
                         <p class="w-status txt">Employment status</p>
                         <p class="w-Affiliation txt">Affiliation</p>
+                        @can('admin-higher')
                         <a href="{{route('employee.create')}}" class="add-btn" >
                             <div class="add-btn__inner">
                                 <i class="fa-solid fa-circle-plus"></i>
                                 <p class="">追加</p>
                             </div>
                         </a>
+                        @endcan
                     </div>
                 </div>
             </div>

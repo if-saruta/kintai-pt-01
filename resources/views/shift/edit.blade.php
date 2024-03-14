@@ -16,6 +16,7 @@
     <main class="main --shift-main">
         <div class="main__link-block --shift-link-block">
             <div class="main__link-block__tags">
+                @can('admin-higher')
                 <form action="{{route('shift.')}}" method="POST"
                     class="main__link-block__item --shift-link-block__item">
                     @csrf
@@ -25,6 +26,7 @@
                         <span class="">全表示</span>
                     </button>
                 </form>
+                @endcan
                 <form action="{{route('shift.employeeShowShift')}}" method="POST"
                     class="main__link-block__item --shift-link-block__item">
                     @csrf
@@ -40,9 +42,14 @@
                     <input hidden name="witch" value="page03" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
                     <button class="{{ request()->routeIs('shift.employeePriceShift*') ? 'active' : '' }} link">
-                        <span class="">ドライバー価格</span>
+                        @can('admin-higher')
+                            <span class="">ドライバー価格</span>
+                        @else
+                            <span class="">配送料金</span>
+                        @endcan
                     </button>
                 </form>
+                @can('admin-higher')
                 <form action="{{route('shift.projectPriceShift')}}" method="POST"
                     class="main__link-block__item --shift-link-block__item">
                     @csrf
@@ -52,6 +59,7 @@
                         <span class="">上代閲覧用</span>
                     </button>
                 </form>
+                @endcan
                 <form action="{{route('shift.projectCount')}}" method="POST"
                     class="main__link-block__item --shift-link-block__item">
                     @csrf
@@ -62,23 +70,25 @@
                     </button>
                 </form>
             </div>
-            <div class="--shift-link-block__btn-area">
-                {{-- シフト編集 --}}
-                <form action="{{route('shift.edit')}}" method="POST" class="icon-block">
-                    @csrf
-                    <input hidden name="witch" value="page06" type="text">
-                    <input hidden type="text" name="date" value="{{$startOfWeek}}">
-                    <button class="{{ request()->routeIs('shift.edit*') ? 'active' : '' }} icon-block__button">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                    </button>
-                </form>
-                {{-- CSVインポート --}}
-                <a href="{{route('shift.csv')}}" class="icon-block">
-                    <div class="{{ request()->routeIs('shift.csv') ? 'active' : '' }} icon-block__button">
-                        <i class="fa-solid fa-file-import"></i>
-                    </div>
-                </a>
-            </div>
+            @can('admin-higher')
+                <div class="--shift-link-block__btn-area">
+                    {{-- シフト編集 --}}
+                    <form action="{{route('shift.edit')}}" method="POST" class="icon-block">
+                        @csrf
+                        <input hidden name="witch" value="page06" type="text">
+                        <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                        <button class="{{ request()->routeIs('shift.edit*') ? 'active' : '' }} icon-block__button">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                    </form>
+                    {{-- CSVインポート --}}
+                    <a href="{{route('shift.csv')}}" class="icon-block">
+                        <div class="{{ request()->routeIs('shift.csv') ? 'active' : '' }} icon-block__button">
+                            <i class="fa-solid fa-file-import"></i>
+                        </div>
+                    </a>
+                </div>
+            @endcan
         </div>
         <div class="main__white-board">
             <?php $count = 0;?>

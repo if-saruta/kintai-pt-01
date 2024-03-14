@@ -34,7 +34,11 @@
                                 <p class="required">必須</p>
                             </div>
                             <div class="info-row__data --top --top-edit">
+                                @can('admin-higher')
                                 <input type="text" class="c-input setValueElem" name="number" required>
+                                @else
+                                <input type="text" class="c-input setValueElem" name="number" readonly>
+                                @endcan
                             </div>
                         </div>
                         <div class="info-row info-row-edit">
@@ -43,24 +47,34 @@
                                 <p class="required">必須</p>
                             </div>
                             <div class="info-row__data info-row-edit__data">
-                                {{-- <input type="text" class="c-input setValueElem" name="company"> --}}
-                                <select name="company" class="c-select" id="setSelectValueElem" required>
-                                    <option value="">選択してください</option>
-                                    @foreach ($companies as $company)
-                                        <option value="{{$company->id}}">{{$company->name}}</option>
-                                    @endforeach
-                                </select>
+                                @can('admin-higher')
+                                    <select name="company" class="c-select" id="setSelectValueElem" required>
+                                        <option value="">選択してください</option>
+                                        @foreach ($companies as $company)
+                                            <option value="{{$company->id}}">{{$company->name}}</option>
+                                        @endforeach
+                                    </select>
+                                @else
+                                    <select name="company" class="c-select" id="setSelectValueElem" disabled="disabled">
+                                        <option value="">選択してください</option>
+                                        @foreach ($companies as $company)
+                                            <option value="{{$company->id}}">{{$company->name}}</option>
+                                        @endforeach
+                                    </select>
+                                @endcan
                             </div>
                         </div>
 
                         {{-- ボタン --}}
                         <div class="btn-area edit-btn-area">
+                            @can('admin-higher')
                             <button class="btn --save" type="submit" name="action" value="save">
                                 入力内容を登録
                             </button>
                             <button class="btn --delete" type="submit" name="action" value="delete" onclick='return confirm("本当に削除しますか?")'>
                                 車両を削除
                             </button>
+                            @endcan
                             <div class="btn --back closeBtn" onclick='return confirm("入力したデータは失われます。")'>
                                 戻る
                             </div>
@@ -125,10 +139,14 @@
                                 {{$vehicle->company->name}}
                                 @endif
                             </p>
-                            <button class="edit-btn action-btn editBtn">
+                            <button class="edit-btn action-btn editBtn @can('admin-higher') @else user @endcan">
                                 <div class="edit-btn__inner">
                                     <i class="fa-solid fa-pen-to-square"></i>
-                                    <p class="edit-btn-txt">編集</p>
+                                    @can('admin-higher')
+                                        <p class="edit-btn-txt">編集</p>
+                                    @else
+                                        <p class="edit-btn-txt">詳細</p>
+                                    @endcan
                                 </div>
                                 <div class="dataHasElem"
                                     data-info='["{{$vehicle->number}}","{{$vehicle->company->name}}"]'>
@@ -145,12 +163,14 @@
                             <p class="w-number">Number</p>
                             <p class="w-name">Company Name</p>
                         </div>
-                        <button class="add-btn" id="addBtn">
-                            <div class="add-btn__inner">
-                                <i class="fa-solid fa-circle-plus"></i>
-                                <p class="">追加</p>
-                            </div>
-                        </button>
+                        @can('admin-higher')
+                            <button class="add-btn" id="addBtn">
+                                <div class="add-btn__inner">
+                                    <i class="fa-solid fa-circle-plus"></i>
+                                    <p class="">追加</p>
+                                </div>
+                            </button>
+                        @endcan
                     </div>
                 </div>
             </div>

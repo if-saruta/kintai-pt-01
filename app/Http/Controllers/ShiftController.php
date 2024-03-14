@@ -89,7 +89,12 @@ class ShiftController extends Controller
 
         $payments = ProjectEmployeePayment::all();
 
-        return view('shift.index', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'sortedShiftDataByEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays'));
+        $user = auth()->user();
+        if($user->role == 1){
+            return view('shift.index', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'sortedShiftDataByEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays'));
+        }else{
+            return redirect()->route('shift.employeeShowShift');
+        }
     }
 
     public function selectWeek(Request $request)
@@ -165,6 +170,8 @@ class ShiftController extends Controller
 
         $page = $request->input('witch') ?? session('page');
 
+        $user = auth()->user();
+
         if ($page) {
             if ($page == 'page01') {
                 return view('shift.index', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays'));
@@ -202,7 +209,11 @@ class ShiftController extends Controller
                 return view('shift.edit', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'projects', 'vehicles', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates','holidays'));
             }
         } else {
-            return view('shift.index', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates','holidays'));
+            if($user->role <= 10){
+                return view('shift.index', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates','holidays'));
+            }else if($user->role > 10){
+                return view('shift.employeeShowShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays'));
+            }
         }
     }
 
@@ -726,7 +737,6 @@ class ShiftController extends Controller
         $modifiedVariableMixed = $CheckProjectName;
         // 半角または全角コロンが含まれているかチェック
         if (1 === preg_match('/[:：]/u', $CheckProjectName)) {
-            // var_dump($CheckProjectName);
             $modifiedVariableMixed = preg_replace('/[:：].*?[:：]/u', '', $CheckProjectName);
             $string = $CheckProjectName;
         }

@@ -131,7 +131,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
             // 編集時常時open
             btn.classList.add('edit-btn-active');
-            btn.querySelector('.edit-btn-txt').innerHTML = '編集中';
+            if(!btn.classList.contains('user')){
+                btn.querySelector('.edit-btn-txt').innerHTML = '編集中';
+            }else{
+                btn.querySelector('.edit-btn-txt').innerHTML = '詳細';
+            }
 
             for(let i = 0; i < companyBox.length; i++){
                 // すべての行を黒くする
@@ -144,8 +148,10 @@ window.addEventListener('DOMContentLoaded', () => {
             var parentElem = btn.parentElement;
             parentElem.classList.remove('after-element');
 
-            addBtn.classList.add('disabled');
-            addBtn.disabled = true;
+            if(addBtn){
+                addBtn.classList.add('disabled');
+                addBtn.disabled = true;
+            }
         }
 
         // スタイルを初期状態に戻す
@@ -158,8 +164,10 @@ window.addEventListener('DOMContentLoaded', () => {
                 editBtn[i].classList.remove('edit-btn-active');
                 editBtn[i].querySelector('.edit-btn-txt').innerHTML = '編集';
             }
-            addBtn.classList.remove('disabled');
-            addBtn.disabled = false;
+            if(addBtn){
+                addBtn.classList.remove('disabled');
+                addBtn.disabled = false;
+            }
         }
 
         const resetSetTxt = () => {
