@@ -509,8 +509,9 @@ class ShiftController extends Controller
                                         foreach ($projects as $project) {
                                             $projectName = ''; //登録されている案件名を格納する変数
                                             $projectName = $this->removeSpaces($project->name); //案件名のスペースを除去
+
                                             // tmpProjectNameには、【】が除去された案件名・charterProjectNameは【】が含まれていれば【】が含まれた案件名、そうでなければNULL
-                                            [$tmpProjectName, $charterProjectName] = $this->isCharterCheck($recordData);
+                                            [$tmpProjectName, $initialProjectName] = $this->isCharterOrCsCheck($recordData);
                                             if ($tmpProjectName === $projectName) {
                                                 $projectIdTmp = $project->id;
 
@@ -520,7 +521,7 @@ class ShiftController extends Controller
                                                 $middleShift = ShiftProjectVehicle::create([
                                                     'shift_id' => $shift->id,
                                                     'project_id' => $project->id,
-                                                    'charter_project_name' => $charterProjectName,
+                                                    'initial_project_name' => $initialProjectName,
                                                     'retail_price' => $employeeInfo[0],
                                                     'driver_price' => $employeeInfo[1],
                                                     // 'total_allowance' => $employeeInfo[2],
@@ -582,7 +583,7 @@ class ShiftController extends Controller
                                         foreach ($projects as $project) {
                                             $projectName = '';
                                             $projectName = $this->removeSpaces($project->name);
-                                            [$tmpProjectName, $charterProjectName] = $this->isCharterCheck($recordData);
+                                            [$tmpProjectName, $initialProjectName] = $this->isCharterOrCsCheck($recordData);
                                             if ($tmpProjectName === $projectName) {
                                                 $projectIdTmp = $project->id;
 
@@ -592,7 +593,7 @@ class ShiftController extends Controller
                                                 $middleShift = ShiftProjectVehicle::create([
                                                     'shift_id' => $shift->id,
                                                     'project_id' => $project->id,
-                                                    'charter_project_name' => $charterProjectName,
+                                                    'initial_project_name' => $initialProjectName,
                                                     'retail_price' => $employeeInfo[0],
                                                     'driver_price' => $employeeInfo[1],
                                                     // 'total_allowance' => $employeeInfo[2],
@@ -610,8 +611,7 @@ class ShiftController extends Controller
 
                                             $middleShift = ShiftProjectVehicle::create([
                                                 'shift_id' => $shift->id,
-                                                'unregistered_project' => $tmpProjectName,
-                                                'charter_project_name' => $charterProjectName,
+                                                'unregistered_project' => $recordData,
                                                 'retail_price' => $employeeInfo[0],
                                                 'driver_price' => $employeeInfo[1],
                                                 // 'total_allowance' => $employeeInfo[2],
@@ -662,7 +662,6 @@ class ShiftController extends Controller
 
         Storage::delete($path);
         $request->session()->forget('csv_file_path');
-
 
         return redirect()->route('shift.selectWeek')->with([
             'date' => $getDate, // 例として固定の日付を設定
@@ -732,16 +731,20 @@ class ShiftController extends Controller
         return array($retail_price, $driver_price, $vehicle_rental_type, $rental_vehicle_id);
     }
 
-    public function isCharterCheck($CheckProjectName)
+    public function isCharterOrCsCheck($CheckProjectName)
     {
-        $string = null;
+        $initialProjectName = null;
         $modifiedVariableMixed = $CheckProjectName;
         // 【】が含まれているかチェック
         if (1 === preg_match('/[【】]/u', $CheckProjectName)) {
             $modifiedVariableMixed = preg_replace('/[【].*?[】]/u', '', $CheckProjectName);
-            $string = $CheckProjectName;
+            $initialProjectName = $CheckProjectName;
+        }else if(1 === preg_match('/[\[\]]|［］/u', $CheckProjectName)){
+            // 半角の[]と全角の［］にマッチし、その内部を含めて削除する正規表現
+            $modifiedVariableMixed = preg_replace('/[\[].*?[\]]|［.*?］/u', '', $CheckProjectName);
+            $initialProjectName = $CheckProjectName;
         }
-        return [$modifiedVariableMixed, $string];
+        return [$modifiedVariableMixed, $initialProjectName];
     }
 
     public function getHoliday($year)

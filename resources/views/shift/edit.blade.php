@@ -289,7 +289,11 @@
 
                                                         {{-- データ表示 --}}
                                                         @if ($spv->project)
-                                                            <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                                            @if ($spv->initial_project_name)
+                                                                <p class="table-cell__item__row setHightElem">{{$spv->initial_project_name}}</p>
+                                                            @else
+                                                                <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                                            @endif
                                                         @elseif($spv->unregistered_project)
                                                             <p class="table-cell__item__row setHightElem" style="color: red;">
                                                                 {{$spv->unregistered_project}}</p>
@@ -387,7 +391,11 @@
 
                                                         {{-- データ表示 --}}
                                                         @if ($spv->project)
-                                                            <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                                            @if ($spv->initial_project_name)
+                                                                <p class="table-cell__item__row setHightElem">{{$spv->initial_project_name}}</p>
+                                                            @else
+                                                                <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                                            @endif
                                                         @elseif($spv->unregistered_project)
                                                             <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
                                                         @else

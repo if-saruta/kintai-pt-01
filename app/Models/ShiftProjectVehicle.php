@@ -14,7 +14,7 @@ class ShiftProjectVehicle extends Model
         'shift_id',
         'project_id',
         'unregistered_project',
-        'charter_project_name',
+        'initial_project_name',
         'vehicle_id',
         'unregistered_vehicle',
         'retail_price',

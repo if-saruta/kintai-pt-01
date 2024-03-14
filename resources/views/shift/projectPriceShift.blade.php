@@ -240,11 +240,15 @@
                                                     @if ($spv->time_of_day == 0)
                                                     <div class="table-cell__item">
                                                         @if ($spv->project)
-                                                        <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                                            @if ($spv->initial_project_name)
+                                                                <p class="table-cell__item__row setHightElem">{{$spv->initial_project_name}}</p>
+                                                            @else
+                                                                <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                                            @endif
                                                         @elseif($spv->unregistered_project)
-                                                        <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
+                                                            <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
                                                         @else
-                                                        <p class="table-cell__item__row setHightElem"></p>
+                                                            <p class="table-cell__item__row setHightElem"></p>
                                                         @endif
                                                         <p class="table-cell__item__row">
                                                             @if ($spv->retail_price)
@@ -272,11 +276,15 @@
                                                     @if ($spv->time_of_day == 1)
                                                     <div class="table-cell__item">
                                                         @if ($spv->project)
-                                                        <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                                            @if ($spv->initial_project_name)
+                                                                <p class="table-cell__item__row setHightElem">{{$spv->initial_project_name}}</p>
+                                                            @else
+                                                                <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                                            @endif
                                                         @elseif($spv->unregistered_project)
-                                                        <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
+                                                            <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
                                                         @else
-                                                        <p class="table-cell__item__row setHightElem"></p>
+                                                            <p class="table-cell__item__row setHightElem"></p>
                                                         @endif
                                                         <p class="table-cell__item__row">
                                                             @if ($spv->retail_price)

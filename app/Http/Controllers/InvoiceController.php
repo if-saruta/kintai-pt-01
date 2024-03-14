@@ -963,12 +963,13 @@ class InvoiceController extends Controller
             // 新しい配列に要素を追加
             $arrangeShiftArray[] = $data;
             // プロジェクト名を格納
-            $firstCheckName = $data['project']['name'];
+            $firstCheckName = $data['initial_project_name'];
 
+            // 引取という文字列が入っているか
             if (str_contains($firstCheckName, '引取') && !str_contains($firstCheckName, '納品')) {
                 // プロジェクトのclient_idを取得
-                $tmpClientId = $data['project']['client']['id'];
-
+                $tmpClientId = $data['project']['id'];
+                // 引取に紐づく納品を探す
                 foreach ($shiftArray as $innerIndex => $innerData) {
                     if (in_array($innerIndex, $skipIndex)) {
                         continue;
@@ -976,15 +977,13 @@ class InvoiceController extends Controller
                     if ($index > $innerIndex) {
                         continue;
                     }
-                    $secondCheckName = $innerData['project']['name'];
+                    $secondCheckName = $innerData['initial_project_name'];
 
-                    if ($innerData['project']['client_id'] == $tmpClientId) {
+                    if ($innerData['project']['id'] == $tmpClientId) {
                         if (!str_contains($secondCheckName, '引取') && str_contains($secondCheckName, '納品')) {
-                            // 全角・半角の括弧の正規表現
-                            $pattern = "/[\(（].+?[\)）]/u";
-                            // 全角・半角の括弧と括弧の中身を削除
-                            $cleanStr01 = preg_replace($pattern, "", $firstCheckName);
-                            $cleanStr02 = preg_replace($pattern, "", $secondCheckName);
+                            //【】を除去
+                            $cleanStr01 = preg_replace('/【.*?】/u', "", $firstCheckName);
+                            $cleanStr02 = preg_replace('/【.*?】/u', "", $secondCheckName);
                             if ($cleanStr01 === $cleanStr02) {
                                 // データを一時格納
                                 $tmpItem = $innerData;

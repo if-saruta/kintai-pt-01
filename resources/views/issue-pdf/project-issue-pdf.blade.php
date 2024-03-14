@@ -52,7 +52,7 @@
             top: -15px;
             right: -30px;
             z-index: 1;
-            width: 110px;
+            width: 95px;
         }
 
         .company-stanp img {

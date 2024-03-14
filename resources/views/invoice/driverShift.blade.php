@@ -371,7 +371,11 @@
                                                                 {{-- 案件名 --}}
                                                                 <td class="w-project shiftActive editShift">
                                                                     @if ($spv->project)
-                                                                        <p class="">{{ $spv->project->name }}</p>
+                                                                        @if ($spv->initial_project_name)
+                                                                            <p class="">{{ $spv->initial_project_name }}</p>
+                                                                        @else
+                                                                            <p class="">{{ $spv->project->name }}</p>
+                                                                        @endif
                                                                     @else
                                                                         <p class="" style="color: red;">{{ $spv->unregistered_project }}</p>
                                                                     @endif
@@ -576,7 +580,11 @@
                                                                 {{-- 案件名 --}}
                                                                 <td class="w-project shiftActive editShift">
                                                                     @if ($spv->project)
-                                                                        <p class="">{{ $spv->project->name }}</p>
+                                                                        @if ($spv->initial_project_name)
+                                                                            <p class="">{{ $spv->initial_project_name }}</p>
+                                                                        @else
+                                                                            <p class="">{{ $spv->project->name }}</p>
+                                                                        @endif
                                                                     @else
                                                                         <p class="" style="color: red;">{{ $spv->unregistered_project }}</p>
                                                                     @endif
