@@ -7,21 +7,11 @@ use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
-    {
-            // MySQL 5.7対応のカラム名変更
-        DB::statement('ALTER TABLE shift_project_vehicle RENAME COLUMN charter_project_name TO initial_project_name;');
+    public function up() {
+        DB::statement('ALTER TABLE shift_project_vehicle CHANGE charter_project_name initial_project_name VARCHAR(255);');
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-            // 元に戻す場合
-        DB::statement('ALTER TABLE shift_project_vehicle RENAME COLUMN initial_project_name TO charter_project_name;');
+    public function down() {
+        DB::statement('ALTER TABLE shift_project_vehicle CHANGE initial_project_name charter_project_name VARCHAR(255);');
     }
 };
