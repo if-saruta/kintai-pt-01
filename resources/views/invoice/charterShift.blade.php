@@ -129,7 +129,11 @@
                                                         {{-- <p class="">{{$data['shift']['date']}}</p> --}}
                                                     </div>
                                                     <div class="data__row__clm --project projectNameBox register">
-                                                        <input type="text" value="{{$data['initial_project_name']}}" class="input charter-input" readonly>
+                                                        @if ($data['initial_project_name'] != null)
+                                                            <input type="text" value="{{$data['initial_project_name']}}" class="input charter-input" readonly>
+                                                        @else
+                                                            <input type="text" value="{{$data['project']['name']}}" class="input charter-input" readonly>
+                                                        @endif
                                                         {{-- モーダルに値を渡す --}}
                                                         <input hidden type="text" value="{{$data['id']}}" class="setId">
                                                         @foreach ($dates as $date)
