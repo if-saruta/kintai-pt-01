@@ -9,14 +9,14 @@
                         <div class="logo-block__inner__img" id="logoImg">
                             <img class="" src="{{ asset('img/logo.png') }}" alt="">
                         </div>
-                        <p class="logo-block__inner__txt navTxt">Caramel</p>
+                        <p class="logo-block__inner__txt navTxt">matthew</p>
                     </a>
                 @else
                     <a href="{{ route('shift.employeeShowShift') }}" class="logo-block__inner">
                         <div class="logo-block__inner__img" id="logoImg">
                             <img class="" src="{{ asset('img/logo.png') }}" alt="">
                         </div>
-                        <p class="logo-block__inner__txt navTxt">Caramel</p>
+                        <p class="logo-block__inner__txt navTxt">matthew</p>
                     </a>
                 @endcan
             </div>
