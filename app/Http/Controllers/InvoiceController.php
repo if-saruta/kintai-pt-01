@@ -768,6 +768,7 @@ class InvoiceController extends Controller
                 'name' => $project_name,
                 'is_charter' => 1,
                 'payment_type' => 1,
+                'registration_location' => 2,
             ]);
 
             $findShiftPV = ShiftProjectVehicle::where('unregistered_project', $project_name)->get();
@@ -786,12 +787,25 @@ class InvoiceController extends Controller
                 'name' => $project_name,
                 'is_charter' => 1,
                 'payment_type' => 1,
+                'registration_location' => 2,
             ]);
-            $shiftPV->project_id = $project->id;
-            $shiftPV->unregistered_project = null;
-            $shiftPV->save();
+
+            $findShiftPV = ShiftProjectVehicle::where('unregistered_project', $project_name)->get();
+            foreach ($findShiftPV as $shift) {
+                $shift->project_id = $project->id;
+                $shift->unregistered_project = null;
+                $shift->save();
+            }
         }
 
+        $employees = Employee::all();
+        foreach($employees as $employee){
+            ProjectEmployeePayment::create([
+                'employee_id' => $employee->id,
+                'project_id' => $project->id,
+                'amount' => null
+            ]);
+        }
 
         ProjectHoliday::create([
             'project_id' => $project->id
@@ -863,6 +877,44 @@ class InvoiceController extends Controller
         $getYear = $request->year;
         $getMonth = $request->month;
 
+        return redirect()->route('invoice.findCharterShift', ['year' => $getYear, 'month' => $getMonth]);
+    }
+
+    public function charterProjectChangeUnregister(Request $request)
+    {
+        $projectId = $request->projectId;
+
+        // 案件をもとにシフトを取得
+        $shiftPvs = ShiftProjectVehicle::where('project_id', $projectId)->get();
+        // 案件を取得
+        $project = Project::find($projectId);
+
+        // 案件の登録場所がチャーター画面なのかチェック
+        if($project->registration_location == 2){
+            // シフトデータを更新
+            if($shiftPvs){
+                foreach($shiftPvs as $shiftPv){
+                    $shiftPv->project_id = null;
+                    $shiftPv->unregistered_project = $project->name;
+                    $shiftPv->initial_project_name = null;
+                    $shiftPv->save();
+                }
+            }
+            // 休日の削除
+            $ProjectHoliday = ProjectHoliday::where('project_id', $projectId)->first();
+            $ProjectHoliday->delete();
+            // 従業員別給与の削除
+            $ProjectEmployeePayments = ProjectEmployeePayment::where('project_id', $projectId)->get();
+            foreach($ProjectEmployeePayments as $ProjectEmployeePayment){
+                $ProjectEmployeePayment->delete();
+            }
+            // 案件の削除
+            $project->forceDelete();
+        }
+
+        // リダイレクト
+        $getYear = $request->year;
+        $getMonth = $request->month;
         return redirect()->route('invoice.findCharterShift', ['year' => $getYear, 'month' => $getMonth]);
     }
 

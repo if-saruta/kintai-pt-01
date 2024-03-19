@@ -193,6 +193,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
+            font-size: 1.2rem;
             &__bg{
                 position: absolute;
                 top: 0;
@@ -248,10 +249,19 @@
                             }
                         }
                     }
-                    .client-modal-btn{
-                        display: block;
+                    .button-area{
+                        width: fit-content;
+                        display: flex;
+                        align-items: center;
+                        gap: 1rem;
                         margin: 0 auto;
                         margin-top: 20px;
+                        .client-modal-btn{
+                            display: block;
+                        }
+                        .back-btn{
+
+                        }
                     }
                 }
             }
@@ -458,6 +468,71 @@
                         }
                         .--back{
 
+                        }
+                    }
+                }
+            }
+        }
+        .project-unregister-modal{
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100000;
+            width: 100vw;
+            height: 100vh;
+            &__bg{
+                display: block;
+                width: 100%;
+                height: 100%;
+                background-color: black;
+                opacity: 0.5;
+            }
+            &__white-board{
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                width: math.div(700,1280) * 100vw;
+                // height: math.div(500,800) * 100vh;
+                padding: 5rem;
+                border-radius: 1.5rem;
+                background-color: white;
+                &__inner{
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5rem;
+                    .title{
+                        width: fit-content;
+                        margin: 0 auto;
+                        font-size: 2.5rem;
+                        font-weight: $fw-bold;
+                    }
+                    .warning-txt{
+                        display: none;
+                        width: fit-content;
+                        margin: 0 auto;
+                        font-size: 1.8rem;
+                        font-weight: $fw-bold;
+                        color: $cRed;
+                    }
+                    .project-name-area{
+                        width: fit-content;
+                        margin: 0 auto;
+                        display: flex;
+                        align-items: center;
+                        gap: 1.5rem;
+                        font-size: 2rem;
+                        font-weight: $fw-bold;
+                    }
+                    .button-area{
+                        width: fit-content;
+                        margin: 0 auto;
+                        display: flex;
+                        align-items: center;
+                        gap: 1rem;
+                        .delete-btn{
+                            width: 12rem;
                         }
                     }
                 }

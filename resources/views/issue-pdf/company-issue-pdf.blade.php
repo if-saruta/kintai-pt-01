@@ -314,7 +314,7 @@
             top: -15px;
             right: -30px;
             z-index: 1;
-            width: 110px;
+            width: 95px;
         }
 
         .company-stanp img {
@@ -394,6 +394,19 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
+        }
+        .target-cost-table{
+            width: 450px;
+            margin-top: 30px;
+            margin-left: auto;
+            margin-right: -12px;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .target-cost-table td{
+            border: 1px solid black;
+            text-align: center;
+            padding: 2px 0;
         }
 
         .bank {
@@ -527,6 +540,22 @@
                     <p class="mini-table-data-txt --right">{{$costTotal}}</p>
                 </td>
             </tr>
+        </table>
+        <table class="target-cost-table">
+            <tbody>
+                <tr>
+                    <td>10%対象</td>
+                    <td>{{ $targetCost }}</td>
+                    <td>消費税</td>
+                    <td>{{ $targetTax }}</td>
+                </tr>
+                <tr>
+                    <td>対象外</td>
+                    <td>{{ $notTargetCost }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
         </table>
         <div class="bank">
             <p class="">お振込先</p>

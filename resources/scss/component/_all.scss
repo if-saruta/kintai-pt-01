@@ -53,11 +53,66 @@
     resize: none;
 }
 
+.c-save-btn{
+    width: 6rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: $fw-black;
+    letter-spacing: 0.1rem;
+    color: $cBlue02;
+    border: 2px solid $cBlue02;
+    border-radius: 1rem;
+    transition: 0.3s;
+}
+.c-save-btn:hover{
+    background-color: $cBlue02;
+    color: white;
+}
+.c-delete-btn{
+    width: 8rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: $fw-black;
+    letter-spacing: 0.1rem;
+    color: $cRed;
+    border: 2px solid $cRed;
+    border-radius: 1rem;
+    transition: 0.3s;
+}
+.c-delete-btn:hover{
+    background-color: $cRed;
+    color: white;
+}
+.c-back-btn{
+    width: 6rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid $cGray02;
+    border-radius: 1rem;
+    font-size: 1.2rem;
+    font-weight: $fw-bold;
+    color: $cGray02;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.c-back-btn:hover{
+    background-color: $cGray02;
+    color: white;
+}
+
 input[type=checkbox]{
     position: relative;
     width: 2rem;
     height: 2rem;
-    border: 2px solid $cGreen;
+    border: 2px solid $cGreen!important;
     border-radius: 0.5rem;
     color: white;
     vertical-align: -2px;
@@ -69,7 +124,7 @@ input[type=checkbox]:checked{
     position: relative;
     width: 2rem;
     height: 2rem;
-    border: 2px solid $cGreen;
+    border: 2px solid $cGreen!important;
     border-radius: 0.5rem;
     color: $cGreen;
     vertical-align: -2px;

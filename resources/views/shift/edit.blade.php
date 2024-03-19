@@ -99,6 +99,16 @@
                 $tmpEmployee = null;
             ?>
             <div class="shift-calendar">
+                <div class="shift-calendar__color-nav">
+                    <div class="shift-calendar__color-nav__item">
+                        <div class="color-box"></div>
+                        <p class="">　: 上代</p>
+                    </div>
+                    <div class="shift-calendar__color-nav__item">
+                        <div class="color-box"></div>
+                        <p class="">　：　ドライバー価格</p>
+                    </div>
+                </div>
                 {{-- 日付の表示 --}}
                 <div class="shift-calendar__date">
                     <form action="{{route('shift.editSelectWeek')}}" method="POST">

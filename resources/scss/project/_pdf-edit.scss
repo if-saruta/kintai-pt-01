@@ -595,6 +595,12 @@
                 padding: 0;
             }
         }
+        .row-check-box{
+            position: absolute;
+            left: -3rem;
+            top: 0.7rem;
+            cursor: pointer;
+        }
         .mini-table{
             /* margin-top: 1px; */
             border-collapse:collapse;
@@ -682,6 +688,33 @@
         }
         .w-100{
             width: 100px;
+        }
+        .tax-table{
+            width: 450px;
+            margin-top: 30px;
+            margin-left: auto;
+            border-bottom: 1px solid $cBlack;
+            border-right: 1px solid $cBlack;
+            font-size: 1.4rem;
+            &__row{
+                width: 100%;
+                border-top: 1px solid $cBlack;
+                &__data{
+                    width: 100px;
+                    border-left: 1px solid $cBlack;
+                    // padding: 0.5rem 0;
+                    input{
+                        width: 100%;
+                        padding: 0;
+                        text-align: center;
+                        border: 0px;
+                        font-size: 15px;
+                    }
+                }
+                &__data:nth-child(even){
+                    border-left: 1px dashed $cBlack;
+                }
+            }
         }
     }
 }

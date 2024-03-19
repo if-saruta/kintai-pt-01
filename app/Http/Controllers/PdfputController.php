@@ -77,6 +77,9 @@ class PdfputController extends Controller
         $costSubTotal = $request->costSubTotal;
         $costTax = $request->costTax;
         $costTotal = $request->costTotal;
+        $targetCost = $request->targetCost;
+        $targetTax = $request->targetTax;
+        $notTargetCost = $request->notTargetCost;
 
         $CompanyInfo = $request->costCompanyInfo;
         $textWithBreaks = nl2br(e($CompanyInfo));
@@ -96,13 +99,13 @@ class PdfputController extends Controller
         // ファイル名指定
         $name = $employee->name;
 
-        $pdf = PDF::loadView('issue-pdf.company-issue-pdf', compact('image_data','textWithBreaks', 'invoiceNumber', 'employee', 'today', 'costItem','costNum','costUntil','costAmount','costSubTotal','costTax','costTotal', 'bankInfoWithBreaks'));
+        $pdf = PDF::loadView('issue-pdf.company-issue-pdf', compact('image_data','textWithBreaks', 'invoiceNumber', 'employee', 'today', 'costItem','costNum','costUntil','costAmount','costSubTotal','costTax','costTotal', 'targetCost', 'targetTax','notTargetCost','bankInfoWithBreaks'));
 
         $fileName = "{$today->format('Y-m-d')}_{$name}_相殺.pdf";
 
         return $pdf->download($fileName); //生成されるファイル名
 
-        // return view('issue-pdf.company-issue-pdf', compact('image_data','textWithBreaks', 'invoiceNumber', 'employee', 'today', 'costItem','costNum','costUntil','costAmount','costSubTotal','costTax','costTotal', 'bankInfoWithBreaks'));
+        // return view('issue-pdf.company-issue-pdf', compact('image_data','textWithBreaks', 'invoiceNumber', 'employee', 'today', 'costItem','costNum','costUntil','costAmount','costSubTotal','costTax','costTotal', 'targetCost', 'targetTax','notTargetCost','bankInfoWithBreaks'));
     }
 
     public function project_issue_pdf(Request $request)

@@ -148,7 +148,8 @@ class ProjectController extends Controller
                 'retail_price' => $removeCommasAndCastToInt($projectData['retail_price']),
                 'driver_price' => $removeCommasAndCastToInt($projectData['driver_price']),
                 'estimated_overtime_hours' => $projectData['estimated_overtime_hours'],
-                'overtime_hourly_wage' => $projectData['overtime_hourly_wage']
+                'overtime_hourly_wage' => $projectData['overtime_hourly_wage'],
+                'registration_location' => 1
             ]);
 
             // 休日情報の更新

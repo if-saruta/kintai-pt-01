@@ -115,12 +115,6 @@ Route::middleware('can:admin-higher')->group(function () {
         Route::post('/csv/import', [ShiftController::class, 'csvImport'])->name('csvImport');
     });
 
-    // Route::prefix('shiftImport')->name('shiftImport.')->group(function () {
-    //     Route::get('/', [ShiftController::class, 'shiftImport'])->name('');
-    //     Route::post('/confirm', [ShiftController::class, 'shiftConfirmCsv'])->name('confirm-csv');
-    //     Route::post('/shiftImport-Csv', [ShiftController::class, 'shiftImportCsv'])->name('Csv');
-    // });
-
     Route::prefix('csv-issue')->name('csv-issue.')->group(function () {
         Route::get('/', [CsvIssueController::class, 'index'])->name('');
         Route::post('/show', [CsvIssueController::class, 'show'])->name('show');
@@ -161,6 +155,7 @@ Route::middleware('can:admin-higher')->group(function () {
         Route::post('/charter-client-update', [InvoiceController::class, 'charterClientUpdate'])->name('charter-client-update');
         Route::post('/charter-project-update', [InvoiceController::class, 'charterProjectUpdate'])->name('charter-project-update');
         Route::post('/charter-driver-update', [InvoiceController::class, 'charterDriverUpdate'])->name('charter-driver-update');
+        Route::post('/charter-project-unregister', [InvoiceController::class, 'charterProjectChangeUnregister'])->name('charter-project-unregister');
         Route::post('/charter-calendar-pdf', [InvoiceController::class, 'charterCalendarPDF'])->name('charter-calendar-pdf');
 
         // pdf発行前編集画面

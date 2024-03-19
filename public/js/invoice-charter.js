@@ -156,6 +156,49 @@ window.addEventListener('load', () => {
     }
     shiftDriverModal();
 
+    // 案件未登録モーダル
+    const projectChangeUnregisterModal = () => {
+        const modal = document.getElementById('projectChangeModal');
+        const openElem = document.querySelectorAll('.clientViewElem');
+        const closeElem = document.querySelectorAll('.projectChangeModalClose');
+        const projectNameViewElem = document.querySelector('.projectNameView');
+        const deleteBtn = modal.querySelector('.deleteBtn');
+        const warningTxt = modal.querySelector('.warning-txt');
+
+        // シフトデータセット要素
+        const setProjectId = modal.querySelector('.setProjectId');
+        const setShiftPvId = modal.querySelector('.setShiftPvId');
+
+        for(let i = 0; i < openElem.length; i++){
+            openElem[i].addEventListener('click', () => {
+                modal.style.display = 'block';
+                // 案件名を取得
+                let projectName = openElem[i].querySelector('.charter-input').getAttribute( "data-project-name" );
+                let shiftPvId = openElem[i].querySelector('.charter-input').getAttribute( "data-shift-id" );
+                let projectId = openElem[i].querySelector('.charter-input').getAttribute( "data-project-id" );
+                let location = openElem[i].querySelector('.charter-input').getAttribute( "data-location" );
+                // 案件名のテキストをセット
+                projectNameViewElem.textContent = projectName;
+                // シフトデータをセット
+                setShiftPvId.value = shiftPvId;
+                setProjectId.value = projectId;
+                if(location != 2){
+                    deleteBtn.style.display = 'none';
+                    warningTxt.style.display = 'block';
+                }
+            })
+        }
+
+        for(let i = 0; i < closeElem.length; i++){
+            closeElem[i].addEventListener('click', () => {
+                modal.style.display = 'none';
+                deleteBtn.style.display = 'flex';
+                warningTxt.style.display = 'none';
+            })
+        }
+    }
+    projectChangeUnregisterModal();
+
     // カンマの制御
     const commmaActive = () => {
         const inputElem = document.querySelectorAll('.commaInput');

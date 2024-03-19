@@ -192,8 +192,8 @@
                                                         <input type="text" name="driver_price[{{$data['id']}}]" value="{{ number_format($data['driver_price']) }}" class="input charter-input commaInput">
                                                     </div>
                                                     {{-- クライアント名 --}}
-                                                    <div class="data__row__clm --common --text-center">
-                                                        <input type="text" value="{{$data['project']['client']['name']}}" class="input charter-input" readonly>
+                                                    <div class="data__row__clm --common --text-center clientViewElem">
+                                                        <input type="text" value="{{$data['project']['client']['name']}}" data-shift-id="{{ $data['id'] }}" data-project-id="{{ $data['project']['id'] }}" data-project-name="{{ $data['project']['name'] }}" data-location="{{ $data['project']['registration_location'] }}" class="input charter-input" readonly>
                                                     </div>
                                                 </div>
                                             @endforeach
@@ -305,7 +305,7 @@
                                         <input hidden type="text" value="{{$getYear}}" name="year">
                                         <input hidden type="text" value="{{$getMonth}}" name="month">
                                         <div class="action-area actionElem">
-                                            <select name="clientId" id="" class="select">
+                                            <select name="clientId" id="" class="c-select">
                                                 <option value="">選択してください</option>
                                                 @foreach ($clients as $client)
                                                     <option value="{{$client->id}}">{{$client->name}}</option>
@@ -315,16 +315,21 @@
                                         <div class="action-area input-area actionElem">
                                             <div class="input-area__item">
                                                 <label for="">クライアント名(ID)</label>
-                                                <input type="text" class="input" name="clientName">
+                                                <input type="text" class="c-input" name="clientName">
                                             </div>
                                             <div class="input-area__item">
                                                 <label for="">クライアント名(PDF使用時)</label>
-                                                <input type="text" class="input" name="clientPdfName">
+                                                <input type="text" class="c-input" name="clientPdfName">
                                             </div>
                                         </div>
-                                        <button class="save-btn client-modal-btn" onclick='return confirm("本当に保存しますか？")'>
-                                            <p class="">保存</p>
-                                        </button>
+                                        <div class="button-area">
+                                            <button class="c-save-btn" onclick='return confirm("本当に保存しますか？")'>
+                                                <p class="">保存</p>
+                                            </button>
+                                            <div class="c-back-btn closeElem">
+                                                <p class="">戻る</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -427,6 +432,37 @@
                                             </button>
                                             <div class="btn --back shiftDriverModalClose">
                                                 戻る
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        {{-- 未登録案件戻すモーダル --}}
+                        <div class="project-unregister-modal" id="projectChangeModal">
+                            <span class="project-unregister-modal__bg projectChangeModalClose"></span>
+                            <div class="project-unregister-modal__white-board">
+                                <form action="{{ route('invoice.charter-project-unregister') }}" method="POST">
+                                    @csrf
+                                    {{-- リダイレクト --}}
+                                    <input hidden type="text" value="{{$getYear}}" name="year">
+                                    <input hidden type="text" value="{{$getMonth}}" name="month">
+
+                                    <div class="project-unregister-modal__white-board__inner">
+                                        <input hidden type="text" name="projectId" class="setProjectId">
+                                        <input hidden type="text" name="shiftPvId" class="setShiftPvId">
+                                        <p class="title">案件変更</p>
+                                        <p class="warning-txt">この案件は未登録案件には戻せません</p>
+                                        <div class="project-name-area">
+                                            <p class="">案件名 : </p>
+                                            <p class="projectNameView"></p>
+                                        </div>
+                                        <div class="button-area">
+                                            <button class="delete-btn c-delete-btn deleteBtn" onclick='return confirm("すべてのシフトに影響します。本当に未登録案件に戻しますか？")'>
+                                                <p class="">未登録案件に戻す</p>
+                                            </button>
+                                            <div class="c-back-btn projectChangeModalClose">
+                                                <p class="">戻る</p>
                                             </div>
                                         </div>
                                     </div>
