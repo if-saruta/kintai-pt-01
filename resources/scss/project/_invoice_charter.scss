@@ -229,6 +229,10 @@
                             gap: 10px;
                         }
                     }
+                    label{
+                        font-size: 1.5rem;
+                        font-weight: $fw-bold;
+                    }
                     .action-area{
                         width: fit-content;
                         margin: 0 auto;

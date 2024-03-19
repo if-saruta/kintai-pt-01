@@ -167,7 +167,7 @@
                     </div>
                     <div class="check-area">
                         <div class="check-area__item">
-                            @can('admin-higer')
+                            @can('admin-higher')
                                 <input type="radio" name="invoice" @if ($employee->is_invoice == 1) checked @endif value="1">
                             @else
                                 <input type="radio" name="invoice" @if ($employee->is_invoice == 1) checked @endif value="1" disabled="disabled">
@@ -175,7 +175,7 @@
                             <label for="">登録</label>
                         </div>
                         <div class="check-area__item">
-                            @can('admin-higer')
+                            @can('admin-higher')
                                 <input type="radio" name="invoice" @if ($employee->is_invoice == 0) checked @endif value="0">
                             @else
                                 <input type="radio" name="invoice" @if ($employee->is_invoice == 0) checked @endif value="0" disabled="disabled">
@@ -189,7 +189,7 @@
                         <p class="input-head">登録番号</p>
                         <p class="required">必須</p>
                     </div>
-                    @can('admin-higer')
+                    @can('admin-higher')
                         <input type="text" name="register_number" value="{{$employee->register_number}}" class="c-input" placeholder="T00000000">
                     @else
                         <input type="text" name="register_number" value="{{$employee->register_number}}" class="c-input" placeholder="T00000000" readonly>

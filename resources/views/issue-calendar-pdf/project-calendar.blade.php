@@ -122,9 +122,12 @@
         $item_count = $retailCheck + $salaryCheck + $expresswayCheck + $parkingCheck;
         // テーブルの横幅を計算 1は日付の固定分
         $clmCount = 1 + ($project_count * $company_count) + $retailCheck + ($project_count * ($company_count * $item_count));
-        $clmWidth = 50;
+        $clmCountByOnly = 1 + $company_count + $retailCheck + ($company_count * $item_count);
+        $clmWidth = 52;
         $tableWidth = $clmCount * $clmWidth;
+        $onlyTableWidth = $clmCountByOnly * $clmWidth;
         $dataWidth = (70 / $tableWidth) * 100;
+        $dataWidthByOnly = (70 / $onlyTableWidth) * 100;
 
         // 休日テーブルの横幅
         $holidayTableWidth = $clmWidth * $project_count;
@@ -133,285 +136,556 @@
 <p class="">{{ $client->name }}</p>
 <p class="">{{ $getYear }}年{{ $getMonth }}月度</p>
 
-<table style="width: {{ $tableWidth }}px;">
-    {{-- ヘッダー --}}
-    <thead>
-        @if ($project_count >= 1 || $company_count >= 1) {{-- どちらか複数あれば --}}
-            <tr>
-                <th rowspan="3" style="width: {{ round($dataWidth) }}%;">----</th>
-                @foreach ($projects as $project)
-                    @if (!$getCompanies->isEmpty())
-                        <th colspan="{{$company_count}}">{{$project->name}}</th>
+@if ($clmCount <= 21)
+    <table style="width: {{ $tableWidth }}px;">
+        {{-- ヘッダー --}}
+        <thead>
+            @if ($project_count >= 1 || $company_count >= 1) {{-- どちらか複数あれば --}}
+                <tr>
+                    <th rowspan="3" style="width: {{ round($dataWidth) }}%;">----</th>
+                    @foreach ($projects as $project)
+                        @if (!$getCompanies->isEmpty())
+                            <th colspan="{{$company_count}}">{{$project->name}}</th>
+                        @endif
+                    @endforeach
+                    @if ($retailCheck == 1)
+                        <th rowspan="3">配送料金</th>
                     @endif
-                @endforeach
-                @if ($retailCheck == 1)
-                    <th rowspan="3">配送料金</th>
-                @endif
-                @foreach ($projects as $project)
-                    @if (!$getCompanies->isEmpty())
-                        <th colspan="{{$company_count * $item_count }}" rowspan="2">{{$project->name}}</th>
-                    @endif
-                @endforeach
-            </tr>
-            <tr>
-                @foreach ($projects as $project)
-                    <th colspan="{{$company_count}}">
-                        @if ($project->holiday->monday == 1)
-                            月
-                        @endif
-                        @if ($project->holiday->tuesday == 1)
-                            火
-                        @endif
-                        @if ($project->holiday->wednesday == 1)
-                            水
-                        @endif
-                        @if ($project->holiday->thursday == 1)
-                            木
-                        @endif
-                        @if ($project->holiday->friday == 1)
-                            金
-                        @endif
-                        @if ($project->holiday->saturday == 1)
-                            土
-                        @endif
-                        @if ($project->holiday->sunday == 1)
-                            日
-                        @endif
-                        @if ($project->holiday->public_holiday == 1)
-                            祝
-                        @endif
-                    </th>
-                @endforeach
-            </tr>
-            <tr>
-                @foreach ($projects as $project)
-                    @foreach ($getCompanies as $company)
-                        <th>{{ $company->name }}</th>
-                    @endforeach
-                @endforeach
-                @foreach ($projects as $project)
-                    @foreach ($getCompanies as $company)
-                        @if ($salaryCheck == 1)
-                            <th class="name-w-60">{{ $company->name }}</th>
-                        @endif
-                        @if ($retailCheck == 1)
-                            <th>配送料金</th>
-                        @endif
-                        @if ($expresswayCheck == 1)
-                            <th>高速料金</th>
-                        @endif
-                        @if ($parkingCheck == 1)
-                            <th>駐車料金</th>
+                    @foreach ($projects as $project)
+                        @if (!$getCompanies->isEmpty())
+                            <th colspan="{{$company_count * $item_count }}" rowspan="2">{{$project->name}}</th>
                         @endif
                     @endforeach
-                @endforeach
-            </tr>
-        @endif
-    </thead>
-    <tbody>
-        @foreach ( $dates as $date )
-            {{-- 案件数をカウント --}}
-            @php
-                $projectEmployeeCount = [];
-                foreach ($projects as $project) {
-                    foreach ($getCompanies as $company) {
-                        $count = 0; // 従業員のカウンタを初期化
-
-                        foreach ($ShiftProjectVehicles as $spv) {
-                            // 日付、会社ID、プロジェクトIDが一致するレコードの数を数える
-                            if ($spv->shift->date == $date->format('Y-m-d') &&
-                                $spv->shift->employee &&
-                                $spv->shift->employee->company_id == $company->id &&
-                                $spv->project_id == $project->id) {
-                                $count++;
-                            }
-                        }
-
-                        // 従業員が一人以上いる場合にのみ結果を格納
-                        if ($count > 0) {
-                            $projectEmployeeCount[$project->id][$company->id] = $count;
-                        }
-                    }
-                }
-            @endphp
-
-            <tr class="tr">
-                <td style="width: {{ round($dataWidth) }}%;">{{ $date->format('n') }}月{{ $date->format('j') }}日({{ $date->isoFormat('ddd') }})</td>
-                @foreach ($projects as $project)
-                    @foreach ($getCompanies as $company)
-                        <td class="name-w-60">
-                            @foreach ( $ShiftProjectVehicles as $spv )
-                                @if($spv->shift->date == $date->format('Y-m-d'))
-                                    @if ($spv->shift->employee)
-                                        @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
-                                            <span @if(isset($projectEmployeeCount[$project->id][$company->id]) && $projectEmployeeCount[$project->id][$company->id] >= 2) style="font-size: 8px;" @endif>{{ $spv->shift->employee->name }}</span><br>
-                                        @endif
-                                    @endif
-                                @endif
-                            @endforeach
-                        </td>
+                </tr>
+                <tr>
+                    @foreach ($projects as $project)
+                        <th colspan="{{$company_count}}">
+                            @if ($project->holiday->monday == 1)
+                                月
+                            @endif
+                            @if ($project->holiday->tuesday == 1)
+                                火
+                            @endif
+                            @if ($project->holiday->wednesday == 1)
+                                水
+                            @endif
+                            @if ($project->holiday->thursday == 1)
+                                木
+                            @endif
+                            @if ($project->holiday->friday == 1)
+                                金
+                            @endif
+                            @if ($project->holiday->saturday == 1)
+                                土
+                            @endif
+                            @if ($project->holiday->sunday == 1)
+                                日
+                            @endif
+                            @if ($project->holiday->public_holiday == 1)
+                                祝
+                            @endif
+                        </th>
                     @endforeach
-                @endforeach
-                {{-- 上代 --}}
+                </tr>
+                <tr>
+                    @foreach ($projects as $project)
+                        @foreach ($getCompanies as $company)
+                            <th>{{ $company->name }}</th>
+                        @endforeach
+                    @endforeach
+                    @foreach ($projects as $project)
+                        @foreach ($getCompanies as $company)
+                            @if ($salaryCheck == 1)
+                                <th class="name-w-60">{{ $company->name }}</th>
+                            @endif
+                            @if ($retailCheck == 1)
+                                <th>配送料金</th>
+                            @endif
+                            @if ($expresswayCheck == 1)
+                                <th>高速料金</th>
+                            @endif
+                            @if ($parkingCheck == 1)
+                                <th>駐車料金</th>
+                            @endif
+                        @endforeach
+                    @endforeach
+                </tr>
+            @endif
+        </thead>
+        <tbody>
+            @foreach ( $dates as $date )
+                {{-- 案件数をカウント --}}
                 @php
-                    //   上代の計算
-                    $tmp_total_retail_day = null;
-                    foreach ($ShiftProjectVehicles as $spv) {
-                        if ($spv->shift->date == $date->format('Y-m-d')) {
-                            if($spv->retail_price){
-                                $tmp_total_retail_day += $spv->retail_price;
+                    $projectEmployeeCount = [];
+                    foreach ($projects as $project) {
+                        foreach ($getCompanies as $company) {
+                            $count = 0; // 従業員のカウンタを初期化
+
+                            foreach ($ShiftProjectVehicles as $spv) {
+                                // 日付、会社ID、プロジェクトIDが一致するレコードの数を数える
+                                if ($spv->shift->date == $date->format('Y-m-d') &&
+                                    $spv->shift->employee &&
+                                    $spv->shift->employee->company_id == $company->id &&
+                                    $spv->project_id == $project->id) {
+                                    $count++;
+                                }
+                            }
+
+                            // 従業員が一人以上いる場合にのみ結果を格納
+                            if ($count > 0) {
+                                $projectEmployeeCount[$project->id][$company->id] = $count;
                             }
                         }
                     }
                 @endphp
-                @if ($retailCheck == 1)
+
+                <tr class="tr">
+                    <td style="width: {{ round($dataWidth) }}%;">{{ $date->format('n') }}月{{ $date->format('j') }}日({{ $date->isoFormat('ddd') }})</td>
+                    @foreach ($projects as $project)
+                        @foreach ($getCompanies as $company)
+                            <td class="name-w-60">
+                                @foreach ( $ShiftProjectVehicles as $spv )
+                                    @if($spv->shift->date == $date->format('Y-m-d'))
+                                        @if ($spv->shift->employee)
+                                            @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
+                                                <span @if(isset($projectEmployeeCount[$project->id][$company->id]) && $projectEmployeeCount[$project->id][$company->id] >= 2) style="font-size: 8px;" @endif>{{ $spv->shift->employee->name }}</span><br>
+                                            @endif
+                                        @endif
+                                    @endif
+                                @endforeach
+                            </td>
+                        @endforeach
+                    @endforeach
+                    {{-- 上代 --}}
                     @php
-                        $amount = $tmp_total_retail_day ? number_format($tmp_total_retail_day) : '';
+                        //   上代の計算
+                        $tmp_total_retail_day = null;
+                        foreach ($ShiftProjectVehicles as $spv) {
+                            if ($spv->shift->date == $date->format('Y-m-d')) {
+                                if($spv->retail_price){
+                                    $tmp_total_retail_day += $spv->retail_price;
+                                }
+                            }
+                        }
                     @endphp
-                    <td class="right-txt amount-w-60 retail-clm">{{$amount}}</td>
-                @endif
+                    @if ($retailCheck == 1)
+                        @php
+                            $amount = $tmp_total_retail_day ? number_format($tmp_total_retail_day) : '';
+                        @endphp
+                        <td class="right-txt amount-w-60 retail-clm">{{$amount}}</td>
+                    @endif
+                    @foreach ($projects as $project)
+                        @foreach ($getCompanies as $company)
+                            {{-- 給与 --}}
+                            @if ($salaryCheck)
+                                <td class="right-txt amount-w-60">
+                                    @foreach ( $ShiftProjectVehicles as $spv )
+                                        @if($spv->shift->date == $date->format('Y-m-d'))
+                                            @if ($spv->shift->employee)
+                                                @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
+                                                    @php
+                                                        $amount = $spv->driver_price ? number_format($spv->driver_price) : '';
+                                                    @endphp
+                                                    {{ $amount }}<br>
+                                                @endif
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                </td>
+                            @endif
+                            {{-- 上代 --}}
+                            @if ($retailCheck == 1)
+                                <td class="right-txt amount-w-60">
+                                    @foreach ( $ShiftProjectVehicles as $spv )
+                                        @if($spv->shift->date == $date->format('Y-m-d'))
+                                            @if ($spv->shift->employee)
+                                                @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
+                                                    @php
+                                                        $amount = $spv->retail_price ? number_format($spv->retail_price) : '';
+                                                    @endphp
+                                                    {{ $amount }}<br>
+                                                @endif
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                </td>
+                            @endif
+                            {{-- 高速代 --}}
+                            @if ($expresswayCheck == 1)
+                                <td class="right-txt amount-w-60">
+                                    @foreach ( $ShiftProjectVehicles as $spv )
+                                        @if($spv->shift->date == $date->format('Y-m-d'))
+                                            @if ($spv->shift->employee)
+                                                @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
+                                                    @php
+                                                        $amount = $spv->expressway_fee ? number_format($spv->expressway_fee) : '';
+                                                    @endphp
+                                                    {{ $amount }}<br>
+                                                @endif
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                </td>
+                            @endif
+                            {{-- パーキング代 --}}
+                            @if ($parkingCheck == 1)
+                                <td class="right-txt amount-w-60">
+                                    @foreach ( $ShiftProjectVehicles as $spv )
+                                        @if($spv->shift->date == $date->format('Y-m-d'))
+                                            @if ($spv->shift->employee)
+                                                @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
+                                                    @php
+                                                        $amount = $spv->parking_fee ? number_format($spv->parking_fee) : '';
+                                                    @endphp
+                                                    {{ $amount }}<br>
+                                                @endif
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                </td>
+                            @endif
+                        @endforeach
+                    @endforeach
+                </tr>
+            @endforeach
+            @for ($i = $dates[count($dates) - 1]->format('d'); $i < 31; $i++)
+                <tr>
+                    <td></td>
+                    @foreach ($projects as $project)
+                        @foreach ($getCompanies as $company)
+                            <td></td>
+                        @endforeach
+                    @endforeach
+                    <td></td>
+                    @foreach ($projects as $project)
+                        @foreach ($getCompanies as $company)
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        @endforeach
+                    @endforeach
+                </tr>
+            @endfor
+            <tr>
+                <td>小計</td>
+                @php
+                    $retailTotal = 0;
+                @endphp
+                @foreach ($projects as $project)
+                    @php
+                        $retailSubTotal = 0;
+                    @endphp
+                    @foreach ( $ShiftProjectVehicles as $spv )
+                        @if ($spv->shift->employee)
+                            @if ($spv->project_id == $project->id)
+                                @php
+                                    $retailSubTotal += $spv->retail_price;
+                                    $retailTotal += $spv->retail_price;
+                                @endphp
+                            @endif
+                        @endif
+                    @endforeach
+                    {{-- 計算した上代の表示 --}}
+                    <td colspan="{{ $company_count }}" class="retail-sub-total-td">{{ number_format($retailSubTotal) }}</td>
+                @endforeach
+                <td class="empty-clm"></td>
                 @foreach ($projects as $project)
                     @foreach ($getCompanies as $company)
                         {{-- 給与 --}}
                         @if ($salaryCheck)
-                            <td class="right-txt amount-w-60">
-                                @foreach ( $ShiftProjectVehicles as $spv )
-                                    @if($spv->shift->date == $date->format('Y-m-d'))
-                                        @if ($spv->shift->employee)
-                                            @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
-                                                @php
-                                                    $amount = $spv->driver_price ? number_format($spv->driver_price) : '';
-                                                @endphp
-                                                {{ $amount }}<br>
-                                            @endif
-                                        @endif
-                                    @endif
-                                @endforeach
-                            </td>
+                            <td class="empty-clm"></td>
                         @endif
                         {{-- 上代 --}}
                         @if ($retailCheck == 1)
-                            <td class="right-txt amount-w-60">
-                                @foreach ( $ShiftProjectVehicles as $spv )
-                                    @if($spv->shift->date == $date->format('Y-m-d'))
-                                        @if ($spv->shift->employee)
-                                            @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
-                                                @php
-                                                    $amount = $spv->retail_price ? number_format($spv->retail_price) : '';
-                                                @endphp
-                                                {{ $amount }}<br>
-                                            @endif
-                                        @endif
-                                    @endif
-                                @endforeach
-                            </td>
+                            <td class="empty-clm"></td>
                         @endif
                         {{-- 高速代 --}}
                         @if ($expresswayCheck == 1)
-                            <td class="right-txt amount-w-60">
-                                @foreach ( $ShiftProjectVehicles as $spv )
-                                    @if($spv->shift->date == $date->format('Y-m-d'))
-                                        @if ($spv->shift->employee)
-                                            @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
-                                                @php
-                                                    $amount = $spv->expressway_fee ? number_format($spv->expressway_fee) : '';
-                                                @endphp
-                                                {{ $amount }}<br>
-                                            @endif
-                                        @endif
-                                    @endif
-                                @endforeach
-                            </td>
+                            <td class="empty-clm"></td>
                         @endif
                         {{-- パーキング代 --}}
                         @if ($parkingCheck == 1)
-                            <td class="right-txt amount-w-60">
-                                @foreach ( $ShiftProjectVehicles as $spv )
-                                    @if($spv->shift->date == $date->format('Y-m-d'))
-                                        @if ($spv->shift->employee)
-                                            @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
-                                                @php
-                                                    $amount = $spv->parking_fee ? number_format($spv->parking_fee) : '';
-                                                @endphp
-                                                {{ $amount }}<br>
+                            <td class="empty-clm"></td>
+                        @endif
+                    @endforeach
+                @endforeach
+            </tr>
+            <tr>
+                <td>合計</td>
+                <td colspan="{{ $company_count * $project_count }}" class="border-right">{{ number_format($retailTotal) }}</td>
+            </tr>
+        </tbody>
+    </table>
+@else
+    @php
+        $countIndex = 0
+    @endphp
+    @foreach ( $projects as $index => $project )
+        @if ($countIndex == $index)
+        <table style="width: {{ $onlyTableWidth }}px; page-break-after: always">
+            {{-- ヘッダー --}}
+            <thead>
+                @if ($project_count >= 1 || $company_count >= 1) {{-- どちらか複数あれば --}}
+                    <tr>
+                        <th rowspan="3" style="width: {{ round($dataWidthByOnly) }}%;">----</th>
+                        @if (!$getCompanies->isEmpty())
+                            <th colspan="{{$company_count}}">{{$project->name}}</th>
+                        @endif
+                        @if ($retailCheck == 1)
+                            <th rowspan="3">配送料金</th>
+                        @endif
+                        @if (!$getCompanies->isEmpty())
+                            <th colspan="{{$company_count * $item_count }}" rowspan="2">{{$project->name}}</th>
+                        @endif
+                    </tr>
+                    <tr>
+                        <th colspan="{{$company_count}}">
+                            @if ($project->holiday->monday == 1)
+                                月
+                            @endif
+                            @if ($project->holiday->tuesday == 1)
+                                火
+                            @endif
+                            @if ($project->holiday->wednesday == 1)
+                                水
+                            @endif
+                            @if ($project->holiday->thursday == 1)
+                                木
+                            @endif
+                            @if ($project->holiday->friday == 1)
+                                金
+                            @endif
+                            @if ($project->holiday->saturday == 1)
+                                土
+                            @endif
+                            @if ($project->holiday->sunday == 1)
+                                日
+                            @endif
+                            @if ($project->holiday->public_holiday == 1)
+                                祝
+                            @endif
+                        </th>
+                    </tr>
+                    <tr>
+                        @foreach ($getCompanies as $company)
+                            <th>{{ $company->name }}</th>
+                        @endforeach
+                        @foreach ($getCompanies as $company)
+                            @if ($salaryCheck == 1)
+                                <th class="name-w-60">{{ $company->name }}</th>
+                            @endif
+                            @if ($retailCheck == 1)
+                                <th>配送料金</th>
+                            @endif
+                            @if ($expresswayCheck == 1)
+                                <th>高速料金</th>
+                            @endif
+                            @if ($parkingCheck == 1)
+                                <th>駐車料金</th>
+                            @endif
+                        @endforeach
+                    </tr>
+                @endif
+            </thead>
+            <tbody>
+                @foreach ( $dates as $date )
+                    {{-- 案件数をカウント --}}
+                    @php
+                        $projectEmployeeCount = [];
+                            foreach ($getCompanies as $company) {
+                                $count = 0; // 従業員のカウンタを初期化
+
+                                foreach ($ShiftProjectVehicles as $spv) {
+                                    // 日付、会社ID、プロジェクトIDが一致するレコードの数を数える
+                                    if ($spv->shift->date == $date->format('Y-m-d') &&
+                                        $spv->shift->employee &&
+                                        $spv->shift->employee->company_id == $company->id &&
+                                        $spv->project_id == $project->id) {
+                                        $count++;
+                                    }
+                                }
+
+                                // 従業員が一人以上いる場合にのみ結果を格納
+                                if ($count > 0) {
+                                    $projectEmployeeCount[$project->id][$company->id] = $count;
+                                }
+                            }
+                    @endphp
+
+                    <tr class="tr">
+                        <td style="width: {{ round($dataWidth) }}%;">{{ $date->format('n') }}月{{ $date->format('j') }}日({{ $date->isoFormat('ddd') }})</td>
+                            @foreach ($getCompanies as $company)
+                                <td class="name-w-60">
+                                    @foreach ( $ShiftProjectVehicles as $spv )
+                                        @if($spv->shift->date == $date->format('Y-m-d'))
+                                            @if ($spv->shift->employee)
+                                                @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
+                                                    <span @if(isset($projectEmployeeCount[$project->id][$company->id]) && $projectEmployeeCount[$project->id][$company->id] >= 2) style="font-size: 8px;" @endif>{{ $spv->shift->employee->name }}</span><br>
+                                                @endif
                                             @endif
                                         @endif
-                                    @endif
-                                @endforeach
-                            </td>
-                        @endif
-                    @endforeach
-                @endforeach
-            </tr>
-        @endforeach
-        @for ($i = $dates[count($dates) - 1]->format('d'); $i < 31; $i++)
-            <tr>
-                <td></td>
-                @foreach ($projects as $project)
-                    @foreach ($getCompanies as $company)
-                        <td></td>
-                    @endforeach
-                @endforeach
-                <td></td>
-                @foreach ($projects as $project)
-                    @foreach ($getCompanies as $company)
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    @endforeach
-                @endforeach
-            </tr>
-        @endfor
-        <tr>
-            <td>小計</td>
-            @php
-                $retailTotal = 0;
-            @endphp
-            @foreach ($projects as $project)
-                @php
-                    $retailSubTotal = 0;
-                @endphp
-                @foreach ( $ShiftProjectVehicles as $spv )
-                    @if ($spv->shift->employee)
-                        @if ($spv->project_id == $project->id)
+                                    @endforeach
+                                </td>
+                            @endforeach
+                        {{-- 上代 --}}
+                        @php
+                            //   上代の計算
+                            $tmp_total_retail_day = null;
+                            foreach ($ShiftProjectVehicles as $spv) {
+                                if ($spv->shift->date == $date->format('Y-m-d')) {
+                                    if($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id){
+                                        if($spv->retail_price){
+                                            $tmp_total_retail_day += $spv->retail_price;
+                                        }
+                                    }
+                                }
+                            }
+                        @endphp
+                        @if ($retailCheck == 1)
                             @php
-                                $retailSubTotal += $spv->retail_price;
-                                $retailTotal += $spv->retail_price;
+                                $amount = $tmp_total_retail_day ? number_format($tmp_total_retail_day) : '';
                             @endphp
+                            <td class="right-txt amount-w-60 retail-clm">{{$amount}}</td>
                         @endif
-                    @endif
+                        @foreach ($getCompanies as $company)
+                            {{-- 給与 --}}
+                            @if ($salaryCheck)
+                                <td class="right-txt amount-w-60">
+                                    @foreach ( $ShiftProjectVehicles as $spv )
+                                        @if($spv->shift->date == $date->format('Y-m-d'))
+                                            @if ($spv->shift->employee)
+                                                @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
+                                                    @php
+                                                        $amount = $spv->driver_price ? number_format($spv->driver_price) : '';
+                                                    @endphp
+                                                    {{ $amount }}<br>
+                                                @endif
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                </td>
+                            @endif
+                            {{-- 上代 --}}
+                            @if ($retailCheck == 1)
+                                <td class="right-txt amount-w-60">
+                                    @foreach ( $ShiftProjectVehicles as $spv )
+                                        @if($spv->shift->date == $date->format('Y-m-d'))
+                                            @if ($spv->shift->employee)
+                                                @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
+                                                    @php
+                                                        $amount = $spv->retail_price ? number_format($spv->retail_price) : '';
+                                                    @endphp
+                                                    {{ $amount }}<br>
+                                                @endif
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                </td>
+                            @endif
+                            {{-- 高速代 --}}
+                            @if ($expresswayCheck == 1)
+                                <td class="right-txt amount-w-60">
+                                    @foreach ( $ShiftProjectVehicles as $spv )
+                                        @if($spv->shift->date == $date->format('Y-m-d'))
+                                            @if ($spv->shift->employee)
+                                                @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
+                                                    @php
+                                                        $amount = $spv->expressway_fee ? number_format($spv->expressway_fee) : '';
+                                                    @endphp
+                                                    {{ $amount }}<br>
+                                                @endif
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                </td>
+                            @endif
+                            {{-- パーキング代 --}}
+                            @if ($parkingCheck == 1)
+                                <td class="right-txt amount-w-60">
+                                    @foreach ( $ShiftProjectVehicles as $spv )
+                                        @if($spv->shift->date == $date->format('Y-m-d'))
+                                            @if ($spv->shift->employee)
+                                                @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
+                                                    @php
+                                                        $amount = $spv->parking_fee ? number_format($spv->parking_fee) : '';
+                                                    @endphp
+                                                    {{ $amount }}<br>
+                                                @endif
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                </td>
+                            @endif
+                        @endforeach
+                    </tr>
                 @endforeach
-                {{-- 計算した上代の表示 --}}
-                <td colspan="{{ $company_count }}" class="retail-sub-total-td">{{ number_format($retailSubTotal) }}</td>
-            @endforeach
-            <td class="empty-clm"></td>
-            @foreach ($projects as $project)
-                @foreach ($getCompanies as $company)
-                    {{-- 給与 --}}
-                    @if ($salaryCheck)
-                        <td class="empty-clm"></td>
-                    @endif
-                    {{-- 上代 --}}
-                    @if ($retailCheck == 1)
-                        <td class="empty-clm"></td>
-                    @endif
-                    {{-- 高速代 --}}
-                    @if ($expresswayCheck == 1)
-                        <td class="empty-clm"></td>
-                    @endif
-                    {{-- パーキング代 --}}
-                    @if ($parkingCheck == 1)
-                        <td class="empty-clm"></td>
-                    @endif
-                @endforeach
-            @endforeach
-        </tr>
-        <tr>
-            <td>合計</td>
-            <td colspan="{{ $company_count * $project_count }}" class="border-right">{{ number_format($retailTotal) }}</td>
-        </tr>
-    </tbody>
-</table>
+                @for ($i = $dates[count($dates) - 1]->format('d'); $i < 31; $i++)
+                    <tr>
+                        <td></td>
+                        @foreach ($getCompanies as $company)
+                            <td></td>
+                        @endforeach
+                        <td></td>
+                        @foreach ($getCompanies as $company)
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        @endforeach
+                    </tr>
+                @endfor
+                <tr>
+                    <td>小計</td>
+                    @php
+                        $retailTotal = 0;
+                    @endphp
+                    @php
+                        $retailSubTotal = 0;
+                    @endphp
+                    @foreach ( $ShiftProjectVehicles as $spv )
+                        @if ($spv->shift->employee)
+                            @if ($spv->project_id == $project->id)
+                                @php
+                                    $retailSubTotal += $spv->retail_price;
+                                    $retailTotal += $spv->retail_price;
+                                @endphp
+                            @endif
+                        @endif
+                    @endforeach
+                    {{-- 計算した上代の表示 --}}
+                    <td colspan="{{ $company_count }}" class="retail-sub-total-td">{{ number_format($retailSubTotal) }}</td>
+                    <td class="empty-clm"></td>
+                    @foreach ($getCompanies as $company)
+                        {{-- 給与 --}}
+                        @if ($salaryCheck)
+                            <td class="empty-clm"></td>
+                        @endif
+                        {{-- 上代 --}}
+                        @if ($retailCheck == 1)
+                            <td class="empty-clm"></td>
+                        @endif
+                        {{-- 高速代 --}}
+                        @if ($expresswayCheck == 1)
+                            <td class="empty-clm"></td>
+                        @endif
+                        {{-- パーキング代 --}}
+                        @if ($parkingCheck == 1)
+                            <td class="empty-clm"></td>
+                        @endif
+                    @endforeach
+                </tr>
+                <tr>
+                    <td>合計</td>
+                    <td colspan="{{ $company_count }}" class="border-right">{{ number_format($retailTotal) }}</td>
+                </tr>
+            </tbody>
+        </table>
+        @endif
+        @php
+        $countIndex++;
+    @endphp
+    @endforeach
+@endif
 </body>
 </html>
