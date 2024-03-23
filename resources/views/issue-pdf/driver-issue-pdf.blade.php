@@ -295,7 +295,7 @@
 
         .employee-info {
             position: absolute;
-            top: 165px;
+            top: 155px;
             right: 0px;
             font-size: 13px;
             line-height: 1.5;
