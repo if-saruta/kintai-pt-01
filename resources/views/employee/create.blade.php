@@ -78,6 +78,15 @@
                         <input type="text" name="address" class="c-input" placeholder="東京都渋谷区道玄坂0-0-0 hogehogefugafugaマンション 1F" required>
                     </div>
                 </div>
+                <div class="phone-area">
+                    <div class="phone-area__input-box">
+                        <div class="head">
+                            <p class="input-head">電話番号</p>
+                            <p class="required">必須</p>
+                        </div>
+                        <input type="text" name="phone" class="c-input" placeholder="000-0000-0000">
+                    </div>
+                </div>
                 <div class="employment-status">
                     <div class="head">
                         <p class="input-head">雇用形態</p>
@@ -121,11 +130,11 @@
                     </div>
                     <div class="check-area">
                         <div class="check-area__item">
-                            <input type="radio" name="invoice" checked value="1">
+                            <input type="radio" name="invoice" checked value="1" class="invoiceRadio">
                             <label for="">登録</label>
                         </div>
                         <div class="check-area__item">
-                            <input type="radio" name="invoice" value="0">
+                            <input type="radio" name="invoice" value="0" class="invoiceRadio">
                             <label for="">未登録</label>
                         </div>
                     </div>
@@ -135,7 +144,9 @@
                         <p class="input-head">登録番号</p>
                         <p class="required">必須</p>
                     </div>
-                    <input type="text" name="register_number" class="c-input" placeholder="T00000000">
+                    <div class="register-input-wrap registerInputWrap">
+                        <input type="text" name="register_number" class="c-input register-input" placeholder="T00000000">
+                    </div>
                 </div>
                 <div class="rental">
                     <div class="head">
@@ -158,12 +169,18 @@
                                 <select name="vehicle" class="c-select">
                                     <option value="">選択してください</option>
                                     @foreach ($vehicles as $vehicle)
-                                    <option value="{{$vehicle->id}}">{{$vehicle->number}}</option>
+                                    <option value="{{$vehicle->id}}">{{ $vehicle->place_name }} {{ $vehicle->class_number }} {{ $vehicle->hiragana }} {{$vehicle->number}}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="remarks-area">
+                    <div class="head">
+                        <p class="">備考欄</p>
+                    </div>
+                    <textarea name="remarks" id="" cols="30" rows="10" class="c-textarea"></textarea>
                 </div>
                 <div class="info-by-project">
                     <p class="input-head">案件別情報</p>

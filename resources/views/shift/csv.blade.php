@@ -76,12 +76,18 @@
             <form action="{{route('shift.csvImport')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="csv-wrap">
-                    <label class="file-up-wrap">
+                    <p class="csv-warning csvWarning">
+                        @if ($warning != null)
+                        {{ $warning }}<br>
+                        インポートを中断しました。csvファイルをご確認ください。
+                        @endif
+                    </p>
+                    <label class="file-up-wrap" @if($warning != null) style="border: 3px solid #D14F4F;"  @endif>
                         <input class="csvInput" type="file" name="csv_file" required>
-                        <div class="csv-icon">
-                            <i class="fa-solid fa-file-csv default-csv"></i>
+                        <div class="csv-icon" @if($warning != null) style="background-color: #D14F4F;" @endif>
+                            <i class="fa-solid fa-file-csv default-csv" @if($warning != null) style="display: none;"  @endif></i>
                             <i class="fa-solid fa-file-circle-check check-csv"></i>
-                            <i class="fa-solid fa-file-circle-exclamation warning-csv"></i>
+                            <i class="fa-solid fa-file-circle-exclamation warning-csv" @if($warning != null) style="display: block;" @endif></i>
                         </div>
                         <p class="file-txt">ファイルを選択</p>
                     </label>

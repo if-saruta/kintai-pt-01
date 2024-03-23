@@ -57,11 +57,13 @@ class EmployeeController extends Controller
                 'initials' => $request->initial,
                 'post_code' => $request->post_code,
                 'address' => $request->address,
+                'phone_number' => $request->phone,
                 'employment_status' => $request->status,
                 'company_id' => $request->company,
                 'is_invoice' => $request->invoice,
                 'vehicle_rental_type' => $request->rental_type,
                 'vehicle_id' => $request->vehicle,
+                'remarks' => $request->remarks,
             ]);
         }else{
             $employee = Employee::create([
@@ -70,10 +72,12 @@ class EmployeeController extends Controller
                 'initials' => $request->initial,
                 'post_code' => $request->post_code,
                 'address' => $request->address,
+                'phone_number' => $request->phone,
                 'employment_status' => $request->status,
                 'company_id' => $request->company,
                 'is_invoice' => $request->invoice,
                 'vehicle_rental_type' => $request->rental_type,
+                'remarks' => $request->remarks,
             ]);
         }
 
@@ -179,11 +183,13 @@ class EmployeeController extends Controller
         $employee->initials = $request->initial;
         $employee->post_code = $request->post_code;
         $employee->address = $request->address;
+        $employee->phone_number = $request->phone;
         $employee->employment_status = $request->status;
         $employee->company_id = $request->company;
         $employee->employment_status = $request->status;
         $employee->is_invoice = $request->invoice;
         $employee->vehicle_rental_type = $request->rental_type;
+        $employee->remarks = $request->remarks;
         if($request->rental_type == 1){
             $employee->vehicle_id = $request->vehicle;
         }else{

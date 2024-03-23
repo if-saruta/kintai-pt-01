@@ -117,7 +117,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const selectElem = document.getElementById('setSelectValueElem');
             if(selectElem !== null){
                 for(let i = 0; i < selectElem.options.length; i++){
-                    if(selectElem.options[i].value == data[2]){
+                    if(selectElem.options[i].value == data[5]){
                         selectElem.selectedIndex = i;
                         break;
                     }

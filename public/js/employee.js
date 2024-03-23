@@ -197,5 +197,32 @@ window.addEventListener('load', () => {
     }
     vehicleSelectActive();
 
+    // インボイス登録のアクションによって、登録番号の挙動を制御
+    const invoiceInputControl = () => {
+        const radio = document.querySelectorAll('.invoiceRadio');
+        const registerInput = document.querySelector('.registerInputWrap');
+
+        const inputControl = (radio, registerInputWrap) => {
+            for(let i = 0; i < radio.length; i++){
+                if(radio[i].checked){
+                    if(radio[i].value == 1){
+                        registerInput.classList.remove('register-input-open');
+                    }else{
+                        registerInput.classList.add('register-input-open');
+                    }
+                }
+            }
+        }
+        // ロード時
+        inputControl(radio, registerInput);
+        // radioに変化があった時
+        for(let i = 0; i < radio.length; i++){
+            radio[i].addEventListener('click', () => {
+                inputControl(radio, registerInput);
+            })
+        }
+    }
+    invoiceInputControl();
+
 
 })

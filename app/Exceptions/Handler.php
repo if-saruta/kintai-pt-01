@@ -6,8 +6,10 @@ use Exception;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Session\TokenMismatchException;
-
+use Illuminate\Auth\Access\AuthorizationException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 use Throwable;
 
@@ -36,24 +38,17 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
-        // 開発中は詳細なエラーを表示する
-        // if (app()->environment('local')) {
-        //     return parent::render($request, $exception);
-        // }
+        // 認証等のエラーの場合
+        if($exception instanceof AuthorizationException || $exception instanceof AccessDeniedHttpException){
+            $statusCode = 403;
+            return response()->view('errors.common', compact('statusCode'), $statusCode);
 
-        // 認証例外の場合はログイン画面にリダイレクトする
-        if ($exception instanceof AuthenticationException) {
-            return redirect()->guest(route('login'));
+        }else if($exception instanceof HttpException){
+            $statusCode = $exception->getStatusCode();
+            return response()->view('errors.common', compact('statusCode'), $statusCode);
         }
 
-        // 419エラーを捕捉してログインページにリダイレクト
-        if ($exception instanceof TokenMismatchException) {
-            return redirect()->guest(route('login'));
-        }
-
-        // それ以外のエラーで本番環境ではホーム画面にリダイレクトする
-        return redirect()->route('home')->with('error', 'Sorry, something went wrong.');
-
+        return parent::render($request, $exception);
     }
 
 

@@ -31,9 +31,6 @@
             margin-top: 5px;
             margin-bottom: 5px;
         }
-        .top-table{
-          /* width: 500px; */
-        }
         table{
           font-size: 7px;
           border-collapse: collapse;
@@ -42,8 +39,6 @@
         table th,
         table td{
           border: 0.5px solid black;
-          /* text-align: center; */
-          /* padding: 1.5px 0px; */
           word-break: break-word;
         }
         .main-table{
@@ -65,13 +60,9 @@
           text-align: center;
         }
         .center-txt{
-            /* padding: 2px 0px; */
             font-size: 9px;
             text-align: center;
             vertical-align: middle;
-        }
-        .project-head-txt{
-            /* font-size: 8px */
         }
         .project{
           width: 35.6%;
@@ -131,18 +122,8 @@
             height: 15.5px;
             vertical-align: middle;
         }
-        .project p{
-            /* font-size: 10px;
-          line-height: 1; */
-        }
-        /* p{
-          font-size: 10px;
-          line-height: 1;
-        } */
         .date p{
             font-size: 8px;
-            /* font-family: Noto Sans JP;
-            font-weight: bold; */
         }
         .memo-box{
             width: 50%;
@@ -187,7 +168,6 @@
             display: block;
             font-size: 10px;
             line-height: 1;
-            /* padding: 3px 0px; */
         }
         .over-legth{
             display: block;
@@ -195,28 +175,15 @@
             line-height: 1;
             padding: 0px 0px;
         }
+        .h-10{
+            height: 10px;
+        }
         .f-s-9{
             font-size: 9px;
         }
-        /* .project-count-table{
-          margin-top: 20px;
-          float: left;
+        .f-s-7{
+            font-size: 8px;
         }
-        .vehicle-table{
-          margin-top: 20px;
-          float: left;
-          margin-left: 20px;
-        }
-        .bg-orange{
-          background-color: rgba(255, 166, 0, 0.386);
-        }
-        .working-count{
-          width: 90px;
-          padding: 3px 5px;
-          background-color: rgba(0, 128, 0, 0.445);
-          clear: left;
-          margin-top: 10px;
-        } */
 
     </style>
 @php
@@ -313,7 +280,7 @@
                       $rental_vehicle = $spv->rentalVehicle->number;
                     }
                   @endphp
-                    <td class="project">
+                    <td class="project @if($setRowCount == 4) h-10 @endif">
                         <p class="">
                             @if ($spv->project)
                             @if($spv->project->name != '休み')
@@ -321,9 +288,9 @@
                                     $str_length = mb_strlen($spv->project->name);
                                 @endphp
                                 @if ($str_length >= 14)
-                                    <span class="over-legth">{{$spv->project->name}}</span>
+                                    <span class="over-legth @if($setRowCount == 4) f-s-7 @endif">{{$spv->project->name}}</span>
                                 @else
-                                    <span class="basic-legth">{{$spv->project->name}}</span>
+                                    <span class="basic-legth @if($setRowCount == 4) f-s-7 @endif">{{$spv->project->name}}</span>
                                 @endif
                             @endif
                         @elseif($spv->unregistered_project)
@@ -332,13 +299,13 @@
                                     $str_length = mb_strlen($spv->unregistered_project);
                                 @endphp
                                 @if ($str_length >= 14)
-                                    <span class="over-legth">{{$spv->unregistered_project}}</span>
+                                    <span class="over-legth @if($setRowCount == 4) f-s-7 @endif">{{$spv->unregistered_project}}</span>
                                 @else
-                                    <span class="basic-legth">{{$spv->unregistered_project}}</span>
+                                    <span class="basic-legth @if($setRowCount == 4) f-s-7 @endif">{{$spv->unregistered_project}}</span>
                                 @endif
                             @endif
                         @else
-                            <span class="basic-legth">&nbsp;</span>
+                            <span class="basic-legth @if($setRowCount == 4) f-s-7 @endif">&nbsp;</span>
                         @endif
                         </p>
                      </td>
@@ -346,34 +313,34 @@
                     @php
                         $amount = $spv->driver_price ? number_format($spv->driver_price) : '';
                     @endphp
-                     <td class="driver-price"><p class="f-s-9">{{ $amount }}</p></td>
+                     <td class="driver-price @if($setRowCount == 4) h-10 @endif"><p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">{{ $amount }}</p></td>
                   @endif
                     @if ($overtimeCheck != 1)
                     @php
                         $amount = $spv->overtime_fee ? number_format($spv->overtime_fee) : '';
                     @endphp
-                    <td class="overtime"><p class="f-s-9">{{ $amount }}</p></td>
+                    <td class="overtime @if($setRowCount == 4) h-10 @endif"><p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">{{ $amount }}</p></td>
                   @endif
                   @if ($allowanceCheck != 1)
                      @php
                         $amount = $spv->total_allowance ? number_format($spv->total_allowance) : '';
                     @endphp
-                     <td class="allowance-fee"><p class="f-s-9">{{ $amount }}</p></td>
+                     <td class="allowance-fee @if($setRowCount == 4) h-10 @endif"><p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">{{ $amount }}</p></td>
                   @endif
                   @if ($expresswayCheck != 1)
                     @php
                         $amount = $spv->expressway_fee ? number_format($spv->expressway_fee) : '';
                     @endphp
-                      <td class="expressway-fee"><p class="f-s-9">{{ $amount }}</p></td>
+                      <td class="expressway-fee @if($setRowCount == 4) h-10 @endif"><p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">{{ $amount }}</p></td>
                   @endif
                   @if ($parkingCheck != 1)
                     @php
                         $amount = $spv->parking_fee ? number_format($spv->parking_fee) : '';
                     @endphp
-                     <td class="parking-fee"><p class="f-s-9">{{ $amount }}</p></td>
+                     <td class="parking-fee @if($setRowCount == 4) h-10 @endif"><p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">{{ $amount }}</p></td>
                   @endif
                   @if ($vehicleCheck != 1)
-                    <td class="vehicle">
+                    <td class="vehicle @if($setRowCount == 4) h-10 @endif">
                         {{-- 契約形態別の2台目・三代目の確認 --}}
                         <p class="">
                         {{-- 自車 --}}
@@ -381,22 +348,22 @@
                             @if ($spv->vehicle)
                                 @if($spv->vehicle->number != '自車')
                                     @if ($spv->vehicle->id != $spv->rental_vehicle_id)
-                                        <p class="f-s-9">No.{{ $spv->vehicle->number }}</p>
+                                        <p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">No.{{ $spv->vehicle->number }}</p>
                                     @endif
                                 @endif
                             @else
                                 @if ($spv->unregistered_vehicle)
-                                    <p class="f-s-9">No.{{ $spv->unregistered_vehicle }}</p>
+                                    <p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">No.{{ $spv->unregistered_vehicle }}</p>
                                 @endif
                             @endif
                         @elseif(in_array($rental_type, [3]))
                             @if ($spv->vehicle)
                                 @if($spv->vehicle->number != '自車')
-                                    <p class="f-s-9">No.{{ $spv->vehicle->number }}</p>
+                                    <p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">No.{{ $spv->vehicle->number }}</p>
                                 @endif
                             @else
                                 @if ($spv->unregistered_vehicle != '自車')
-                                    <p class="f-s-9">No.{{ $spv->unregistered_vehicle }}</p>
+                                    <p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">No.{{ $spv->unregistered_vehicle }}</p>
                                 @endif
                             @endif
                         @endif
@@ -413,24 +380,24 @@
                 @if ($count == 0)
                   <td rowspan="{{ $setRowCount }}" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                 @endif
-                <td class="project"><p><span class="basic-legth">&nbsp;</span></p></td>
+                <td class="project @if($setRowCount == 4) h-10 @endif"><p><span class="basic-legth @if($setRowCount == 4) f-s-7 @endif">&nbsp;</span></p></td>
                 @if ($amountCheck != 1)
-                    <td class="driver-price"><p>&nbsp;</p></td>
+                    <td class="driver-price @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($overtimeCheck != 1)
-                    <td class="overtime"><p>&nbsp;</p></td>
+                    <td class="overtime @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($allowanceCheck != 1)
-                    <td class="allowance-fee"><p>&nbsp;</p></td>
+                    <td class="allowance-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($expresswayCheck != 1)
-                    <td class="expressway-fee"><p>&nbsp;</p></td>
+                    <td class="expressway-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($parkingCheck != 1)
-                    <td class="parking-fee"><p>&nbsp;</p></td>
+                    <td class="parking-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($vehicleCheck != 1)
-                    <td class="vehicle"><p>&nbsp;</p></td>
+                    <td class="vehicle @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
               </tr>
           @endfor
@@ -441,24 +408,24 @@
             @if ($count == 0)
                 <td rowspan="{{ $setRowCount }}" class="date"><p class=""></p></td>
             @endif
-            <td class="project"><p><span class="basic-legth">&nbsp;</span></p></td>
+            <td class="project @if($setRowCount == 4) h-10 @endif"><p><span class="basic-legth @if($setRowCount == 4) f-s-7 @endif">&nbsp;</span></p></td>
             @if ($amountCheck != 1)
-                <td class="driver-price"><p>&nbsp;</p></td>
+                <td class="driver-price @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
             @endif
             @if ($overtimeCheck != 1)
-                <td class="overtime"><p>&nbsp;</p></td>
+                <td class="overtime @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
             @endif
             @if ($allowanceCheck != 1)
-                <td class="allowance-fee"><p>&nbsp;</p></td>
+                <td class="allowance-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
             @endif
             @if ($expresswayCheck != 1)
-                <td class="expressway-fee"><p>&nbsp;</p></td>
+                <td class="expressway-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
             @endif
             @if ($parkingCheck != 1)
-                <td class="parking-fee"><p>&nbsp;</p></td>
+                <td class="parking-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
             @endif
             @if ($vehicleCheck != 1)
-                <td class="vehicle"><p>&nbsp;</p></td>
+                <td class="vehicle @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
             @endif
         </tr>
      @endfor
@@ -499,13 +466,6 @@
               $count = 0;
           @endphp
 
-          @php
-            // //   2台目・三代目の確認変数
-            // $second_machine_check = true;
-            // // 稼働の確認
-            // $is_working = true;
-          @endphp
-
           @foreach ($shiftProjectVehicles as $spv)
             @if($spv->shift->date== $date->format('Y-m-d'))
                 <tr>
@@ -515,17 +475,12 @@
 
                   @php
                     $count++;
-                    // 集計表で使用する変数
-                    // $total_amount += $spv->driver_price;
-                    // $total_allowance += $spv->total_allowance;
-                    // $total_parking += $spv->parking_fee;
-                    // $total_expressway += $spv->expressway_fee;
                     $rental_type = $spv->vehicle_rental_type;
                     if($spv->rentalVehicle){
                       $rental_vehicle = $spv->rentalVehicle->number;
                     }
                   @endphp
-                  <td class="project">
+                  <td class="project @if($setRowCount == 4) h-10 @endif">
                     <p class="">
                         @if ($spv->project)
                         @if($spv->project->name != '休み')
@@ -533,9 +488,9 @@
                                 $str_length = mb_strlen($spv->project->name);
                             @endphp
                             @if ($str_length >= 14)
-                                <span class="over-legth">{{$spv->project->name}}</span>
+                                <span class="over-legth @if($setRowCount == 4) f-s-7 @endif">{{$spv->project->name}}</span>
                             @else
-                                <span class="basic-legth">{{$spv->project->name}}</span>
+                                <span class="basic-legth @if($setRowCount == 4) f-s-7 @endif">{{$spv->project->name}}</span>
                             @endif
                         @endif
                     @elseif($spv->unregistered_project)
@@ -544,9 +499,9 @@
                                 $str_length = mb_strlen($spv->unregistered_project);
                             @endphp
                             @if ($str_length >= 14)
-                                <span class="over-legth">{{$spv->unregistered_project}}</span>
+                                <span class="over-legth @if($setRowCount == 4) f-s-7 @endif">{{$spv->unregistered_project}}</span>
                             @else
-                                <span class="basic-legth">{{$spv->unregistered_project}}</span>
+                                <span class="basic-legth @if($setRowCount == 4) f-s-7 @endif">{{$spv->unregistered_project}}</span>
                             @endif
                         @endif
                     @else
@@ -558,34 +513,34 @@
                     @php
                         $amount = $spv->driver_price ? number_format($spv->driver_price) : '';
                     @endphp
-                     <td class="driver-price"><p class="f-s-9">{{$amount}}</p></td>
+                     <td class="driver-price @if($setRowCount == 4) h-10 @endif"><p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">{{$amount}}</p></td>
                   @endif
                   @if ($overtimeCheck != 1)
                     @php
                         $amount = $spv->overtime_fee ? number_format($spv->overtime_fee) : '';
                     @endphp
-                    <td class="overtime"><p class="f-s-9">{{ $amount }}</p></td>
+                    <td class="overtime @if($setRowCount == 4) h-10 @endif"><p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">{{ $amount }}</p></td>
                   @endif
                   @if ($allowanceCheck != 1)
                     @php
                         $amount = $spv->total_allowance ? number_format($spv->total_allowance) : '';
                     @endphp
-                     <td class="allowance-fee"><p class="f-s-9">{{$amount}}</p></td>
+                     <td class="allowance-fee @if($setRowCount == 4) h-10 @endif"><p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">{{$amount}}</p></td>
                   @endif
                   @if ($expresswayCheck != 1)
                      @php
                         $amount = $spv->expressway_fee ? number_format($spv->expressway_fee) : '';
                     @endphp
-                      <td class="expressway-fee"><p class="f-s-9">{{$amount}}</p></td>
+                      <td class="expressway-fee @if($setRowCount == 4) h-10 @endif"><p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">{{$amount}}</p></td>
                   @endif
                   @if ($parkingCheck != 1)
                      @php
                         $amount = $spv->parking_fee ? number_format($spv->parking_fee) : '';
                     @endphp
-                     <td class="parking-fee"><p class="f-s-9">{{$amount}}</p></td>
+                     <td class="parking-fee @if($setRowCount == 4) h-10 @endif"><p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">{{$amount}}</p></td>
                   @endif
                   @if ($vehicleCheck != 1)
-                    <td class="vehicle">
+                    <td class="vehicle @if($setRowCount == 4) h-10 @endif">
                         {{-- 契約形態別の2台目・三代目の確認 --}}
                         <p class="">
                         {{-- 自車 --}}
@@ -593,43 +548,25 @@
                             @if ($spv->vehicle)
                                 @if($spv->vehicle->number != '自車')
                                     @if ($spv->vehicle->id != $spv->rental_vehicle_id)
-                                        <p class="f-s-9">No.{{ $spv->vehicle->number }}</p>
+                                        <p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">No.{{ $spv->vehicle->number }}</p>
                                     @endif
                                 @endif
                             @else
                                 @if ($spv->unregistered_vehicle)
-                                    <p class="f-s-9">No.{{ $spv->unregistered_vehicle }}</p>
+                                    <p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">No.{{ $spv->unregistered_vehicle }}</p>
                                 @endif
                             @endif
                         @elseif(in_array($rental_type, [3]))
                             @if ($spv->vehicle)
                                 @if($spv->vehicle->number != '自車')
-                                    <p class="f-s-9">No.{{ $spv->vehicle->number }}</p>
+                                    <p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">No.{{ $spv->vehicle->number }}</p>
                                 @endif
                             @else
                                 @if ($spv->unregistered_vehicle != '自車')
-                                    <p class="f-s-9">No.{{ $spv->unregistered_vehicle }}</p>
+                                    <p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">No.{{ $spv->unregistered_vehicle }}</p>
                                 @endif
                             @endif
                         @endif
-                        {{-- @if ($rental_type == 0 || $spv->vehicle_id)
-                            {{$spv->vehicle->number}}
-                            @php
-                                if($second_machine_check){
-                                $second_machine_count++;
-                                $second_machine_check = false;
-                                // 2台目の車両の種類を確認
-                                if(!in_array($spv->vehicle->number, $secound_vehicle_array)){
-                                    $secound_vehicle_array[] = $spv->vehicle->number;
-                                }
-                                }else{
-                                $third_machine_count++;
-                                if(!in_array($spv->vehicle->number, $third_vehicle_array)){
-                                    $third_vehicle_array[] = $spv->vehicle->number;
-                                }
-                                }
-                            @endphp
-                        @endif --}}
                         </p>
                     </td>
                   @endif
@@ -643,24 +580,24 @@
                 @if ($count == 0)
                   <td rowspan="{{ $setRowCount }}" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                 @endif
-                <td class="project"><span class="basic-legth">&nbsp;</span></td>
+                <td class="project @if($setRowCount == 4) h-10 @endif"><span class="basic-legth @if($setRowCount == 4) f-s-7 @endif">&nbsp;</span></td>
                 @if ($amountCheck != 1)
-                    <td class="driver-price"><p>&nbsp;</p></td>
+                    <td class="driver-price @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($overtimeCheck != 1)
-                    <td class="overtime"><p>&nbsp;</p></td>
+                    <td class="overtime @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($allowanceCheck != 1)
-                    <td class="allowance-fee"><p>&nbsp;</p></td>
+                    <td class="allowance-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($expresswayCheck != 1)
-                    <td class="expressway-fee"><p>&nbsp;</p></td>
+                    <td class="expressway-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($parkingCheck != 1)
-                    <td class="parking-fee"><p>&nbsp;</p></td>
+                    <td class="parking-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($vehicleCheck != 1)
-                    <td class="vehicle"><p>&nbsp;</p></td>
+                    <td class="vehicle @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
               </tr>
           @endfor
@@ -673,24 +610,24 @@
                 @if ($count == 0)
                     <td rowspan="{{ $setRowCount }}" class="date"><p class=""></p></td>
                 @endif
-                <td class="project"><p><span class="basic-legth">&nbsp;</span></p></td>
+                <td class="project @if($setRowCount == 4) h-10 @endif"><p><span class="basic-legth @if($setRowCount == 4) f-s-7 @endif">&nbsp;</span></p></td>
                 @if ($amountCheck != 1)
-                    <td class="driver-price"><p>&nbsp;</p></td>
+                    <td class="driver-price @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($overtimeCheck != 1)
-                    <td class="overtime"><p>&nbsp;</p></td>
+                    <td class="overtime @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($allowanceCheck != 1)
-                    <td class="allowance-fee"><p>&nbsp;</p></td>
+                    <td class="allowance-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($expresswayCheck != 1)
-                    <td class="expressway-fee"><p>&nbsp;</p></td>
+                    <td class="expressway-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($parkingCheck != 1)
-                    <td class="parking-fee"><p>&nbsp;</p></td>
+                    <td class="parking-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($vehicleCheck != 1)
-                    <td class="vehicle"><p>&nbsp;</p></td>
+                    <td class="vehicle @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
             </tr>
         @endfor

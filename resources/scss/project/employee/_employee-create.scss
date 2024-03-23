@@ -78,6 +78,22 @@
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+            .register-input-wrap{
+                position: relative;
+            }
+            .register-input-open{
+                &::after{
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 0.5rem;
+                    background-color: black;
+                    opacity: 0.5;
+                }
+            }
         }
         .employee-initial{
             width: 10rem;
@@ -104,6 +120,14 @@
             }
             .--address{
                 width: 45rem;
+            }
+        }
+        .phone-area{
+            width: 20rem;
+            &__input-box{
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
             }
         }
         .employment-status{
@@ -185,6 +209,17 @@
                     letter-spacing: 0.1rem;
                     color: $cBlack;
                 }
+            }
+        }
+        .remarks-area{
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            .head{
+                font-size: 1.3rem;
+                font-weight: $fw-bold;
+                letter-spacing: 0.1rem;
+                color: $cBlack;
             }
         }
         .info-by-project{

@@ -169,6 +169,7 @@
                         </thead>
                         <tbody class="shift-calendar-table__body">
                             @foreach ($projects as $project)
+                                @if($project->client->id != 1)
                                 <tr class="shift-calendar-table__body__row --count-row">
                                     <td class="--count-row__project"><p class="">{{$project->name}}</p></td>
                                     @foreach ( $convertedDates as $date )
@@ -191,6 +192,7 @@
                                         </td>
                                     @endforeach
                                 </tr>
+                                @endif
                             @endforeach
                             @foreach ($unregistered_project as $unProject)
                                 <tr class="shift-calendar-table__body__row --count-row">

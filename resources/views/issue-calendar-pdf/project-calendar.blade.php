@@ -423,7 +423,7 @@
     @endphp
     @foreach ( $projects as $index => $project )
         @if ($countIndex == $index)
-        <table style="width: {{ $onlyTableWidth }}px; page-break-after: always">
+        <table style="width: {{ $onlyTableWidth }}px; @if($index < ($project_count - 1)) page-break-after: always @endif">
             {{-- ヘッダー --}}
             <thead>
                 @if ($project_count >= 1 || $company_count >= 1) {{-- どちらか複数あれば --}}

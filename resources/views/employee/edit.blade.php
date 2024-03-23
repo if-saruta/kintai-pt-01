@@ -99,6 +99,19 @@
                         @endcan
                     </div>
                 </div>
+                <div class="phone-area">
+                    <div class="phone-area__input-box">
+                        <div class="head">
+                            <p class="input-head">電話番号</p>
+                            <p class="required">必須</p>
+                        </div>
+                        @can('admin-higher')
+                            <input type="text" name="phone" class="c-input" value="{{ $employee->phone_number }}" placeholder="000-0000-0000">
+                        @else
+                            <input type="text" name="phone" class="c-input" value="{{ $employee->phone_number }}" readonly>
+                        @endcan
+                    </div>
+                </div>
                 <div class="employment-status">
                     <div class="head">
                         <p class="input-head">雇用形態</p>
@@ -168,17 +181,17 @@
                     <div class="check-area">
                         <div class="check-area__item">
                             @can('admin-higher')
-                                <input type="radio" name="invoice" @if ($employee->is_invoice == 1) checked @endif value="1">
+                                <input type="radio" name="invoice" @if ($employee->is_invoice == 1) checked @endif value="1" class="invoiceRadio">
                             @else
-                                <input type="radio" name="invoice" @if ($employee->is_invoice == 1) checked @endif value="1" disabled="disabled">
+                                <input type="radio" name="invoice" @if ($employee->is_invoice == 1) checked @endif value="1" disabled="disabled" class="invoiceRadio">
                             @endcan
                             <label for="">登録</label>
                         </div>
                         <div class="check-area__item">
                             @can('admin-higher')
-                                <input type="radio" name="invoice" @if ($employee->is_invoice == 0) checked @endif value="0">
+                                <input type="radio" name="invoice" @if ($employee->is_invoice == 0) checked @endif value="0" class="invoiceRadio">
                             @else
-                                <input type="radio" name="invoice" @if ($employee->is_invoice == 0) checked @endif value="0" disabled="disabled">
+                                <input type="radio" name="invoice" @if ($employee->is_invoice == 0) checked @endif value="0" disabled="disabled" class="invoiceRadio">
                             @endcan
                             <label for="">未登録</label>
                         </div>
@@ -190,9 +203,13 @@
                         <p class="required">必須</p>
                     </div>
                     @can('admin-higher')
-                        <input type="text" name="register_number" value="{{$employee->register_number}}" class="c-input" placeholder="T00000000">
+                        <div class="register-input-wrap registerInputWrap">
+                            <input type="text" name="register_number" value="{{$employee->register_number}}" class="c-input" placeholder="T00000000">
+                        </div>
                     @else
-                        <input type="text" name="register_number" value="{{$employee->register_number}}" class="c-input" placeholder="T00000000" readonly>
+                        <div class="register-input-wrap registerInputWrap">
+                            <input type="text" name="register_number" value="{{$employee->register_number}}" class="c-input" placeholder="T00000000" readonly>
+                        </div>
                     @endcan
                 </div>
                 <div class="rental">
@@ -227,9 +244,9 @@
                                         <option value="">選択してください</option>
                                         @foreach ($vehicles as $vehicle)
                                             @if ($vehicle->id == $employee->vehicle_id)
-                                                <option selected value="{{$vehicle->id}}">{{$vehicle->number}}</option>
+                                                <option selected value="{{$vehicle->id}}">{{ $vehicle->place_name }} {{ $vehicle->class_number }} {{ $vehicle->hiragana }} {{$vehicle->number}}</option>
                                             @else
-                                                <option value="{{$vehicle->id}}">{{$vehicle->number}}</option>
+                                                <option value="{{$vehicle->id}}">{{ $vehicle->place_name }} {{ $vehicle->class_number }} {{ $vehicle->hiragana }} {{$vehicle->number}}</option>
                                             @endif
                                         @endforeach
                                     </select>
@@ -238,9 +255,9 @@
                                         <option value="">選択してください</option>
                                         @foreach ($vehicles as $vehicle)
                                             @if ($vehicle->id == $employee->vehicle_id)
-                                                <option selected value="{{$vehicle->id}}">{{$vehicle->number}}</option>
+                                                <option selected value="{{$vehicle->id}}">{{ $vehicle->place_name }} {{ $vehicle->class_number }} {{ $vehicle->hiragana }} {{$vehicle->number}}</option>
                                             @else
-                                                <option value="{{$vehicle->id}}">{{$vehicle->number}}</option>
+                                                <option value="{{$vehicle->id}}">{{ $vehicle->place_name }} {{ $vehicle->class_number }} {{ $vehicle->hiragana }} {{$vehicle->number}}</option>
                                             @endif
                                         @endforeach
                                     </select>
@@ -248,6 +265,16 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="remarks-area">
+                    <div class="head">
+                        <p class="">備考欄</p>
+                    </div>
+                    @can('admin-higher')
+                        <textarea name="remarks" id="" cols="30" rows="10" class="c-textarea">{{ $employee->remarks }}</textarea>
+                    @else
+                        <textarea name="remarks" id="" cols="30" rows="10" class="c-textarea" readonly>{{ $employee->remarks }}</textarea>
+                    @endcan
                 </div>
                 @can('admin-higher')
                     <div class="info-by-project">

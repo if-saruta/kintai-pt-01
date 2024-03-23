@@ -829,12 +829,12 @@
                     {{-- 上代 --}}
                     <div class="form-block__item">
                         <p class="item-title">上代</p>
-                        <input type="text" class="c-input commaInput" id="retailInput" name="retailInput">
+                        <input type="text" class="c-input commaInput" id="retailInput" name="retailInput" placeholder="1,000">
                     </div>
                     {{-- 給与 --}}
                     <div class="form-block__item">
                         <p class="item-title">給与</p>
-                        <input type="text" class="c-input commaInput" id="salaryInput" name="salaryInput">
+                        <input type="text" class="c-input commaInput" id="salaryInput" name="salaryInput" placeholder="1,000">
                     </div>
                 </div>
                 {{-- ボタン --}}
@@ -898,7 +898,7 @@
                         <select name="projectSelect" id="createProjectSelect" class="c-select modal-select">
                             <option value="">選択してください</option>
                             @foreach ($projects as $project)
-                            <option value="{{$project->id}}">{{$project->name}}</option>
+                            <option value="{{$project->id}}" data-retail-amount="{{ $project->retail_price }}" data-driver-amount="{{ $project->driver_price }}">{{$project->name}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -929,12 +929,12 @@
                     {{-- 上代 --}}
                     <div class="form-block__item">
                         <p class="item-title">上代</p>
-                        <input type="text" class="c-input commaInput" id="createRetailInput" name="retailInput" placeholder="0000">
+                        <input type="text" class="c-input commaInput" id="createRetailInput" name="retailInput" placeholder="1,000">
                     </div>
                     {{-- 給与 --}}
                     <div class="form-block__item">
                         <p class="item-title">給与</p>
-                        <input type="text" class="c-input commaInput" id="createSalaryInput" name="salaryInput" placeholder="0000">
+                        <input type="text" class="c-input commaInput" id="createSalaryInput" name="salaryInput" placeholder="1,000">
                     </div>
                 </div>
                 {{-- ボタン --}}

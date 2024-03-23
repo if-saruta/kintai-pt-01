@@ -4,7 +4,6 @@
             {{ __('シフト') }}
         </h2>
     </x-slot>
-
     <main class="main --shift-main">
         <div class="main__link-block --shift-link-block">
             <div class="main__link-block__tags">
@@ -197,7 +196,7 @@
                                         $is_employee_open = true;
                                         // 1日ごとの最大案件数
                                         $max_count = 1;
-                                        @endphp
+                                    @endphp
                                         {{-- 最大案件数の計算 --}}
                                     @php
                                         foreach ($shiftData as $shift) {

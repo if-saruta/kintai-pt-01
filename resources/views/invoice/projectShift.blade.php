@@ -137,10 +137,10 @@
                             <input hidden type="text" name="client" value="{{$getClient->id}}">
                             <input hidden type="text" name="year" value="{{$getYear}}">
                             <input hidden type="text" name="month" value="{{$getMonth}}">
-                            <button name="action" value="beside">
+                            <button name="action" value="beside" class="c-pdf-download-btn">
                                 ダウンロード 横画面
                             </button>
-                            <button name="action" value="vertical">
+                            <button name="action" value="vertical" class="c-pdf-download-btn">
                                 ダウンロード 縦画面
                             </button>
                         </form>
@@ -312,7 +312,7 @@
                                             @endforeach
                                             @foreach ($narrowProjects as $project)
                                                 @php
-                                                    
+
                                                 @endphp
                                                 @foreach ($getCompanies as $company)
                                                 <th

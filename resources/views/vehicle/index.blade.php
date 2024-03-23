@@ -30,14 +30,53 @@
                         <input hidden type="text" class="setValueElem" name="id">
                         <div class="info-row info-row-edit">
                             <div class="flex-10">
+                                <p class="info-row__head info-row-edit__head">地名</p>
+                                <p class="required">必須</p>
+                            </div>
+                            <div class="info-row__data --top --top-edit">
+                                @can('admin-higher')
+                                <input type="text" class="c-input setValueElem" name="place_name" placeholder="世田谷">
+                                @else
+                                <input type="text" class="c-input setValueElem" name="place_name" placeholder="世田谷" readonly>
+                                @endcan
+                            </div>
+                        </div>
+                        <div class="info-row info-row-edit">
+                            <div class="flex-10">
+                                <p class="info-row__head info-row-edit__head">分類番号</p>
+                                <p class="required">必須</p>
+                            </div>
+                            <div class="info-row__data --top --top-edit">
+                                @can('admin-higher')
+                                <input type="text" class="c-input setValueElem" name="class_number" placeholder="300">
+                                @else
+                                <input type="text" class="c-input setValueElem" name="class_number" placeholder="300" readonly>
+                                @endcan
+                            </div>
+                        </div>
+                        <div class="info-row info-row-edit">
+                            <div class="flex-10">
+                                <p class="info-row__head info-row-edit__head">ひらがな</p>
+                                <p class="required">必須</p>
+                            </div>
+                            <div class="info-row__data --top --top-edit">
+                                @can('admin-higher')
+                                <input type="text" class="c-input setValueElem" name="hiragana" placeholder="あ">
+                                @else
+                                <input type="text" class="c-input setValueElem" name="hiragana" placeholder="あ" readonly>
+                                @endcan
+                            </div>
+                        </div>
+                        <div class="info-row info-row-edit">
+                            <div class="flex-10">
                                 <p class="info-row__head info-row-edit__head">ナンバー</p>
                                 <p class="required">必須</p>
                             </div>
                             <div class="info-row__data --top --top-edit">
                                 @can('admin-higher')
-                                <input type="text" class="c-input setValueElem" name="number" required>
+                                    <input type="text" class="c-input setValueElem" name="number" required>
                                 @else
-                                <input type="text" class="c-input setValueElem" name="number" readonly>
+                                    <input type="text" class="c-input setValueElem" name="number" readonly>
                                 @endcan
                             </div>
                         </div>
@@ -84,6 +123,33 @@
                     <form action="{{route('vehicle.store')}}" method="POST" class="info-wrap__register-item__inner --edit-inner" id="createView">
                         @csrf
                         <input hidden type="text" class="setValueElem" name="id">
+                        <div class="info-row info-row-edit">
+                            <div class="flex-10">
+                                <p class="info-row__head info-row-edit__head">地名</p>
+                                <p class="required">必須</p>
+                            </div>
+                            <div class="info-row__data --top --top-edit">
+                                <input type="text" class="c-input setValueElem" name="place_name" placeholder="世田谷" required>
+                            </div>
+                        </div>
+                        <div class="info-row info-row-edit">
+                            <div class="flex-10">
+                                <p class="info-row__head info-row-edit__head">分類番号</p>
+                                <p class="required">必須</p>
+                            </div>
+                            <div class="info-row__data --top --top-edit">
+                                <input type="text" class="c-input setValueElem" name="class_number" placeholder="300" required>
+                            </div>
+                        </div>
+                        <div class="info-row info-row-edit">
+                            <div class="flex-10">
+                                <p class="info-row__head info-row-edit__head">ひらがな</p>
+                                <p class="required">必須</p>
+                            </div>
+                            <div class="info-row__data --top --top-edit">
+                                <input type="text" class="c-input setValueElem" name="hiragana" placeholder="あ" required>
+                            </div>
+                        </div>
                         <div class="info-row info-row-edit">
                             <div class="flex-10">
                                 <p class="info-row__head info-row-edit__head">ナンバー</p>
@@ -152,7 +218,7 @@
                                     data-info='["{{$vehicle->number}}","{{$vehicle->company->name}}"]'>
                                 </div>
                                 <div class="dataHasEditElem"
-                                    data-info='["{{$vehicle->id}}","{{$vehicle->number}}","{{$vehicle->company->id}}"]'>
+                                    data-info='["{{$vehicle->id}}","{{$vehicle->place_name}}","{{$vehicle->class_number}}","{{$vehicle->hiragana}}","{{$vehicle->number}}","{{$vehicle->company->id}}"]'>
                                 </div>
                             </button>
                         </div>

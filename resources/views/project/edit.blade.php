@@ -86,7 +86,7 @@
                                         <div class="salary-type-box">
                                             <div class="head input-head">
                                                 <p class="">ドライバー価格形態</p>
-                                                <p class="item-type">必須</p>
+                                                {{-- <p class="item-type">必須</p> --}}
                                             </div>
                                             <div class="salary-type-box__input-area">
                                                 <div class="input-item flex-10">

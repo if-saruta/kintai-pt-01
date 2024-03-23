@@ -184,13 +184,13 @@ window.addEventListener('DOMContentLoaded', () => {
         vehicleSelect.style.display = 'block';
     }
 
-
+    // シフト新規作成モーダルの挙動を制御
     const createModalActive = () => {
         const targetElem = document.querySelectorAll('.createBtn');
         const modal = document.getElementById('createShiftModal');
         const closeElem = document.querySelectorAll('.createCloseModal');
 
-
+        // モダールに値をセット
         const setValue = (target) => {
             const setId = document.getElementById('createSetId');
             const setEmployee = document.getElementById('createEmployee');
@@ -214,6 +214,30 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // 案件select変化時の上代と給与の金額をセット
+        const projectSelect = document.getElementById('createProjectSelect');
+        const createRetailInput = document.getElementById('createRetailInput');
+        const createSalaryInput = document.getElementById('createSalaryInput');
+        if(projectSelect != null){
+            function displaySelectedOption() {
+                // 上代の金額取得
+                const projectAmount = projectSelect.options[projectSelect.selectedIndex].getAttribute('data-retail-amount');
+                // ドライバー価格の取得
+                const driverAmount = projectSelect.options[projectSelect.selectedIndex].getAttribute('data-driver-amount');
+                // 金額をセット
+                if(projectAmount != null){
+                    createRetailInput.value = inputCommma(projectAmount);
+                }
+                if(driverAmount != null){
+                    createSalaryInput.value = inputCommma(driverAmount);
+                }
+            }
+            displaySelectedOption();
+            // 選択が変更されたときに選択されているオプションを表示
+            projectSelect.addEventListener('change', displaySelectedOption);
+        }
+
+        // 新規と既存のラジオボタンで表示inputを制御
         const changeRadio = () => {
             const projectInput = document.getElementById('createProjectInput');
             const projectSelect = document.getElementById('createProjectSelect');
@@ -222,19 +246,24 @@ window.addEventListener('DOMContentLoaded', () => {
 
             const projectRadio = document.querySelectorAll('.createProjectRadio');
             const vehicleRadio = document.querySelectorAll('.createVehicleRadio');
-
+            // 案件の挙動
             for(let i = 0; i < projectRadio.length; i++){
                 projectRadio[i].addEventListener('change', () => {
                     projectInput.style.display = 'none';
                     projectSelect.style.display = 'none';
                     if(projectRadio[i].value == '0'){
-                        projectSelect.style.display = "block"
+                        projectSelect.style.display = "block";
+                        // 上代・給与の値をセット
+                        displaySelectedOption();
                     }else{
                         projectInput.style.display = "block";
+                        // 上代・給与の値を空に
+                        createRetailInput.value = '';
+                        createSalaryInput.value = '';
                     }
                 })
             }
-
+            // 車両の挙動
             for(let i = 0; i < vehicleRadio.length; i++){
                 vehicleRadio[i].addEventListener('change', () => {
                     vehicleInput.style.display = 'none';
@@ -248,7 +277,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 })
             }
         }
-
+        // モーダルが閉じた時にすべてのデータを初期値にする
         const CreateReturnInitialState = () => {
             const projectInput = document.getElementById('createProjectInput');
             const projectSelect = document.getElementById('createProjectSelect');
@@ -274,7 +303,7 @@ window.addEventListener('DOMContentLoaded', () => {
             retailInput.value = '';
             salaryInput.value = '';
         }
-
+        // 開ける
         for(let i = 0; i < targetElem.length; i++){
             targetElem[i].addEventListener('click', () => {
                 modal.style.display = "block";
@@ -282,6 +311,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 changeRadio();
             })
         }
+        // 閉じる
         for(let i = 0; i < closeElem.length; i++){
             closeElem[i].addEventListener('click', () => {
                 modal.style.display = "none";
@@ -293,7 +323,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     createModalActive();
 
-
+    // csvファイルのインポートの挙動を制御
     const csvActive = () => {
         const input = document.querySelector('.csvInput');
         const setFileName = document.querySelector('.active-file-txt');
@@ -310,10 +340,13 @@ window.addEventListener('DOMContentLoaded', () => {
         const activeIcon = document.querySelector('.active-icon');
 
         const btn = document.querySelector('.import-btn');
+        // 警告要素
+        const csvWarning = document.querySelector('.csvWarning');
 
         if(input != null){
             input.addEventListener('change', function() {
                 var fileName = ''; // ファイル名を格納する変数
+                csvWarning.innerHTML = ''; //警告文を消す
                 if (this.files && this.files.length > 0) {
                   // inputタグを通じて選択された最初のファイルの名前を取得
                   fileName = this.files[0].name;
@@ -393,6 +426,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     setHeight();
 
+    // 所属先の列の挙動を制御
     const companyClmCreate = () => {
         const companyView = document.getElementById('companyView');
         const getRow = document.querySelectorAll('.getRow');

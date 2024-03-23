@@ -11,7 +11,7 @@ class Vehicle extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['number','company_id'];
+    protected $fillable = ['place_name','class_number','hiragana','number','company_id'];
 
     public function shifts()
     {

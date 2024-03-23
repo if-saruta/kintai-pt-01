@@ -660,9 +660,22 @@
 
     // csv
     .csv-wrap{
+        position: relative;
         width: 60rem;
         margin: 0 auto;
         padding-top: 16rem;
+        .csv-warning{
+            position: absolute;
+            top: 5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.7rem;
+            font-weight: $fw-bold;
+            color: $cRed;
+            white-space: nowrap;
+            text-align: center;
+            line-height: 1.5;
+        }
         input[type="file"]{
             display: none;
         }

@@ -29,6 +29,9 @@ class VehicleController extends Controller
     {
 
         Vehicle::create([
+            'place_name' => $request->place_name,
+            'class_number' => $request->class_number,
+            'hiragana' => $request->hiragana,
             'number' => $request->number,
             'company_id' => $request->company,
         ]);
@@ -42,6 +45,9 @@ class VehicleController extends Controller
         $vehicle = Vehicle::find($id);
 
         if($request->input('action') == 'save'){
+            $vehicle->place_name = $request->place_name;
+            $vehicle->class_number = $request->class_number;
+            $vehicle->hiragana = $request->hiragana;
             $vehicle->number = $request->number;
             $vehicle->company_id = $request->company;
             $vehicle->save();

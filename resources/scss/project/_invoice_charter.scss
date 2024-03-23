@@ -11,6 +11,15 @@
     &__charter{
         margin-left: 20px;
         padding-top: 3rem;
+        .warning-txt{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            margin-top: 3rem;
+            font-size: 1.3rem;
+            font-weight: $fw-bold;
+        }
         .select-area{
             display: flex;
             align-items: center;
@@ -61,7 +70,6 @@
             margin-top: 3rem;
             width: 15rem;
             height: 4.5rem;
-            border: 2px solid $cGreen;
             border-radius: 1rem;
             display: flex;
             align-items: center;
@@ -69,7 +77,6 @@
             font-size: 1.4rem;
             font-weight: $fw-bold;
             letter-spacing: 0.1rem;
-            color: $cGreen;
         }
         .charter-calender-wrap{
             width: 98%;

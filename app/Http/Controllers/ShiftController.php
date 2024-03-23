@@ -16,11 +16,15 @@ use League\Csv\Reader;
 use League\Csv\Writer;
 use League\Csv\Statement;
 use Carbon\Carbon;
+use DateTime;
 use Svg\Tag\Rect;
 use Symfony\Component\VarDumper\VarDumper;
 use Illuminate\Support\Facades\Storage;
 use League\Csv\CharsetConverter;
 use Yasumi\Yasumi;
+use Illuminate\Support\Facades\DB;
+use Exception;
+use Throwable;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -323,350 +327,386 @@ class ShiftController extends Controller
 
     public function csv()
     {
-        return view('shift.csv');
+        $warning = session('warning');
+
+        return view('shift.csv', compact('warning'));
     }
 
     public function csvImport(Request $request)
     {
-
-        $employees = Employee::all();
-        $projects = Project::all();
-        $vehicles = Vehicle::all();
-
-
-        $path = $request->file('csv_file')->getRealPath();
-
-        // CSVファイルを読み込む
-        $csv = Reader::createFromPath($path, 'r');
-        // $reader = Reader::createFromPath($path, 'r');
-        // $encoder = (new CharsetConverter())->inputEncoding('SJIS-win');
-        // $csv = $encoder->convert($reader);
-
-        $records = [];
-        foreach ($csv as $record) {
-            // 各レコードから0番目の要素を削除
-            array_shift($record);
-            $records[] = $record;
-        }
-
-        // 日付の行を整形・取得
-        $dateRow = $records[0];
-        $tmpDate = "";
-        foreach ($dateRow as $index => &$date) { // 参照による代入を使用
-            // ０番目は空のためスキップ
-            if ($index == 0) continue;
-            // 日付を格納
-            if (empty($date)) {
-                $date = $tmpDate;
-            } else {
-                $tmpDate = $date;
-            }
-        }
-        unset($date);
-
-        $getDate = $dateRow[2];
-
-        // すでに登録してある日付のシフトを削除
-        $hasShift = Shift::whereIn('date', $dateRow)->get();
-        if (!$hasShift->isEmpty()) {
-            foreach ($hasShift as $shift) {
-                $shift->delete();
-            }
-        }
-
-        // シフトを格納する配列を初期化
-        $organizedData = [];
-        // 従業員名を格納する変数
-        $employeeName = "";
-
-        // レコードをDBに格納するために整形
-        foreach ($records as $index => $record) {
-            // インデックス0は日付のためスキップ
-            if ($index !== 0) {
-                // var_dump($index);
-                if ($record[0] !== "") {
-                    // 従業員名を格納
-                    $employeeName = $record[0];
-                }
-
-                // 奇数行は案件が格納
-                if ($index % 2 != 0) {
-                    // 日付ごとにデータを整理
-                    foreach ($record as $colIndex => $value) {
-
-                        // 0番目の列は従業員名なのでスキップ
-                        if ($colIndex == 0) continue;
-
-                        // 日付を取得
-                        $date = $dateRow[$colIndex];
-
-                        // 日付が設定されていない場合はスキップ
-                        if (empty($date)) continue;
-
-                        if ($colIndex % 2 != 0) { // 午前の案件
-                            // スラッシュで案件を分割
-                            $projectNames = explode('/', $value);
-                            foreach ($projectNames as $index => $projectName) {
-                                $cleanProjectName = $this->removeSpaces($projectName);
-                                $organizedData[$date][$employeeName][0][$index][] = $cleanProjectName;
-                            }
-                        } else { // 午後の案件
-                            // スラッシュで案件を分割
-                            $projectNames = explode('/', $value);
-                            foreach ($projectNames as $index => $projectName) {
-                                $cleanProjectName = $this->removeSpaces($projectName);
-                                $organizedData[$date][$employeeName][1][$index][] = $cleanProjectName;
-                            }
-                        }
-                    }
-                } else { //偶数行は車両が格納
-                    foreach ($record as $colIndex => $value) {
-                        // 0番目の列は従業員名なのでスキップ
-                        if ($colIndex == 0) continue;
-
-                        // 日付を取得
-                        $date = $dateRow[$colIndex];
-
-                        // 日付が設定されていない場合はスキップ
-                        if (empty($date)) continue;
-
-                        if ($colIndex % 2 != 0) {
-                            // 午前の車両
-                            // スラッシュで案件を分割
-                            $value = $this->cleanString($value);
-                            $vehicleNumbers = explode('/', $value);
-                            foreach ($vehicleNumbers as $index => $vehicleNumber) {
-                                $organizedData[$date][$employeeName][0][$index][] = $vehicleNumber;
-                            }
-                        } else {
-                            // 午後の車両
-                            // スラッシュで案件を分割
-                            $value = $this->cleanString($value);
-                            $vehicleNumbers = explode('/', $value);
-                            foreach ($vehicleNumbers as $index => $vehicleNumber) {
-                                $organizedData[$date][$employeeName][1][$index][] = $vehicleNumber;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        $employeeArray = [];
-        // dd($organizedData);
-
-        foreach ($organizedData as $date => $employeeData) {
-            foreach ($employeeData as $employee_r => $row) {
-
-                //** 従業員登録 ****************************/
-
+        $getDate = '';
+        $errorDate = true;
+        try{
+            DB::transaction(function () use ($request, &$getDate, &$errorDate) {
                 $employees = Employee::all();
-                $employeeIdTmp = null;
+                $projects = Project::all();
+                $vehicles = Vehicle::all();
 
-                $cleanCsvEmployee = $this->removeSpaces($employee_r); // スペースなどを除去
-                $isEmployeeCheck = false; //登録済みの従業員なのか判定の変数
 
-                foreach ($employees as $employee) {
-                    $cleanEmployee = $this->removeSpaces($employee->name);
-                    // 登録済みの従業員
-                    if ($cleanCsvEmployee === $cleanEmployee) {
-                        $shift = Shift::create([
-                            'date' => $date,
-                            'employee_id' => $employee->id,
-                        ]);
-                        $isEmployeeCheck = true;
-                        $employeeIdTmp = $employee->id;
+                $path = $request->file('csv_file')->getRealPath();
+
+                // CSVファイルを読み込む
+                $csv = Reader::createFromPath($path, 'r');
+
+                $records = [];
+                $checkRecordStart = false;
+                foreach ($csv as $record) {
+                    // 担当者の文字列があるまで行をスキップ
+                    if($record[0] == '担当者'){
+                        $checkRecordStart = true;
+                    }
+                    if(!$checkRecordStart) continue;
+                    // 各レコードから0番目の要素を削除 0番目が所属先の列のため
+                    array_shift($record);
+                    $records[] = $record;
+                }
+
+                // 日付の行を整形・取得
+                $dateRow = $records[0];
+                $tmpDate = "";
+                foreach ($dateRow as $index => &$date) { // 参照による代入を使用
+                    // ０番目は空のためスキップ
+                    if ($index == 0) continue;
+                    // 日付を格納
+                    if($index % 2 != 0){
+                        $tmpDate = $date;
+                    }else{
+                        $date = $tmpDate;
+                    }
+                }
+                unset($date);
+
+                // 日付が有効な日付か判定
+                $formats = ['Ymd', 'Y-m-d', 'Y/m/d','Y-n-j', 'Y/n/j'];
+                foreach($dateRow as $index => $dateStr){
+                    // 0番目は空のためスキップ
+                    if($index == 0) continue;
+                    $isCheckFormat = false;
+                    // 日付が空ならスキップ
+                    if($dateStr == '') continue;
+                    foreach ($formats as $format) {
+                        $date = \DateTime::createFromFormat($format, $dateStr);
+                        if ($date && $date->format($format) == $dateStr) {
+                            $isCheckFormat = true;
+                            break;
+                        }
+                    }
+                    // 有効ではない日付があった場合リダイレクト
+                    if(!$isCheckFormat){
+                        $errorDate = false;
+                    }
+                }
+
+                // リダイレクトように日付を取得
+                $getDate = $dateRow[2];
+
+                // すでに登録してある日付のシフトを削除
+                $hasShift = Shift::whereIn('date', $dateRow)->get();
+                if (!$hasShift->isEmpty()) {
+                    foreach ($hasShift as $shift) {
+                        $shift->delete();
+                    }
+                }
+
+                // シフトを格納する配列を初期化
+                $organizedData = [];
+                // 従業員名を格納する変数
+                $employeeName = "";
+
+                // レコードをDBに格納するために整形
+                foreach ($records as $index => $record) {
+                    // インデックス0は日付のためスキップ
+                    if ($index !== 0) {
+                        // var_dump($index);
+                        if ($record[0] !== "") {
+                            // 従業員名を格納
+                            $employeeName = $record[0];
+                        }
+
+                        // 奇数行は案件が格納
+                        if ($index % 2 != 0) {
+                            // 日付ごとにデータを整理
+                            foreach ($record as $colIndex => $value) {
+
+                                // 0番目の列は従業員名なのでスキップ
+                                if ($colIndex == 0) continue;
+
+                                // 日付を取得
+                                $date = $dateRow[$colIndex];
+
+                                // 日付が設定されていない場合はスキップ
+                                if (empty($date)) continue;
+
+                                if ($colIndex % 2 != 0) { // 午前の案件
+                                    // スラッシュで案件を分割
+                                    $projectNames = explode('/', $value);
+                                    foreach ($projectNames as $index => $projectName) {
+                                        $cleanProjectName = $this->removeSpaces($projectName);
+                                        $organizedData[$date][$employeeName][0][$index][] = $cleanProjectName;
+                                    }
+                                } else { // 午後の案件
+                                    // スラッシュで案件を分割
+                                    $projectNames = explode('/', $value);
+                                    foreach ($projectNames as $index => $projectName) {
+                                        $cleanProjectName = $this->removeSpaces($projectName);
+                                        $organizedData[$date][$employeeName][1][$index][] = $cleanProjectName;
+                                    }
+                                }
+                            }
+                        } else { //偶数行は車両が格納
+                            foreach ($record as $colIndex => $value) {
+                                // 0番目の列は従業員名なのでスキップ
+                                if ($colIndex == 0) continue;
+
+                                // 日付を取得
+                                $date = $dateRow[$colIndex];
+
+                                // 日付が設定されていない場合はスキップ
+                                if (empty($date)) continue;
+
+                                if ($colIndex % 2 != 0) {
+                                    // 午前の車両
+                                    // スラッシュで案件を分割
+                                    $value = $this->cleanString($value);
+                                    $vehicleNumbers = explode('/', $value);
+                                    foreach ($vehicleNumbers as $index => $vehicleNumber) {
+                                        $organizedData[$date][$employeeName][0][$index][] = $vehicleNumber;
+                                    }
+                                } else {
+                                    // 午後の車両
+                                    // スラッシュで案件を分割
+                                    $value = $this->cleanString($value);
+                                    $vehicleNumbers = explode('/', $value);
+                                    foreach ($vehicleNumbers as $index => $vehicleNumber) {
+                                        $organizedData[$date][$employeeName][1][$index][] = $vehicleNumber;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $employeeArray = [];
+
+                foreach ($organizedData as $date => $employeeData) {
+                    foreach ($employeeData as $employee_r => $row) {
+
+                        //** 従業員登録 ****************************/
+
+                        $employees = Employee::all();
+                        $employeeIdTmp = null;
+
+                        $cleanCsvEmployee = $this->removeSpaces($employee_r); // スペースなどを除去
+                        $isEmployeeCheck = false; //登録済みの従業員なのか判定の変数
+
+                        foreach ($employees as $employee) {
+                            $cleanEmployee = $this->removeSpaces($employee->name);
+                            // 登録済みの従業員
+                            if ($cleanCsvEmployee === $cleanEmployee) {
+                                $shift = Shift::create([
+                                    'date' => $date,
+                                    'employee_id' => $employee->id,
+                                ]);
+                                $isEmployeeCheck = true;
+                                $employeeIdTmp = $employee->id;
+                                if(!in_array($employee->name, $employeeArray)){
+                                    $employeeArray[] = $employee->name;
+                                }
+                            }
+                        }
+                        // 未登録の従業員
+                        if (!$isEmployeeCheck) {
+                            $shift = Shift::create([
+                                'date' => $date,
+                                'unregistered_employee' => $employee_r,
+                            ]);
+                        }
+
+
+                        /**
+                         * $recordIndex→0には案件のデータ・1には車両のデータ
+                         */
+
+                        //** シフトに関する情報を登録 *******************/
+
+                        foreach ($row as $index => $data) {
+                            // 午前シフト情報登録
+                            if ($index == 0) {
+                                foreach ($data as $dataIndex => $record) {
+                                    foreach ($record as $recordIndex => $recordData) {
+                                        if (!$recordData == "") {
+                                            if ($recordIndex == 0) {
+                                                $projects = Project::all();
+                                                $isProjectCheck = false;
+                                                $projectIdTmp = null;
+                                                foreach ($projects as $project) {
+                                                    $projectName = ''; //登録されている案件名を格納する変数
+                                                    $projectName = $this->removeSpaces($project->name); //案件名のスペースを除去
+
+                                                    // tmpProjectNameには、【】が除去された案件名・charterProjectNameは【】が含まれていれば【】が含まれた案件名、そうでなければNULL
+                                                    [$tmpProjectName, $initialProjectName] = $this->isCharterOrCsCheck($recordData);
+                                                    if ($tmpProjectName === $projectName) {
+                                                        $projectIdTmp = $project->id;
+
+                                                        // 従業員の詳細のデータを取得
+                                                        $employeeInfo = $this->getEmployeeInfo($employeeIdTmp, $projectIdTmp);
+
+                                                        $middleShift = ShiftProjectVehicle::create([
+                                                            'shift_id' => $shift->id,
+                                                            'project_id' => $project->id,
+                                                            'initial_project_name' => $initialProjectName,
+                                                            'retail_price' => $employeeInfo[0],
+                                                            'driver_price' => $employeeInfo[1],
+                                                            // 'total_allowance' => $employeeInfo[2],
+                                                            'vehicle_rental_type' => $employeeInfo[2],
+                                                            'rental_vehicle_id' => $employeeInfo[3],
+                                                            'time_of_day' => 0,
+                                                        ]);
+                                                        $isProjectCheck = true;
+                                                        break;
+                                                    }
+                                                }
+                                                if (!$isProjectCheck) {
+                                                    // 従業員の詳細のデータを取得
+                                                    $employeeInfo = $this->getEmployeeInfo($employeeIdTmp, $projectIdTmp);
+
+                                                    $middleShift = ShiftProjectVehicle::create([
+                                                        'shift_id' => $shift->id,
+                                                        'unregistered_project' => $recordData,
+                                                        'retail_price' => $employeeInfo[0],
+                                                        'driver_price' => $employeeInfo[1],
+                                                        // 'total_allowance' => $employeeInfo[2],
+                                                        'vehicle_rental_type' => $employeeInfo[2],
+                                                        'rental_vehicle_id' => $employeeInfo[3],
+                                                        'time_of_day' => 0,
+                                                    ]);
+                                                }
+                                            }
+                                            if ($recordIndex == 1) {
+                                                $vehicles = Vehicle::all();
+                                                $isVehicleCheck = false;
+                                                foreach ($vehicles as $vehicle) {
+                                                    $vehicleNumber = $this->cleanString($vehicle->number);
+                                                    if ($recordData === $vehicleNumber) {
+                                                        $createdMiddleShift = ShiftProjectVehicle::where('id', $middleShift->id)->first();
+                                                        $createdMiddleShift->vehicle_id = $vehicle->id;
+                                                        $createdMiddleShift->save();
+                                                        $isVehicleCheck = true;
+                                                    }
+                                                }
+                                                if (!$isVehicleCheck) {
+                                                    $createdMiddleShift = ShiftProjectVehicle::where('id', $middleShift->id)->first();
+                                                    $createdMiddleShift->unregistered_vehicle = $recordData;
+                                                    $createdMiddleShift->save();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            // 午後シフト情報登録
+                            if ($index == 1) {
+                                foreach ($data as $dataIndex => $record) {
+                                    foreach ($record as $recordIndex => $recordData) {
+                                        if (!$recordData == "") {
+                                            if ($recordIndex == 0) {
+                                                $projects = Project::all();
+                                                $isProjectCheck = false;
+                                                $projectIdTmp = null;
+                                                foreach ($projects as $project) {
+                                                    $projectName = '';
+                                                    $projectName = $this->removeSpaces($project->name);
+                                                    [$tmpProjectName, $initialProjectName] = $this->isCharterOrCsCheck($recordData);
+                                                    if ($tmpProjectName === $projectName) {
+                                                        $projectIdTmp = $project->id;
+
+                                                        // 従業員の詳細のデータを取得
+                                                        $employeeInfo = $this->getEmployeeInfo($employeeIdTmp, $projectIdTmp);
+
+                                                        $middleShift = ShiftProjectVehicle::create([
+                                                            'shift_id' => $shift->id,
+                                                            'project_id' => $project->id,
+                                                            'initial_project_name' => $initialProjectName,
+                                                            'retail_price' => $employeeInfo[0],
+                                                            'driver_price' => $employeeInfo[1],
+                                                            // 'total_allowance' => $employeeInfo[2],
+                                                            'vehicle_rental_type' => $employeeInfo[2],
+                                                            'rental_vehicle_id' => $employeeInfo[3],
+                                                            'time_of_day' => 1,
+                                                        ]);
+                                                        $isProjectCheck = true;
+                                                        break;
+                                                    }
+                                                }
+                                                if (!$isProjectCheck) {
+                                                    // 従業員の詳細のデータを取得
+                                                    $employeeInfo = $this->getEmployeeInfo($employeeIdTmp, $projectIdTmp);
+
+                                                    $middleShift = ShiftProjectVehicle::create([
+                                                        'shift_id' => $shift->id,
+                                                        'unregistered_project' => $recordData,
+                                                        'retail_price' => $employeeInfo[0],
+                                                        'driver_price' => $employeeInfo[1],
+                                                        // 'total_allowance' => $employeeInfo[2],
+                                                        'vehicle_rental_type' => $employeeInfo[2],
+                                                        'rental_vehicle_id' => $employeeInfo[3],
+                                                        'time_of_day' => 1,
+                                                    ]);
+                                                }
+                                            }
+                                            if ($recordIndex == 1) {
+                                                $vehicles = Vehicle::all();
+                                                $isVehicleCheck = false;
+                                                foreach ($vehicles as $vehicle) {
+                                                    $vehicleNumber = $this->cleanString($vehicle->number);
+                                                    if ($recordData === $vehicleNumber) {
+                                                        $createdMiddleShift = ShiftProjectVehicle::where('id', $middleShift->id)->first();
+                                                        $createdMiddleShift->vehicle_id = $vehicle->id;
+                                                        $createdMiddleShift->save();
+                                                        $isVehicleCheck = true;
+                                                    }
+                                                }
+                                                if (!$isVehicleCheck) {
+                                                    $createdMiddleShift = ShiftProjectVehicle::where('id', $middleShift->id)->first();
+                                                    $createdMiddleShift->unregistered_vehicle = $recordData;
+                                                    $createdMiddleShift->save();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // csvにはいない登録従業員のシフト登録
+                foreach($dateRow as $index => $date){
+                    if ($index % 2 == 0) continue;
+                    foreach($employees as $employee){
                         if(!in_array($employee->name, $employeeArray)){
-                            $employeeArray[] = $employee->name;
+                            $shift = Shift::create([
+                                'date' => $date,
+                                'employee_id' => $employee->id,
+                            ]);
                         }
                     }
                 }
-                // 未登録の従業員
-                if (!$isEmployeeCheck) {
-                    $shift = Shift::create([
-                        'date' => $date,
-                        'unregistered_employee' => $employee_r,
-                    ]);
-                }
 
-
-                /**
-                 * $recordIndex→0には案件のデータ・1には車両のデータ
-                 */
-
-                //** シフトに関する情報を登録 *******************/
-
-                foreach ($row as $index => $data) {
-                    // 午前シフト情報登録
-                    if ($index == 0) {
-                        foreach ($data as $dataIndex => $record) {
-                            foreach ($record as $recordIndex => $recordData) {
-                                if (!$recordData == "") {
-                                    if ($recordIndex == 0) {
-                                        $projects = Project::all();
-                                        $isProjectCheck = false;
-                                        $projectIdTmp = null;
-                                        foreach ($projects as $project) {
-                                            $projectName = ''; //登録されている案件名を格納する変数
-                                            $projectName = $this->removeSpaces($project->name); //案件名のスペースを除去
-
-                                            // tmpProjectNameには、【】が除去された案件名・charterProjectNameは【】が含まれていれば【】が含まれた案件名、そうでなければNULL
-                                            [$tmpProjectName, $initialProjectName] = $this->isCharterOrCsCheck($recordData);
-                                            if ($tmpProjectName === $projectName) {
-                                                $projectIdTmp = $project->id;
-
-                                                // 従業員の詳細のデータを取得
-                                                $employeeInfo = $this->getEmployeeInfo($employeeIdTmp, $projectIdTmp);
-
-                                                $middleShift = ShiftProjectVehicle::create([
-                                                    'shift_id' => $shift->id,
-                                                    'project_id' => $project->id,
-                                                    'initial_project_name' => $initialProjectName,
-                                                    'retail_price' => $employeeInfo[0],
-                                                    'driver_price' => $employeeInfo[1],
-                                                    // 'total_allowance' => $employeeInfo[2],
-                                                    'vehicle_rental_type' => $employeeInfo[2],
-                                                    'rental_vehicle_id' => $employeeInfo[3],
-                                                    'time_of_day' => 0,
-                                                ]);
-                                                $isProjectCheck = true;
-                                                break;
-                                            }
-                                        }
-                                        if (!$isProjectCheck) {
-                                            // 従業員の詳細のデータを取得
-                                            $employeeInfo = $this->getEmployeeInfo($employeeIdTmp, $projectIdTmp);
-
-                                            $middleShift = ShiftProjectVehicle::create([
-                                                'shift_id' => $shift->id,
-                                                'unregistered_project' => $recordData,
-                                                'retail_price' => $employeeInfo[0],
-                                                'driver_price' => $employeeInfo[1],
-                                                // 'total_allowance' => $employeeInfo[2],
-                                                'vehicle_rental_type' => $employeeInfo[2],
-                                                'rental_vehicle_id' => $employeeInfo[3],
-                                                'time_of_day' => 0,
-                                            ]);
-                                        }
-                                    }
-                                    if ($recordIndex == 1) {
-                                        $vehicles = Vehicle::all();
-                                        $isVehicleCheck = false;
-                                        foreach ($vehicles as $vehicle) {
-                                            $vehicleNumber = $this->cleanString($vehicle->number);
-                                            if ($recordData === $vehicleNumber) {
-                                                $createdMiddleShift = ShiftProjectVehicle::where('id', $middleShift->id)->first();
-                                                $createdMiddleShift->vehicle_id = $vehicle->id;
-                                                $createdMiddleShift->save();
-                                                $isVehicleCheck = true;
-                                            }
-                                        }
-                                        if (!$isVehicleCheck) {
-                                            $createdMiddleShift = ShiftProjectVehicle::where('id', $middleShift->id)->first();
-                                            $createdMiddleShift->unregistered_vehicle = $recordData;
-                                            $createdMiddleShift->save();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    // 午後シフト情報登録
-                    if ($index == 1) {
-                        foreach ($data as $dataIndex => $record) {
-                            foreach ($record as $recordIndex => $recordData) {
-                                if (!$recordData == "") {
-                                    if ($recordIndex == 0) {
-                                        $projects = Project::all();
-                                        $isProjectCheck = false;
-                                        $projectIdTmp = null;
-                                        foreach ($projects as $project) {
-                                            $projectName = '';
-                                            $projectName = $this->removeSpaces($project->name);
-                                            [$tmpProjectName, $initialProjectName] = $this->isCharterOrCsCheck($recordData);
-                                            if ($tmpProjectName === $projectName) {
-                                                $projectIdTmp = $project->id;
-
-                                                // 従業員の詳細のデータを取得
-                                                $employeeInfo = $this->getEmployeeInfo($employeeIdTmp, $projectIdTmp);
-
-                                                $middleShift = ShiftProjectVehicle::create([
-                                                    'shift_id' => $shift->id,
-                                                    'project_id' => $project->id,
-                                                    'initial_project_name' => $initialProjectName,
-                                                    'retail_price' => $employeeInfo[0],
-                                                    'driver_price' => $employeeInfo[1],
-                                                    // 'total_allowance' => $employeeInfo[2],
-                                                    'vehicle_rental_type' => $employeeInfo[2],
-                                                    'rental_vehicle_id' => $employeeInfo[3],
-                                                    'time_of_day' => 1,
-                                                ]);
-                                                $isProjectCheck = true;
-                                                break;
-                                            }
-                                        }
-                                        if (!$isProjectCheck) {
-                                            // 従業員の詳細のデータを取得
-                                            $employeeInfo = $this->getEmployeeInfo($employeeIdTmp, $projectIdTmp);
-
-                                            $middleShift = ShiftProjectVehicle::create([
-                                                'shift_id' => $shift->id,
-                                                'unregistered_project' => $recordData,
-                                                'retail_price' => $employeeInfo[0],
-                                                'driver_price' => $employeeInfo[1],
-                                                // 'total_allowance' => $employeeInfo[2],
-                                                'vehicle_rental_type' => $employeeInfo[2],
-                                                'rental_vehicle_id' => $employeeInfo[3],
-                                                'time_of_day' => 1,
-                                            ]);
-                                        }
-                                    }
-                                    if ($recordIndex == 1) {
-                                        $vehicles = Vehicle::all();
-                                        $isVehicleCheck = false;
-                                        foreach ($vehicles as $vehicle) {
-                                            $vehicleNumber = $this->cleanString($vehicle->number);
-                                            if ($recordData === $vehicleNumber) {
-                                                $createdMiddleShift = ShiftProjectVehicle::where('id', $middleShift->id)->first();
-                                                $createdMiddleShift->vehicle_id = $vehicle->id;
-                                                $createdMiddleShift->save();
-                                                $isVehicleCheck = true;
-                                            }
-                                        }
-                                        if (!$isVehicleCheck) {
-                                            $createdMiddleShift = ShiftProjectVehicle::where('id', $middleShift->id)->first();
-                                            $createdMiddleShift->unregistered_vehicle = $recordData;
-                                            $createdMiddleShift->save();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                Storage::delete($path);
+                $request->session()->forget('csv_file_path');
+            });
+        }catch(Throwable $e){
+            if(!$errorDate){
+                return redirect()->route('shift.csv')->with('warning', '有効ではないまたは形式が異なる日付が含まれています。');
             }
+            return redirect()->route('shift.csv')->with('warning', 'csvファイルの内容が正しくありません。');
         }
-
-        // csvにはいない登録従業員のシフト登録
-        foreach($dateRow as $index => $date){
-            if ($index % 2 == 0) continue;
-            foreach($employees as $employee){
-                if(!in_array($employee->name, $employeeArray)){
-                    $shift = Shift::create([
-                        'date' => $date,
-                        'employee_id' => $employee->id,
-                    ]);
-                }
-            }
-        }
-
-        Storage::delete($path);
-        $request->session()->forget('csv_file_path');
-
         return redirect()->route('shift.selectWeek')->with([
-            'date' => $getDate, // 例として固定の日付を設定
+            'date' => $getDate, // リダイレクト先でインポートしたい日付のシフトを表示させるため渡す
             'page' => 'page01'
         ]);
+
     }
 
 

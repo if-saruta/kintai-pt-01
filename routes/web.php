@@ -27,7 +27,6 @@ use App\Models\Employee;
 
 // 初期サクセスはログイン画面
 Route::get('/', function () {
-    // return view('welcome');
     return redirect()->guest(route('login'));
 });
 

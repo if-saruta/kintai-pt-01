@@ -278,7 +278,21 @@
         font-weight: $fw-bold;
         letter-spacing: 0.1rem;
         color: $cGreen;
+        transition: 0.5s;
     }
+    &__button:hover{
+        background-color: $cGreen;
+        color: white;
+    }
+}
+.c-pdf-download-btn{
+    border: 2px solid #D927A9;
+    color: #D927A9;
+    transition: 0.5s;
+}
+.c-pdf-download-btn:hover{
+    background-color: #D927A9;
+    color: white;
 }
 .c-search-info{
     &__date{

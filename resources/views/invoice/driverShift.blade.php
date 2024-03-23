@@ -122,7 +122,7 @@
                             {{-- <textarea hidden name="textarea" id="setTextArea" cols="30" rows="10"></textarea> --}}
                         </div>
                         <div class="driver-invoice-shift__top-btn-wrap">
-                            <button class="c-middle-head__button pdf-form formSubmit">
+                            <button class="c-middle-head__button pdf-form formSubmit c-pdf-download-btn">
                                 ダウンロード
                             </button>
                             {{-- 設定ボタン --}}
@@ -956,7 +956,7 @@
                 </div>
                 <div class="input-area">
                     <select name="" id="allowanceSelect" class="c-select radioRalation">
-                        <option value="">選択してください</option>
+                        <option value="0">選択してください</option>
                     </select>
                     <input type="text" id="allowanceInput" class="c-input radioRalation"
                         placeholder="金額を入力">

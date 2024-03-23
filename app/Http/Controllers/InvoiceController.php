@@ -738,7 +738,7 @@ class InvoiceController extends Controller
     public function charterShift()
     {
         $shiftArray = null;
-        $unregisterProjectShift = null;
+        $unregisterProjectShift = collect();
         $warning = null;
         $getYear = null;
         $getMonth = null;
@@ -1055,10 +1055,9 @@ class InvoiceController extends Controller
         }
         // 元の配列に代入
         $shiftArray = array_values($arrangeShiftArray);
-        // dd($shiftArray);
 
         $warning = null;
-        if (!empty($shiftArray) && !$unregisterProjectShift) {
+        if (empty($shiftArray) && $unregisterProjectShift->isEmpty()) {
             $warning = "選択されたシフトは登録されていません";
         }
 

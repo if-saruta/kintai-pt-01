@@ -5,6 +5,10 @@
 .--invoice-white-board{
     .project-invoice-shift{
         .warning-txt{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
             margin-top: 3rem;
             font-size: 1.3rem;
             font-weight: $fw-bold;
@@ -36,7 +40,6 @@
                 margin-top: 2rem;
                 width: 15rem;
                 height: 4.5rem;
-                border: 2px solid #4FD1C5;
                 border-radius: 1rem;
                 display: flex;
                 align-items: center;
@@ -44,12 +47,11 @@
                 font-size: 1.4rem;
                 font-weight: bold;
                 letter-spacing: 0.1rem;
-                color: #4FD1C5;
             }
         }
         .setting-btn{
             width: 5rem;
-            height: 5rem;
+            height: 4.5rem;
             margin-top: 2rem;
             border: 2px solid $cGray02;
             border-radius: 1rem;
@@ -62,6 +64,10 @@
             color: $cGray02;
             cursor: pointer;
             transition: 0.5s;
+        }
+        .setting-btn:hover{
+            background-color: $cGray02;
+            color: white;
         }
         .setting-modal-wrap{
             display: none;
@@ -263,12 +269,13 @@
             width: 100%;
             &__save-btn{
                 position: absolute;
-                top: -6.6rem;
+                top: -6.8rem;
                 left: 45rem;
+
             }
             button{
                 width: 15rem;
-                height: 3rem;
+                height: 4.5rem;
                 margin-top: 2rem;
                 display: flex;
                 align-items: center;
@@ -280,6 +287,10 @@
                 letter-spacing: 0.1rem;
                 color: #4F9FD1;
                 transition: 0.5s;
+            }
+            button:hover{
+                background-color: #4F9FD1;
+                color: white;
             }
             &__scroll-wrap{
                 position: relative;
