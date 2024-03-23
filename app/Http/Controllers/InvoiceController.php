@@ -815,7 +815,7 @@ class InvoiceController extends Controller
         $getMonth = $request->month;
 
         return redirect()->route('invoice.findCharterShift')->with([
-            'year' => $getyear,
+            'year' => $getYear,
             'month' => $getMonth
         ]);
     }
@@ -851,7 +851,7 @@ class InvoiceController extends Controller
         $getMonth = $request->month;
 
         return redirect()->route('invoice.findCharterShift')->with([
-            'year' => $getyear,
+            'year' => $getYear,
             'month' => $getMonth
         ]);
     }
@@ -884,7 +884,7 @@ class InvoiceController extends Controller
         $getMonth = $request->month;
 
         return redirect()->route('invoice.findCharterShift')->with([
-            'year' => $getyear,
+            'year' => $getYear,
             'month' => $getMonth
         ]);
     }
@@ -966,7 +966,7 @@ class InvoiceController extends Controller
 
 
         return redirect()->route('invoice.findCharterShift')->with([
-            'year' => $getyear,
+            'year' => $getYear,
             'month' => $getMonth
         ]);
     }
@@ -977,7 +977,7 @@ class InvoiceController extends Controller
         $getMonth = $request->month;
 
         return redirect()->route('invoice.findCharterShift')->with([
-            'year' => $getyear,
+            'year' => $getYear,
             'month' => $getMonth
         ]);
     }
@@ -1113,9 +1113,10 @@ class InvoiceController extends Controller
     {
         $getYear = $request->year;
         $getMonth = $request->month;
+        $narrowClientId = $request->input('narrowClientId', []);
 
         // チャーター案件が含まれるシフト
-        $ShiftProjectVehicles = ShiftProjectVehicle::with('shift', 'shift.employee', 'project', 'project.client')
+        $basicShiftProjectVehicles = ShiftProjectVehicle::with('shift', 'shift.employee', 'project', 'project.client')
             ->join('shifts', 'shift_project_vehicle.shift_id', '=', 'shifts.id')
             ->select('shift_project_vehicle.*', 'shifts.date as shift_date')
             ->whereHas('shift', function ($query) use ($getYear, $getMonth) {
@@ -1127,6 +1128,17 @@ class InvoiceController extends Controller
             })
             ->orderBy('shifts.date', 'asc')
             ->get();
+
+        // 絞り込みのデータをもとにデータをフィルタリング
+        $ShiftProjectVehicles = $basicShiftProjectVehicles->filter(function ($shiftPv) use ($narrowClientId){
+            if(!empty($narrowClientId)){
+                if(in_array($shiftPv->project->client->id, $narrowClientId)){ //$narrowClientIdに含まれるidがあるか
+                    return $shiftPv;
+                }
+            }else{
+                return $shiftPv; //$narrowClientIdが空なら全てを返す
+            }
+        });
 
         // 未登録の案件があるシフト
         $unregisterProjectShift = ShiftProjectVehicle::with('shift', 'shift.employee', 'project', 'project.client')

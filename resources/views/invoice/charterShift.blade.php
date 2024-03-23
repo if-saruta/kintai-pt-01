@@ -105,6 +105,9 @@
                                 @csrf
                                 <input hidden type="text" value="{{$getYear}}" name="year">
                                 <input hidden type="text" value="{{$getMonth}}" name="month">
+                                @foreach ($narrowClientId as $id)
+                                    <input hidden type="text" value="{{ $id }}" name="narrowClientId[]">
+                                @endforeach
 
                                 <button class="calendar-pdf-button c-pdf-download-btn">
                                     <p>ダウンロード</p>
