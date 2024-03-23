@@ -295,7 +295,7 @@
 
         .employee-info {
             position: absolute;
-            top: 190px;
+            top: 165px;
             right: 0px;
             font-size: 13px;
             line-height: 1.5;
@@ -335,7 +335,7 @@
         .request-table-data {
             position: relative;
             width: 200px;
-            height: 100px;
+            height: 50px;
             border: 1px solid black;
         }
 

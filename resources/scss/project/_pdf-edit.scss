@@ -202,6 +202,11 @@
     letter-spacing: 0.1rem;
     color: $cGreen;
     background-color: white;
+    transition: 0.3s;
+}
+.pdf-issue-btn:hover{
+    background-color: $cGreen;
+    color: white;
 }
 
 .plus{
@@ -363,7 +368,7 @@
         }
         .employee-info{
             position: absolute;
-            top: 180px;
+            top: 155px;
             right: 0px;
             font-size: 14px;
             line-height: 1.7;
@@ -424,7 +429,7 @@
         .request-table-data{
             position: relative;
             width: 200px;
-            height: 100px;
+            height: 50px;
             border: 1px solid black;
         }
         .request-table-data-txt{

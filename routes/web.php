@@ -148,8 +148,8 @@ Route::middleware('can:admin-higher')->group(function () {
 
         // チャーター関連
         Route::get('/charter', [InvoiceController::class, 'charterShift'])->name('charterShift');
-        Route::post('/search-charter-shift', [InvoiceController::class, 'searchCharterShift'])->name('searchCharterShift');
-        Route::get('/find-charter-shift/{year}/{month}', [InvoiceController::class, 'findCharterDate'])->name('findCharterShift');
+        Route::get('/find-charter-shift', [InvoiceController::class, 'findCharterDate'])->name('findCharterShift');
+        Route::post('/find-charter-shift', [InvoiceController::class, 'findCharterDate'])->name('findCharterShift');
         Route::post('/charter-shift-update', [InvoiceController::class, 'charterShiftUpdate'])->name('charter-shift-update');
         Route::post('/charter-client-update', [InvoiceController::class, 'charterClientUpdate'])->name('charter-client-update');
         Route::post('/charter-project-update', [InvoiceController::class, 'charterProjectUpdate'])->name('charter-project-update');
@@ -257,8 +257,8 @@ Route::middleware('can:user-higher')->group(function () {
 
         // チャーター関連
         Route::get('/charter', [InvoiceController::class, 'charterShift'])->name('charterShift');
-        Route::post('/search-charter-shift', [InvoiceController::class, 'searchCharterShift'])->name('searchCharterShift');
-        Route::get('/find-charter-shift/{year}/{month}', [InvoiceController::class, 'findCharterDate'])->name('findCharterShift');
+        Route::get('/find-charter-shift', [InvoiceController::class, 'findCharterDate'])->name('findCharterShift');
+        Route::post('/find-charter-shift', [InvoiceController::class, 'findCharterDate'])->name('findCharterShift');
         Route::post('/charter-shift-update', [InvoiceController::class, 'charterShiftUpdate'])->name('charter-shift-update');
         Route::post('/charter-client-update', [InvoiceController::class, 'charterClientUpdate'])->name('charter-client-update');
         Route::post('/charter-project-update', [InvoiceController::class, 'charterProjectUpdate'])->name('charter-project-update');

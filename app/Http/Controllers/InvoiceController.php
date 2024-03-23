@@ -814,7 +814,10 @@ class InvoiceController extends Controller
         $getYear = $request->year;
         $getMonth = $request->month;
 
-        return redirect()->route('invoice.findCharterShift', ['year' => $getYear, 'month' => $getMonth]);
+        return redirect()->route('invoice.findCharterShift')->with([
+            'year' => $getyear,
+            'month' => $getMonth
+        ]);
     }
 
     public function charterShiftUpdate(Request $request)
@@ -847,7 +850,10 @@ class InvoiceController extends Controller
         $getYear = $request->year;
         $getMonth = $request->month;
 
-        return redirect()->route('invoice.findCharterShift', ['year' => $getYear, 'month' => $getMonth]);
+        return redirect()->route('invoice.findCharterShift')->with([
+            'year' => $getyear,
+            'month' => $getMonth
+        ]);
     }
 
     public function charterProjectUpdate(Request $request)
@@ -877,7 +883,10 @@ class InvoiceController extends Controller
         $getYear = $request->year;
         $getMonth = $request->month;
 
-        return redirect()->route('invoice.findCharterShift', ['year' => $getYear, 'month' => $getMonth]);
+        return redirect()->route('invoice.findCharterShift')->with([
+            'year' => $getyear,
+            'month' => $getMonth
+        ]);
     }
 
     public function charterProjectChangeUnregister(Request $request)
@@ -915,7 +924,10 @@ class InvoiceController extends Controller
         // リダイレクト
         $getYear = $request->year;
         $getMonth = $request->month;
-        return redirect()->route('invoice.findCharterShift', ['year' => $getYear, 'month' => $getMonth]);
+        return redirect()->route('invoice.findCharterShift')->with([
+            'year' => $getyear,
+            'month' => $getMonth
+        ]);
     }
 
     public function charterDriverUpdate(Request $request)
@@ -952,7 +964,11 @@ class InvoiceController extends Controller
         $getYear = $request->year;
         $getMonth = $request->month;
 
-        return redirect()->route('invoice.findCharterShift', ['year' => $getYear, 'month' => $getMonth]);
+
+        return redirect()->route('invoice.findCharterShift')->with([
+            'year' => $getyear,
+            'month' => $getMonth
+        ]);
     }
 
     public function searchCharterShift(Request $request)
@@ -960,13 +976,20 @@ class InvoiceController extends Controller
         $getYear = $request->year;
         $getMonth = $request->month;
 
-        return redirect()->route('invoice.findCharterShift', ['year' => $getYear, 'month' => $getMonth]);
+        return redirect()->route('invoice.findCharterShift')->with([
+            'year' => $getyear,
+            'month' => $getMonth
+        ]);
     }
 
-    public function findCharterDate($getYear, $getMonth)
+    public function findCharterDate(Request $request)
     {
+        $getYear = $request->year ?? session('year');
+        $getMonth = $request->month ?? session('month');
+        $narrowClientId = $request->input('narrowClientId', []);
+
         // チャーター案件が含まれるシフト
-        $ShiftProjectVehicles = ShiftProjectVehicle::with('shift', 'shift.employee', 'project', 'project.client')
+        $basicShiftProjectVehicles = ShiftProjectVehicle::with('shift', 'shift.employee', 'project', 'project.client')
             ->join('shifts', 'shift_project_vehicle.shift_id', '=', 'shifts.id')
             ->select('shift_project_vehicle.*', 'shifts.date as shift_date')
             ->whereHas('shift', function ($query) use ($getYear, $getMonth) {
@@ -978,6 +1001,27 @@ class InvoiceController extends Controller
             })
             ->orderBy('shifts.date', 'asc')
             ->get();
+
+        // シフトに含まれるクライアントを格納
+        $includedClientId = []; // シフトに含まれているクライアントを格納変数
+        foreach($basicShiftProjectVehicles as $spv){
+            if(!in_array($spv->project->client->id, $includedClientId)){
+                $includedClientId[] = $spv->project->client->id;
+            }
+        }
+        // idをもとにクライアントを取得
+        $includedClients = Client::whereIn('id', $includedClientId)->get();
+
+        // 絞り込みのデータをもとにデータをフィルタリング
+        $ShiftProjectVehicles = $basicShiftProjectVehicles->filter(function ($shiftPv) use ($narrowClientId){
+            if(!empty($narrowClientId)){
+                if(in_array($shiftPv->project->client->id, $narrowClientId)){ //$narrowClientIdに含まれるidがあるか
+                    return $shiftPv;
+                }
+            }else{
+                return $shiftPv; //$narrowClientIdが空なら全てを返す
+            }
+        });
 
         // 未登録の案件があるシフト
         $unregisterProjectShift = ShiftProjectVehicle::with('shift', 'shift.employee', 'project', 'project.client')
@@ -993,8 +1037,6 @@ class InvoiceController extends Controller
 
             // 全日にちを取得
         $dates = $this->createDate($getYear, $getMonth);
-
-
 
         // チャーター案件が含まれるシフトを配列に変換
         $shiftArray = $ShiftProjectVehicles->toArray();
@@ -1064,7 +1106,7 @@ class InvoiceController extends Controller
         $projectsByCharter = project::where('is_charter', 1)->get();
         $employees = Employee::all();
 
-        return view('invoice.charterShift', compact('ShiftProjectVehicles', 'shiftArray', 'unregisterProjectShift', 'clients', 'getYear', 'getMonth', 'warning', 'dates', 'projectsByCharter', 'employees'));
+        return view('invoice.charterShift', compact('ShiftProjectVehicles', 'shiftArray', 'unregisterProjectShift', 'clients', 'getYear', 'getMonth', 'warning', 'dates', 'projectsByCharter', 'employees', 'includedClients', 'narrowClientId'));
     }
 
     public function charterCalendarPDF(Request $request)

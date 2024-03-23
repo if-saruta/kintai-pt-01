@@ -199,6 +199,24 @@ window.addEventListener('load', () => {
     }
     projectChangeUnregisterModal();
 
+    const clientNarrowModal = () => {
+        const narrowModal = document.getElementById('narrowModal');
+        const settingBtn = document.getElementById('settingBtn');
+        const narrowModalCloseBtn = document.querySelectorAll('.narrowModalCloseBtn');
+
+        // モーダルオープン
+        settingBtn.addEventListener('click', () => {
+            narrowModal.style.display = 'block';
+        })
+        // モーダルクローズ
+        for(let i = 0; i < narrowModalCloseBtn.length; i++){
+            narrowModalCloseBtn[i].addEventListener('click', () => {
+                narrowModal.style.display = 'none';
+            })
+        }
+    }
+    clientNarrowModal();
+
     // カンマの制御
     const commmaActive = () => {
         const inputElem = document.querySelectorAll('.commaInput');

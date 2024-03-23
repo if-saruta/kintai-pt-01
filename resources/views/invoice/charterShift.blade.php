@@ -34,7 +34,7 @@
         <div class="main__white-board --charter-board">
             <div class="invoice">
                 <div class="invoice__charter">
-                    <form action="{{ route('invoice.searchCharterShift') }}" method="POST">
+                    <form action="{{ route('invoice.findCharterShift') }}" method="POST">
                         @csrf
                         <div class="select-area">
                             <div class="c-select-area__block">
@@ -71,15 +71,49 @@
 
                     <div class="">
                         @if(!empty($shiftArray) || !$unregisterProjectShift->isEmpty())
-                        <form action="{{route('invoice.charter-calendar-pdf')}}" method="POST">
-                            @csrf
-                            <input hidden type="text" value="{{$getYear}}" name="year">
-                            <input hidden type="text" value="{{$getMonth}}" name="month">
+                        <div class="narrow-modal" id="narrowModal">
+                            <span class="narrow-modal__bg narrowModalCloseBtn"></span>
+                            <div class="narrow-modal__white-board">
+                                <div class="narrow-modal__white-board__inner">
+                                    <p class="title">クライアント絞り込み</p>
+                                    <form action="{{ route('invoice.findCharterShift') }}" method="POST">
+                                        @csrf
+                                        <input hidden type="text" value="{{$getYear}}" name="year">
+                                        <input hidden type="text" value="{{$getMonth}}" name="month">
+                                        <div class="client-wrap">
+                                            @foreach ($includedClients as $index => $includedClient)
+                                                <label for="client{{ $index }}" class="client-wrap__item">
+                                                    <input @if(empty($narrowClientId)) checked @elseif(in_array($includedClient->id, $narrowClientId)) checked @endif  type="checkbox" name="narrowClientId[]" value="{{ $includedClient->id }}" id="client{{ $index }}">
+                                                    {{ $includedClient->name }}
+                                                </label>
+                                            @endforeach
+                                        </div>
+                                        <div class="btn-area narrowModalCloseBtn">
+                                            <button class="c-save-btn narrow-btn">
+                                                絞り込み
+                                            </button>
+                                            <div class="c-back-btn">
+                                                戻る
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="charter-top-btn-area">
+                            <form action="{{route('invoice.charter-calendar-pdf')}}" method="POST">
+                                @csrf
+                                <input hidden type="text" value="{{$getYear}}" name="year">
+                                <input hidden type="text" value="{{$getMonth}}" name="month">
 
-                            <button class="calendar-pdf-button c-pdf-download-btn">
-                                <p>ダウンロード</p>
-                            </button>
-                        </form>
+                                <button class="calendar-pdf-button c-pdf-download-btn">
+                                    <p>ダウンロード</p>
+                                </button>
+                            </form>
+                            <div class="setting-btn" id="settingBtn">
+                                <p class="">設定</p>
+                            </div>
+                        </div>
                         <form action="{{route('invoice.charter-shift-update')}}" method="POST">
                             @csrf
                             <input hidden type="text" value="{{$getYear}}" name="year">

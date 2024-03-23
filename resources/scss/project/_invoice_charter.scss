@@ -66,8 +66,96 @@
                 color: $cBlack;
             }
         }
-        .calendar-pdf-button{
+        .narrow-modal{
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            &__bg{
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: black;
+                opacity: 0.5;
+            }
+            &__white-board{
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                width: math.div(700,1280) * 100vw;
+                padding: 5rem;
+                border-radius: 1.5rem;
+                background-color: white;
+                .title{
+                    width: fit-content;
+                    margin: 0 auto;
+                    font-size: 2rem;
+                    font-weight: $fw-bold;
+                    letter-spacing: 0.1rem;
+                    color: $cBlack;
+                }
+                .client-wrap{
+                    width: fit-content;
+                    margin: 0 auto;
+                    margin-top: 3rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 3rem;
+                    flex-wrap: wrap;
+                    &__item{
+                        display: flex;
+                        align-items: center;
+                        gap: 1rem;
+                        font-size: 1.4rem;
+                        font-weight: $fw-bold;
+                        color: $cBlack;
+                    }
+                }
+                .btn-area{
+                    width: fit-content;
+                    margin: 0 auto;
+                    margin-top: 3rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 4rem;
+                    .narrow-btn{
+                        width: 9rem;
+                    }
+                }
+            }
+        }
+        .charter-top-btn-area{
             margin-top: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            .setting-btn{
+                width: 5rem;
+                height: 4.5rem;
+                border: 2px solid #ACACAC;
+                border-radius: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.3rem;
+                font-weight: 700;
+                letter-spacing: .1rem;
+                color: #acacac;
+                cursor: pointer;
+                transition: .5s;
+            }
+            .setting-btn:hover{
+                background-color: #ACACAC;
+                color: white;
+            }
+        }
+        .calendar-pdf-button{
             width: 15rem;
             height: 4.5rem;
             border-radius: 1rem;
