@@ -832,15 +832,16 @@
         opacity: 0.6;
     }
     &__white-board{
-        position: relative;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
         z-index: 2;
         width: math.div(700,1280) * 100vw;
-        height: math.div(650,800) * 100vh;
-        margin: 0 auto;
-        margin-top: 10rem;
+        height: math.div(600,800) * 100vh;
+        padding-bottom: 5rem;
         border-radius: 1.5rem;
         background-color: white;
-
         .name-block{
             position: absolute;
             width: fit-content;
