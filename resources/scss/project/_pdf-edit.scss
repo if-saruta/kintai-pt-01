@@ -93,7 +93,6 @@
 }
 .--project-pdf-edit-board{
     position: relative;
-    // height: auto!important;
 }
 .--common-data{
     border: 0px;
@@ -234,11 +233,11 @@
     }
 }
 .salaryAddBtn{
-    top: 455px;
+    top: 407px;
     right: -40px;
 }
 .salaryCostAddBtn{
-    top: 125px;
+    top: 145px;
     right: -40px;
 }
 .costAddBtn{
@@ -385,6 +384,7 @@
                 }
                 &__under{
                     display: flex;
+                    align-items: center;
                     gap: 10px;
                     .input{
                         width: 138px;

@@ -411,28 +411,6 @@
                                             @endif
                                         </tr>
                                     </table>
-                                    {{-- <table class="top-table --no-margin">
-                                        <tr>
-                                            <th class="top-table-head no-border w-70"><p class="top-table-head-txt"></p></th>
-                                            <th class="top-table-head no-border w-70"><p class="top-table-head-txt"></p></th>
-                                            <th class="top-table-head w-330 --bg-green colorChangeElem"><p class="top-table-data-txt --right">小計</p></th>
-                                            <th class="top-table-head w-70"><p class="top-table-head-txt"></p></th>
-                                            <th class="top-table-head w-70"><p class="top-table-head-txt"></p></th>
-                                            <th class="top-table-head w-100"><input type="text" name="salaryCostTotal" value="{{round($subTotalCost * 1.1)}}" class="input table-input changeElement costAllTotal" readonly></th>
-                                        </tr>
-                                        <tr>
-                                            <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
-                                            <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
-                                            <td class="top-table-data w-330 --bg-green colorChangeElem"><p class="top-table-data-txt --center">差引合計金額</p></td>
-                                            <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
-                                            <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
-                                            @if ($employeeInfo->is_invoice == 0)
-                                                <td class="top-table-data w-100"><input type="text" value="{{ round(((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) - round($subTotalCost * 1.1)) }}" class="inputn table-input allCalcTotal" readonly></td>
-                                            @else
-                                                <td class="top-table-data w-100"><input type="text" value="{{ round($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - round($totalSalaryAmount * 0.2) + $etc - round($subTotalCost * 1.1) }}" class="inputn table-input allCalcTotal" readonly></td>
-                                            @endif
-                                        </tr>
-                                    </table> --}}
                                 </div>
                             </div>
                         </div>
@@ -495,63 +473,63 @@ FAX:03-5875-7469
                                         </tr>
                                         @if ($administrativeOutsourcingName)
                                         <tr class="costBasicRow">
-                                            <td class="table-item w-400"><input type="text" name="costItem[]" value="{{ $administrativeOutsourcingName }}" class="input table-input changeElement"> <input checked type="checkbox" class="row-check-box"></td>
-                                            <td class="table-data w-100"><input type="text" name="costNum[]" value="1" class="input table-input changeElement costNum"></td>
-                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $administrativeOutsourcingAmount }}" class="input table-input cost-amount changeElement costUnit commaInput"></td>
-                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $administrativeOutsourcingAmount }}" class="input table-input cost-amount changeElement costElem commaInput"></td>
+                                            <td class="table-item w-400"><input type="text" name="costItem[]" value="{{ $administrativeOutsourcingName }}" class="input table-input changeElement costChangeElem"> <input checked type="checkbox" class="row-check-box"></td>
+                                            <td class="table-data w-100"><input type="text" name="costNum[]" value="1" class="input table-input changeElement costChangeElem costNum"></td>
+                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $administrativeOutsourcingAmount }}" class="input table-input cost-amount changeElement costChangeElem costUnit commaInput"></td>
+                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $administrativeOutsourcingAmount }}" class="input table-input cost-amount changeElement costChangeElem costElem commaInput"></td>
                                         </tr>
                                         @endif
                                         @if ($totalLease)
                                         <tr class="costBasicRow">
-                                            <td class="table-item w-400"><input type="text" name="costItem[]" value="車両リース代" class="input table-input changeElement"><input checked type="checkbox" class="row-check-box"></td>
-                                            <td class="table-data w-100"><input type="text" name="costNum[]" value="1" class="input table-input changeElement costNum"></td>
-                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $totalLease }}" class="input table-input cost-amount changeElement costUnit commaInput"></td>
-                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $totalLease }}" class="input table-input cost-amount changeElement costElem commaInput"></td>
+                                            <td class="table-item w-400"><input type="text" name="costItem[]" value="車両リース代" class="input table-input changeElement costChangeElem"><input checked type="checkbox" class="row-check-box"></td>
+                                            <td class="table-data w-100"><input type="text" name="costNum[]" value="1" class="input table-input changeElement costChangeElem costNum"></td>
+                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $totalLease }}" class="input table-input cost-amount changeElement costChangeElem costUnit commaInput"></td>
+                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $totalLease }}" class="input table-input cost-amount changeElement costChangeElem costElem commaInput"></td>
                                         </tr>
                                         @endif
                                         @if ($totalInsurance)
                                         <tr class="costBasicRow">
-                                            <td class="table-item w-400"><input type="text" name="costItem[]" value="保険代" class="input table-input changeElement"><input checked type="checkbox" class="row-check-box"></td>
-                                            <td class="table-data w-100"><input type="text" name="costNum[]" value="1" class="input table-input changeElement costNum"></td>
-                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $totalInsurance }}" class="input table-input cost-amount changeElement costUnit commaInput"></td>
-                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $totalInsurance }}" class="input table-input cost-amount changeElement costElem commaInput"></td>
+                                            <td class="table-item w-400"><input type="text" name="costItem[]" value="保険代" class="input table-input changeElement costChangeElem"><input checked type="checkbox" class="row-check-box"></td>
+                                            <td class="table-data w-100"><input type="text" name="costNum[]" value="1" class="input table-input changeElement costChangeElem costNum"></td>
+                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $totalInsurance }}" class="input table-input cost-amount changeElement costChangeElem costUnit commaInput"></td>
+                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $totalInsurance }}" class="input table-input cost-amount changeElement costChangeElem costElem commaInput"></td>
                                         </tr>
                                         @endif
                                         @if ($administrativeName)
                                         <tr class="costBasicRow">
-                                            <td class="table-item w-400"><input type="text" name="costItem[]" value="{{ $administrativeName }}" class="input table-input changeElement"><input checked type="checkbox" class="row-check-box"></td>
-                                            <td class="table-data w-100"><input type="text" name="costNum[]" value="1" class="input table-input changeElement costNum"></td>
-                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $administrativeAmount }}" class="input table-input cost-amount changeElement costUnit commaInput"></td>
-                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $administrativeAmount }}" class="input table-input cost-amount changeElement costElem commaInput"></td>
+                                            <td class="table-item w-400"><input type="text" name="costItem[]" value="{{ $administrativeName }}" class="input table-input changeElement costChangeElem"><input checked type="checkbox" class="row-check-box"></td>
+                                            <td class="table-data w-100"><input type="text" name="costNum[]" value="1" class="input table-input changeElement costChangeElem costNum"></td>
+                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $administrativeAmount }}" class="input table-input cost-amount changeElement costChangeElem costUnit commaInput"></td>
+                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $administrativeAmount }}" class="input table-input cost-amount changeElement costChangeElem costElem commaInput"></td>
                                         </tr>
                                         @endif
                                         @if ($transferName)
                                         <tr class="costBasicRow">
-                                            <td class="table-item w-400"><input type="text" name="costItem[]" value="{{ $transferName }}" class="input table-input changeElement"><input checked type="checkbox" class="row-check-box"></td>
-                                            <td class="table-data w-100"><input type="text" name="costNum[]" value="1" class="input table-input changeElement costNum"></td>
-                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $transferAmount }}" class="input table-input cost-amount changeElement costUnit commaInput"></td>
-                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $transferAmount }}" class="input table-input cost-amount changeElement costElem commaInput"></td>
+                                            <td class="table-item w-400"><input type="text" name="costItem[]" value="{{ $transferName }}" class="input table-input changeElement costChangeElem"><input checked type="checkbox" class="row-check-box"></td>
+                                            <td class="table-data w-100"><input type="text" name="costNum[]" value="1" class="input table-input changeElement costChangeElem costNum"></td>
+                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $transferAmount }}" class="input table-input cost-amount changeElement costChangeElem costUnit commaInput"></td>
+                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $transferAmount }}" class="input table-input cost-amount changeElement costChangeElem costElem commaInput"></td>
                                         </tr>
                                         @endif
                                         @foreach ($CostOthers as $CostOther)
                                             <tr class="costBasicRow">
-                                                <td class="table-item w-400"><input type="text" name="costItem[]" value="{{ $CostOther['name'] }}" class="input table-input changeElement"><input checked type="checkbox" class="row-check-box"></td>
-                                                <td class="table-data w-100"><input type="text" name="costNum[]" value="1" class="input table-input changeElement costNum"></td>
-                                                <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $CostOther['amount'] }}" class="input table-input cost-amount changeElement costUnit commaInput"></td>
-                                                <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $CostOther['amount'] }}" class="input table-input cost-amount changeElement costElem commaInput"></td>
+                                                <td class="table-item w-400"><input type="text" name="costItem[]" value="{{ $CostOther['name'] }}" class="input table-input changeElement costChangeElem"><input checked type="checkbox" class="row-check-box"></td>
+                                                <td class="table-data w-100"><input type="text" name="costNum[]" value="1" class="input table-input changeElement costChangeElem costNum"></td>
+                                                <td class="table-data w-100"><input type="text" name="costUntil[]" value="{{ $CostOther['amount'] }}" class="input table-input cost-amount changeElement costChangeElem costUnit commaInput"></td>
+                                                <td class="table-data w-110"><input type="text" name="costAmount[]" value="{{ $CostOther['amount'] }}" class="input table-input cost-amount changeElement costChangeElem costElem commaInput"></td>
                                             </tr>
                                         @endforeach
                                         <tr class="costBasicRow">
-                                            <td class="table-item w-400"><input type="text" name="costItem[]" value="" class="input table-input changeElement"><input checked type="checkbox" class="row-check-box"></td>
-                                            <td class="table-data w-100"><input type="text" name="costNum[]" value="" class="input table-input changeElement costNum"></td>
-                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="" class="input table-input cost-amount changeElement costUnit commaInput"></td>
-                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="" class="input table-input cost-amount changeElement costElem commaInput"></td>
+                                            <td class="table-item w-400"><input type="text" name="costItem[]" value="" class="input table-input changeElement costChangeElem"><input checked type="checkbox" class="row-check-box"></td>
+                                            <td class="table-data w-100"><input type="text" name="costNum[]" value="" class="input table-input changeElement costChangeElem costNum"></td>
+                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="" class="input table-input cost-amount changeElement costChangeElem costUnit commaInput"></td>
+                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="" class="input table-input cost-amount changeElement costChangeElem costElem commaInput"></td>
                                         </tr>
                                         <tr class="costBasicRow">
-                                            <td class="table-item w-400"><input type="text" name="costItem[]" value="" class="input table-input changeElement"><input checked type="checkbox" class="row-check-box"></td>
-                                            <td class="table-data w-100"><input type="text" name="costNum[]" value="" class="input table-input changeElement costNum"></td>
-                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="" class="input table-input cost-amount changeElement costUnit commaInput"></td>
-                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="" class="input table-input cost-amount changeElement costElem commaInput"></td>
+                                            <td class="table-item w-400"><input type="text" name="costItem[]" value="" class="input table-input changeElement costChangeElem"><input checked type="checkbox" class="row-check-box"></td>
+                                            <td class="table-data w-100"><input type="text" name="costNum[]" value="" class="input table-input changeElement costChangeElem costNum"></td>
+                                            <td class="table-data w-100"><input type="text" name="costUntil[]" value="" class="input table-input cost-amount changeElement costChangeElem costUnit commaInput"></td>
+                                            <td class="table-data w-110"><input type="text" name="costAmount[]" value="" class="input table-input cost-amount changeElement costChangeElem costElem commaInput"></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -559,17 +537,17 @@ FAX:03-5875-7469
                                     <tr>
                                         <td class="w-401 border-none"></td>
                                         <td class="mini-table-data w-201"><p class="mini-table-data-txt --center">小計</p></td>
-                                        <td class="table-data w-110"><input type="text" name="costSubTotal" value="{{$subTotalCost}}" class="input table-inputcost-amount changeElement cost-amount costSubTotal commaInput" readonly></td>
+                                        <td class="table-data w-110"><input type="text" name="costSubTotal" value="{{$subTotalCost}}" class="input table-inputcost-amount changeElement costChangeElem cost-amount costSubTotal commaInput" readonly></td>
                                     </tr>
                                     <tr>
                                         <td class="w-401 border-none"></td>
                                         <td class="mini-table-data w-201"><p class="mini-table-data-txt --center">消費税(10%)</p></td>
-                                        <td class="table-data w-110"><input type="text" name="costTax" value="{{round($subTotalCost * 0.1)}}" class="input table-input changeElement cost-amount costTaxElem commaInput" readonly></td>
+                                        <td class="table-data w-110"><input type="text" name="costTax" value="{{round($subTotalCost * 0.1)}}" class="input table-input changeElement costChangeElem cost-amount costTaxElem commaInput" readonly></td>
                                     </tr>
                                     <tr>
                                         <td class="w-401 border-none"></td>
                                         <td class="mini-table-data w-201"><p class="mini-table-data-txt --center"> 合計金額(内消費税)</p></td>
-                                        <td class="table-data w-110"><input type="text" name="costTotal" value="{{round($subTotalCost * 1.1)}}" class="input table-input changeElement cost-amount costTotalElem commaInput" readonly></td>
+                                        <td class="table-data w-110"><input type="text" name="costTotal" value="{{round($subTotalCost * 1.1)}}" class="input table-input changeElement costChangeElem cost-amount costTotalElem commaInput" readonly></td>
                                     </tr>
                                 </table>
                                 <table class="tax-table">

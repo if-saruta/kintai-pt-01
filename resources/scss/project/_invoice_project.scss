@@ -269,7 +269,7 @@
             width: 100%;
             &__save-btn{
                 position: absolute;
-                top: -6.8rem;
+                top: -8.5rem;
                 left: 45rem;
 
             }
@@ -296,11 +296,11 @@
                 position: relative;
                 overflow: scroll;
                 height: math.div(460,800) * 100vh;
+                margin-top: 1.5rem;
             }
             .holiday-table{
                 width: fit-content;
                 font-size: 1.4rem;
-                margin-top: 1.5rem;
                 &__body{
                     display: flex;
                     &__project-item{

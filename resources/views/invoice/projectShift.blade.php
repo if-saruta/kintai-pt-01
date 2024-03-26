@@ -17,7 +17,7 @@
                 <a href="{{route('invoice.projectShift')}}" class="main__link-block__item --shift-link-block__item">
                     @csrf
                     <button
-                        class="{{ request()->routeIs('invoice.projectShift','invoice.searchProjectShift', 'invoice.project-edit-pdf') ? 'active' : '' }} link">
+                        class="{{ request()->routeIs('invoice.projectShift','invoice.searchProjectShift', 'invoice.projectShiftUpdate','invoice.project-edit-pdf') ? 'active' : '' }} link">
                         <span class="">案件</span>
                     </button>
                 </a>

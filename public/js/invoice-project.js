@@ -192,7 +192,7 @@ window.addEventListener('load', () => {
                     e.target.value = numberValue.toLocaleString();
                 } else {
                     // 数値でない場合は入力を空にする
-                    e.target.value = '';
+                    e.target.value = 0;
                 }
             })
         }

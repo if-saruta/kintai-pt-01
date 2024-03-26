@@ -80,7 +80,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const salary = document.querySelectorAll('.salaryAmount');
 
             for(let i = 0; i < salary.length; i++){
-                salary[i].value = num[i].value * removeCommasAndCastToInt(unit[i].value);
+                salary[i].value = addCommas(num[i].value * removeCommasAndCastToInt(unit[i].value));
             }
         }
 
@@ -95,7 +95,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     total += salaryValue;
                 }
             }
-            salarySubTotal.value = total;
+            salarySubTotal.value = addCommas(total);
             return total;
         }
 
@@ -122,7 +122,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     tmpTotal += etcValue;
                 }
             }
-            etcTotalElement.value = tmpTotal;
+            etcTotalElement.value = addCommas(tmpTotal);
             return tmpTotal;
         }
 
@@ -130,7 +130,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const salaryTotalElement = document.querySelector('.salaryTotal')
             const salaryTotalTmp = salarySub + salaryTax + etc;
 
-            salaryTotalElement.value = salaryTotalTmp;
+            salaryTotalElement.value = addCommas(salaryTotalTmp);
         }
 
         const costItemByDriverCalc = () => {
@@ -139,7 +139,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const total = document.querySelectorAll('.costTotalByDriver');
 
             for(let i = 0; i < total.length; i++){
-                total[i].value = num[i].value * removeCommasAndCastToInt(unit[i].value);
+                total[i].value = addCommas(num[i].value * removeCommasAndCastToInt(unit[i].value));
             }
         }
 
@@ -155,7 +155,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            totalAll.value = tmp;
+            totalAll.value = addCommas(tmp);
         }
 
         // 全部の合計金額の計算
@@ -169,8 +169,8 @@ window.addEventListener('DOMContentLoaded', () => {
             const salaryAmount = removeCommasAndCastToInt(salaryTotal.value);
             const costAmount = removeCommasAndCastToInt(costAllTotal.value);
 
-            allCalcTotal.value = salaryAmount - costAmount;
-            allCalcTotalView.textContent = '¥' + (salaryAmount - costAmount);
+            allCalcTotal.value = addCommas(salaryAmount - costAmount);
+            allCalcTotalView.textContent = '¥' + addCommas((salaryAmount - costAmount));
         }
 
 
@@ -288,7 +288,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
             totalElem.value = totalValue;
             totalView.textContent = '¥' + addCommas(totalValue);
-            totalByDriver.value = totalValue;
+            totalByDriver.value = addCommas(totalValue);
             unit.value = totalValue;
         }
 
@@ -325,13 +325,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
         for(let i = 0; i < changeElem.length; i++){
             changeElem[i].addEventListener('change', () => {
-                costItemCalc();
-                const resultSubTotal = costSubTotalCalc();
-                const resultTax = taxCalc(resultSubTotal);
-                costTotalCalc(resultSubTotal, resultTax);
-                costAllTotal();
-                lastCalc();
-                commmaActive();
+                if(changeElem[i].classList.contains('costChangeElem')){
+                    costItemCalc();
+                    const resultSubTotal = costSubTotalCalc();
+                    const resultTax = taxCalc(resultSubTotal);
+                    costTotalCalc(resultSubTotal, resultTax);
+                    costAllTotal();
+                    lastCalc();
+                    commmaActive();
+                }
             })
         }
 
@@ -364,6 +366,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const costTaxElem = document.querySelector('.costTaxElem');
         const costSubTotal = document.querySelector('.costSubTotal');
         const costTotalElem = document.querySelector('.costTotalElem');
+        const costTotalView = document.querySelector('.costTotalView');
         // 10%対象テーブルの要素
         const targetCost = document.querySelector('.targetCost');
         const targetCostTax = document.querySelector('.targetCostTax');
@@ -385,10 +388,11 @@ window.addEventListener('DOMContentLoaded', () => {
                     }
                 }
 
-                // メインテーブルに値をセット
+                // 費用メインテーブルに値をセット
                 const tax = targetAmountTotal * 0.1;
                 costTaxElem.value = addCommas(Math.round(tax));
                 costTotalElem.value = addCommas(removeCommasAndCastToInt(costSubTotal.value) + Math.round(tax));
+                costTotalView.textContent = '¥' + addCommas(removeCommasAndCastToInt(costSubTotal.value) + Math.round(tax));
 
                 // 10%対象テーブルに値をセット
                 targetCost.value = addCommas(targetAmountTotal);
@@ -416,6 +420,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const costTaxElem = document.querySelector('.costTaxElem');
         const costSubTotal = document.querySelector('.costSubTotal');
         const costTotalElem = document.querySelector('.costTotalElem');
+        const costTotalView = document.querySelector('.costTotalView');
 
         // 10%対象が編集された場合発火
         targetCost.addEventListener('change', () => {
@@ -432,7 +437,8 @@ window.addEventListener('DOMContentLoaded', () => {
             let calcTotalCost = costSubTotalValue + changeTax;
             // 合計金額をセット
             costTotalElem.value = addCommas(calcTotalCost);
-            // ドライバー価格メインテールの費用相殺テーブルに値をセット
+            costTotalView.textContent = '¥' + addCommas(calcTotalCost);
+            // ドライバー価格メインテーブルの費用相殺テーブルに値をセット
             costInvoiceUnit.value = addCommas(calcTotalCost);
             costInvoiceTotal.value = addCommas(calcTotalCost);
             checkBoxActiveTotalCalc();
@@ -445,7 +451,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const costAllTotal = document.querySelector('.costAllTotal');
         const salaryTotal = document.querySelector('.salaryTotal');
         const allCalcTotal = document.querySelector('.allCalcTotal');
-        const totalView = document.querySelector('.costTotalView');
+        const totalView = document.querySelector('.allCalcTotalView');
 
         let total = 0;
         for(let i = 0; i < costTotalByDriver.length; i++){
@@ -455,7 +461,6 @@ window.addEventListener('DOMContentLoaded', () => {
         let allTotal = removeCommasAndCastToInt(salaryTotal.value) - total;
         allCalcTotal.value = addCommas(allTotal);
         totalView.textContent = '¥' + addCommas(allTotal);
-        console.log('t');
     }
 
 
@@ -498,7 +503,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 <td class="top-table-data w-70"><input type="text" name="salaryCount[]" class="input table-input changeElement salaryNum"></td>
                 <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" class="input table-input changeElement salaryUnit commaInput"></td>
                 <td class="top-table-data w-70"><input type="text" name="salaryAmount[]" class="input table-input changeElement salaryAmount commaInput"></td>
-                <div class="salaryRowDelete deleteRowBtn"><span class="deleteRowBtn__line"><span/><span class="deleteRowBtn__line"><span/><div/>
+                <div class="salaryRowDelete deleteRowBtn"><span class="deleteRowBtn__line"></span></div>
             `;
 
             const SalaryRows = table.querySelectorAll('.salaryBasicRow');
@@ -529,8 +534,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 <td class="top-table-data w-330"><input type="text" name="salaryCostName[]" class="input table-input changeElement"></td>
                 <td class="top-table-data w-70"><input type="text" name="salaryCostNum[]" class="input table-input changeElement costNumByDriver"></td>
                 <td class="top-table-data w-70"><input type="text" name="salaryCostUntil[]" class="input table-input changeElement amount costUnitByDriver commaInput"></td>
-                <td class="top-table-data w-100"><input type="text" name="salaryCostAmount[]" class="input table-input changeElement amount costTotalByDriver costInvoiceTotal commaInput"></td>
-                <div class="salaryRowDelete deleteRowBtn"><span class="deleteRowBtn__line"><span/><span class="deleteRowBtn__line"><span/><div/>
+                <td class="top-table-data w-100"><input type="text" name="salaryCostAmount[]" class="input table-input changeElement amount costTotalByDriver costInvoiceTotal commaInput">                <div class="salaryRowDelete deleteRowBtn"><span class="deleteRowBtn__line"></span></div></td>
             `;
 
             const salaryCostRows = table.querySelectorAll('.salaryCostBasicRow');
@@ -556,11 +560,10 @@ window.addEventListener('DOMContentLoaded', () => {
             newRow.classList.add('costBasicRow');
 
             newRow.innerHTML = `
-                <td class="table-item w-400"><input type="text" name="costItem[]" value="" class="input table-input changeElement"><input checked type="checkbox" class="row-check-box"></td>
-                <td class="table-data w-100"><input type="text" name="costNum[]" value="" class="input table-input changeElement costNum"></td>
-                <td class="table-data w-100"><input type="text" name="costUntil[]" value="" class="input table-input cost-amount changeElement costUnit commaInput"></td>
-                <td class="table-data w-110"><input type="text" name="costAmount[]" value="" class="input table-input cost-amount changeElement costElem commaInput"></td>
-                <div class="salaryRowDelete deleteRowBtn"><span class="deleteRowBtn__line"><span/><span class="deleteRowBtn__line"><span/><div/>
+                <td class="table-item w-400"><input type="text" name="costItem[]" value="" class="input table-input changeElement costChangeElem"><input checked type="checkbox" class="row-check-box"></td>
+                <td class="table-data w-100"><input type="text" name="costNum[]" value="" class="input table-input changeElement costChangeElem costNum"></td>
+                <td class="table-data w-100"><input type="text" name="costUntil[]" value="" class="input table-input cost-amount changeElement costChangeElem costUnit commaInput"></td>
+                <td class="table-data w-110"><input type="text" name="costAmount[]" value="" class="input table-input cost-amount changeElement costChangeElem costElem commaInput"><div class="salaryRowDelete deleteRowBtn"><span class="deleteRowBtn__line"><span/><div/></td>
             `;
 
             const costRows = table.querySelectorAll('.costBasicRow');
