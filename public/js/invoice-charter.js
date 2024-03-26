@@ -163,7 +163,7 @@ window.addEventListener('load', () => {
         const closeElem = document.querySelectorAll('.projectChangeModalClose');
         const projectNameViewElem = document.querySelector('.projectNameView');
         const deleteBtn = modal.querySelector('.deleteBtn');
-        const warningTxt = modal.querySelector('.warning-txt');
+        const warningTxt = modal.querySelector('.unregister-warning-txt');
 
         // シフトデータセット要素
         const setProjectId = modal.querySelector('.setProjectId');

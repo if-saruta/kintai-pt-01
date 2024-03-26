@@ -489,7 +489,7 @@
                                         <input hidden type="text" name="projectId" class="setProjectId">
                                         <input hidden type="text" name="shiftPvId" class="setShiftPvId">
                                         <p class="title">案件変更</p>
-                                        <p class="warning-txt">この案件は未登録案件には戻せません</p>
+                                        <p class="unregister-warning-txt">この案件は未登録案件には戻せません</p>
                                         <div class="project-name-area">
                                             <p class="">案件名 : </p>
                                             <p class="projectNameView"></p>

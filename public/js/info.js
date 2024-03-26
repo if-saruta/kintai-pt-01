@@ -94,7 +94,9 @@ window.addEventListener('DOMContentLoaded', () => {
             const dataHasElem = clickElem.querySelector('.dataHasElem');
             if(clickElem.classList.contains('open')){
                 if(dataHasElem !== null){
-                    var data = JSON.parse(dataHasElem.getAttribute('data-info'));
+                    var beforeEscapeData = dataHasElem.getAttribute('data-info');
+                    var escapeData = beforeEscapeData.replace(/\n/g, "\\n");
+                    var data = JSON.parse(escapeData);
                     data.forEach((element, index) => {
                         if(setTxtElem.length != 0){
                             setTxtElem[index].innerHTML = element;
@@ -108,7 +110,9 @@ window.addEventListener('DOMContentLoaded', () => {
         const editClickSetValue = (btn) => {
             const dataHasElem = btn.querySelector('.dataHasEditElem');
             let setValueElem = document.querySelectorAll('.setValueElem');
-            var data = JSON.parse(dataHasElem.getAttribute('data-info'));
+            var beforeEscapeData = dataHasElem.getAttribute('data-info');
+            var escapeData = beforeEscapeData.replace(/\n/g, "\\n");
+            var data = JSON.parse(escapeData);
             // データをセット
             data.forEach((element, index) => {
                 setValueElem[index].value = element;
