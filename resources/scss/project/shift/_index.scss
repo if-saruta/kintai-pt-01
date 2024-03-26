@@ -481,13 +481,16 @@
                                 line-height: math.div(19,13);
                                 cursor: pointer;
                                 &__row{
-                                    min-height: 2.5rem;
+                                    min-height: 4.2rem;
                                     padding: 0.5rem 0.3rem;
                                     display: flex;
                                     align-items: center;
                                     justify-content: center;
                                     flex-shrink: 0;
                                     border-bottom: 1px dashed $cGray;
+                                }
+                                &__row:nth-child(2){
+                                    min-height: 4.2rem;
                                 }
                                 &__row:nth-child(3){
                                     background-color: rgba(255, 0, 0, 0.087);
