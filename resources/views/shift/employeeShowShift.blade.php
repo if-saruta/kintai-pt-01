@@ -200,7 +200,8 @@
                                         }
                                         if($max_count < $am_count){
                                             $max_count = $am_count;
-                                        }elseif ($max_count < $pm_count) {
+                                        }
+                                        if ($max_count < $pm_count) {
                                             $max_count = $pm_count;
                                         }
                                     }

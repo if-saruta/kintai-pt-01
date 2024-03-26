@@ -213,7 +213,8 @@
                                             }
                                             if($max_count < $am_count){
                                                 $max_count=$am_count;
-                                            }elseif ($max_count < $pm_count) {
+                                            }
+                                            if ($max_count < $pm_count) {
                                                 $max_count=$pm_count;
                                             }
                                         }
@@ -229,7 +230,7 @@
                                                 <td class="table-employee-name">
                                                     <div class="table-employee-name__block">
                                                         @if ($shift->employee)
-                                                        <p class="">{{$shift->employee->name}}</p>
+                                                        <p class="">{{$shift->employee->name}} {{ $max_count }}</p>
                                                         @else
                                                         <p class="" style="color: red;">{{$shift->unregistered_employee}}</p>
                                                         @endif
