@@ -313,17 +313,17 @@
                                                         @endif
                                                         {{-- 車両 --}}
                                                         @if ($spv->vehicle)
-                                                            <p class="table-cell__item__row">No.{{$spv->vehicle->number}}</p>
+                                                            <p class="table-cell__item__row vehicle-row">No.{{$spv->vehicle->number}}</p>
                                                         @elseif($spv->unregistered_vehicle)
                                                             @if ($spv->unregistered_vehicle != '自車')
-                                                                <p class="table-cell__item__row" style="color: red;">
+                                                                <p class="table-cell__item__row vehicle-row" style="color: red;">
                                                                     No.{{$spv->unregistered_vehicle}}</p>
                                                             @else
                                                                 <p class="table-cell__item__row">
                                                                     No.{{$spv->unregistered_vehicle}}</p>
                                                             @endif
                                                         @else
-                                                            <p class="table-cell__item__row"></p>
+                                                            <p class="table-cell__item__row vehicle-row"></p>
                                                         @endif
                                                         <p class="table-cell__item__row" style="background-color: rgba(255, 0, 0, 0.087);">
                                                             @if ($spv->retail_price)
@@ -366,7 +366,7 @@
                                                     @endphp
                                                 @endif
                                                     <p class="table-cell__item__row --empty-item__row setHightElem"></p>
-                                                    <p class="table-cell__item__row --empty-item__row"></p>
+                                                    <p class="table-cell__item__row --empty-item__row vehicle-row"></p>
                                                     <p class="table-cell__item__row --empty-item__row"></p>
                                                     <p class="table-cell__item__row --empty-item__row"></p>
                                                 </div>
@@ -414,17 +414,17 @@
                                                         @endif
                                                         {{-- 車両 --}}
                                                         @if ($spv->vehicle)
-                                                            <p class="table-cell__item__row">No.{{$spv->vehicle->number}}</p>
+                                                            <p class="table-cell__item__row vehicle-row">No.{{$spv->vehicle->number}}</p>
                                                         @elseif($spv->unregistered_vehicle)
                                                             @if ($spv->unregistered_vehicle != '自車')
-                                                                <p class="table-cell__item__row" style="color: red;">
+                                                                <p class="table-cell__item__row vehicle-row" style="color: red;">
                                                                     No.{{$spv->unregistered_vehicle}}</p>
                                                             @else
-                                                                <p class="table-cell__item__row">
+                                                                <p class="table-cell__item__row vehicle-row">
                                                                     No.{{$spv->unregistered_vehicle}}</p>
                                                             @endif
                                                         @else
-                                                            <p class="table-cell__item__row"></p>
+                                                            <p class="table-cell__item__row vehicle-row"></p>
                                                         @endif
                                                         <p class="table-cell__item__row" style="background-color: rgba(255, 0, 0, 0.087);">
                                                             @if ($spv->retail_price)
@@ -466,7 +466,7 @@
                                                     @endphp
                                                 @endif
                                                 <p class="table-cell__item__row --empty-item__row setHightElem"></p>
-                                                <p class="table-cell__item__row --empty-item__row"></p>
+                                                <p class="table-cell__item__row --empty-item__row vehicle-row"></p>
                                                 <p class="table-cell__item__row --empty-item__row"></p>
                                                 <p class="table-cell__item__row --empty-item__row"></p>
                                             </div>
@@ -587,17 +587,17 @@
                                                         @endif
                                                         {{-- 車両 --}}
                                                         @if ($spv->vehicle)
-                                                            <p class="table-cell__item__row">No.{{$spv->vehicle->number}}</p>
+                                                            <p class="table-cell__item__row vehicle-row">No.{{$spv->vehicle->number}}</p>
                                                         @elseif($spv->unregistered_vehicle)
                                                             @if ($spv->unregistered_vehicle != '自車')
-                                                                <p class="table-cell__item__row" style="color: red;">
+                                                                <p class="table-cell__item__row vehicle-row" style="color: red;">
                                                                     No.{{$spv->unregistered_vehicle}}</p>
                                                             @else
-                                                                <p class="table-cell__item__row">
+                                                                <p class="table-cell__item__row vehicle-row">
                                                                     No.{{$spv->unregistered_vehicle}}</p>
                                                             @endif
                                                         @else
-                                                            <p class="table-cell__item__row"></p>
+                                                            <p class="table-cell__item__row vehicle-row"></p>
                                                         @endif
                                                         <p class="table-cell__item__row --retail-back-ground-color">
                                                             @if ($spv->retail_price)
@@ -640,7 +640,7 @@
                                                     @endphp
                                                 @endif
                                                     <p class="table-cell__item__row --empty-item__row setHightElem"></p>
-                                                    <p class="table-cell__item__row --empty-item__row"></p>
+                                                    <p class="table-cell__item__row --empty-item__row vehicle-row"></p>
                                                     <p class="table-cell__item__row --empty-item__row"></p>
                                                     <p class="table-cell__item__row --empty-item__row"></p>
                                                 </div>
@@ -688,17 +688,17 @@
                                                         @endif
                                                         {{-- 車両 --}}
                                                         @if ($spv->vehicle)
-                                                            <p class="table-cell__item__row">No.{{$spv->vehicle->number}}</p>
+                                                            <p class="table-cell__item__row vehicle-row">No.{{$spv->vehicle->number}}</p>
                                                         @elseif($spv->unregistered_vehicle)
                                                             @if ($spv->unregistered_vehicle != '自車')
-                                                                <p class="table-cell__item__row" style="color: red;">
+                                                                <p class="table-cell__item__row vehicle-row" style="color: red;">
                                                                     No.{{$spv->unregistered_vehicle}}</p>
                                                             @else
-                                                                <p class="table-cell__item__row">
+                                                                <p class="table-cell__item__row vehicle-row">
                                                                     No.{{$spv->unregistered_vehicle}}</p>
                                                             @endif
                                                         @else
-                                                            <p class="table-cell__item__row"></p>
+                                                            <p class="table-cell__item__row vehicle-row"></p>
                                                         @endif
                                                         <p class="table-cell__item__row --retail-back-ground-color">
                                                             @if ($spv->retail_price)
@@ -740,7 +740,7 @@
                                                     @endphp
                                                 @endif
                                                 <p class="table-cell__item__row --empty-item__row setHightElem"></p>
-                                                <p class="table-cell__item__row --empty-item__row"></p>
+                                                <p class="table-cell__item__row --empty-item__row vehicle-row"></p>
                                                 <p class="table-cell__item__row --empty-item__row"></p>
                                                 <p class="table-cell__item__row --empty-item__row"></p>
                                             </div>
