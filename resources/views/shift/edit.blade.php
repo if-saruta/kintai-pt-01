@@ -319,7 +319,7 @@
                                                                 <p class="table-cell__item__row vehicle-row" style="color: red;">
                                                                     No.{{$spv->unregistered_vehicle}}</p>
                                                             @else
-                                                                <p class="table-cell__item__row">
+                                                                <p class="table-cell__item__row vehicle-row">
                                                                     No.{{$spv->unregistered_vehicle}}</p>
                                                             @endif
                                                         @else
