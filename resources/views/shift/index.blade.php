@@ -230,7 +230,7 @@
                                                 <td class="table-employee-name">
                                                     <div class="table-employee-name__block">
                                                         @if ($shift->employee)
-                                                        <p class="">{{$shift->employee->name}} {{ $max_count }}</p>
+                                                        <p class="">{{$shift->employee->name}}</p>
                                                         @else
                                                         <p class="" style="color: red;">{{$shift->unregistered_employee}}</p>
                                                         @endif
