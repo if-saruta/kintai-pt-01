@@ -109,7 +109,8 @@
         }
         .address-area{
             display: flex;
-            gap: 3rem;
+            flex-direction: column;
+            gap: 1rem;
             &__input-box{
                 display: flex;
                 flex-direction: column;

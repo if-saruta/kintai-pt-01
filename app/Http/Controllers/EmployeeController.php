@@ -57,6 +57,7 @@ class EmployeeController extends Controller
                 'initials' => $request->initial,
                 'post_code' => $request->post_code,
                 'address' => $request->address,
+                'building_name' => $request->building_name,
                 'phone_number' => $request->phone,
                 'employment_status' => $request->status,
                 'company_id' => $request->company,
@@ -72,6 +73,7 @@ class EmployeeController extends Controller
                 'initials' => $request->initial,
                 'post_code' => $request->post_code,
                 'address' => $request->address,
+                'building_name' => $request->building_name,
                 'phone_number' => $request->phone,
                 'employment_status' => $request->status,
                 'company_id' => $request->company,
@@ -183,6 +185,7 @@ class EmployeeController extends Controller
         $employee->initials = $request->initial;
         $employee->post_code = $request->post_code;
         $employee->address = $request->address;
+        $employee->building_name = $request->building_name;
         $employee->phone_number = $request->phone;
         $employee->employment_status = $request->status;
         $employee->company_id = $request->company;

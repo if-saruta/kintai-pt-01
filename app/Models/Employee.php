@@ -11,7 +11,7 @@ class Employee extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['register_number', 'name', 'initials', 'post_code', 'address', 'phone_number', 'employment_status', 'company_id', 'is_invoice', 'vehicle_rental_type', 'vehicle_id', 'remarks'];
+    protected $fillable = ['register_number', 'name', 'initials', 'post_code', 'address', 'building_name', 'phone_number', 'employment_status', 'company_id', 'is_invoice', 'vehicle_rental_type', 'vehicle_id', 'remarks'];
 
     public function shifts()
     {

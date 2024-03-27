@@ -354,8 +354,7 @@
                                                         <input hidden type="text" value="{{$findDate}}" class="createFindDate">
                                                         <input hidden type="text" value="0" class="createTimeOfPart">
                                                         @if ($shift->employee)
-                                                        <input hidden type="text" value="{{$shift->employee->name}}"
-                                                            class="createEmployeeName">
+                                                        <input hidden type="text" value="{{$shift->employee->name}}" data-employee-id="{{ $shift->employee->id }}" class="createEmployeeName">
                                                         @else
                                                         <input hidden type="text" value="{{$shift->unregistered_employee}}"
                                                             class="createEmployeeName">
@@ -455,7 +454,7 @@
                                                         <input hidden type="text" value="{{$findDate}}" class="createFindDate">
                                                         <input hidden type="text" value="1" class="createTimeOfPart">
                                                         @if ($shift->employee)
-                                                            <input hidden type="text" value="{{$shift->employee->name}}" class="createEmployeeName">
+                                                        <input hidden type="text" value="{{$shift->employee->name}}" data-employee-id="{{ $shift->employee->id }}" class="createEmployeeName">
                                                         @else
                                                             <input hidden type="text" value="{{$shift->unregistered_employee}}"
                                                                 class="createEmployeeName">
@@ -628,8 +627,7 @@
                                                         <input hidden type="text" value="{{$findDate}}" class="createFindDate">
                                                         <input hidden type="text" value="0" class="createTimeOfPart">
                                                         @if ($shift->employee)
-                                                            <input hidden type="text" value="{{$shift->employee->name}}"
-                                                                class="createEmployeeName">
+                                                        <input hidden type="text" value="{{$shift->employee->name}}" data-employee-id="{{ $shift->employee->id }}" class="createEmployeeName">
                                                         @else
                                                             <input hidden type="text" value="{{$shift->unregistered_employee}}"
                                                                 class="createEmployeeName">
@@ -729,7 +727,7 @@
                                                         <input hidden type="text" value="{{$findDate}}" class="createFindDate">
                                                         <input hidden type="text" value="1" class="createTimeOfPart">
                                                         @if ($shift->employee)
-                                                            <input hidden type="text" value="{{$shift->employee->name}}" class="createEmployeeName">
+                                                            <input hidden type="text" value="{{$shift->employee->name}}" data-employee-id="{{ $shift->employee->id }}" class="createEmployeeName">
                                                         @else
                                                             <input hidden type="text" value="{{$shift->unregistered_employee}}"
                                                                 class="createEmployeeName">
@@ -856,7 +854,7 @@
     </div>
 
     {{-- 新規作成用モーダル --}}
-    <div class="shift-edit-modal" id="createShiftModal">
+    <div class="shift-edit-modal shift-create-modal" id="createShiftModal">
         <span class="shift-edit-modal__bg createCloseModal" onclick='return confirm("入力したデータは失われます。")'></span>
         <div class="shift-edit-modal__white-board">
             {{-- シフト情報 --}}
@@ -872,6 +870,11 @@
                         id="createDay">19</span><span class="txt">日</span></p>
                 <p class="date-block__part" id="createSetTxtPart">午後の案件</p>
             </div>
+            <select hidden name="" id="paymentSelect">
+                @foreach ($payments as $payment)
+                    <option data-payment-project-id="{{ $payment->project_id }}" data-payment-employee-id="{{ $payment->employee_id }}">{{ $payment->amount }}</option>
+                @endforeach
+            </select>
             {{-- フォームエリア --}}
             <form action="{{route('shift.store')}}" method="POST" class="form-block">
                 @csrf
@@ -899,7 +902,7 @@
                         <select name="projectSelect" id="createProjectSelect" class="c-select modal-select">
                             <option value="">選択してください</option>
                             @foreach ($projects as $project)
-                            <option value="{{$project->id}}" data-retail-amount="{{ $project->retail_price }}" data-driver-amount="{{ $project->driver_price }}">{{$project->name}}</option>
+                                <option value="{{$project->id}}" data-retail-amount="{{ $project->retail_price }}" data-driver-amount="{{ $project->driver_price }}">{{$project->name}}</option>
                             @endforeach
                         </select>
                     </div>

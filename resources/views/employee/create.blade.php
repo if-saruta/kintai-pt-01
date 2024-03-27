@@ -75,7 +75,14 @@
                             <p class="input-head">住所</p>
                             <p class="required">必須</p>
                         </div>
-                        <input type="text" name="address" class="c-input" placeholder="東京都渋谷区道玄坂0-0-0 hogehogefugafugaマンション 1F" required>
+                        <input type="text" name="address" class="c-input" placeholder="東京都渋谷区道玄坂0-0-0" required>
+                    </div>
+                    <div class="address-area__input-box --address">
+                        <div class="head">
+                            <p class="input-head">建物名</p>
+                            <p class="required">任意</p>
+                        </div>
+                        <input type="text" name="building_name" class="c-input" placeholder="建物名など">
                     </div>
                 </div>
                 <div class="phone-area">

@@ -166,6 +166,12 @@
                                     <div class="">
                                         〒{{$employeeInfo->post_code}} <br>
                                         {{$employeeInfo->address}} <br>
+                                        @if ($employeeInfo->building_name)
+                                            {{$employeeInfo->building_name}} <br>
+                                        @endif
+                                        @if ($employeeInfo->phone_number)
+                                        {{ $employeeInfo->phone_number }}<br>
+                                        @endif
                                         @if ($employeeInfo->is_invoice == 1)
                                             登録番号　{{$employeeInfo->register_number}} <br>
                                         @endif
@@ -185,7 +191,7 @@
 東京都葛飾区四つ木2-3-11
 </textarea>
                                     <br>
-                                    <p class="">下記の通りご請求申し上げます。</p>
+                                    <p class="" style="margin-top: 30px;">下記の通りご請求申し上げます。</p>
                                 </div>
                                 {{-- 請求金額 --}}
                                 <table class="request-table">
@@ -199,7 +205,7 @@
                                     </tr>
                                 </table>
                                 {{-- 給与詳細テーブル --}}
-                                <table class="top-table salaryTopTable">
+                                <table class="top-table salary-top-table salaryTopTable">
                                     <div class="plus salaryAddBtn">
                                         <span class="plus__line"></span>
                                         <span class="plus__line"></span>
@@ -247,8 +253,8 @@
                                             <td class="top-table-data w-260"><input type="text" name="salaryProject[]" value="値引き分" class="input table-input changeElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryEtc[]" class="input table-input changeElement etcElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryCount[]" value="1" class="input table-input changeElement salaryNum"></td>
-                                            <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{ number_format(-round($totalSalaryAmount * 0.2)) }}" class="input table-input amount changeElement salaryUnit commaInput"></td>
-                                            <td class="top-table-data w-70"><input type="text" name="salaryAmount[]" value="{{ number_format(-round($totalSalaryAmount * 0.2)) }}" class="input table-input amount changeElement salaryAmount commaInput"></td>
+                                            <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{ number_format(-round($totalSalaryAmount * 0.1) * 0.2) }}" class="input table-input amount changeElement salaryUnit commaInput"></td>
+                                            <td class="top-table-data w-70"><input type="text" name="salaryAmount[]" value="{{ number_format(-round($totalSalaryAmount * 0.1) * 0.2) }}" class="input table-input amount changeElement salaryAmount commaInput"></td>
                                         </tr>
                                     @endif
                                     {{-- 追加分項目 --}}
@@ -359,7 +365,7 @@
                                         <tr class="salaryCostBasicRow">
                                             <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data no-border w-70"><p class="top-table-data-txt --center"></p></td>
-                                            <td class="top-table-data w-330"><p class="top-table-data-txt --center f-s-10">㈱T.N.G 請求書NO.{{ $employeeInfo->initials }}<input class="invoice-number --invoice-number02 --common-data" value="{{ $today->format('Y') }}{{ $today->format('n') }}15" readonly>({{ $today->format('Y') }}年 {{ $today->format('n') }}月 15日発行)相殺</㈱T.N.G></p></td>
+                                            <td class="top-table-data w-330 off-set-td"><input type="text" name="offSetInvoiceNumber" value="㈱T.N.G 請求書NO.{{ $employeeInfo->initials }}{{ $today->format('Y') }}{{ $today->format('m') }}15({{ $today->format('Y') }}年 {{ $today->format('n') }}月 15日発行)相殺"></td>
                                             <td class="top-table-data w-70"><input type="text" name="getCostNum" value="1" class="input table-input changeElement costNumByDriver"></td>
                                             <td class="top-table-data w-70"><input type="text" name="getCostUntil" value="{{ number_format(round($subTotalCost * 1.1))}}" class="input table-input amount changeElement costUnitByDriver costInvoiceUnit costUnitByDriver-C commaInput"></td>
                                             <td class="top-table-data w-100"><input type="text" name="getCostAmount" value="{{ number_format(round($subTotalCost * 1.1))}}" class="input table-input amount changeElement costTotalByDriver costInvoiceTotal commaInput" readonly></td>

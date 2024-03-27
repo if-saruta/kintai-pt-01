@@ -832,14 +832,14 @@
                                                         @if ($vehicle_rantal_type == 1 || $vehicle_rantal_type == 2)
                                                             <tr class="info-table-row">
                                                                 <th><input type="text" name="monthLease[name]" value="リース代　@if($vehicle_rantal_type == 1) 月契約No.{{ $vehicle_rantal_number }} @endif"></th>
-                                                                <td><input type="text" name="monthLease[amount]" value="{{ number_format(30992) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                                <td><input type="text" name="monthLease[amount]" value="{{ number_format(34090) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                             </tr>
                                                         @endif
                                                         @if ($secondMachineCount != 0)
                                                             @php
-                                                                $second_lease = 1000;
+                                                                $second_lease = 909;
                                                                 if ($vehicle_rantal_type == 0) {
-                                                                    $second_lease = 1500;
+                                                                    $second_lease = 909;
                                                                 }
                                                             @endphp
                                                             <tr class="info-table-row">
@@ -856,13 +856,13 @@
                                                         @if ($vehicle_rantal_type == 1 || $vehicle_rantal_type == 2)
                                                             <tr class="info-table-row">
                                                                 <th><input type="text" name="monthInsurance[name]" value="保険料　@if($vehicle_rantal_type == 1) 月契約No.{{ $vehicle_rantal_number }} @endif"></th>
-                                                                <td><input type="text" name="monthInsurance[amount]" value="{{ number_format(9818) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                                <td><input type="text" name="monthInsurance[amount]" value="{{ number_format(13637) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                             </tr>
                                                         @endif
                                                         @if ($secondMachineCount != 0)
                                                             <tr class="info-table-row">
                                                                 <th><input type="text" name="secondInsurance[name]" value="保険料 2台目(日割り)"></th>
-                                                                <td><input type="text" name="secondInsurance[amount]" value="{{ number_format($secondMachineCount * 410) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                                <td><input type="text" name="secondInsurance[amount]" value="{{ number_format($secondMachineCount * 455) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                             </tr>
                                                         @endif
                                                     </tbody>

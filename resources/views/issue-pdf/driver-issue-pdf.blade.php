@@ -295,8 +295,10 @@
 
         .employee-info {
             position: absolute;
-            top: 155px;
+            /* top: 130px; */
+            bottom: 740px;
             right: 0px;
+            /* width: 250px; */
             font-size: 13px;
             line-height: 1.5;
         }
@@ -444,6 +446,12 @@
             <p class="">
                 〒{{$employee->post_code}} <br>
                 {{$employee->address}} <br>
+                @if ($employee->building_name)
+                {{$employee->building_name}} <br>
+                @endif
+                @if ($employee->phone_number)
+                {{ $employee->phone_number }}<br>
+                @endif
                 @if ($employee->is_invoice == 1)
                 登録番号　{{$employee->register_number}} <br>
                 @endif
@@ -648,8 +656,8 @@
                     <p class="top-table-data-txt --center"></p>
                 </td>
                 <td class="top-table-data w-330">
-                    <p class="top-table-data-txt --center f-s-10">㈱T.N.G 請求書NO.{{ $employee->initials
-                        }}{{$invoiceNumber}}({{ $today->format('Y') }}年 {{ $today->format('n') }}月 15日発行)相殺</㈱T.N.G>
+                    <p class="top-table-data-txt --center f-s-10">
+                        {{ $offSetInvoiceNumber }}
                     </p>
                 </td>
                 <td class="top-table-data w-70">

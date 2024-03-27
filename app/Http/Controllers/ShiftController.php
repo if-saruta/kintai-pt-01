@@ -170,7 +170,7 @@ class ShiftController extends Controller
             $convertedDates[] = Carbon::createFromFormat('Y-m-d', $date);
         }
 
-        $payments = ProjectEmployeePayment::all();
+        $payments = ProjectEmployeePayment::whereNotNull('amount')->get();
 
         $page = $request->input('witch') ?? session('page');
 

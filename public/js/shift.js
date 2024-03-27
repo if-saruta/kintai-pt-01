@@ -218,27 +218,46 @@ window.addEventListener('DOMContentLoaded', () => {
         const projectSelect = document.getElementById('createProjectSelect');
         const createRetailInput = document.getElementById('createRetailInput');
         const createSalaryInput = document.getElementById('createSalaryInput');
+        const paymentSelect = document.getElementById('paymentSelect');
         if(projectSelect != null){
-            function displaySelectedOption() {
+            function displaySelectedOption(target) {
+                // 編集中の従業員IDを取得
+                const employeeId = target.querySelector('.createEmployeeName').getAttribute('data-employee-id');
+                // 選択されている案件IDを取得
+                const projectId = projectSelect.options[projectSelect.selectedIndex].value;
+                // 条件が一致する給与を検索
+                let paymentAmount = 0;
+                for(let i = 0; i < paymentSelect.options.length; i++){
+                    // オプションを格納
+                    var optionElem = paymentSelect.options[i];
+                    var paymentProjectId = optionElem.getAttribute('data-payment-project-id'); //オプションのデータ属性を取得
+                    var paymentEmployeeId = optionElem.getAttribute('data-payment-employee-id'); //オプションのデータ属性を取得
+                    // 選択されている案件と比較
+                    if(paymentProjectId == projectId && paymentEmployeeId == employeeId){
+                        paymentAmount = optionElem.value;
+                        break;
+                    }
+                }
+
                 // 上代の金額取得
                 const projectAmount = projectSelect.options[projectSelect.selectedIndex].getAttribute('data-retail-amount');
                 // ドライバー価格の取得
                 const driverAmount = projectSelect.options[projectSelect.selectedIndex].getAttribute('data-driver-amount');
+                
                 // 金額をセット
                 if(projectAmount != null){
                     createRetailInput.value = inputCommma(projectAmount);
                 }
-                if(driverAmount != null){
+                if(paymentAmount != 0){ //案件別給与が一致していれば
+                    createSalaryInput.value = inputCommma(paymentAmount);
+                }else if(driverAmount != null){
                     createSalaryInput.value = inputCommma(driverAmount);
                 }
             }
-            displaySelectedOption();
-            // 選択が変更されたときに選択されているオプションを表示
-            projectSelect.addEventListener('change', displaySelectedOption);
         }
 
         // 新規と既存のラジオボタンで表示inputを制御
-        const changeRadio = () => {
+        const changeRadio = (target) => {
             const projectInput = document.getElementById('createProjectInput');
             const projectSelect = document.getElementById('createProjectSelect');
             const vehicleInput = document.getElementById('createVehicleInput');
@@ -254,7 +273,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     if(projectRadio[i].value == '0'){
                         projectSelect.style.display = "block";
                         // 上代・給与の値をセット
-                        displaySelectedOption();
+                        displaySelectedOption(target);
                     }else{
                         projectInput.style.display = "block";
                         // 上代・給与の値を空に
@@ -308,7 +327,12 @@ window.addEventListener('DOMContentLoaded', () => {
             targetElem[i].addEventListener('click', () => {
                 modal.style.display = "block";
                 setValue(targetElem[i]);
-                changeRadio();
+                changeRadio(targetElem[i]);
+                displaySelectedOption(targetElem[i]);
+                // 選択が変更されたときに選択されているオプションを表示
+                projectSelect.addEventListener('change', () => {
+                    displaySelectedOption(targetElem[i])
+                });
             })
         }
         // 閉じる
