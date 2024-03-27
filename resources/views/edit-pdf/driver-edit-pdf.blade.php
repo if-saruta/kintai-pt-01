@@ -159,6 +159,30 @@
                                 </div>
                                 <div class="line colorChangeElem"></div>
                                 <div class="date"><p class="">{{ $today->format('Y') }}年 {{ $today->format('n') }}月 20日</p></div>
+                                <div class="top-info-area">
+                                    <div class="top-info-area__left">
+                                {{-- 会社情報 --}}
+<div class="company">
+<textarea name="salaryCompanyInfo" class="textarea salary-textarea salaryCompanyTextarea" id="" cols="30" rows="10">
+株式会社 T.N.G　御中
+〒124-0011
+東京都葛飾区四つ木2-3-11
+</textarea>
+<br>
+<p class="" style="margin-top: 30px;">下記の通りご請求申し上げます。</p>
+</div>
+                                        {{-- 請求金額 --}}
+                                        <table class="request-table">
+                                            <tr>
+                                                <td class="request-table-data --bg-green colorChangeElem"><p class="request-table-data-txt">ご請求金額</p></td>
+                                                @if($employeeInfo->is_invoice == 1)
+                                                    <td class="request-table-data"><p class="request-table-data-txt allCalcTotalView">¥{{number_format(round(((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) - round($subTotalCost * 1.1)))}}</p></td>
+                                                @else
+                                                    <td class="request-table-data"><p class="request-table-data-txt allCalcTotalView">¥{{ number_format(round($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - round($totalSalaryAmount * 0.2) + $etc - round($subTotalCost * 1.1)) }}</p></td>
+                                                @endif
+                                            </tr>
+                                        </table>
+                                    </div>
                                 {{-- 従業員情報 --}}
                                 <div class="employee-info">
                                     <input type="text" hidden name="employeeId" value="{{$employeeInfo->id}}">
@@ -183,27 +207,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{-- 会社情報 --}}
-                                <div class="company">
-<textarea name="salaryCompanyInfo" class="textarea salary-textarea salaryCompanyTextarea" id="" cols="30" rows="10">
-株式会社 T.N.G　御中
-〒124-0011
-東京都葛飾区四つ木2-3-11
-</textarea>
-                                    <br>
-                                    <p class="" style="margin-top: 30px;">下記の通りご請求申し上げます。</p>
                                 </div>
-                                {{-- 請求金額 --}}
-                                <table class="request-table">
-                                    <tr>
-                                        <td class="request-table-data --bg-green colorChangeElem"><p class="request-table-data-txt">ご請求金額</p></td>
-                                        @if($employeeInfo->is_invoice == 1)
-                                            <td class="request-table-data"><p class="request-table-data-txt allCalcTotalView">¥{{number_format(round(((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) - round($subTotalCost * 1.1)))}}</p></td>
-                                        @else
-                                            <td class="request-table-data"><p class="request-table-data-txt allCalcTotalView">¥{{ number_format(round($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - round($totalSalaryAmount * 0.2) + $etc - round($subTotalCost * 1.1)) }}</p></td>
-                                        @endif
-                                    </tr>
-                                </table>
                                 {{-- 給与詳細テーブル --}}
                                 <table class="top-table salary-top-table salaryTopTable">
                                     <div class="plus salaryAddBtn">
