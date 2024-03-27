@@ -38,6 +38,10 @@
 
             <!-- Page Content -->
             <main>
+                <form action="{{ route('logout') }}" method="POST" class="c-logout">
+                    @csrf
+                    <button>logout</button>
+                </form>
                 {{ $slot }}
             </main>
         </div>

@@ -130,3 +130,26 @@ body::-webkit-scrollbar{
         background-color: $cGray;
     }
 }
+.c-logout{
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    font-size: 1.2rem;
+    font-weight: $fw-bold;
+    color: $cGreen;
+    border-radius: 0.5rem;
+    border: 1px solid $cGreen;
+    background-color: white;
+    transition: 0.5s;
+    button{
+        width: 5rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+.c-logout:hover{
+    background-color: $cGreen;
+    color: white;
+}

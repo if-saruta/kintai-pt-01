@@ -188,7 +188,9 @@
                                             }
                                         @endphp
                                         <td class="--count-row__count">
-                                            {{$project_count}}
+                                            @if ($project_count != 0)
+                                                {{$project_count}}
+                                            @endif
                                         </td>
                                     @endforeach
                                 </tr>
@@ -212,7 +214,11 @@
                                                 }
                                             }
                                         @endphp
-                                        <td class="--count-f-s">{{$unProject_count}}</td>
+                                        <td class="--count-f-s">
+                                            @if ($unProject_count != 0)
+                                                {{$unProject_count}}
+                                            @endif
+                                        </td>
                                     @endforeach
                                 </tr>
                             @endforeach
