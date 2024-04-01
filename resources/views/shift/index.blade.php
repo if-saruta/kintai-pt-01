@@ -197,7 +197,7 @@
                                         // 1日ごとの最大案件数
                                         $max_count = 1;
                                     @endphp
-                                        {{-- 最大案件数の計算 --}}
+                                    {{-- 最大案件数の計算 --}}
                                     @php
                                         foreach ($shiftData as $shift) {
                                             $am_count = 0;
@@ -237,7 +237,7 @@
                                                     </div>
                                                 </td>
                                                 @php
-                                                $is_employee_open = false;
+                                                    $is_employee_open = false;
                                                 @endphp
                                             @endif
                                             {{-- 最大案件数の計算 --}}
@@ -264,7 +264,7 @@
                                                             @endif
                                                             {{-- 車両 --}}
                                                             @if ($spv->vehicle)
-                                                                <p class="table-cell__item__row">No.{{$spv->vehicle->number}}</p>
+                                                                <p class="table-cell__item__row" @if(in_array($spv->vehicle->id, $MultipleDailyUsesVehiclesArray[$shift->date])) style="background-color: yellow;" @endif>No.{{$spv->vehicle->number}}</p>
                                                             @elseif($spv->unregistered_vehicle)
                                                                 @if ($spv->unregistered_vehicle != '自車')
                                                                     <p class="table-cell__item__row" style="color: red;">
@@ -318,7 +318,7 @@
                                                             @endif
                                                             {{-- 車両 --}}
                                                             @if ($spv->vehicle)
-                                                                <p class="table-cell__item__row">No.{{$spv->vehicle->number}}</p>
+                                                                <p class="table-cell__item__row" @if(in_array($spv->vehicle->id, $MultipleDailyUsesVehiclesArray[$shift->date])) style="background-color: yellow;" @endif>No.{{$spv->vehicle->number}}</p>
                                                             @elseif($spv->unregistered_vehicle)
                                                                 @if ($spv->unregistered_vehicle != '自車')
                                                                     <p class="table-cell__item__row" style="color: red;">
@@ -420,7 +420,7 @@
                                                             @endif
                                                             {{-- 車両 --}}
                                                             @if ($spv->vehicle)
-                                                                <p class="table-cell__item__row">No.{{$spv->vehicle->number}}</p>
+                                                                <p class="table-cell__item__row" @if(in_array($spv->vehicle->id, $MultipleDailyUsesVehiclesArray[$shift->date])) style="background-color: yellow;" @endif>No.{{$spv->vehicle->number}}</p>
                                                             @elseif($spv->unregistered_vehicle)
                                                                 @if ($spv->unregistered_vehicle != '自車')
                                                                     <p class="table-cell__item__row" style="color: red;">
@@ -470,7 +470,7 @@
                                                             @endif
                                                             {{-- 車両 --}}
                                                             @if ($spv->vehicle)
-                                                                <p class="table-cell__item__row">No.{{$spv->vehicle->number}}</p>
+                                                                <p class="table-cell__item__row" @if(in_array($spv->vehicle->id, $MultipleDailyUsesVehiclesArray[$shift->date])) style="background-color: yellow;" @endif>No.{{$spv->vehicle->number}}</p>
                                                             @elseif($spv->unregistered_vehicle)
                                                                 @if ($spv->unregistered_vehicle != '自車')
                                                                     <p class="table-cell__item__row" style="color: red;">

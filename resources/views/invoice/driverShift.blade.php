@@ -837,6 +837,7 @@
                                                         @endif
                                                         @if ($secondMachineCount != 0)
                                                             @php
+                                                            
                                                                 $second_lease = 909;
                                                                 if ($vehicle_rantal_type == 0) {
                                                                     $second_lease = 909;
