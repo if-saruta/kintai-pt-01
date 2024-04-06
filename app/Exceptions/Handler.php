@@ -36,20 +36,20 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Throwable $exception)
-    {
-        // 認証等のエラーの場合
-        if($exception instanceof AuthorizationException || $exception instanceof AccessDeniedHttpException){
-            $statusCode = 403;
-            return response()->view('errors.common', compact('statusCode'), $statusCode);
+    // public function render($request, Throwable $exception)
+    // {
+    //     // 認証等のエラーの場合
+    //     if($exception instanceof AuthorizationException || $exception instanceof AccessDeniedHttpException){
+    //         $statusCode = 403;
+    //         return response()->view('errors.common', compact('statusCode'), $statusCode);
 
-        }else if($exception instanceof HttpException){
-            $statusCode = $exception->getStatusCode();
-            return response()->view('errors.common', compact('statusCode'), $statusCode);
-        }
+    //     }else if($exception instanceof HttpException){
+    //         $statusCode = $exception->getStatusCode();
+    //         return response()->view('errors.common', compact('statusCode'), $statusCode);
+    //     }
 
-        return parent::render($request, $exception);
-    }
+    //     return parent::render($request, $exception);
+    // }
 
 
 }
