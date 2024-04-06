@@ -100,7 +100,7 @@
                         <p class="">: ドライバー価格</p>
                     </div>
                 </div>
-                <div class="calendar-download">
+                {{-- <div class="calendar-download">
                     <form action="{{ route('shift.allViewPdf') }}" method="POST">
                         @csrf
                         <input hidden name="startOfWeek" value="{{ $startOfWeek }}" type="text">
@@ -108,7 +108,7 @@
                         <input hidden name="projectHeight" value="" id="projectHeight" type="text">
                         <button class="calendar-download-btn">ダウンロード</button>
                     </form>
-                </div>
+                </div> --}}
                 {{-- 日付の表示 --}}
                 <div class="shift-calendar__date">
                     <form action="{{route('shift.selectWeek')}}" method="POST">
