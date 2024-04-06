@@ -12,7 +12,7 @@ use App\Models\ProjectEmployeePayment;
 
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
-// use PDF;
+use Yasumi\Yasumi;
 
 class PdfputController extends Controller
 {
@@ -60,11 +60,9 @@ class PdfputController extends Controller
         // ファイル名指定
         $name = $employee->name;
 
-        $pdf = PDF::loadView('issue-pdf.driver-issue-pdf', compact('today', 'employee', 'textWithBreaks', 'invoiceNumber', 'offSetInvoiceNumber', 'bankName', 'bankAccountHolder', 'salaryNo', 'salaryMonth','salaryProject', 'salaryEtc', 'salaryCount', 'salaryUntil', 'salaryAmount', 'salarySubTotal', 'salaryTax', 'etcTotal', 'salaryTotal', 'getCostNum', 'getCostUntil', 'getCostAmount', 'salaryCostName', 'salaryCostNum', 'salaryCostUntil', 'salaryCostAmount', 'salaryCostTotal', 'allTotal', 'color'));
+    $pdf->download($fileName); //生成されるファイル名
 
-        $fileName = "{$today->format('Y-m-d')}_{$name}.pdf";
-
-        return $pdf->download($fileName); //生成されるファイル名
+        // return view('issue-pdf.driver-issue-pdf', compact('today', 'employee', 'textWithBreaks', 'invoiceNumber', 'offSetInvoiceNumber', 'bankName', 'bankAccountHolder', 'salaryNo', 'salaryMonth','salaryProject', 'salaryEtc', 'salaryCount', 'salaryUntil', 'salaryAmount', 'salarySubTotal', 'salaryTax', 'etcTotal', 'salaryTotal', 'getCostNum', 'getCostUntil', 'getCostAmount', 'salaryCostName', 'salaryCostNum', 'salaryCostUntil', 'salaryCostAmount', 'salaryCostTotal', 'allTotal', 'color'));
     }
 
     public function company_issue_pdf(Request $request)
@@ -157,34 +155,59 @@ class PdfputController extends Controller
         return $pdf->download($fileName); //生成されるファイル名
     }
 
-    public function pdf_sample(Request $request)
+    public function allViewDownloadPdf(Request $request)
     {
-        $projectId = 1;
-        $month = 11;
+        $startOfWeek = $request->startOfWeek;
+        $endOfWeek = $request->endOfWeek;
+        $projectHeight = $request->projectHeight;
 
-        $getProject = Project::find($projectId);
-        // 取得した月でフィルター
-        $shifts = Shift::whereMonth('date', $month)
-            ->get();
+        // 登録従業員シフト抽出
+        $shifts = Shift::with('employee', 'projectsVehicles.project', 'projectsVehicles.vehicle')
+        ->whereBetween('date', [$startOfWeek, $endOfWeek])
+        ->whereNotNull('employee_id')
+        ->get();
+        $shiftDataByEmployee = $shifts->groupBy(function ($shift) {
+            return $shift->employee_id;
+        });
 
-        // 月の全日付を取得
-        Carbon::setLocale('ja');
+        // 未登録従業員シフト抽出
+        $unShifts = Shift::with('employee', 'projectsVehicles.project', 'projectsVehicles.vehicle')
+        ->whereBetween('date', [$startOfWeek, $endOfWeek])
+        ->whereNull('employee_id')
+        ->get();
+        $shiftDataByUnEmployee = $unShifts->groupBy(function ($unShift) {
+            return $unShift->unregistered_employee;
+        });
 
+        // 日付を格納
         $dates = [];
-        $year = Carbon::now()->year; // 現在の年を取得
-        $startDate = Carbon::createFromDate($year, $month, 1);
-        $daysInMonth = $startDate->daysInMonth;
-
-        for ($day = 1; $day <= $daysInMonth; $day++) {
-            $date = Carbon::createFromDate($year, $month, $day);
-            $dates[] = [
-                'display' => $date->format('m月d日') . '(' . $date->isoFormat('ddd') . ')',
-                'compare' => $date->format('Y-m-d')
-            ];
+        foreach ($shifts as $shift) {
+            if (!in_array($shift->date, $dates)) {
+                $dates[] = $shift->date;
+            }
+        }
+        $convertedDates = [];
+        foreach ($dates as $date) {
+            $convertedDates[] = Carbon::createFromFormat('Y-m-d', $date);
         }
 
-        // $pdf = PDF::loadView('dompdf.pdf',compact('shifts','getProject','dates','projectId','month'));
-        // return $pdf->download('PDFダウンロード.pdf');
-        // return view('dompdf.pdf',compact('shifts','getProject','dates','projectId','month'));
+        $date = new Carbon($startOfWeek);
+        // 祝日を取得
+        $holidays = $this->getHoliday($date->format('Y'));
+
+        // return view('shift-calendar-pdf.all-view-shift', compact('shiftDataByEmployee', 'unShifts', 'convertedDates', 'holidays', 'projectHeight'));
+
+        $pdf = PDF::loadView('shift-calendar-pdf.all-view-shift', compact('shiftDataByEmployee', 'unShifts', 'convertedDates', 'holidays', 'projectHeight'))->setPaper('a4', 'landscape');;
+
+        return $pdf->download();
     }
+
+    // 祝日を取得
+    public function getHoliday($year)
+    {
+        $holidays = Yasumi::create('Japan', $year, 'ja_JP');
+
+        return $holidays;
+    }
+
 }

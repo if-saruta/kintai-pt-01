@@ -11,18 +11,7 @@
                 <div class="info-wrap__register-item">
                     {{-- デフォルトの画面 --}}
                     <div class="info-wrap__register-item__inner --vehicle-default-view" id='defaultView'>
-                        {{-- <div class="info-row">
-                            <p class="info-row__head">ナンバー</p>
-                            <div class="info-row__data --top">
-                                <p class="setCompanyName setTxtElem">--------</p>
-                            </div>
-                        </div>
-                        <div class="info-row">
-                            <p class="info-row__head">所属先</p>
-                            <div class="info-row__data">
-                                <p class="setRegisterNumber setTxtElem">--------</p>
-                            </div>
-                        </div> --}}
+                        
                     </div>
                     {{-- 編集画面 --}}
                     <form action="{{route('vehicle.update')}}" method="POST" class="info-wrap__register-item__inner --edit-inner" id="editView">

@@ -297,7 +297,7 @@
 
         .company {
             position: absolute;
-            top: 200px;
+            bottom: 680px;
             right: 0;
             line-height: 1.5;
             font-size: 13px;
@@ -306,6 +306,8 @@
         .company-info {
             position: relative;
             z-index: 2;
+            max-width: 270px;
+            word-wrap: break-word;
         }
 
         .company-stanp {
@@ -415,6 +417,7 @@
         }
 
         .bank-txt-wrap {
+            width: 100%;
             padding: 7px;
             margin-top: 7px;
             border: 1px solid black;

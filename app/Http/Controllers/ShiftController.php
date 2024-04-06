@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
+use App\Models\Client;
 use App\Models\Project;
 use App\Models\Employee;
 use App\Models\Vehicle;
@@ -11,6 +13,8 @@ use App\Models\ShiftProjectVehicle;
 use App\Models\ProjectEmployeePayment;
 use App\Models\AllowanceByOther;
 use App\Models\AllowanceByProject;
+use App\Models\ProjectHoliday;
+
 use Illuminate\Database\Console\DumpCommand;
 use League\Csv\Reader;
 use League\Csv\Writer;
@@ -217,7 +221,8 @@ class ShiftController extends Controller
             } elseif ($page == 'page06') {
                 $projects = Project::all();
                 $vehicles = Vehicle::all();
-                return view('shift.edit', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'projects', 'vehicles', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates','holidays', 'MultipleDailyUsesVehiclesArray'));
+                $clients = Client::where('id', '!=', 1)->get();
+                return view('shift.edit', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'clients', 'projects', 'vehicles', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates','holidays', 'MultipleDailyUsesVehiclesArray'));
             }
         } else {
             if($user->role <= 10){
@@ -282,9 +287,35 @@ class ShiftController extends Controller
             $shiftMiddle->project_id = $request->projectSelect;
             $shiftMiddle->unregistered_project = null;
         } else {
-            $shiftMiddle->unregistered_project = $request->projectInput;
-            // 未登録の方はnullを保存
-            $shiftMiddle->project_id = null;
+            if($request->clientSwitch == 0){
+                $project = Project::create([
+                    'client_id' => $request->clientExistingId,
+                    'name' => $request->projectInput,
+                    'payment_type' => 1,
+                ]);
+            }else if($request->clientSwitch == 1){
+                $client = Client::create([
+                    'name' => $request->clientName,
+                    'pdfName' => $request->clientPdfName,
+                ]);
+                $project = Project::create([
+                    'client_id' => $client->id,
+                    'name' => $request->projectInput,
+                    'payment_type' => 1,
+                ]);
+            }
+            $shiftMiddle->project_id = $project->id;
+            ProjectHoliday::create([
+                'project_id' => $project->id
+            ]);
+            $employees = Employee::all();
+            foreach($employees as $employee){
+                ProjectEmployeePayment::create([
+                    'employee_id' => $employee->id,
+                    'project_id' => $project->id,
+                    'amount' => null,
+                ]);
+            }
         }
 
         if ($request->createVehicleRadio == 0) {

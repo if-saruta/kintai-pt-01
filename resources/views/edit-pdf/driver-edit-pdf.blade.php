@@ -71,12 +71,12 @@
                     <div class="common__block">
                         <label for="">所属先</label>
                         <select name="" class="c-select companySelect" id="">
-                            <option value="">選択</option>
                             @foreach ($companies as $company)
                                 <option
                                     data-company-name="{{$company->name}}"
                                     data-company-post-code="{{$company->post_code}}"
                                     data-company-address="{{$company->address}}"
+                                    data-company-building-name="{{$company->building_name}}"
                                     data-company-phone = "{{$company->phone}}"
                                     data-company-fax = "{{$company->fax}}"
                                     data-company-register-number = "{{$company->register_number}}"
@@ -158,55 +158,59 @@
                                     <p class="">請求書</p>
                                 </div>
                                 <div class="line colorChangeElem"></div>
-                                <div class="date"><p class="">{{ $today->format('Y') }}年 {{ $today->format('n') }}月 20日</p></div>
                                 <div class="top-info-area">
                                     <div class="top-info-area__left">
-                                {{-- 会社情報 --}}
-<div class="company">
+                                        {{-- 会社情報 --}}
+                                        <div class="company">
 <textarea name="salaryCompanyInfo" class="textarea salary-textarea salaryCompanyTextarea" id="" cols="30" rows="10">
 株式会社 T.N.G　御中
 〒124-0011
 東京都葛飾区四つ木2-3-11
 </textarea>
-<br>
-<p class="" style="margin-top: 30px;">下記の通りご請求申し上げます。</p>
-</div>
-                                        {{-- 請求金額 --}}
-                                        <table class="request-table">
-                                            <tr>
-                                                <td class="request-table-data --bg-green colorChangeElem"><p class="request-table-data-txt">ご請求金額</p></td>
-                                                @if($employeeInfo->is_invoice == 1)
-                                                    <td class="request-table-data"><p class="request-table-data-txt allCalcTotalView">¥{{number_format(round(((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) - round($subTotalCost * 1.1)))}}</p></td>
-                                                @else
-                                                    <td class="request-table-data"><p class="request-table-data-txt allCalcTotalView">¥{{ number_format(round($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - round($totalSalaryAmount * 0.2) + $etc - round($subTotalCost * 1.1)) }}</p></td>
-                                                @endif
-                                            </tr>
-                                        </table>
-                                    </div>
-                                {{-- 従業員情報 --}}
-                                <div class="employee-info">
-                                    <input type="text" hidden name="employeeId" value="{{$employeeInfo->id}}">
-                                    <p class="employee-name">{{$employeeInfo->name}}</p>
-                                    <div class="">
-                                        〒{{$employeeInfo->post_code}} <br>
-                                        {{$employeeInfo->address}} <br>
-                                        @if ($employeeInfo->building_name)
-                                            {{$employeeInfo->building_name}} <br>
-                                        @endif
-                                        @if ($employeeInfo->phone_number)
-                                        {{ $employeeInfo->phone_number }}<br>
-                                        @endif
-                                        @if ($employeeInfo->is_invoice == 1)
-                                            登録番号　{{$employeeInfo->register_number}} <br>
-                                        @endif
-                                        <div class="employee-info__bank" id="bankArea">
-                                            <div class="employee-info__bank__top">
-                                                <div class=""><input type="text" name="bank_name" class="input setBankName" value="{{$employeeInfo->bankAccounts->first()->bank_name}}" readonly></div>
-                                            </div>
-                                            <div class="employee-info__bank__under">振込先名<input type="text" name="bank_account_holder" class="input setAccountHolder" value="{{$employeeInfo->bankAccounts->first()->account_holder_name}}" readonly></div>
+                                        </div>
+                                        <div class="top-info-area__left__bottom">
+                                            <p class="message">下記の通りご請求申し上げます。</p>
+                                            {{-- 請求金額 --}}
+                                            <table class="request-table">
+                                                <tr>
+                                                    <td class="request-table-data --bg-green colorChangeElem"><p class="request-table-data-txt">ご請求金額</p></td>
+                                                    @if($employeeInfo->is_invoice == 1)
+                                                        <td class="request-table-data"><p class="request-table-data-txt allCalcTotalView">¥{{number_format(round(((($totalSalaryAmount + $allowanceAmount + $otherTotal) * 1.1) + $etc) - round($subTotalCost * 1.1)))}}</p></td>
+                                                    @else
+                                                        <td class="request-table-data"><p class="request-table-data-txt allCalcTotalView">¥{{ number_format(round($totalSalaryAmount * 1.1) + $allowanceAmount + $otherTotal - round($totalSalaryAmount * 0.2) + $etc - round($subTotalCost * 1.1)) }}</p></td>
+                                                    @endif
+                                                </tr>
+                                            </table>
                                         </div>
                                     </div>
-                                </div>
+                                    <div class="top-info-area__right">
+                                        {{-- 日付 --}}
+                                        <div class="date"><p class="">{{ $today->format('Y') }}年 {{ $today->format('n') }}月 20日</p></div>
+                                        {{-- 従業員情報 --}}
+                                        <div class="employee-info">
+                                            <input type="text" hidden name="employeeId" value="{{$employeeInfo->id}}">
+                                            <p class="employee-name">{{$employeeInfo->name}}</p>
+                                            <div class="">
+                                                〒{{$employeeInfo->post_code}} <br>
+                                                {{$employeeInfo->address}} <br>
+                                                @if ($employeeInfo->building_name)
+                                                    {{$employeeInfo->building_name}} <br>
+                                                @endif
+                                                @if ($employeeInfo->phone_number)
+                                                {{ $employeeInfo->phone_number }}<br>
+                                                @endif
+                                                @if ($employeeInfo->is_invoice == 1)
+                                                    登録番号　{{$employeeInfo->register_number}} <br>
+                                                @endif
+                                                <div class="employee-info__bank" id="bankArea">
+                                                    <div class="employee-info__bank__top">
+                                                        <div class=""><input type="text" name="bank_name" class="input setBankName" value="{{$employeeInfo->bankAccounts->first()->bank_name}}" readonly></div>
+                                                    </div>
+                                                    <div class="employee-info__bank__under">振込先名<input type="text" name="bank_account_holder" class="input setAccountHolder" value="{{$employeeInfo->bankAccounts->first()->account_holder_name}}" readonly></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 {{-- 給与詳細テーブル --}}
                                 <table class="top-table salary-top-table salaryTopTable">
@@ -217,7 +221,7 @@
                                     <tr>
                                         <th class="top-table-head w-70 --bg-green colorChangeElem"><p class="top-table-head-txt">NO</p></th>
                                         <th class="top-table-head w-70 --bg-green colorChangeElem"><p class="top-table-head-txt">月日</p></th>
-                                        <th class="top-table-head w-260 --bg-green colorChangeElem"><p class="top-table-head-txt">案件名</p></th>
+                                        <th class="top-table-head w-344 --bg-green colorChangeElem"><p class="top-table-head-txt">案件名</p></th>
                                         <th class="top-table-head w-70 --bg-green colorChangeElem"><p class="top-table-head-txt">高速代他</p></th>
                                         <th class="top-table-head w-70 --bg-green colorChangeElem"><p class="top-table-head-txt">実績</p></th>
                                         <th class="top-table-head w-70 --bg-green colorChangeElem"><p class="top-table-head-txt">単価</p></th>
@@ -227,7 +231,7 @@
                                     <tr class="salaryBasicRow">
                                         <td class="top-table-data w-70"><input type="text" name="salaryNo[]" class="input table-input"></td>
                                         <td class="top-table-data w-70"><input type="text" name="salaryMonth[]" value="{{ $today->format('n') }}月度" class="input table-input changeElement"></td>
-                                        <td class="top-table-data w-260"><input type="text" name="salaryProject[]" value="外注費" class="input table-input changeElement"></td>
+                                        <td class="top-table-data w-344"><input type="text" name="salaryProject[]" value="外注費" class="input table-input changeElement"></td>
                                         <td class="top-table-data w-70"><input type="text" name="salaryEtc[]" value="{{ number_format($etc) }}" class="input table-input changeElement etcElement commaInput"></td>
                                         <td class="top-table-data w-70"><input type="text" name="salaryCount[]" value="1" class="input table-input changeElement salaryNum"></td>
                                         @if ($employeeInfo->is_invoice == 1)
@@ -243,7 +247,7 @@
                                         <tr class="salaryBasicRow">
                                             <td class="top-table-data w-70"><input type="text" name="salaryNo[]" class="input table-input changeElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryMonth[]" value="{{ $today->format('n') }}月度" class="input table-input changeElement"></td>
-                                            <td class="top-table-data w-260"><input type="text" name="salaryProject[]" value="{{ $allowanceName }}" class="input table-input changeElement"></td>
+                                            <td class="top-table-data w-344"><input type="text" name="salaryProject[]" value="{{ $allowanceName }}" class="input table-input changeElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryEtc[]" class="input table-input changeElement etcElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryCount[]" @if($allowanceAmount != 0) value="1" @endif  class="input table-input changeElement salaryNum"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{ number_format($allowanceAmount) }}" class="input table-input amount changeElement salaryUnit commaInput"></td>
@@ -254,7 +258,7 @@
                                         <tr class="salaryBasicRow">
                                             <td class="top-table-data w-70"><input type="text" name="salaryNo[]" class="input table-input changeElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryMonth[]" value="{{ $today->format('n') }}月度" class="input table-input changeElement"></td>
-                                            <td class="top-table-data w-260"><input type="text" name="salaryProject[]" value="値引き分" class="input table-input changeElement"></td>
+                                            <td class="top-table-data w-344"><input type="text" name="salaryProject[]" value="値引き分" class="input table-input changeElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryEtc[]" class="input table-input changeElement etcElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryCount[]" value="1" class="input table-input changeElement salaryNum"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{ number_format(-round($totalSalaryAmount * 0.1) * 0.2) }}" class="input table-input amount changeElement salaryUnit commaInput"></td>
@@ -266,7 +270,7 @@
                                         <tr class="salaryBasicRow">
                                             <td class="top-table-data w-70"><input type="text" name="salaryNo[]" class="input table-input changeElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryMonth[]" class="input table-input changeElement"></td>
-                                            <td class="top-table-data w-260"><input type="text" name="salaryProject[]" value="{{ $other['name'] }}" class="input table-input changeElement"></td>
+                                            <td class="top-table-data w-344"><input type="text" name="salaryProject[]" value="{{ $other['name'] }}" class="input table-input changeElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryEtc[]" class="input table-input changeElement etcElement"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryCount[]" value="1" class="input table-input changeElement salaryNum"></td>
                                             <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{ number_format($other['amount']) }}" class="input table-input amount changeElement salaryUnit commaInput"></td>
@@ -279,7 +283,7 @@
                                     <tr class="salaryBasicRow">
                                         <td class="top-table-data w-70"><input type="text" name="salaryNo[]" class="input table-input changeElement"></td>
                                         <td class="top-table-data w-70"><input type="text" name="salaryMonth[]" class="input table-input changeElement"></td>
-                                        <td class="top-table-data w-260"><input type="text" name="salaryProject[]" class="input table-input changeElement"></td>
+                                        <td class="top-table-data w-344"><input type="text" name="salaryProject[]" class="input table-input changeElement"></td>
                                         <td class="top-table-data w-70"><input type="text" name="salaryEtc[]" class="input table-input changeElement etcElement"></td>
                                         <td class="top-table-data w-70"><input type="text" name="salaryCount[]" class="input table-input changeElement salaryNum"></td>
                                         <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" class="input table-input amount changeElement salaryUnit commaInput"></td>
@@ -288,7 +292,7 @@
                                     <tr class="salaryBasicRow">
                                         <td class="top-table-data w-70"><input type="text" name="salaryNo[]" class="input table-input changeElement"></td>
                                         <td class="top-table-data w-70"><input type="text" name="salaryMonth[]" class="input table-input changeElement"></td>
-                                        <td class="top-table-data w-260"><input type="text" name="salaryProject[]" class="input table-input changeElement"></td>
+                                        <td class="top-table-data w-344"><input type="text" name="salaryProject[]" class="input table-input changeElement"></td>
                                         <td class="top-table-data w-70"><input type="text" name="salaryEtc[]" class="input table-input changeElement etcElement"></td>
                                         <td class="top-table-data w-70"><input type="text" name="salaryCount[]" class="input table-input changeElement salaryNum"></td>
                                         <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" class="input table-input amount changeElement salaryUnit commaInput"></td>
@@ -298,7 +302,7 @@
                                         <tr>
                                             <td class="top-table-data w-70 --bg-green colorChangeElem"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-70 --bg-green colorChangeElem"><p class="top-table-data-txt --center"></p></td>
-                                            <td class="top-table-data w-260 --bg-green colorChangeElem"><p class="top-table-data-txt --right">小計</p></td>
+                                            <td class="top-table-data w-344 --bg-green colorChangeElem"><p class="top-table-data-txt --right">小計</p></td>
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
@@ -308,7 +312,7 @@
                                         <tr>
                                             <td class="top-table-data w-70 --bg-green colorChangeElem"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-70 --bg-green colorChangeElem"><p class="top-table-data-txt --center"></p></td>
-                                            <td class="top-table-data w-260 --bg-green colorChangeElem"><p class="top-table-data-txt --right">小計</p></td>
+                                            <td class="top-table-data w-344 --bg-green colorChangeElem"><p class="top-table-data-txt --right">小計</p></td>
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                             <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
@@ -319,7 +323,7 @@
                                     <tr>
                                         <td class="top-table-data w-70 --bg-green colorChangeElem"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70 --bg-green colorChangeElem"><p class="top-table-data-txt --center"></p></td>
-                                        <td class="top-table-data w-260 --bg-green colorChangeElem"><p class="top-table-data-txt --right">消費税(10%)</p></td>
+                                        <td class="top-table-data w-344 --bg-green colorChangeElem"><p class="top-table-data-txt --right">消費税(10%)</p></td>
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
@@ -329,7 +333,7 @@
                                     <tr>
                                         <td class="top-table-data w-70 --bg-green colorChangeElem"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70 --bg-green colorChangeElem"><p class="top-table-data-txt --center"></p></td>
-                                        <td class="top-table-data w-260 --bg-green colorChangeElem"><p class="top-table-data-txt --right">高速代他</p></td>
+                                        <td class="top-table-data w-344 --bg-green colorChangeElem"><p class="top-table-data-txt --right">高速代他</p></td>
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
@@ -338,7 +342,7 @@
                                     <tr>
                                         <td class="top-table-data w-70 --bg-green colorChangeElem"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70 --bg-green colorChangeElem"><p class="top-table-data-txt --center"></p></td>
-                                        <td class="top-table-data w-260 --bg-green colorChangeElem"><p class="top-table-data-txt --right">合計金額</p></td>
+                                        <td class="top-table-data w-344 --bg-green colorChangeElem"><p class="top-table-data-txt --right">合計金額</p></td>
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --center"></p></td>
                                         <td class="top-table-data w-70"><p class="top-table-data-txt --right"></p></td>
@@ -444,15 +448,21 @@
                                 <div class="title">
                                     <p class="">請求書</p>
                                 </div>
-                                <div class="driver">
-                                    <p class="driver__name">{{$employeeInfo->name}}　様</p>
-                                    <input type="text" hidden name="employeeId" value="{{$employeeInfo->id}}">
-                                    <p class="f-s-13">
-                                        件名：{{ $today->format('n') }}月度の差引金額について<br>
-                                        下記の通りご請求申し上げます。
-                                    </p>
-                                </div>
-                                <div class="company">
+                                <div class="top-info-area">
+                                    <div class="top-info-area__left">
+                                        <div class="driver">
+                                            <p class="driver__name">{{$employeeInfo->name}}　様</p>
+                                            <input type="text" hidden name="employeeId" value="{{$employeeInfo->id}}">
+                                            <p class="f-s-13">
+                                                件名：{{ $today->format('n') }}月度の差引金額について<br>
+                                                下記の通りご請求申し上げます。
+                                            </p>
+                                        </div>
+                                        <div class="amount">
+                                            <p class="amount-txt"><span class="">ご請求金額</span><span class="amount-fee costTotalView">¥{{number_format(round($subTotalCost * 1.1))}}</span></p>
+                                        </div>
+                                    </div>
+                                    <div class="company">
 <textarea name="costCompanyInfo" class="textarea cost-textarea costCompanyTextarea" id="" cols="30" rows="10">
 株式会社T.N.G
 〒124-0011
@@ -462,12 +472,10 @@ TEL:03-5875-7469
 FAX:03-5875-7469
 登録番号: T6011801035426
 </textarea>
-<div class="company__stanp">
-    <img class="" src="{{ asset('img/signature-stamp.png') }}" alt="">
-</div>
-                                </div>
-                                <div class="amount">
-                                    <p class="amount-txt"><span class="">ご請求金額</span><span class="amount-fee costTotalView">¥{{number_format(round($subTotalCost * 1.1))}}</span></p>
+                                        <div class="company__stanp">
+                                            <img class="" src="{{ asset('img/signature-stamp.png') }}" alt="">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="parent">
                                     <div class="plus costAddBtn">

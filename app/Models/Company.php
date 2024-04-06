@@ -11,5 +11,5 @@ class Company extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['register_number','name', 'post_code', 'address', 'phone', 'fax', 'bank_name', 'account_holder_name'];
+    protected $fillable = ['register_number','name', 'post_code', 'address', 'building_name', 'phone', 'fax', 'bank_name', 'account_holder_name'];
 }

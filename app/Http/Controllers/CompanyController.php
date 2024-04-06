@@ -25,6 +25,7 @@ class CompanyController extends Controller
             'name' => $request->name,
             'post_code' => $request->post_code,
             'address' => $request->address,
+            'building_name' => $request->building_name,
             'phone' => $request->phone,
             'fax' => $request->fax,
             'bank_name' => $request->bank_name,
@@ -44,6 +45,7 @@ class CompanyController extends Controller
             $company->name = $request->name;
             $company->post_code = $request->post_code;
             $company->address = $request->address;
+            $company->building_name = $request->building_name;
             $company->phone = $request->phone;
             $company->fax = $request->fax;
             $company->bank_name = $request->bank_name;

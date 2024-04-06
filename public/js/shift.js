@@ -184,10 +184,11 @@ window.addEventListener('DOMContentLoaded', () => {
         vehicleSelect.style.display = 'block';
     }
 
+    const modal = document.getElementById('createShiftModal');
     // シフト新規作成モーダルの挙動を制御
     const createModalActive = () => {
         const targetElem = document.querySelectorAll('.createBtn');
-        const modal = document.getElementById('createShiftModal');
+        // const modal = document.getElementById('createShiftModal');
         const closeElem = document.querySelectorAll('.createCloseModal');
 
         // モダールに値をセット
@@ -243,7 +244,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 const projectAmount = projectSelect.options[projectSelect.selectedIndex].getAttribute('data-retail-amount');
                 // ドライバー価格の取得
                 const driverAmount = projectSelect.options[projectSelect.selectedIndex].getAttribute('data-driver-amount');
-                
+
                 // 金額をセット
                 if(projectAmount != null){
                     createRetailInput.value = inputCommma(projectAmount);
@@ -274,11 +275,13 @@ window.addEventListener('DOMContentLoaded', () => {
                         projectSelect.style.display = "block";
                         // 上代・給与の値をセット
                         displaySelectedOption(target);
+                        clientViewActive(projectRadio[i]);
                     }else{
                         projectInput.style.display = "block";
                         // 上代・給与の値を空に
                         createRetailInput.value = '';
                         createSalaryInput.value = '';
+                        clientViewActive(projectRadio[i]);
                     }
                 })
             }
@@ -296,6 +299,43 @@ window.addEventListener('DOMContentLoaded', () => {
                 })
             }
         }
+
+        // クライアント入力画面の挙動を制御
+        const clientSwitch = document.querySelectorAll('.clientSwitchRadio'); //既存か新規のラジオボタン
+        const clientExistingView = document.getElementById('clientExistingArea'); //既存のview
+        const clientCreateView = document.getElementById('clientCreateArea'); //新規のview
+        const clientSelect = clientExistingView.querySelector('.clientSelect');
+        const clientInput = clientCreateView.querySelectorAll('.clientInput'); //新規input
+        const clientViewActive = (projectRadio) => {
+            // 既存・新規で表示の切り替え
+            if(projectRadio.value == '0'){
+                modal.classList.remove('create-client-active');
+            }else{
+                modal.classList.add('create-client-active');
+                clientSelect.required = true; //初期値として必須項目に変更
+            }
+
+            for(let i = 0; i < clientSwitch.length; i++){
+                clientSwitch[i].addEventListener('change', () => {
+                    if(clientSwitch[i].value == '0'){
+                        clientExistingView.style.display = 'block';
+                        clientCreateView.style.display = 'none';
+                        clientSelect.required = true; //selectの必須項目変更
+                        for(let j = 0; j < clientInput.length; j++){ //inputの必須項目変更
+                            clientInput[j].required = false;
+                        }
+                    }else{
+                        clientExistingView.style.display = 'none';
+                        clientCreateView.style.display = 'flex';
+                        clientSelect.required = false; //selectの必須項目変更
+                        for(let j = 0; j < clientInput.length; j++){ //inputの必須項目変更
+                            clientInput[j].required = true;
+                        }
+                    }
+                })
+            }
+        }
+
         // モーダルが閉じた時にすべてのデータを初期値にする
         const CreateReturnInitialState = () => {
             const projectInput = document.getElementById('createProjectInput');
@@ -321,6 +361,16 @@ window.addEventListener('DOMContentLoaded', () => {
             vehicleSelect.style.display = 'block';
             retailInput.value = '';
             salaryInput.value = '';
+
+            // クライアント
+            modal.classList.remove('create-client-active'); //クライアントviewを非表示
+            clientSwitch[0].checked = true; //既存案件のラジオをtrue
+            clientExistingView.style.display = 'block'; //既存クライアントviewを表示
+            clientCreateView.style.display = 'none'; //新規クライアントviewを非表示
+            clientSelect.options[0].selected = true; //クライアントselectのoptionを0
+            for(let i = 0; i < clientInput.length; i++){
+                clientInput[i].value = '';
+            }
         }
         // 開ける
         for(let i = 0; i < targetElem.length; i++){
@@ -345,7 +395,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
     }
-    createModalActive();
+    if(modal != null){
+        createModalActive();
+    }
 
     // csvファイルのインポートの挙動を制御
     const csvActive = () => {
@@ -435,6 +487,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const setHeight = () => {
         const setElem = document.querySelectorAll('.setHightElem');
+        const projectHeight = document.getElementById('projectHeight');
 
         let max = 0;
         for(let i = 0; i < setElem.length; i++){
@@ -446,6 +499,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
         for(let i = 0; i < setElem.length; i++){
             setElem[i].style.height = `${max}px`;
+        }
+        // pdfのフォームのinputに案件の高さ
+        if(projectHeight != null){
+            projectHeight.value = max;
         }
     }
     setHeight();

@@ -295,12 +295,18 @@
 
         .employee-info {
             position: absolute;
-            /* top: 130px; */
-            bottom: 740px;
+            bottom: 730px;
             right: 0px;
-            /* width: 250px; */
+            /* max-width: 260px;
+            width: 260px; */
             font-size: 13px;
             line-height: 1.5;
+        }
+        .employee-info-main{
+            max-width: 260px;
+            /* width: 260px; */
+            white-space: wrap;
+            word-wrap: break-word;
         }
 
         .employee-name {
@@ -321,6 +327,7 @@
         }
 
         .company {
+            max-width: 400px;
             margin-top: 20px;
             font-size: 13px;
             line-height: 1.5;
@@ -443,9 +450,9 @@
         </div>
         <div class="employee-info">
             <p class="employee-name">{{$employee->name}}</p>
-            <p class="">
+            <p class="employee-info-main">
                 〒{{$employee->post_code}} <br>
-                {{$employee->address}} <br>
+                {{ $employee->address }}<br>
                 @if ($employee->building_name)
                 {{$employee->building_name}} <br>
                 @endif

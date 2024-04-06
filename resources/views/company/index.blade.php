@@ -63,6 +63,12 @@
                                 </div>
                             </div>
                             <div class="info-row">
+                                <p class="info-row__head">建物名</p>
+                                <div class="info-row__data">
+                                    <p class="setAddress setTxtElem">--------</p>
+                                </div>
+                            </div>
+                            <div class="info-row">
                                 <p class="info-row__head">銀行口座</p>
                                 <div class="info-row__data">
                                     <p class="setBankName setTxtElem">--------</p>
@@ -112,7 +118,6 @@
                             <div class="info-row info-row-edit">
                                 <div class="flex-10">
                                     <p class="info-row__head info-row-edit__head">FAX</p>
-                                    <p class="required">必須</p>
                                 </div>
                                 <div class="info-row__data info-row-edit__data">
                                     <input type="text" class="c-input setValueElem" name="fax">
@@ -133,8 +138,16 @@
                                     <p class="required">必須</p>
                                 </div>
                                 <div class="info-row__data info-row-edit__data">
-                                    <textarea id="" cols="30" rows="10" class="c-textarea setValueElem"
-                                        name="address" required></textarea>
+                                    <input id="" cols="30" rows="10" class="c-input setValueElem"
+                                        name="address" required></input>
+                                </div>
+                            </div>
+                            <div class="info-row info-row-edit">
+                                <div class="flex-10">
+                                    <p class="info-row__head info-row-edit__head">建物名</p>
+                                </div>
+                                <div class="info-row__data info-row-edit__data">
+                                    <input type="text" class="c-input setValueElem" name="building_name" placeholder="⚪︎⚪︎コーポ001">
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
@@ -207,7 +220,6 @@
                             <div class="info-row info-row-edit">
                                 <div class="flex-10">
                                     <p class="info-row__head info-row-edit__head">FAX</p>
-                                    <p class="required">必須</p>
                                 </div>
                                 <div class="info-row__data info-row-edit__data">
                                     <input type="text" class="c-input setValueElem" name="fax" placeholder="000-0000-0000">
@@ -228,7 +240,15 @@
                                     <p class="required">必須</p>
                                 </div>
                                 <div class="info-row__data info-row-edit__data">
-                                    <textarea id="" cols="30" rows="10" class="c-textarea setValueElem" name="address" placeholder="東京都新宿区新宿 0-00-00" required></textarea>
+                                    <input id="" cols="30" rows="10" class="c-input setValueElem" name="address" placeholder="東京都新宿区新宿 0-00-00" required></input>
+                                </div>
+                            </div>
+                            <div class="info-row info-row-edit">
+                                <div class="flex-10">
+                                    <p class="info-row__head info-row-edit__head">建物名</p>
+                                </div>
+                                <div class="info-row__data info-row-edit__data">
+                                    <input type="text" name="building_name" class="c-input setValueElem" placeholder="⚪︎⚪︎コーポ001">
                                 </div>
                             </div>
                             <div class="info-row info-row-edit">
@@ -289,10 +309,10 @@
                                     <p class="edit-btn-txt">編集</p>
                                 </div>
                                 <div class="dataHasElem"
-                                    data-info='["{{$company->name}}","{{$company->register_number}}","{{$company->phone}}","{{$company->fax}}","{{$company->post_code}}","{{$company->address}}","{{$company->bank_name}}","{{$company->account_holder_name}}"]'>
+                                    data-info='["{{$company->name}}","{{$company->register_number}}","{{$company->phone}}","{{$company->fax}}","{{$company->post_code}}","{{$company->address}}","{{$company->building_name}}","{{$company->bank_name}}","{{$company->account_holder_name}}"]'>
                                 </div>
                                 <div class="dataHasEditElem"
-                                    data-info='["{{$company->id}}","{{$company->name}}","{{$company->register_number}}","{{$company->phone}}","{{$company->fax}}","{{$company->post_code}}","{{$company->address}}","{{$company->bank_name}}","{{$company->account_holder_name}}"]'>
+                                    data-info='["{{$company->id}}","{{$company->name}}","{{$company->register_number}}","{{$company->phone}}","{{$company->fax}}","{{$company->post_code}}","{{$company->address}}","{{$company->building_name}}","{{$company->bank_name}}","{{$company->account_holder_name}}"]'>
                                 </div>
                             </button>
                         </div>

@@ -93,12 +93,21 @@
                 <div class="shift-calendar__color-nav">
                     <div class="shift-calendar__color-nav__item">
                         <div class="color-box"></div>
-                        <p class="">　: 上代</p>
+                        <p class="">: 上代</p>
                     </div>
                     <div class="shift-calendar__color-nav__item">
                         <div class="color-box"></div>
-                        <p class="">　：　ドライバー価格</p>
+                        <p class="">: ドライバー価格</p>
                     </div>
+                </div>
+                <div class="calendar-download">
+                    <form action="{{ route('shift.allViewPdf') }}" method="POST">
+                        @csrf
+                        <input hidden name="startOfWeek" value="{{ $startOfWeek }}" type="text">
+                        <input hidden name="endOfWeek" value="{{ $endOfWeek }}" type="text">
+                        <input hidden name="projectHeight" value="" id="projectHeight" type="text">
+                        <button class="calendar-download-btn">ダウンロード</button>
+                    </form>
                 </div>
                 {{-- 日付の表示 --}}
                 <div class="shift-calendar__date">

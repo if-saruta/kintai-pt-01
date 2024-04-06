@@ -187,6 +187,15 @@ window.addEventListener('DOMContentLoaded', () => {
             })
         }
 
+        salaryItemCalc();
+        costItemByDriverCalc();
+        const resultSalarySubTotal = salarySubTotalCalc();
+        const resultSalaryTax =  salaryTaxCalc(resultSalarySubTotal);
+        const resultEtc = etcTotalCalc();
+        salaryTotalCalc(resultSalarySubTotal, resultSalaryTax, resultEtc);
+        costAllTotal();
+        lastCalc();
+
         const btns = document.querySelectorAll('.deleteRowBtn');
         for (let i = 0; i < btns.length; i++) {
             btns[i].addEventListener('click', function() {
@@ -647,14 +656,20 @@ window.addEventListener('DOMContentLoaded', () => {
             companyName = selectedOption.getAttribute('data-company-name');
             post_code = selectedOption.getAttribute('data-company-post-code');
             address = selectedOption.getAttribute('data-company-address');
+            building_name = selectedOption.getAttribute('data-company-building-name');
             phone = selectedOption.getAttribute('data-company-phone');
             fax = selectedOption.getAttribute('data-company-fax');
             number = selectedOption.getAttribute('data-company-register-number');
             bank_name = selectedOption.getAttribute('data-bank-name');
             holder_name = selectedOption.getAttribute('data-account-holder-name');
 
-            salaryTextarea.value = companyName + "　" + '御中' + '\n' + '〒' + post_code + '\n' + address;
-            costTextarea.value = companyName + '\n' + '〒' + post_code + '\n' + address + '\n' + 'TEL : ' + phone + '\n' + 'FAX : ' + fax + '\n' + '登録番号 : ' + number;
+            // building_nameが空でなければ、addressの後に'\n'とbuilding_nameを追加
+            let fullAddress = building_name ? address + '\n' + building_name : address;
+
+            // 給与請求書
+            salaryTextarea.value = companyName + "　" + '御中' + '\n' + '〒' + post_code + '\n' + address + '\n' + building_name;
+            // 費用請求書関連
+            costTextarea.value = companyName + '\n' + '〒' + post_code + '\n' + fullAddress + '\n' + 'TEL : ' + phone + '\n' + 'FAX : ' + fax + '\n' + '登録番号 : ' + number;
             bankTextarea.value = bank_name + "　　　" + holder_name;
         });
     }
