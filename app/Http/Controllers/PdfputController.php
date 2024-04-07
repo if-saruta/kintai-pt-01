@@ -64,7 +64,7 @@ class PdfputController extends Controller
 
         $fileName = "{$today->format('Y-m-d')}_{$name}.pdf";
 
-        $pdf->download($fileName); //生成されるファイル名
+        return $pdf->download($fileName); //生成されるファイル名
 
         // return view('issue-pdf.driver-issue-pdf', compact('today', 'employee', 'textWithBreaks', 'invoiceNumber', 'offSetInvoiceNumber', 'bankName', 'bankAccountHolder', 'salaryNo', 'salaryMonth','salaryProject', 'salaryEtc', 'salaryCount', 'salaryUntil', 'salaryAmount', 'salarySubTotal', 'salaryTax', 'etcTotal', 'salaryTotal', 'getCostNum', 'getCostUntil', 'getCostAmount', 'salaryCostName', 'salaryCostNum', 'salaryCostUntil', 'salaryCostAmount', 'salaryCostTotal', 'allTotal', 'color'));
     }
