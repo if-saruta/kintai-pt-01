@@ -197,6 +197,8 @@ class PdfputController extends Controller
 
         // return view('shift-calendar-pdf.all-view-shift', compact('shiftDataByEmployee', 'unShifts', 'convertedDates', 'holidays', 'projectHeight'));
 
+        ini_set('memory_limit', '256M');
+
         $pdf = PDF::loadView('shift-calendar-pdf.all-view-shift', compact('shiftDataByEmployee', 'unShifts', 'convertedDates', 'holidays', 'projectHeight'))->setPaper('a4', 'landscape');;
 
         return $pdf->download();
