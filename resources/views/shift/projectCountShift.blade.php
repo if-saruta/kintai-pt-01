@@ -91,6 +91,20 @@
                 $tmpEmployee = null;
             ?>
             <div class="shift-calendar">
+                {{-- シフトPDFダウンロード --}}
+                <div class="calendar-download">
+                    <form action="{{ route('shift.allViewPdf') }}" method="POST">
+                        @csrf
+                        {{-- 日付 --}}
+                        <input hidden name="startOfWeek" value="{{ $startOfWeek }}" type="text">
+                        <input hidden name="endOfWeek" value="{{ $endOfWeek }}" type="text">
+                        {{-- 案件のhegiht --}}
+                        <input hidden name="projectHeight" value="" id="projectHeight" type="text">
+                        {{-- シフトの種類 --}}
+                        <input hidden name="shiftType" value="projectCount" type="text">
+                        <button class="calendar-download-btn">ダウンロード</button>
+                    </form>
+                </div>
                 {{-- 日付の表示 --}}
                 <div class="shift-calendar__date">
                     <form action="{{route('shift.projectCountSelectWeek')}}" method="POST">
