@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Client;
 use App\Models\Project;
-use App\Models\projectDetail;
+use App\Models\ProjectDetail;
 use App\Models\Employee;
 use App\Models\ProjectEmployeePayment;
 use App\Models\ShiftProjectVehicle;
