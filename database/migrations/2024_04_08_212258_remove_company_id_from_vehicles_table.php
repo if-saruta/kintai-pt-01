@@ -12,9 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('vehicles', function (Blueprint $table) {
-            $table->string('place_name')->nullable()->after('id');
-            $table->string('class_number')->nullable()->after('place_name');
-            $table->string('hiragana')->nullable()->after('class_number');
+            // 外部キー制約を削除
+            $table->dropForeign(['company_id']);
+            // company_idカラムを削除
+            $table->dropColumn('company_id');
         });
     }
 
@@ -24,7 +25,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('vehicles', function (Blueprint $table) {
-            $table->dropColumn(['place_name', 'class_number', 'hiragana']);
+            // company_idカラムを追加
+            $table->unsignedBigInteger('company_id')->nullable()->after('number');
+            // 外部キー制約を再追加
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
         });
     }
 };

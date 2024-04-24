@@ -6,225 +6,66 @@
     </x-slot>
 
     <main class="main">
-        <div class="main__white-board --info-white-board">
+        <div class="main__white-board --info-white-board --vehicle-white-board">
             <div class="info-wrap">
-                <div class="info-wrap__register-item">
-                    {{-- デフォルトの画面 --}}
-                    <div class="info-wrap__register-item__inner --vehicle-default-view" id='defaultView'>
-                        
-                    </div>
-                    {{-- 編集画面 --}}
-                    <form action="{{route('vehicle.update')}}" method="POST" class="info-wrap__register-item__inner --edit-inner" id="editView">
-                        @csrf
-                        <input hidden type="text" class="setValueElem" name="id">
-                        <div class="info-row info-row-edit">
-                            <div class="flex-10">
-                                <p class="info-row__head info-row-edit__head">地名</p>
-                                <p class="required">必須</p>
-                            </div>
-                            <div class="info-row__data --top --top-edit">
-                                @can('admin-higher')
-                                <input type="text" class="c-input setValueElem" name="place_name" placeholder="世田谷">
-                                @else
-                                <input type="text" class="c-input setValueElem" name="place_name" placeholder="世田谷" readonly>
-                                @endcan
-                            </div>
-                        </div>
-                        <div class="info-row info-row-edit">
-                            <div class="flex-10">
-                                <p class="info-row__head info-row-edit__head">分類番号</p>
-                                <p class="required">必須</p>
-                            </div>
-                            <div class="info-row__data --top --top-edit">
-                                @can('admin-higher')
-                                <input type="text" class="c-input setValueElem" name="class_number" placeholder="300">
-                                @else
-                                <input type="text" class="c-input setValueElem" name="class_number" placeholder="300" readonly>
-                                @endcan
-                            </div>
-                        </div>
-                        <div class="info-row info-row-edit">
-                            <div class="flex-10">
-                                <p class="info-row__head info-row-edit__head">ひらがな</p>
-                                <p class="required">必須</p>
-                            </div>
-                            <div class="info-row__data --top --top-edit">
-                                @can('admin-higher')
-                                <input type="text" class="c-input setValueElem" name="hiragana" placeholder="あ">
-                                @else
-                                <input type="text" class="c-input setValueElem" name="hiragana" placeholder="あ" readonly>
-                                @endcan
-                            </div>
-                        </div>
-                        <div class="info-row info-row-edit">
-                            <div class="flex-10">
-                                <p class="info-row__head info-row-edit__head">ナンバー</p>
-                                <p class="required">必須</p>
-                            </div>
-                            <div class="info-row__data --top --top-edit">
-                                @can('admin-higher')
-                                    <input type="text" class="c-input setValueElem" name="number" required>
-                                @else
-                                    <input type="text" class="c-input setValueElem" name="number" readonly>
-                                @endcan
-                            </div>
-                        </div>
-                        <div class="info-row info-row-edit">
-                            <div class="flex-10">
-                                <p class="info-row__head info-row-edit__head">所属先</p>
-                                <p class="required">必須</p>
-                            </div>
-                            <div class="info-row__data info-row-edit__data">
-                                @can('admin-higher')
-                                    <select name="company" class="c-select" id="setSelectValueElem" required>
-                                        <option value="">選択してください</option>
-                                        @foreach ($companies as $company)
-                                            <option value="{{$company->id}}">{{$company->name}}</option>
-                                        @endforeach
-                                    </select>
-                                @else
-                                    <select name="company" class="c-select" id="setSelectValueElem" disabled="disabled">
-                                        <option value="">選択してください</option>
-                                        @foreach ($companies as $company)
-                                            <option value="{{$company->id}}">{{$company->name}}</option>
-                                        @endforeach
-                                    </select>
-                                @endcan
-                            </div>
-                        </div>
-
-                        {{-- ボタン --}}
-                        <div class="btn-area edit-btn-area">
-                            @can('admin-higher')
-                            <button class="btn --save" type="submit" name="action" value="save">
-                                入力内容を登録
-                            </button>
-                            <button class="btn --delete" type="submit" name="action" value="delete" onclick='return confirm("本当に削除しますか?")'>
-                                車両を削除
-                            </button>
-                            @endcan
-                            <div class="btn --back closeBtn" onclick='return confirm("入力したデータは失われます。")'>
-                                戻る
-                            </div>
-                        </div>
-                    </form>
-                    {{-- 新規作成画面 --}}
-                    <form action="{{route('vehicle.store')}}" method="POST" class="info-wrap__register-item__inner --edit-inner" id="createView">
-                        @csrf
-                        <input hidden type="text" class="setValueElem" name="id">
-                        <div class="info-row info-row-edit">
-                            <div class="flex-10">
-                                <p class="info-row__head info-row-edit__head">地名</p>
-                                <p class="required">必須</p>
-                            </div>
-                            <div class="info-row__data --top --top-edit">
-                                <input type="text" class="c-input setValueElem" name="place_name" placeholder="世田谷" required>
-                            </div>
-                        </div>
-                        <div class="info-row info-row-edit">
-                            <div class="flex-10">
-                                <p class="info-row__head info-row-edit__head">分類番号</p>
-                                <p class="required">必須</p>
-                            </div>
-                            <div class="info-row__data --top --top-edit">
-                                <input type="text" class="c-input setValueElem" name="class_number" placeholder="300" required>
-                            </div>
-                        </div>
-                        <div class="info-row info-row-edit">
-                            <div class="flex-10">
-                                <p class="info-row__head info-row-edit__head">ひらがな</p>
-                                <p class="required">必須</p>
-                            </div>
-                            <div class="info-row__data --top --top-edit">
-                                <input type="text" class="c-input setValueElem" name="hiragana" placeholder="あ" required>
-                            </div>
-                        </div>
-                        <div class="info-row info-row-edit">
-                            <div class="flex-10">
-                                <p class="info-row__head info-row-edit__head">ナンバー</p>
-                                <p class="required">必須</p>
-                            </div>
-                            <div class="info-row__data --top --top-edit">
-                                <input type="text" class="c-input setValueElem" name="number" placeholder="No.000" required>
-                            </div>
-                        </div>
-                        <div class="info-row info-row-edit">
-                            <div class="flex-10">
-                                <p class="info-row__head info-row-edit__head">所属先</p>
-                                <p class="required">必須</p>
-                            </div>
-                            <div class="info-row__data info-row-edit__data">
-                                <select name="company" class="c-select" required>
-                                    <option value="">選択してください</option>
-                                    @foreach ($companies as $company)
-                                        <option value="{{$company->id}}">{{$company->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        {{-- ボタン --}}
-                        <div class="btn-area edit-btn-area">
-                            <button class="btn --save" type="submit" name="action" value="save">
-                                入力内容を登録
-                            </button>
-                            <div class="btn --back createCloseBtn" onclick='return confirm("入力したデータは失われます。")'>
-                                戻る
-                            </div>
-                        </div>
-                    </form>
-                    {{-- <form class="csv" action="{{ route('vehicle.csv') }}" method="post" enctype="multipart/form-data">
-                        @csrf
-                        <input type="file" name="csv_file">
-                        <button class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="submit">インポート</button>
-                    </form> --}}
-                </div>
                 <div class="info-wrap__register-list">
                     <div class="info-wrap__register-list__head">
                         <div class="info-wrap__register-list__head__row">
-                            <p class="w-number">Number</p>
-                            <p class="w-name">Company Name</p>
+                            <p class="w-number number">ナンバー</p>
+                            <p class="w-name employee">使用者</p>
+                            <p class="w-name date">車検満了日</p>
+                            <a href="{{ route('vehicle.allShow') }}" class="all-info-btn">一覧詳細</a>
                         </div>
                     </div>
                     <div class="info-wrap__register-list__body">
-                        @foreach ($vehicles as $vehicle)
-                        <div class="info-wrap__register-list__body__row companyBox">
-                            <p class="number w-number">{{$vehicle->number}}</p>
-                            <p class="company w-name">
-                                @if ($vehicle->company)
-                                {{$vehicle->company->name}}
-                                @endif
-                            </p>
-                            <button class="edit-btn action-btn editBtn @can('admin-higher') @else user @endcan">
-                                <div class="edit-btn__inner">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                    @can('admin-higher')
-                                        <p class="edit-btn-txt">編集</p>
-                                    @else
-                                        <p class="edit-btn-txt">詳細</p>
-                                    @endcan
+                        @foreach ($vehiclesGroupedByOwner as $ownerType => $vehiclesInOwnerGroup)
+                            @foreach ($vehiclesInOwnerGroup as $ownerName => $vehicles)
+                                <div class="list-group-wrap">
+                                    <div class="owner-row">
+                                        <p class="">{{ $ownerName }}</p>
+                                    </div>
+                                    @foreach ($vehicles as $vehicle)
+                                        <div class="info-wrap__register-list__body__row">
+                                            <p class="number w-number">{{$vehicle->number}}</p>
+                                            <p class="employee">
+                                                @if ($vehicle->employee)
+                                                    {{ $vehicle->employee->name }}
+                                                @endif
+                                            </p>
+                                            <p class="date">
+                                                @if ($vehicle->inspection_expiration_date)
+                                                    {{ $vehicle->inspection_expiration_date->format('Y年n月j日') }}
+                                                @endif
+                                            </p>
+                                            <a href="{{ route('vehicle.edit',['id' => $vehicle->id]) }}" class="edit-btn action-btn editBtn @can('admin-higher') @else user @endcan">
+                                                <div class="edit-btn__inner">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                    @can('admin-higher')
+                                                        <p class="edit-btn-txt">編集</p>
+                                                    @else
+                                                        <p class="edit-btn-txt">詳細</p>
+                                                    @endcan
+                                                </div>
+                                            </a>
+                                        </div>
+                                    @endforeach
                                 </div>
-                                <div class="dataHasElem"
-                                    data-info='["{{$vehicle->number}}","{{$vehicle->company->name}}"]'>
-                                </div>
-                                <div class="dataHasEditElem"
-                                    data-info='["{{$vehicle->id}}","{{$vehicle->place_name}}","{{$vehicle->class_number}}","{{$vehicle->hiragana}}","{{$vehicle->number}}","{{$vehicle->company->id}}"]'>
-                                </div>
-                            </button>
-                        </div>
+                            @endforeach
                         @endforeach
                     </div>
                     <div class="info-wrap__register-list__head --foot">
                         <div class="info-wrap__register-list__head__row">
-                            <p class="w-number">Number</p>
-                            <p class="w-name">Company Name</p>
+                            <p class="w-number">ナンバー</p>
+                            <p class="w-name">使用者</p>
+                            <p class="w-name">車検満了日</p>
                         </div>
                         @can('admin-higher')
-                            <button class="add-btn" id="addBtn">
+                            <a href="{{ route('vehicle.create') }}" class="add-btn">
                                 <div class="add-btn__inner">
                                     <i class="fa-solid fa-circle-plus"></i>
                                     <p class="">追加</p>
                                 </div>
-                            </button>
+                            </a>
                         @endcan
                     </div>
                 </div>
@@ -235,5 +76,5 @@
 </x-app-layout>
 
 {{-- script --}}
-<script src="{{asset('js/info.js')}}"></script>
+<script src="{{asset('js/vehicle.js')}}"></script>
 

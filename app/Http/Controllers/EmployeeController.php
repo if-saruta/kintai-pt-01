@@ -35,10 +35,18 @@ class EmployeeController extends Controller
         $companies = Company::all();
         $projects = Project::where('client_id', '!=', 1)->get();
         $vehicles = Vehicle::all();
+
         // 日給登録してある案件を取得
         $projectPayments = Project::where('payment_type', 1)->get();
 
-        return view('employee.create', compact('companies','projects','vehicles','projectPayments'));
+        // すでに使用者として登録してある車両を配列に格納
+        $vehiclesUsed = Vehicle::whereNotNull('employee_id')->get();
+        $vehicleUsedArray = [];
+        foreach($vehiclesUsed as $vehicleUsed){
+            $vehicleUsedArray[] = $vehicleUsed->id;
+        }
+
+        return view('employee.create', compact('companies','projects','vehicles','projectPayments', 'vehicleUsedArray'));
     }
 
     public function store(Request $request)
@@ -165,7 +173,16 @@ class EmployeeController extends Controller
         $allowanceProjects = AllowanceByProject::where('employee_id', $id)->get();
         $allowanceOthers = AllowanceByOther::where('employee_id', $id)->get();
 
-        return view('employee.edit', compact('employee','companies','projects','vehicles','projectPayments', 'projectEmployeePayments', 'allowanceProjects', 'allowanceOthers'));
+        // すでに使用者として登録してある車両を配列に格納
+        $vehiclesUsed = Vehicle::whereNotNull('employee_id')->get();
+        $vehicleUsedArray = [];
+        foreach($vehiclesUsed as $vehicleUsed){
+            if($vehicleUsed->employee_id != $employee->id){
+                $vehicleUsedArray[] = $vehicleUsed->id;
+            }
+        }
+
+        return view('employee.edit', compact('employee','companies','projects','vehicles','projectPayments', 'projectEmployeePayments', 'allowanceProjects', 'allowanceOthers', 'vehicleUsedArray'));
     }
 
     public function update(Request $request, $id)
@@ -178,6 +195,7 @@ class EmployeeController extends Controller
         };
 
         $employee = Employee::find($id);
+        $oldVehicleId = $employee->vehicle_id;
 
         // 従業員データを更新
         $employee->register_number = $request->register_number;
@@ -200,10 +218,14 @@ class EmployeeController extends Controller
         }
         $employee->save();
 
-        $bank_account = BankAccount::where('employee_id', $employee->id)->first();
-        $bank_account->bank_name = $request->bank_name;
-        $bank_account->account_holder_name = $request->account_holder_name;
-        $bank_account->save();
+        BankAccount::updateOrCreate(
+            ['employee_id' => $employee->id],
+            ['bank_name' => $request->bank_name, 'account_holder_name' => $request->account_holder_name]
+        );
+        // $bank_account = BankAccount::where('employee_id', $employee->id)->first();
+        // $bank_account->bank_name = $request->bank_name;
+        // $bank_account->account_holder_name = $request->account_holder_name;
+        // $bank_account->save();
 
 
         // 案件別給与データ更新
@@ -300,7 +322,22 @@ class EmployeeController extends Controller
             }
         }
 
+        // 車両の変更があった場合、
+        if($oldVehicleId != $employee->vehicle_id){
+            // 既存登録されている車両を変更
+            if($oldVehicleId){
+                $vehicle = Vehicle::find($oldVehicleId);
+                $vehicle->employee_id = null;
+                $vehicle->save();
+            }
 
+            if($employee->vehicle_id != null){
+                // 新規で登録されている車両を登録
+                $newVehicle = Vehicle::find($employee->vehicle_id);
+                $newVehicle->employee_id = $employee->id;
+                $newVehicle->save();
+            }
+        }
 
 
         return redirect()->route('employee.');

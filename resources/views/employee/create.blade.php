@@ -14,7 +14,7 @@
     </script> --}}
 
     <main class="main">
-        <form action="{{ route('employee.store')}}" method="POST" class="main__white-board --employee-white-board">
+        <form action="{{ route('employee.store')}}" method="POST" class="main__white-board --employee-white-board" id="form">
             @csrf
             <div class="employee-name-box">
                 <div class="employee-name-box__inner">
@@ -170,10 +170,13 @@
                                 <option value="3">日割り</option>
                             </select>
                         </div>
-                        <div class="select-area__item">
-                            <p class="">貸出車両</p>
+                        <div class="select-area__item --vehicle-item">
+                            <div class="select-area__item__head">
+                                <p class="">貸出車両</p>
+                                <p class="" id="vehicleWarningTxt" style="color:red;"></p>
+                            </div>
                             <div class="" id="controlSelect">
-                                <select name="vehicle" class="c-select">
+                                <select name="vehicle" id="vehicleSelect" class="c-select">
                                     <option value="">選択してください</option>
                                     @foreach ($vehicles as $vehicle)
                                     <option value="{{$vehicle->id}}">{{ $vehicle->place_name }} {{ $vehicle->class_number }} {{ $vehicle->hiragana }} {{$vehicle->number}}</option>
@@ -255,6 +258,10 @@
 
 
 </x-app-layout>
+
+<script>
+    var vehicleUsedArray = @json($vehicleUsedArray);
+</script>
 
 {{-- script --}}
 <script src="{{asset('js/employee.js')}}"></script>

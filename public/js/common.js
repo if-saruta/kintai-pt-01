@@ -32,4 +32,11 @@ window.addEventListener('load', () => {
     };
 
     toggleNav();
+
+    const loadingActive = () => {
+        const loading = document.getElementById('loading');
+
+        loading.classList.add('loading-close');
+    }
+    loadingActive();
 })

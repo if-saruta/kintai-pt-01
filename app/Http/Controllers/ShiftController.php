@@ -403,6 +403,90 @@ class ShiftController extends Controller
         ]);
     }
 
+    public function bulkReflection(Request $request)
+    {
+        $reflection_type = $request->reflection_type;
+        $startOfWeek = $request->startOfWeek;
+        $endOfWeek = $request->endOfWeek;
+
+        if($reflection_type == 'driverReflection'){
+            $this->driverReflection($startOfWeek, $endOfWeek);
+        }elseif($reflection_type == 'clientReflection'){
+            $this->clientReflection($startOfWeek, $endOfWeek);
+        }else{
+            $this->driverReflection($startOfWeek, $endOfWeek);
+            $this->clientReflection($startOfWeek, $endOfWeek);
+        }
+
+        return redirect()->route('shift.edit')->with([
+            'date' => $startOfWeek, // 例として固定の日付を設定
+            'page' => 'page06'
+        ]);
+    }
+
+    public function driverReflection($startOfWeek, $endOfWeek)
+    {
+        // 登録従業員シフト抽出
+        $shifts = Shift::with('employee', 'projectsVehicles.project', 'projectsVehicles.vehicle')
+        ->whereBetween('date', [$startOfWeek, $endOfWeek])
+        ->whereNotNull('employee_id')
+        ->get();
+
+        $shiftGroupByEmployee = $shifts->groupBy(function ($shift) {
+            return $shift->employee_id;
+        });
+
+        foreach($shiftGroupByEmployee as $employeeId => $shifts){
+            $employee = Employee::find($employeeId);
+            if($employee == null) continue; //従業員が見つからない場合スキップ
+
+            foreach($shifts as $shift){
+                foreach($shift->projectsVehicles as $spv){
+                    $shiftPv = ShiftProjectVehicle::find($spv->id);
+                    $shiftPv->vehicle_rental_type = $employee->vehicle_rental_type;
+                    $shiftPv->rental_vehicle_id = $employee->vehicle_id;
+                    $shiftPv->save();
+                }
+            }
+        }
+    }
+
+    public function clientReflection($startOfWeek, $endOfWeek)
+    {
+        $shiftPv = ShiftProjectVehicle::whereHas('shift', function ($query) use ($startOfWeek, $endOfWeek) {
+            $query->whereBetween('date', [$startOfWeek, $endOfWeek]);
+        })
+        ->whereNotNull('project_id')
+        ->get();
+        // 案件ごとにグループ分け
+        $shiftPvGroupByProject = $shiftPv->groupBy(function ($data) {
+            return $data->project_id;
+        });
+
+        foreach($shiftPvGroupByProject as $projectId => $shiftPvs){
+            // 案件を取得
+            $project = Project::find($projectId);
+            if($project == null) continue; //案件が見つからない場合スキップ
+
+            foreach($shiftPvs as $shiftPv => $spv){
+                // 従業員idを取得
+                $employeeId = $spv->shift->employee ? $spv->shift->employee_id : null;
+                // 給与の情報を抽出
+                $employeePayment = ProjectEmployeePayment::where('employee_id', $employeeId)
+                ->where('project_id', $projectId)
+                ->first();
+                if($employeePayment != null && $employeePayment->amount != 0){
+                    $driver_price = $employeePayment->amount;
+                }else{
+                    $driver_price = $project->driver_price;
+                }
+                $spv->retail_price = $project->retail_price;
+                $spv->driver_price = $driver_price;
+                $spv->save();
+            }
+        }
+    }
+
     public function csv()
     {
         $warning = session('warning');
@@ -761,6 +845,7 @@ class ShiftController extends Controller
                 // csvにはいない登録従業員のシフト登録
                 foreach($dateRow as $index => $date){
                     if ($index % 2 == 0) continue;
+                    if ($date == null) continue;
                     foreach($employees as $employee){
                         if(!in_array($employee->name, $employeeArray)){
                             $shift = Shift::create([
@@ -852,16 +937,12 @@ class ShiftController extends Controller
     public function isCharterOrCsCheck($CheckProjectName)
     {
         $initialProjectName = null;
-        $modifiedVariableMixed = $CheckProjectName;
-        // 【】が含まれているかチェック
-        if (1 === preg_match('/[【】]/u', $CheckProjectName)) {
-            $modifiedVariableMixed = preg_replace('/[【].*?[】]/u', '', $CheckProjectName);
-            $initialProjectName = $CheckProjectName;
-        }else if(1 === preg_match('/[\[\]]|［］/u', $CheckProjectName)){
-            // 半角の[]と全角の［］にマッチし、その内部を含めて削除する正規表現
-            $modifiedVariableMixed = preg_replace('/[\[].*?[\]]|［.*?］/u', '', $CheckProjectName);
+        // すべての種類のカッコとその内容を削除
+        $modifiedVariableMixed = preg_replace('/【.*?】|[\[].*?[\]]|［.*?］/u', '', $CheckProjectName);
+        if($modifiedVariableMixed != $CheckProjectName){
             $initialProjectName = $CheckProjectName;
         }
+
         return [$modifiedVariableMixed, $initialProjectName];
     }
 

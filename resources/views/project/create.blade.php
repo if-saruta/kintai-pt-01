@@ -5,13 +5,6 @@
         </h2>
     </x-slot>
 
-    {{-- <script>
-        window.onbeforeunload = function(e) {
-            e.preventDefault();
-            return '';
-        };
-
-    </script> --}}
 
     <main class="main">
         <div class="main__white-board --client-white-board">

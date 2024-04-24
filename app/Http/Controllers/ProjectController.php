@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Client;
 use App\Models\Project;
+use App\Models\projectDetail;
 use App\Models\Employee;
 use App\Models\ProjectEmployeePayment;
 use App\Models\ShiftProjectVehicle;
 use App\Models\ProjectHoliday;
 use League\Csv\Reader;
 use League\Csv\Statement;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProjectController extends Controller
 {
@@ -262,6 +264,87 @@ class ProjectController extends Controller
         $project->delete();
 
         return redirect()->route('project.edit', ['id' => $clientId]);
+    }
+
+    public function info($id)
+    {
+        $project = Project::find($id);
+
+        $financialMetrics = $this->calculateFinancialMetrics($project);
+
+        return view('project.info', compact('project', 'financialMetrics'));
+    }
+
+    public function infoEdit($id)
+    {
+        $project = Project::find($id);
+
+        $financialMetrics = $this->calculateFinancialMetrics($project);
+
+        return view('project.infoEdit', compact('project', 'financialMetrics'));
+    }
+
+    public function infoUpdate(Request $request)
+    {
+        // リクエストデータを取得
+        $data = $request->all();
+
+        // retail_price_for_hgl が存在する場合、カンマを除去
+        if (isset($data['retail_price_for_hgl'])) {
+            $data['retail_price_for_hgl'] = str_replace(',', '', $data['retail_price_for_hgl']);
+        }
+        projectDetail::updateOrCreate(
+            ['project_id' => $request->project_id],
+            $data
+        );
+
+        $projectId = $request->project_id;
+
+        return redirect()->route('project.info', ['id' => $projectId]);
+    }
+
+    public function infoPdf(Request $request)
+    {
+        $id = $request->project_id;
+        $project = Project::find($id);
+
+        $financialMetrics = $this->calculateFinancialMetrics($project);
+
+        $pdf =  PDF::loadView('project.infoPdf',compact('project','financialMetrics'));
+        $fileName = "{$project->name}_案件表.pdf";
+
+        return $pdf->download($fileName); //生成されるファイル名
+
+        return view('project.infoPdf');
+    }
+
+    public function calculateFinancialMetrics($project)
+    {
+        $retail_price = $project->retail_price ?? 0;
+        $driver_price = $project->driver_price ?? 0;
+        // 数値にキャストしてから演算を行う
+        $tng_head = (float)($project->retail_price - $project->driver_price);
+        $retail_price = (float)($project->retail_price);
+        $profit_rate_tng = $retail_price != 0 ? $tng_head / $retail_price : 0;
+
+        $retail_price_for_hgl = (float)($project->projectDetail->retail_price_for_hgl ?? 0);
+        if($retail_price_for_hgl != 0){
+            $hgl_head = (float)($retail_price - $retail_price_for_hgl);
+            $profit_rate_hgl = $retail_price != 0 ? $hgl_head / $retail_price : 0;
+        }else{
+            $hgl_head = 0;
+            $profit_rate_hgl = 0;
+        }
+
+        return [
+            'retail_price' => $retail_price,
+            'driver_price' => $driver_price,
+            'tng_head' => $tng_head,
+            'profit_rate_tng' => $profit_rate_tng,
+            'retail_price_for_hgl' => $retail_price_for_hgl,
+            'hgl_head' => $hgl_head,
+            'profit_rate_hgl' => $profit_rate_hgl,
+        ];
     }
 
     public function csvImport(Request $request)

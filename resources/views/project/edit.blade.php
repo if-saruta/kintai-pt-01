@@ -70,6 +70,9 @@
                                                 <p class="">案件名</p>
                                                 <input type="text" name="editProjects[{{$project->id}}][name]" class="c-input" value="{{$project->name}}" required>
                                             </div>
+                                            <a href="{{ route('project.info', ['id' => $project->id]) }}" class="project-info-link projectInfoLink">
+                                                案件表
+                                            </a>
                                             <i class="fa-solid fa-angle-up angle"></i>
                                         </div>
                                     </div>

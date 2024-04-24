@@ -159,30 +159,60 @@
                 </tr>
                 <tr>
                     @foreach ($projects as $project)
+                        @php
+                            $hasHoliday = false;
+                        @endphp
                         <th colspan="{{$company_count}}">
                             @if ($project->holiday->monday == 1)
                                 月
+                                @php
+                                    $hasHoliday = true;
+                                @endphp
                             @endif
                             @if ($project->holiday->tuesday == 1)
                                 火
+                                @php
+                                    $hasHoliday = true;
+                                @endphp
                             @endif
                             @if ($project->holiday->wednesday == 1)
                                 水
+                                @php
+                                    $hasHoliday = true;
+                                @endphp
                             @endif
                             @if ($project->holiday->thursday == 1)
                                 木
+                                @php
+                                    $hasHoliday = true;
+                                @endphp
                             @endif
                             @if ($project->holiday->friday == 1)
                                 金
+                                @php
+                                    $hasHoliday = true;
+                                @endphp
                             @endif
                             @if ($project->holiday->saturday == 1)
                                 土
+                                @php
+                                    $hasHoliday = true;
+                                @endphp
                             @endif
                             @if ($project->holiday->sunday == 1)
                                 日
+                                @php
+                                    $hasHoliday = true;
+                                @endphp
                             @endif
                             @if ($project->holiday->public_holiday == 1)
                                 祝
+                                @php
+                                    $hasHoliday = true;
+                                @endphp
+                            @endif
+                            @if(!$hasHoliday)
+                                なし
                             @endif
                         </th>
                     @endforeach
@@ -441,29 +471,59 @@
                     </tr>
                     <tr>
                         <th colspan="{{$company_count}}">
+                            @php
+                                $hasHoliday = false;
+                            @endphp
                             @if ($project->holiday->monday == 1)
                                 月
+                                @php
+                                    $hasHoliday = true;
+                                @endphp
                             @endif
                             @if ($project->holiday->tuesday == 1)
                                 火
+                                @php
+                                    $hasHoliday = true;
+                                @endphp
                             @endif
                             @if ($project->holiday->wednesday == 1)
                                 水
+                                @php
+                                    $hasHoliday = true;
+                                @endphp
                             @endif
                             @if ($project->holiday->thursday == 1)
                                 木
+                                @php
+                                    $hasHoliday = true;
+                                @endphp
                             @endif
                             @if ($project->holiday->friday == 1)
                                 金
+                                @php
+                                    $hasHoliday = true;
+                                @endphp
                             @endif
                             @if ($project->holiday->saturday == 1)
                                 土
+                                @php
+                                    $hasHoliday = true;
+                                @endphp
                             @endif
                             @if ($project->holiday->sunday == 1)
                                 日
+                                @php
+                                    $hasHoliday = true;
+                                @endphp
                             @endif
                             @if ($project->holiday->public_holiday == 1)
                                 祝
+                                @php
+                                    $hasHoliday = true;
+                                @endphp
+                            @endif
+                            @if(!$hasHoliday)
+                                なし
                             @endif
                         </th>
                     </tr>

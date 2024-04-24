@@ -142,9 +142,9 @@
         {{-- フォーム内容 --}}
             <div class="pdf-wrap">
                 <div class="pdf-wrap__inner">
-                    <form action="{{route('invoice.driver-issue-pdf')}}" method="POST">
+                    <form action="{{route('invoice.driver-issue-pdf')}}" method="POST" onsubmit="return false;">
                         @csrf
-                        <button class="pdf-issue-btn">
+                        <button type="button" class="pdf-issue-btn" onClick="submit();">
                             <p class="">ダウンロード</p>
                         </button>
                         <input hidden type="text" name="pdfColor" value="rgb(151, 255, 151)" class="sentColor">
@@ -431,9 +431,9 @@
                     </form>
 
                     {{-- 費用請求書 --}}
-                    <form action="{{route('invoice.company-issue-pdf')}}" method="POST">
+                    <form action="{{route('invoice.company-issue-pdf')}}" method="POST" onsubmit="return false;">
                         @csrf
-                        <button class="pdf-issue-btn">
+                        <button type="button" class="pdf-issue-btn" onClick="submit();">
                             <p class="">ダウンロード</p>
                         </button>
                         <div class="pdf --company-issue">

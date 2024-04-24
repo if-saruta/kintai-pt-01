@@ -26,8 +26,9 @@ window.addEventListener('DOMContentLoaded', () => {
     projectsContainer.addEventListener('click', (e) => {
         const btn = e.target.closest('.accordionBtn');
         const inputElem = e.target;
+        const projectInfoLink = e.target;
 
-        if(btn !== null && !inputElem.classList.contains('c-input')){
+        if(btn !== null && !inputElem.classList.contains('c-input') && !projectInfoLink.classList.contains('projectInfoLink')){
             const parentWrap = btn.closest('.project-info-wrap');//大枠の親要素を取得
             const ct = btn.nextElementSibling;//開閉要素を取得
             const angle = btn.querySelector('.angle');

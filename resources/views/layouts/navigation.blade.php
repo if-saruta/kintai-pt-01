@@ -38,6 +38,13 @@
                         <span class="nav-item__txt navTxt">{{ __('ダッシュボード') }}</span>
                     </a>
                 @endcan
+                <a href="{{ route('invoice.driverShift') }}"
+                    class="{{ request()->routeIs('invoice.*') ? 'active' : '' }} nav-item">
+                    <div class="icon-wrap">
+                        <i class="fa-solid fa-file-invoice"></i>
+                    </div>
+                    <span class="nav-item__txt navTxt">{{ __('請求書') }}</span>
+                </a>
                 @can('admin-higher')
                     <a href="{{ route('project.') }}"
                         class="{{ request()->routeIs('project.*') ? 'active' : '' }} nav-item">
@@ -53,13 +60,6 @@
                         <i class="fa-solid fa-user"></i>
                     </div>
                     <span class="nav-item__txt navTxt">{{ __('ドライバー管理') }}</span>
-                </a>
-                <a href="{{ route('invoice.driverShift') }}"
-                    class="{{ request()->routeIs('invoice.*') ? 'active' : '' }} nav-item">
-                    <div class="icon-wrap">
-                        <i class="fa-solid fa-file-invoice"></i>
-                    </div>
-                    <span class="nav-item__txt navTxt">{{ __('請求書') }}</span>
                 </a>
                 @can('admin-higher')
                 <a href="{{ route('company.') }}"
@@ -83,7 +83,7 @@
                     <div class="icon-wrap">
                         <i class="fa-solid fa-gear"></i>
                     </div>
-                    <span class="nav-item__txt navTxt">{{ __('設定') }}</span>
+                    <span class="nav-item__txt navTxt">{{ __('アカウント設定') }}</span>
                 </a>
                 @endcan
                 <div class="nav-item --close-nav-item open" id="navToggle">
@@ -178,3 +178,12 @@
         </div>
     </div>
 </nav>
+<div class="loading" id="loading">
+    <div class="spinner-box">
+        <div class="circle-border">
+            <div class="circle-core"></div>
+        </div>
+    </div>
+</div>
+
+{{-- <script src="{{asset('js/common.js')}}"></script> --}}

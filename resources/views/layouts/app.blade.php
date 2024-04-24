@@ -4,11 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="robots" content="noindex" />
 
         <title>勤怠管理システム</title>
-        <!-- Fonts -->
-        {{-- <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" /> --}}
 
         {{-- Google Fonts --}}
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +19,6 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.js'])
 
-        {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
     </head>
     <body class="antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900 all-wrap">

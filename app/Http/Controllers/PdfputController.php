@@ -200,8 +200,7 @@ class PdfputController extends Controller
         // 祝日を取得
         $holidays = $this->getHoliday($date->format('Y'));
 
-        // $projects = Project::all();
-        // return view('shift-calendar-pdf.projectCountShift', compact('shifts', 'shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projects'));
+        // return view('shift-calendar-pdf.allViewShift', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projectHeight'));
 
         // 一時的にメモリ制限を増やす
         ini_set('memory_limit', '256M');
@@ -213,18 +212,18 @@ class PdfputController extends Controller
         $shift_type = $request->shiftType;
         if($shift_type == 'all'){
             $pdf = PDF::loadView('shift-calendar-pdf.allViewShift', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projectHeight'))->setPaper('a4', 'landscape');
-            $fileName = "{$date->format('Y')}年_{$startOfWeekCarbon->format('n')}月{$startOfWeekCarbon->format('j')}日~{$endOfWeekCarbon->format('n')}月{$endOfWeekCarbon->format('j')}日_全表示シフト";
+            $fileName = "{$date->format('Y')}年_{$startOfWeekCarbon->format('n')}月{$startOfWeekCarbon->format('j')}日~{$endOfWeekCarbon->format('n')}月{$endOfWeekCarbon->format('j')}日_全表示シフト.pdf";
         }elseif($shift_type == 'employeeShow'){
             $pdf = PDF::loadView('shift-calendar-pdf.employeeShowShift', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projectHeight'))->setPaper('a4', 'landscape');
-            $fileName = "{$date->format('Y')}年_{$startOfWeekCarbon->format('n')}月{$startOfWeekCarbon->format('j')}日~{$endOfWeekCarbon->format('n')}月{$endOfWeekCarbon->format('j')}日_稼働表シフト";
+            $fileName = "{$date->format('Y')}年_{$startOfWeekCarbon->format('n')}月{$startOfWeekCarbon->format('j')}日~{$endOfWeekCarbon->format('n')}月{$endOfWeekCarbon->format('j')}日_稼働表シフト.pdf";
 
         }elseif($shift_type == 'employeePrice'){
             $pdf = PDF::loadView('shift-calendar-pdf.employeePriceShift', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projectHeight'))->setPaper('a4', 'landscape');
-            $fileName = "{$date->format('Y')}年_{$startOfWeekCarbon->format('n')}月{$startOfWeekCarbon->format('j')}日~{$endOfWeekCarbon->format('n')}月{$endOfWeekCarbon->format('j')}日_配送料金シフト";
+            $fileName = "{$date->format('Y')}年_{$startOfWeekCarbon->format('n')}月{$startOfWeekCarbon->format('j')}日~{$endOfWeekCarbon->format('n')}月{$endOfWeekCarbon->format('j')}日_配送料金シフト.pdf";
 
         }elseif($shift_type == 'projectPrice'){
             $pdf = PDF::loadView('shift-calendar-pdf.projectPriceShift', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projectHeight'))->setPaper('a4', 'landscape');
-            $fileName = "{$date->format('Y')}年_{$startOfWeekCarbon->format('n')}月{$startOfWeekCarbon->format('j')}日~{$endOfWeekCarbon->format('n')}月{$endOfWeekCarbon->format('j')}日_上代シフト";
+            $fileName = "{$date->format('Y')}年_{$startOfWeekCarbon->format('n')}月{$startOfWeekCarbon->format('j')}日~{$endOfWeekCarbon->format('n')}月{$endOfWeekCarbon->format('j')}日_上代シフト.pdf";
 
         }elseif($shift_type == 'projectCount'){
             $shiftDataByDay = $shifts->groupBy(function ($shift) {
@@ -248,10 +247,10 @@ class PdfputController extends Controller
             $projects = Project::all();
 
             $pdf = PDF::loadView('shift-calendar-pdf.projectCountShift', compact('shifts', 'shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projects', 'unregistered_project'))->setPaper('a4');
-            $fileName = "{$date->format('Y')}年_{$startOfWeekCarbon->format('n')}月{$startOfWeekCarbon->format('j')}日~{$endOfWeekCarbon->format('n')}月{$endOfWeekCarbon->format('j')}日_案件数シフト";
+            $fileName = "{$date->format('Y')}年_{$startOfWeekCarbon->format('n')}月{$startOfWeekCarbon->format('j')}日~{$endOfWeekCarbon->format('n')}月{$endOfWeekCarbon->format('j')}日_案件数シフト.pdf";
         }else{
             $pdf = PDF::loadView('shift-calendar-pdf.allViewShift', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projectHeight'))->setPaper('a4', 'landscape');
-            $fileName = "{$date->format('Y')}年_{$startOfWeekCarbon->format('n')}月{$startOfWeekCarbon->format('j')}日~{$endOfWeekCarbon->format('n')}月{$endOfWeekCarbon->format('j')}日_全表示シフト";
+            $fileName = "{$date->format('Y')}年_{$startOfWeekCarbon->format('n')}月{$startOfWeekCarbon->format('j')}日~{$endOfWeekCarbon->format('n')}月{$endOfWeekCarbon->format('j')}日_全表示シフト.pdf";
         }
 
         return $pdf->download($fileName);

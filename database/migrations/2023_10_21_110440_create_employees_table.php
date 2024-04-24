@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('employment_status')->nullable();
             $table->boolean('is_invoice')->default(false);
             $table->string('register_number')->nullable();
-            $table->string('vehicle_rental_type')->nullable();// 0 : 自車 1 : 月リース 2 : なんでも月リース 3 : 日割り
+            $table->string('vehicle_rental_type')->nullable();// 0 : 自車, 1 : 月リース, 2 : なんでも月リース, 3 : 日割り
             $table->foreignId('vehicle_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();

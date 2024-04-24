@@ -510,8 +510,8 @@ window.addEventListener('DOMContentLoaded', () => {
                 <td class="top-table-data w-260"><input type="text" name="salaryProject[]" class="input table-input changeElement"></td>
                 <td class="top-table-data w-70"><input type="text" name="salaryEtc[]" class="input table-input changeElement etcElement"></td>
                 <td class="top-table-data w-70"><input type="text" name="salaryCount[]" class="input table-input changeElement salaryNum"></td>
-                <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" class="input table-input changeElement salaryUnit commaInput"></td>
-                <td class="top-table-data w-70"><input type="text" name="salaryAmount[]" class="input table-input changeElement salaryAmount commaInput"></td>
+                <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" class="input table-input amount changeElement salaryUnit commaInput"></td>
+                <td class="top-table-data w-70"><input type="text" name="salaryAmount[]" class="input table-input amount changeElement salaryAmount commaInput"></td>
                 <div class="salaryRowDelete deleteRowBtn"><span class="deleteRowBtn__line"></span></div>
             `;
 

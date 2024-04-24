@@ -33,4 +33,10 @@ class Project extends Model
         return $this->belongsTo(Client::class);
     }
 
+    // ProjectDetailへの1対1のリレーション
+    public function projectDetail()
+    {
+        return $this->hasOne(ProjectDetail::class);
+    }
+
 }

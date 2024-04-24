@@ -244,6 +244,11 @@
                                         foreach ($shifts as $shift) {
                                                 if ($shift->date == $date->format('Y-m-d')) {
                                                     foreach ($shift->projectsVehicles as $spv) {
+                                                        if($spv->project){
+                                                            if($spv->project->client->id == 1){
+                                                                continue;
+                                                            }
+                                                        }
                                                         $day_count++;
                                                     }
                                                 }

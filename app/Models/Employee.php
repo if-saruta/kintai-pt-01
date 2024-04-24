@@ -28,6 +28,11 @@ class Employee extends Model
         return $this->belongsTo(Company::class);
     }
 
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class, 'employee_id');
+    }
+
     public function payments()
     {
         return $this->hasMany(ProjectEmployeePayment::class);

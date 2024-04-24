@@ -285,7 +285,7 @@
         }
 
         @page {
-            margin-top: 5px;
+            margin-top: 25px;
             margin-bottom: 5px;
             margin-left: 40px;
             margin-right: 5px;
@@ -293,7 +293,7 @@
 
         table {
             width: 1070px;
-            font-size: 7px;
+            font-size: 10px;
             border-collapse: collapse;
             table-layout: fixed;
         }
@@ -311,7 +311,8 @@
         }
 
         .employee-clm {
-            width: 70.523px;
+            width: 4.59%;
+            font-size: 9px;
             /* border-bottom: 1px solid black; */
         }
 
@@ -325,15 +326,26 @@
         }
 
         .date-clm {
-            width: 132.738px;
+            width: 13.34%;
+            height: 20px;
         }
 
         .date-part-clm {
-            width: 66.39px;
+            width: 6.67%;
+            height: 20px;
+        }
+
+        .item-cell {
+            border-top: 1px dashed rgb(214, 214, 214);
+            border-bottom: 1px dashed rgb(214, 214, 214);
+            text-align: center;
+            display: table;
+            table-layout: fixed;
+            width: 100%;
         }
 
         .total-amount-clm {
-            width: 70px;
+            width: 4.59%;
         }
 
         tbody .total-amount-clm {
@@ -341,35 +353,26 @@
         }
 
         .date-part-clm:nth-child(2n) {
-            border-right: 0.5px dashed rgb(214, 214, 214);
+            border-right: 1px dashed rgb(214, 214, 214);
         }
 
         .date-part-clm:nth-child(2n+1) {
-            border-left: 0.5px dashed rgb(214, 214, 214);
+            border-left: 1px dashed rgb(214, 214, 214);
         }
 
         .head-date-part-clm:nth-child(2n) {
-            border-left: 0.5px dashed rgb(214, 214, 214);
+            border-left: 1px dashed rgb(214, 214, 214);
             border-right: 0.5px solid black;
         }
 
         .head-date-part-clm:nth-child(2n+1) {
-            border-right: 0.5px dashed rgb(214, 214, 214);
+            border-right: 1px dashed rgb(214, 214, 214);
             border-left: 0.5px solid black;
         }
 
         .txt-position-center {
             text-align: center;
             vertical-align: middle;
-        }
-
-        .item-cell {
-            border-top: 0.5px dashed rgb(214, 214, 214);
-            border-bottom: 0.5px dashed rgb(214, 214, 214);
-            text-align: center;
-            display: table;
-            table-layout: fixed;
-            width: 66.39px;
         }
 
         .txt-position-center .item-cell:first-child {
@@ -493,14 +496,14 @@
                                             <div class="item-cell">
                                                 @if ($spv->project)
                                                     @if ($spv->initial_project_name)
-                                                        <p class="" style="height: {{ $projectHeight / 4 }}px;">{{ $spv->initial_project_name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->initial_project_name }}</p>
                                                     @else
-                                                        <p class="" style="height: {{ $projectHeight / 4 }}px;">{{ $spv->project->name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->project->name }}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
-                                                    <p class="" style="color: red; height: {{ $projectHeight / 4 }}px;">{{ $spv->unregistered_project }}</p>
+                                                    <p class="" style="color: red; height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
                                                 @else
-                                                    <p class="" style="height: {{ $projectHeight / 4 }}px;"></p>
+                                                    <p class="" style="height: {{ $projectHeight / 2 }}px;"></p>
                                                 @endif
                                             </div>
                                             {{-- ドライバー価格 --}}
@@ -521,7 +524,7 @@
                                 @endforeach
                                 @for ($i = $am_check_count; $i < $max_count; $i++)
                                     <div class="txt-position-center">
-                                        <div class="item-cell"><p class="" style="height: {{ $projectHeight / 4 }}px;"></p></div>
+                                        <div class="item-cell"><p class="" style="height: {{ $projectHeight / 2 }}px;"></p></div>
                                         <div class="item-cell"><p class=""></p></div>
                                     </div>
                                 @endfor
@@ -535,14 +538,14 @@
                                             <div class="item-cell">
                                                 @if ($spv->project)
                                                     @if ($spv->initial_project_name)
-                                                        <p class="" style="height: {{ $projectHeight / 4 }}px;">{{ $spv->initial_project_name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->initial_project_name }}</p>
                                                     @else
-                                                        <p class="" style="height: {{ $projectHeight / 4 }}px;">{{ $spv->project->name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->project->name }}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
-                                                    <p class="" style="color: red; height: {{ $projectHeight / 4 }}px;">{{ $spv->unregistered_project }}</p>
+                                                    <p class="" style="color: red; height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
                                                 @else
-                                                    <p class="" style="height: {{ $projectHeight / 4 }}px;"></p>
+                                                    <p class="" style="height: {{ $projectHeight / 2 }}px;"></p>
                                                 @endif
                                             </div>
                                             {{-- ドライバー価格 --}}
@@ -563,7 +566,7 @@
                                 @endforeach
                                 @for ($i = $pm_check_count; $i < $max_count; $i++)
                                     <div class="txt-position-center">
-                                        <div class="item-cell"><p class="" style="height: {{ $projectHeight / 4 }}px;"></p></div>
+                                        <div class="item-cell"><p class="" style="height: {{ $projectHeight / 2 }}px;"></p></div>
                                         <div class="item-cell"><p class=""></p></div>
                                     </div>
                                 @endfor
@@ -640,14 +643,14 @@
                                             <div class="item-cell">
                                                 @if ($spv->project)
                                                     @if ($spv->initial_project_name)
-                                                        <p class="" style="height: {{ $projectHeight / 4 }}px;">{{ $spv->initial_project_name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->initial_project_name }}</p>
                                                     @else
-                                                        <p class="" style="height: {{ $projectHeight / 4 }}px;">{{ $spv->project->name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->project->name }}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
-                                                    <p class="" style="color: red; height: {{ $projectHeight / 4 }}px;">{{ $spv->unregistered_project }}</p>
+                                                    <p class="" style="color: red; height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
                                                 @else
-                                                    <p class="" style="height: {{ $projectHeight / 4 }}px;"></p>
+                                                    <p class="" style="height: {{ $projectHeight / 2 }}px;"></p>
                                                 @endif
                                             </div>
                                             {{-- ドライバー価格 --}}
@@ -668,7 +671,7 @@
                                 @endforeach
                                 @for ($i = $am_check_count; $i < $max_count; $i++)
                                     <div class="txt-position-center">
-                                        <div class="item-cell"><p class="" style="height: {{ $projectHeight / 4 }}px;"></p></div>
+                                        <div class="item-cell"><p class="" style="height: {{ $projectHeight / 2 }}px;"></p></div>
                                         <div class="item-cell"><p class=""></p></div>
                                     </div>
                                 @endfor
@@ -682,14 +685,14 @@
                                             <div class="item-cell">
                                                 @if ($spv->project)
                                                     @if ($spv->initial_project_name)
-                                                        <p class="" style="height: {{ $projectHeight / 4 }}px;">{{ $spv->initial_project_name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->initial_project_name }}</p>
                                                     @else
-                                                        <p class="" style="height: {{ $projectHeight / 4 }}px;">{{ $spv->project->name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->project->name }}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
-                                                    <p class="" style="color: red; height: {{ $projectHeight / 4 }}px;">{{ $spv->unregistered_project }}</p>
+                                                    <p class="" style="color: red; height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
                                                 @else
-                                                    <p class="" style="height: {{ $projectHeight / 4 }}px;"></p>
+                                                    <p class="" style="height: {{ $projectHeight / 2 }}px;"></p>
                                                 @endif
                                             </div>
                                             {{-- ドライバー価格 --}}
@@ -710,7 +713,7 @@
                                 @endforeach
                                 @for ($i = $pm_check_count; $i < $max_count; $i++)
                                     <div class="txt-position-center">
-                                        <div class="item-cell"><p class="" style="height: {{ $projectHeight / 4 }}px;"></p></div>
+                                        <div class="item-cell"><p class="" style="height: {{ $projectHeight / 2 }}px;"></p></div>
                                         <div class="item-cell"><p class=""></p></div>
                                     </div>
                                 @endfor

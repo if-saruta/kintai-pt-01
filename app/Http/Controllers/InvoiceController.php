@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
+
 use App\Models\AllowanceByProject;
 use App\Models\Client;
-use Illuminate\Http\Request;
 use App\Models\Company;
 use App\Models\Employee;
 use App\Models\Project;
@@ -1129,6 +1131,16 @@ class InvoiceController extends Controller
             ->orderBy('shifts.date', 'asc')
             ->get();
 
+        // シフトに含まれるクライアントを格納
+        $includedClientId = []; // シフトに含まれているクライアントを格納変数
+        foreach($basicShiftProjectVehicles as $spv){
+            if(!in_array($spv->project->client->id, $includedClientId)){
+                $includedClientId[] = $spv->project->client->id;
+            }
+        }
+        // idをもとにクライアントを取得
+        $includedClients = Client::whereIn('id', $includedClientId)->get();
+
         // 絞り込みのデータをもとにデータをフィルタリング
         $ShiftProjectVehicles = $basicShiftProjectVehicles->filter(function ($shiftPv) use ($narrowClientId){
             if(!empty($narrowClientId)){
@@ -1152,12 +1164,14 @@ class InvoiceController extends Controller
             ->orderBy('shifts.date', 'asc')
             ->get();
 
+            // 全日にちを取得
+        $dates = $this->createDate($getYear, $getMonth);
 
         // チャーター案件が含まれるシフトを配列に変換
         $shiftArray = $ShiftProjectVehicles->toArray();
 
         // チャーター案件があるクライアントを取得
-        $clients = Client::all();
+        $clients = Client::where('id', '!=', 1)->get();
 
         // 新しい配列を作成
         $arrangeShiftArray = [];
@@ -1172,12 +1186,13 @@ class InvoiceController extends Controller
             // 新しい配列に要素を追加
             $arrangeShiftArray[] = $data;
             // プロジェクト名を格納
-            $firstCheckName = $data['project']['name'];
+            $firstCheckName = $data['initial_project_name'];
 
+            // 引取という文字列が入っているか
             if (str_contains($firstCheckName, '引取') && !str_contains($firstCheckName, '納品')) {
                 // プロジェクトのclient_idを取得
-                $tmpClientId = $data['project']['client']['id'];
-
+                $tmpClientId = $data['project']['id'];
+                // 引取に紐づく納品を探す
                 foreach ($shiftArray as $innerIndex => $innerData) {
                     if (in_array($innerIndex, $skipIndex)) {
                         continue;
@@ -1185,15 +1200,13 @@ class InvoiceController extends Controller
                     if ($index > $innerIndex) {
                         continue;
                     }
-                    $secondCheckName = $innerData['project']['name'];
+                    $secondCheckName = $innerData['initial_project_name'];
 
-                    if ($innerData['project']['client_id'] == $tmpClientId) {
+                    if ($innerData['project']['id'] == $tmpClientId) {
                         if (!str_contains($secondCheckName, '引取') && str_contains($secondCheckName, '納品')) {
-                            // 全角・半角の括弧の正規表現
-                            $pattern = "/[\(（].+?[\)）]/u";
-                            // 全角・半角の括弧と括弧の中身を削除
-                            $cleanStr01 = preg_replace($pattern, "", $firstCheckName);
-                            $cleanStr02 = preg_replace($pattern, "", $secondCheckName);
+                            //【】を除去
+                            $cleanStr01 = preg_replace('/【.*?】/u', "", $firstCheckName);
+                            $cleanStr02 = preg_replace('/【.*?】/u', "", $secondCheckName);
                             if ($cleanStr01 === $cleanStr02) {
                                 // データを一時格納
                                 $tmpItem = $innerData;
@@ -1223,6 +1236,183 @@ class InvoiceController extends Controller
         return $pdf->download($fileName); //生成されるファイル名
 
         // return view('issue-calendar-pdf.charter-calendar', compact('ShiftProjectVehicles', 'shiftArray', 'unregisterProjectShift', 'clients', 'getYear', 'getMonth', 'dates'));
+    }
+
+    public function charterCalendarCsv(Request $request)
+    {
+        // $getYear = $request->year ?? session('year');
+        // $getMonth = $request->month ?? session('month');
+        // $narrowClientId = $request->input('narrowClientId', []);
+
+        $getYear = $request->year;
+        $getMonth = $request->month;
+        $narrowClientId = $request->input('narrowClientId', []);
+
+        // チャーター案件が含まれるシフト
+        $basicShiftProjectVehicles = ShiftProjectVehicle::with('shift', 'shift.employee', 'project', 'project.client')
+            ->join('shifts', 'shift_project_vehicle.shift_id', '=', 'shifts.id')
+            ->select('shift_project_vehicle.*', 'shifts.date as shift_date')
+            ->whereHas('shift', function ($query) use ($getYear, $getMonth) {
+                $query->whereYear('date', $getYear)
+                    ->whereMonth('date', $getMonth);
+            })
+            ->whereHas('project', function ($query) {
+                $query->where('is_charter', 1);
+            })
+            ->orderBy('shifts.date', 'asc')
+            ->get();
+
+        // シフトに含まれるクライアントを格納
+        $includedClientId = []; // シフトに含まれているクライアントを格納変数
+        foreach($basicShiftProjectVehicles as $spv){
+            if(!in_array($spv->project->client->id, $includedClientId)){
+                $includedClientId[] = $spv->project->client->id;
+            }
+        }
+        // idをもとにクライアントを取得
+        $includedClients = Client::whereIn('id', $includedClientId)->get();
+
+        // 絞り込みのデータをもとにデータをフィルタリング
+        $ShiftProjectVehicles = $basicShiftProjectVehicles->filter(function ($shiftPv) use ($narrowClientId){
+            if(!empty($narrowClientId)){
+                if(in_array($shiftPv->project->client->id, $narrowClientId)){ //$narrowClientIdに含まれるidがあるか
+                    return $shiftPv;
+                }
+            }else{
+                return $shiftPv; //$narrowClientIdが空なら全てを返す
+            }
+        });
+
+        // 未登録の案件があるシフト
+        $unregisterProjectShift = ShiftProjectVehicle::with('shift', 'shift.employee', 'project', 'project.client')
+            ->join('shifts', 'shift_project_vehicle.shift_id', '=', 'shifts.id')
+            ->select('shift_project_vehicle.*', 'shifts.date as shift_date')
+            ->whereHas('shift', function ($query) use ($getYear, $getMonth) {
+                $query->whereYear('date', $getYear)
+                    ->whereMonth('date', $getMonth);
+            })
+            ->whereNotNull('shift_project_vehicle.unregistered_project') // この行を追加
+            ->orderBy('shifts.date', 'asc')
+            ->get();
+
+            // 全日にちを取得
+        $dates = $this->createDate($getYear, $getMonth);
+
+        // チャーター案件が含まれるシフトを配列に変換
+        $shiftArray = $ShiftProjectVehicles->toArray();
+
+        // チャーター案件があるクライアントを取得
+        $clients = Client::where('id', '!=', 1)->get();
+
+        // 新しい配列を作成
+        $arrangeShiftArray = [];
+        $tmpItem = null; // 外側のスコープで変数を宣言
+        $skipIndex = [];
+
+        foreach ($shiftArray as $index => $data) {
+
+            if (in_array($index, $skipIndex)) {
+                continue;
+            }
+            // 新しい配列に要素を追加
+            $arrangeShiftArray[] = $data;
+            // プロジェクト名を格納
+            $firstCheckName = $data['initial_project_name'];
+
+            // 引取という文字列が入っているか
+            if (str_contains($firstCheckName, '引取') && !str_contains($firstCheckName, '納品')) {
+                // プロジェクトのclient_idを取得
+                $tmpClientId = $data['project']['id'];
+                // 引取に紐づく納品を探す
+                foreach ($shiftArray as $innerIndex => $innerData) {
+                    if (in_array($innerIndex, $skipIndex)) {
+                        continue;
+                    }
+                    if ($index > $innerIndex) {
+                        continue;
+                    }
+                    $secondCheckName = $innerData['initial_project_name'];
+
+                    if ($innerData['project']['id'] == $tmpClientId) {
+                        if (!str_contains($secondCheckName, '引取') && str_contains($secondCheckName, '納品')) {
+                            //【】を除去
+                            $cleanStr01 = preg_replace('/【.*?】/u', "", $firstCheckName);
+                            $cleanStr02 = preg_replace('/【.*?】/u', "", $secondCheckName);
+                            if ($cleanStr01 === $cleanStr02) {
+                                // データを一時格納
+                                $tmpItem = $innerData;
+                                $skipIndex[] = $innerIndex;
+                                break; // 内側のループを終了
+                            }
+                        }
+                    }
+                }
+
+                if ($tmpItem !== null) {
+                    // 条件を満たしたアイテムを $arrangeShiftArray に追加
+                    $arrangeShiftArray[] = $tmpItem;
+                    $tmpItem = null; // $tmpItem をリセット
+                }
+            }
+        }
+        // 元の配列に代入
+        $shiftArray = array_values($arrangeShiftArray);
+
+        // 項目を設定
+        $csvHeader = [
+            '日付','案件名','配送料金','高速料金','駐車料金','ドライバー','ドライバー価格','クライアント名'
+        ];
+
+        $temps = []; //一時的に配列に格納
+        array_push($temps, $csvHeader); //ヘッダーを設定
+
+        foreach($shiftArray as $data){
+            // 案件名
+            if($data['initial_project_name'] != null){
+                $projectName = $data['initial_project_name'];
+            }else{
+                $projectName = $data['project']['name'];
+            }
+            // 従業員名
+            if(isset($data['shift']['employee']['name'])){
+                $employeeName = $data['shift']['employee']['name'];
+            }else{
+                $employeeName = $data['shift']['unregistered_employee'];
+            }
+            // 格納するデータを整形
+            $temp = [
+                $data['shift']['date'],
+                $projectName,
+                $data['retail_price'],
+                $data['expressway_fee'],
+                $data['parking_fee'],
+                $employeeName,
+                $data['driver_price'],
+                $data['project']['client']['name'],
+            ];
+            // １行づつ追加
+            array_push($temps, $temp);
+        }
+
+        //  ファイルを作成
+        $stream = fopen('php://temp', 'r+b');
+        // １行づつ作成したファイルに書き込み
+        foreach ($temps as $temp) {
+            fputcsv($stream, $temp);
+        }
+        // ファイルポインタを先頭に戻す
+        rewind($stream);
+        // 改行コードを置き換え・文字列に変換・エンコード
+        $csv = str_replace(PHP_EOL, "\r\n", stream_get_contents($stream));
+        // 文字列をエンコードする
+        $csv = mb_convert_encoding($csv, 'SJIS-win', 'UTF-8');
+
+        $fileName = 'チャーターリスト.csv';
+        $headers = array(
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename='.$fileName,
+        );
+        return Response::make($csv, 200, $headers);
     }
 
 

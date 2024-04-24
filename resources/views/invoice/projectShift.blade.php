@@ -40,11 +40,11 @@
                                 <select name="year" id="" class="c-select year-select" required>
                                     <option value="">----</option>
                                     @for ($year = now()->year; $year >= now()->year - 10; $year--)
-                                    @if ($year == $getYear)
-                                    <option selected value="{{ $year }}">{{ $year }}</option>
-                                    @else
-                                    <option value="{{ $year }}">{{ $year }}</option>
-                                    @endif
+                                        @if ($year == $getYear)
+                                            <option selected value="{{ $year }}">{{ $year }}</option>
+                                        @else
+                                            <option value="{{ $year }}">{{ $year }}</option>
+                                        @endif
                                     @endfor
                                 </select>
                                 <label for="">年</label>
@@ -293,7 +293,7 @@
                                             <th rowspan="2" class="project-table-w-amount retailClm numberBox border-right-bold">配送料金</th>
                                             {{-- 案件・所属先詳細ヘッド --}}
                                             @foreach ($narrowProjects as $project)
-                                            <th colspan="{{$company_count * 4 }}" class="rightHead projectInfoHead" data-company-count="{{$company_count}}">{{$project->name}}
+                                            <th colspan="{{$company_count * 4 }}" class="rightHead projectInfoHead border-right-bold" data-company-count="{{$company_count}}">{{$project->name}}
                                             </th>
                                             @endforeach
                                         </tr>

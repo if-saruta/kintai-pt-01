@@ -5,16 +5,8 @@
         </h2>
     </x-slot>
 
-    {{-- <script>
-        window.onbeforeunload = function(e) {
-            e.preventDefault();
-            return '';
-        };
-
-    </script> --}}
-
     <main class="main">
-        <form action="{{ route('employee.update',['id'=>$employee->id])}}" method="POST" class="main__white-board --employee-white-board">
+        <form action="{{ route('employee.update',['id'=>$employee->id])}}" method="POST" id="form" class="main__white-board --employee-white-board">
             @csrf
             <div class="employee-name-box">
                 <div class="employee-name-box__inner">
@@ -170,6 +162,7 @@
                             <p class="">銀行名</p>
                             @can('admin-higher')
                                 <input type="text" name="bank_name" value="{{$employee->bankAccounts->first()->bank_name}}" class="c-input" placeholder="東京銀行　新宿支店　(普) 000000000" required>
+                                {{-- <input type="text" name="bank_name" value="" class="c-input" placeholder="東京銀行　新宿支店　(普) 000000000" required> --}}
                             @else
                                 <input type="text" name="bank_name" value="{{$employee->bankAccounts->first()->bank_name}}" class="c-input" placeholder="東京銀行　新宿支店　(普) 000000000" readonly>
                             @endcan
@@ -178,6 +171,7 @@
                             <p class="">口座名義人</p>
                             @can('admin-higher')
                                 <input type="text" name="account_holder_name" value="{{$employee->bankAccounts->first()->account_holder_name}}" class="c-input" placeholder="ヤマダ タロウ" required>
+                                {{-- <input type="text" name="account_holder_name" value="" class="c-input" placeholder="ヤマダ タロウ" required> --}}
                             @else
                                 <input type="text" name="account_holder_name" value="{{$employee->bankAccounts->first()->account_holder_name}}" class="c-input" placeholder="ヤマダ タロウ" readonly>
                             @endcan
@@ -247,11 +241,14 @@
                                 </select>
                             @endcan
                         </div>
-                        <div class="select-area__item">
-                            <p class="">貸出車両</p>
+                        <div class="select-area__item --vehicle-item">
+                            <div class="select-area__item__head">
+                                <p class="">貸出車両</p>
+                                <p class="" id="vehicleWarningTxt" style="color:red;"></p>
+                            </div>
                             <div class="" id="controlSelect">
                                 @can('admin-higher')
-                                    <select name="vehicle" class="c-select">
+                                    <select name="vehicle" id="vehicleSelect" class="c-select">
                                         <option value="">選択してください</option>
                                         @foreach ($vehicles as $vehicle)
                                             @if ($vehicle->id == $employee->vehicle_id)
@@ -363,9 +360,11 @@
         </form>
     </main>
 
-
-
 </x-app-layout>
+
+<script>
+    var vehicleUsedArray = @json($vehicleUsedArray);
+</script>
 
 {{-- script --}}
 <script src="{{asset('js/employee.js')}}"></script>

@@ -1,0 +1,138 @@
+@use "../../foundation/variables.scss" as *;
+@use "../../foundation/mixin.scss" as *;
+@use "sass:math";
+
+.--client-white-board{
+    .btn-area{
+        margin-top: 2rem;
+        margin-left: 5rem;
+        .project-info-save-btn{
+            cursor: pointer;
+        }
+    }
+    .project-info-box{
+        position: relative;
+        overflow-y: scroll;
+        width: 900px;
+        height: math.div(650,800) * 100vh;
+        margin: 0 auto;
+        margin-top: 3rem;
+        table{
+            width: 99.9%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            table-layout: fixed;
+            overflow-wrap : break-word;
+            font-size: 1.5rem;
+            font-weight: $fw-bold;
+        }
+        table th,
+        table td{
+        border: 1px solid black;
+        text-align: center;
+        vertical-align: middle;
+        }
+        &__top-table{
+            td{
+                height: 40px;
+            }
+            .project-head{
+                width: 10%;
+            }
+            .project-name{
+                width: 40%;
+            }
+            .client-head{
+                width: 13%;
+            }
+            .client-name{
+                width: 37%;
+            }
+        }
+        &__middle-table{
+            margin-top: 15px!important;
+            td{
+                height: 40px;
+            }
+            .head{
+                width: 20%;
+            }
+            .dd{
+                width: 70%;
+            }
+        }
+        &__amount-table{
+            margin-top: 15px!important;
+            th{
+                height: 40px;
+            }
+            td{
+                height: 40px;
+            }
+
+        }
+        &__profit-table{
+            margin-top: 15px!important;
+            th{
+                height: 40px;
+            }
+            td{
+                height: 40px;
+            }
+            .head{
+                width: 13.6%;
+            }
+        }
+        .table-layout{
+            width: 100%;
+            display: table;
+            table-layout: fixed;
+        }
+        .project-table-cell{
+            height: 40px;
+            display: table-cell;
+            border: 1px solid black;
+            vertical-align: middle;
+            input{
+                width: 100%;
+                height: 40px;
+                box-sizing: border-box;
+                border: 0px;
+                font-size: 15px;
+            }
+        }
+        .blue-bg{
+            background-color: rgb(163, 199, 239);
+        }
+        .remarks-box{
+            width: 99.5%;
+            height: 200px;
+            margin-top: 15px;
+            border: 2px solid black;
+            textarea{
+                width: 100%;
+                height: 100%;
+                padding-top: 1rem;
+                padding-left: 1rem;
+                box-sizing: border-box;
+                font-size: 15px;
+                line-height: 1.5;
+                font-weight: $fw-bold;
+                text-align: center;
+            }
+            p{
+                font-size: 15px;
+                font-weight: $fw-bold;
+            }
+        }
+        .dd{
+            input{
+                width: 100%;
+                height: 40px;
+                box-sizing: border-box;
+                border: 0px;
+                font-size: 15px;
+            }
+        }
+    }
+}

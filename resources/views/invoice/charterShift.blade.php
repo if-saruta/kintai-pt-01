@@ -110,7 +110,18 @@
                                 @endforeach
 
                                 <button class="calendar-pdf-button c-pdf-download-btn">
-                                    <p>ダウンロード</p>
+                                    <p>PDFダウンロード</p>
+                                </button>
+                            </form>
+                            <form action="{{ route('invoice.charter-calendar-csv') }}" method="POST">
+                                @csrf
+                                <input hidden type="text" value="{{$getYear}}" name="year">
+                                <input hidden type="text" value="{{$getMonth}}" name="month">
+                                @foreach ($narrowClientId as $id)
+                                    <input hidden type="text" value="{{ $id }}" name="narrowClientId[]">
+                                @endforeach
+                                <button class="calendar-csv-button">
+                                    <p class="">csvダウンロード</p>
                                 </button>
                             </form>
                             <div class="setting-btn" id="settingBtn">

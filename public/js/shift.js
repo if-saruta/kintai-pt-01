@@ -550,4 +550,25 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     companyClmCreate();
 
+    /**
+     * 編集ページ　設定モーダル
+     */
+    const settingModalActive = () => {
+        const modal = document.getElementById('settingModal');
+        const openBtn = document.querySelector('.settingModalOpen');
+        const closeBtn = document.querySelectorAll('.settingModalClose');
+
+        if(modal){
+            openBtn.addEventListener('click', () => {
+                modal.style.display = 'block';
+            })
+
+            for(let i = 0; i < closeBtn.length; i++){
+                closeBtn[i].addEventListener('click', () => {
+                    modal.style.display = 'none';
+                })
+            }
+        }
+    }
+    settingModalActive();
 })

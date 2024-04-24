@@ -178,24 +178,96 @@ window.addEventListener('load', () => {
         const observeSelect = document.getElementById('observeSelect');
         const controlSelect = document.getElementById('controlSelect');
 
+        const vehicleSelect = document.getElementById('vehicleSelect');
+        const form = document.getElementById('form');
+        const warningTxt = document.getElementById('vehicleWarningTxt');
+
         if(observeSelect != null){
+            /**
+             * 貸出車両のアクションを制御
+             */
             // select選択時
             observeSelect.addEventListener('change', () => {
                 if(observeSelect.value == 1){
-                    controlSelect.classList.remove('not-action');
+                    controlSelect.classList.remove('--vehicle-not-action');
                 }else{
-                    controlSelect.classList.add('not-action');
+                    controlSelect.classList.add('--vehicle-not-action');
+                    vehicleSelect.selectedIndex = 0;
+                    warningCheckAction(true);
                 }
             })
                     // 読み込み時
             if(observeSelect.value == 1){
-                controlSelect.classList.remove('not-action');
+                controlSelect.classList.remove('--vehicle-not-action');
             }else{
-                controlSelect.classList.add('not-action');
+                controlSelect.classList.add('--vehicle-not-action');
+                vehicleSelect.selectedIndex = 0;
             }
+
+            /**
+             * 貸出車両の確認
+             */
+            vehicleSelect.addEventListener('change', function() {
+                // 選択されているIDを取得
+                var vehicleId = parseInt(this.value, 10); //文字列のためint型にキャスト
+                // 配列にIDが含まれているか確認
+                if(vehicleUsedArray.includes(vehicleId)){
+                    warningCheckAction(false);
+                } else {
+                    warningCheckAction(true);
+                }
+            })
+
+            const warningCheckAction = (isBool) => {
+                if(isBool){
+                    warningTxt.textContent = '';
+                    form.dataset.valid = "true";
+                }else{
+                    warningTxt.textContent = '既に使用されているため、変更してください';
+                    form.dataset.valid = "false";
+                }
+            }
+
+            // フォーム送信時のイベント
+            form.addEventListener('submit', function(event) {
+                if (form.dataset.valid === "false") {
+                    event.preventDefault(); // フォームの送信を阻止
+                    alert('貸出車両が正しくありません。別の車両をを選択してください。');
+                }
+            });
         }
+
     }
     vehicleSelectActive();
+
+    // 貸出車両の制御
+    const checkVehicleUsed = () => {
+        const vehicleSelect = document.getElementById('vehicleSelect');
+        const form = document.getElementById('form');
+        const warningTxt = document.getElementById('vehicleWarningTxt');
+
+        vehicleSelect.addEventListener('change', function() {
+            // 選択されているIDを取得
+            var vehicleId = parseInt(this.value, 10); //文字列のためint型にキャスト
+            // 配列にIDが含まれているか確認
+            if(vehicleUsedArray.includes(vehicleId)){
+                warningTxt.textContent = '既に使用されているため、変更してください';
+                form.dataset.valid = "false";
+            } else {
+                warningTxt.textContent = '';
+                form.dataset.valid = "true";
+            }
+        })
+
+        // フォーム送信時のイベント
+        form.addEventListener('submit', function(event) {
+            if (form.dataset.valid === "false") {
+                event.preventDefault(); // フォームの送信を阻止
+                alert('貸出車両が正しくありません。別の車両をを選択してください。');
+            }
+        });
+    }
+    // checkVehicleUsed();
 
     // インボイス登録のアクションによって、登録番号の挙動を制御
     const invoiceInputControl = () => {
@@ -223,6 +295,7 @@ window.addEventListener('load', () => {
         }
     }
     invoiceInputControl();
+
 
 
 })

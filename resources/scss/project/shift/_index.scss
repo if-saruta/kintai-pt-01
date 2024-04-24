@@ -3,8 +3,6 @@
 @use "sass:math";
 
 .--shift-main{
-    // width: math.div(1235.2,1280) * 100vw;
-    // margin-left: math.div(44.8,1280) * 100vw;
     .shift-warning-txt{
         position: absolute;
         top: 50%;
@@ -14,8 +12,7 @@
     }
     .--shift-link-block{
         position: relative;
-        gap: math.div(180,1280) * 100vw;
-        // justify-content: space-between;
+        gap: math.div(100,1280) * 100vw;
         &__item:nth-child(1){
             .link{
                 display: block;
@@ -244,6 +241,17 @@
                 .color-box{
                     background-color: rgba(0, 0, 255, 0.087);
                 }
+            }
+        }
+        &__setting{
+            position: absolute;
+            top: 3.3rem;
+            right: 24rem;
+            width: 4rem;
+            height: 2.5rem;
+            border-radius: 0.5rem;
+            i{
+                font-size: 1.8rem;
             }
         }
         .calendar-download-btn{
@@ -1018,6 +1026,74 @@
     display: block;
     display: none;
 }
+.shift-setting-modal{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 300000;
+    width: 100vw;
+    height: 100vh;
+    &__bg{
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        opacity: 0.6;
+    }
+    &__white-board{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        z-index: 2;
+        width: math.div(700,1280) * 100vw;
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+        border-radius: 1.5rem;
+        background-color: white;
+        &__inner{
+            .title{
+                width: fit-content;
+                margin: 0 auto;
+                font-size: 2.6rem;
+                font-weight: $fw-bold;
+                color: $cBlack;
+            }
+            .select-radio{
+                width: fit-content;
+                margin: 0 auto;
+                margin-top: 3rem;
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+                font-size: 1.5rem;
+                font-weight: $fw-bold;
+                label{
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                }
+            }
+            .btn-area{
+                width: fit-content;
+                margin: 0 auto;
+                margin-top: 3rem;
+                display: flex;
+                align-items: center;
+                gap: 3rem;
+                .btn{
+                    height: 4rem;
+                }
+            }
+        }
+    }
+}
+
 .create-client-active{
     .shift-edit-modal__white-board{
         width: math.div(1100,1280) * 100vw;

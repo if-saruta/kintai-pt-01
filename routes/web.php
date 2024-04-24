@@ -65,9 +65,14 @@ Route::middleware('can:admin-higher')->group(function () {
 
     Route::prefix('vehicle')->name('vehicle.')->group(function () {
         Route::get('/', [VehicleController::class, 'index'])->name('');
+        Route::get('/create', [VehicleController::class, 'create'])->name('create');
         Route::post('/store', [VehicleController::class, 'store'])->name('store');
-        Route::post('/update', [VehicleController::class, 'update'])->name('update');
+        Route::get('/edit/{id}', [VehicleController::class, 'edit'])->name('edit');
+        Route::post('/update/{id}', [VehicleController::class, 'update'])->name('update');
         Route::get('/delete/{id}', [VehicleController::class, 'delete'])->name('delete');
+        Route::post('/allShow', [VehicleController::class, 'allShow'])->name('allShow');
+        Route::get('/allShow', [VehicleController::class, 'allShow'])->name('allShow');
+        Route::post('/downloadPdf', [VehicleController::class, 'downloadPdf'])->name('downloadPdf');
         Route::post('/csv', [VehicleController::class, 'csvImport'])->name('csv');
     });
 
@@ -80,6 +85,10 @@ Route::middleware('can:admin-higher')->group(function () {
         Route::get('/delete/{id}', [ProjectController::class, 'delete'])->name('delete');
         Route::get('/projectDelete/{id}', [ProjectController::class, 'projectDelete'])->name('projectDelete');
         Route::get('/employee_payment_show/{id}', [ProjectController::class, 'employeePaymentShow'])->name('employeePaymentShow');
+        Route::get('/info/{id}', [ProjectController::class, 'info'])->name('info');
+        Route::get('/info/{id}/edit', [ProjectController::class, 'infoEdit'])->name('infoEdit');
+        Route::post('/info/update', [ProjectController::class, 'infoUpdate'])->name('infoUpdate');
+        Route::post('/infoPdf', [ProjectController::class, 'infoPdf'])->name('infoPdf');
         Route::post('/csv', [ProjectController::class, 'csvImport'])->name('csv');
     });
 
@@ -96,6 +105,8 @@ Route::middleware('can:admin-higher')->group(function () {
 
         Route::post('/update', [ShiftController::class, 'update'])->name('update');
         Route::post('/delete', [ShiftController::class, 'delete'])->name('delete');
+
+        Route::post('/bulkReflection', [ShiftController::class, 'bulkReflection'])->name('bulkReflection');
 
         Route::post('/employeeShowShift', [ShiftController::class, 'selectWeek'])->name('employeeShowShift');
         Route::post('/employeeShowShift/selectWeek', [ShiftController::class, 'selectWeek'])->name('employeeShowShiftSelectWeek');
@@ -158,6 +169,7 @@ Route::middleware('can:admin-higher')->group(function () {
         Route::post('/charter-driver-update', [InvoiceController::class, 'charterDriverUpdate'])->name('charter-driver-update');
         Route::post('/charter-project-unregister', [InvoiceController::class, 'charterProjectChangeUnregister'])->name('charter-project-unregister');
         Route::post('/charter-calendar-pdf', [InvoiceController::class, 'charterCalendarPDF'])->name('charter-calendar-pdf');
+        Route::post('/charter-calendar-csv', [InvoiceController::class, 'charterCalendarCsv'])->name('charter-calendar-csv');
 
         // pdf発行前編集画面
         Route::post('/driver-edit-pdf', [PdfEditController::class, 'driver_edit_pdf'])->name('driver-edit-pdf');

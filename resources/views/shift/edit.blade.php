@@ -5,14 +5,6 @@
         </h2>
     </x-slot>
 
-    {{-- <script>
-        window.onbeforeunload = function(e) {
-            e.preventDefault();
-            return '';
-        };
-
-    </script> --}}
-
     <main class="main --shift-main">
         <div class="main__link-block --shift-link-block">
             <div class="main__link-block__tags">
@@ -150,6 +142,9 @@
                         </button>
                     </form>
                 </div>
+                <div class="shift-calendar__setting c-back-btn settingModalOpen">
+                    <i class="fa-solid fa-gear"></i>
+                </div>
                 {{-- カレンダー検索 --}}
                 <form action="{{route('shift.editSelectWeek')}}" class="datepicker" method="POST">
                     @csrf
@@ -177,16 +172,13 @@
                                 @foreach ( $convertedDates as $date )
                                 <th colspan="2" class="txt">
                                     @if ($holidays->isHoliday($date))
-                                    <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd')
-                                        }})</p>
+                                        <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd')}})</p>
                                     @elseif ($date->isSaturday())
-                                    <p class="" style="color: skyblue;">{{$date->format('j')}}日({{
-                                        $date->isoFormat('ddd') }})</p>
+                                        <p class="" style="color: skyblue;">{{$date->format('j')}}日({{$date->isoFormat('ddd') }})</p>
                                     @elseif($date->isSunday())
-                                    <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd')
-                                        }})</p>
+                                        <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd')}})</p>
                                     @else
-                                    <p class="">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
+                                        <p class="">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                     @endif
                                 </th>
                                 @endforeach
@@ -205,60 +197,65 @@
                         <tbody class="shift-calendar-table__body">
                             @foreach ( $sortedShiftDataByEmployee as $employeeId => $shiftData )
                             @php
-                            // 一周目だけ従業員表示
-                            $is_employee_open = true;
-                            // 1日ごとの最大案件数
-                            $max_count = 1;
+                                // 一周目だけ従業員表示
+                                $is_employee_open = true;
+                                // 1日ごとの最大案件数
+                                $max_count = 1;
                             @endphp
                             {{-- 最大案件数の計算 --}}
                             @php
-                            foreach ($shiftData as $shift) {
-                            $am_count = 0;
-                            $pm_count = 0;
-                            foreach ($shift->projectsVehicles as $spv) {
-                            $count = 0;
-                            if($spv->time_of_day == 0){
-                            $am_count++;
-                            }
-                            if($spv->time_of_day == 1){
-                            $pm_count++;
-                            }
-                            }
-                            if($max_count < $am_count){ $max_count=$am_count; } if ($max_count < $pm_count) {
-                                $max_count=$pm_count; } } @endphp <tr class="shift-calendar-table__body__row getRow">
+                                foreach ($shiftData as $shift) {
+                                    $am_count = 0;
+                                    $pm_count = 0;
+                                    foreach ($shift->projectsVehicles as $spv) {
+                                        $count = 0;
+                                        if($spv->time_of_day == 0){
+                                            $am_count++;
+                                        }
+                                        if($spv->time_of_day == 1){
+                                            $pm_count++;
+                                        }
+                                    }
+                                    if($max_count < $am_count){
+                                        $max_count=$am_count;
+                                    }
+                                    if ($max_count < $pm_count) {
+                                        $max_count=$pm_count;
+                                    }
+                                }
+                            @endphp
+                            <tr class="shift-calendar-table__body__row getRow">
                                 {{-- 左側の会社の列作成のため --}}
                                 @if ($shift->employee)
-                                <td class="td-none companyInfo"
-                                    data-company-name="{{ $shift->employee->company->name }}">
-                                    @endif
-                                    @foreach ( $shiftData as $shift ) {{-- $shift == 1日のシフト --}}
+                                    <td class="td-none companyInfo" data-company-name="{{ $shift->employee->company->name }}">
+                                @endif
+                                @foreach ( $shiftData as $shift ) {{-- $shift == 1日のシフト --}}
                                     {{-- 一周目だけ従業員表示 --}}
                                     @if ($is_employee_open)
-                                <td class="table-employee-name">
-                                    <div class="table-employee-name__block">
-                                        @if ($shift->employee)
-                                        <p class="">{{$shift->employee->name}}</p>
-                                        @else
-                                        <p class="" style="color: red;">{{$shift->unregistered_employee}}</p>
-                                        @endif
-                                    </div>
-                                </td>
+                                        <td class="table-employee-name">
+                                            <div class="table-employee-name__block">
+                                                @if ($shift->employee)
+                                                    <p class="">{{$shift->employee->name}}</p>
+                                                @else
+                                                    <p class="" style="color: red;">{{$shift->unregistered_employee}}</p>
+                                                @endif
+                                            </div>
+                                        </td>
+                                        @php
+                                        $is_employee_open = false;
+                                        @endphp
+                                    @endif
                                 @php
-                                $is_employee_open = false;
-                                @endphp
-                                @endif
-                                @php
+                                    $am_check_count = 0;
+                                    $pm_check_count = 0;
 
-                                $am_check_count = 0;
-                                $pm_check_count = 0;
-
-                                foreach ($convertedDates as $date) {
-                                if ($shift->date == $date->format('Y-m-d')) {
-                                $findYear = $date->format('Y');
-                                $findMonth = $date->format('m');
-                                $findDate = $date->format('d');
-                                }
-                                }
+                                    foreach ($convertedDates as $date) {
+                                        if ($shift->date == $date->format('Y-m-d')) {
+                                            $findYear = $date->format('Y');
+                                            $findMonth = $date->format('m');
+                                            $findDate = $date->format('d');
+                                        }
+                                    }
                                 @endphp
                                 {{-- 午前 --}}
                                 <td class="table-cell">
@@ -272,41 +269,33 @@
                                         <input hidden type="text" value="{{$findDate}}" class="findDate">
                                         <input hidden type="text" value="0" class="timeOfPart">
                                         @if ($spv->project)
-                                        <input hidden type="text" value="{{$spv->project->name}}" name=""
-                                            class="projectName">
+                                            <input hidden type="text" value="{{$spv->project->name}}" name="" class="projectName">
                                         @else
-                                        <input hidden type="text" value="{{$spv->unregistered_project}}" name=""
-                                            class="projectName">
+                                            <input hidden type="text" value="{{$spv->unregistered_project}}" name="" class="projectName">
                                         @endif
                                         @if ($spv->vehicle)
-                                        <input hidden type="text" value="{{$spv->vehicle->number}}" name=""
-                                            class="vehicleNumber">
+                                            <input hidden type="text" value="{{$spv->vehicle->number}}" name="" class="vehicleNumber">
                                         @else
-                                        <input hidden type="text" value="{{$spv->unregistered_vehicle}}" name=""
-                                            class="vehicleNumber">
+                                            <input hidden type="text" value="{{$spv->unregistered_vehicle}}" name="" class="vehicleNumber">
                                         @endif
-                                        <input hidden type="text" value="{{$spv->retail_price}}" name=""
-                                            class="retailPrice">
-                                        <input hidden type="text" value="{{$spv->driver_price}}" name=""
-                                            class="salaryPrice">
+                                            <input hidden type="text" value="{{$spv->retail_price}}" name="" class="retailPrice">
+                                            <input hidden type="text" value="{{$spv->driver_price}}" name="" class="salaryPrice">
                                         @if ($shift->employee)
-                                        <input hidden type="text" value="{{$shift->employee->name}}"
-                                            class="employeeName">
+                                            <input hidden type="text" value="{{$shift->employee->name}}" class="employeeName">
                                         @endif
                                         <input hidden type="text" value="" name="">
 
                                         {{-- データ表示 --}}
                                         @if ($spv->project)
-                                        @if ($spv->initial_project_name)
-                                        <p class="table-cell__item__row setHightElem">{{$spv->initial_project_name}}</p>
-                                        @else
-                                        <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
-                                        @endif
+                                            @if ($spv->initial_project_name)
+                                                <p class="table-cell__item__row setHightElem">{{$spv->initial_project_name}}</p>
+                                            @else
+                                                <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                            @endif
                                         @elseif($spv->unregistered_project)
-                                        <p class="table-cell__item__row setHightElem" style="color: red;">
-                                            {{$spv->unregistered_project}}</p>
+                                            <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
                                         @else
-                                        <p class="table-cell__item__row setHightElem"></p>
+                                            <p class="table-cell__item__row setHightElem"></p>
                                         @endif
                                         {{-- 車両 --}}
                                         @if ($spv->vehicle)
@@ -989,6 +978,39 @@
                     </button>
                     <div class="btn --back createCloseModal" onclick='return confirm("入力したデータは失われます。")'>
                         戻る
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- 設定モーダル --}}
+    <div class="shift-setting-modal" id="settingModal">
+        <div class="shift-setting-modal__bg settingModalClose"></div>
+        <div class="shift-setting-modal__white-board">
+            <form action="{{ route('shift.bulkReflection') }}" method="POST">
+                @csrf
+                <input hidden value="{{$startOfWeek}}" name="startOfWeek" type="text">
+                <input hidden value="{{$endOfWeek}}" name="endOfWeek" type="text">
+                <div class="shift-setting-modal__white-board__inner">
+                    <p class="title">編集</p>
+                    <div class="select-radio">
+                        <label for="">
+                            <input checked type="radio" value="allReflection" name="reflection_type">
+                            現在のすべての登録情報を反映
+                        </label>
+                        <label for="">
+                            <input type="radio" value="driverReflection" name="reflection_type">
+                            ドライバーの登録情報を反映
+                        </label>
+                        <label for="">
+                            <input type="radio" value="clientReflection" name="reflection_type">
+                            クライアントの登録情報を反映
+                        </label>
+                    </div>
+                    <div class="btn-area">
+                        <button class="c-save-btn btn" onclick='return confirm("上書き保存されます。よろしいですか？")'>反映</button>
+                        <div class="c-back-btn settingModalClose">戻る</div>
                     </div>
                 </div>
             </form>

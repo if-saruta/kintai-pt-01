@@ -176,13 +176,16 @@
             padding: 0px 0px;
         }
         .h-10{
-            height: 10px;
+            height: 11.1px;
         }
         .f-s-9{
             font-size: 9px;
         }
         .f-s-7{
             font-size: 8px;
+        }
+        .set-row-2-heigth{
+            height: 22.5px;
         }
 
     </style>
@@ -205,6 +208,7 @@
     $third_vehicle_array = [];
     $working_count = 0;
 @endphp
+
 <div class="top-table">
     <p class="name">{{ $findEmployee->name }}</p>
     <p class="date-info">{{ $getYear }}年{{ $getMonth }}月度</p>
@@ -280,7 +284,7 @@
                       $rental_vehicle = $spv->rentalVehicle->number;
                     }
                   @endphp
-                    <td class="project @if($setRowCount == 4) h-10 @endif">
+                    <td class="project @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif">
                         <p class="">
                             @if ($spv->project)
                             @if($spv->project->name != '休み')
@@ -340,7 +344,7 @@
                      <td class="parking-fee @if($setRowCount == 4) h-10 @endif"><p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">{{ $amount }}</p></td>
                   @endif
                   @if ($vehicleCheck != 1)
-                    <td class="vehicle @if($setRowCount == 4) h-10 @endif">
+                    <td class="vehicle @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif">
                         {{-- 契約形態別の2台目・三代目の確認 --}}
                         <p class="">
                         {{-- 自車 --}}
@@ -380,24 +384,24 @@
                 @if ($count == 0)
                   <td rowspan="{{ $setRowCount }}" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                 @endif
-                <td class="project @if($setRowCount == 4) h-10 @endif"><p><span class="basic-legth @if($setRowCount == 4) f-s-7 @endif">&nbsp;</span></p></td>
+                <td class="project @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p><span class="basic-legth @if($setRowCount == 4) f-s-7 @endif">&nbsp;</span></p></td>
                 @if ($amountCheck != 1)
-                    <td class="driver-price @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                    <td class="driver-price @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($overtimeCheck != 1)
-                    <td class="overtime @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                    <td class="overtime @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($allowanceCheck != 1)
-                    <td class="allowance-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                    <td class="allowance-fee @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($expresswayCheck != 1)
-                    <td class="expressway-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                    <td class="expressway-fee @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($parkingCheck != 1)
-                    <td class="parking-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                    <td class="parking-fee @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($vehicleCheck != 1)
-                    <td class="vehicle @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                    <td class="vehicle @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
               </tr>
           @endfor
@@ -408,24 +412,24 @@
             @if ($count == 0)
                 <td rowspan="{{ $setRowCount }}" class="date"><p class=""></p></td>
             @endif
-            <td class="project @if($setRowCount == 4) h-10 @endif"><p><span class="basic-legth @if($setRowCount == 4) f-s-7 @endif">&nbsp;</span></p></td>
+            <td class="project @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p><span class="basic-legth @if($setRowCount == 4) f-s-7 @endif">&nbsp;</span></p></td>
             @if ($amountCheck != 1)
-                <td class="driver-price @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                <td class="driver-price @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
             @endif
             @if ($overtimeCheck != 1)
-                <td class="overtime @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                <td class="overtime @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
             @endif
             @if ($allowanceCheck != 1)
-                <td class="allowance-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                <td class="allowance-fee @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
             @endif
             @if ($expresswayCheck != 1)
-                <td class="expressway-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                <td class="expressway-fee @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
             @endif
             @if ($parkingCheck != 1)
-                <td class="parking-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                <td class="parking-fee @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
             @endif
             @if ($vehicleCheck != 1)
-                <td class="vehicle @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                <td class="vehicle @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
             @endif
         </tr>
      @endfor
@@ -480,7 +484,7 @@
                       $rental_vehicle = $spv->rentalVehicle->number;
                     }
                   @endphp
-                  <td class="project @if($setRowCount == 4) h-10 @endif">
+                  <td class="project @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif">
                     <p class="">
                         @if ($spv->project)
                         @if($spv->project->name != '休み')
@@ -540,7 +544,7 @@
                      <td class="parking-fee @if($setRowCount == 4) h-10 @endif"><p class="f-s-9 @if($setRowCount == 4) f-s-7 @endif">{{$amount}}</p></td>
                   @endif
                   @if ($vehicleCheck != 1)
-                    <td class="vehicle @if($setRowCount == 4) h-10 @endif">
+                    <td class="vehicle @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif">
                         {{-- 契約形態別の2台目・三代目の確認 --}}
                         <p class="">
                         {{-- 自車 --}}
@@ -580,24 +584,24 @@
                 @if ($count == 0)
                   <td rowspan="{{ $setRowCount }}" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                 @endif
-                <td class="project @if($setRowCount == 4) h-10 @endif"><span class="basic-legth @if($setRowCount == 4) f-s-7 @endif">&nbsp;</span></td>
+                <td class="project @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><span class="basic-legth @if($setRowCount == 4) f-s-7 @endif">&nbsp;</span></td>
                 @if ($amountCheck != 1)
-                    <td class="driver-price @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                    <td class="driver-price @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($overtimeCheck != 1)
-                    <td class="overtime @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                    <td class="overtime @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($allowanceCheck != 1)
-                    <td class="allowance-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                    <td class="allowance-fee @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($expresswayCheck != 1)
-                    <td class="expressway-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                    <td class="expressway-fee @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($parkingCheck != 1)
-                    <td class="parking-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                    <td class="parking-fee @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($vehicleCheck != 1)
-                    <td class="vehicle @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                    <td class="vehicle @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
               </tr>
           @endfor
@@ -610,24 +614,24 @@
                 @if ($count == 0)
                     <td rowspan="{{ $setRowCount }}" class="date"><p class=""></p></td>
                 @endif
-                <td class="project @if($setRowCount == 4) h-10 @endif"><p><span class="basic-legth @if($setRowCount == 4) f-s-7 @endif">&nbsp;</span></p></td>
+                <td class="project @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p><span class="basic-legth @if($setRowCount == 4) f-s-7 @endif">&nbsp;</span></p></td>
                 @if ($amountCheck != 1)
-                    <td class="driver-price @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                    <td class="driver-price @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($overtimeCheck != 1)
-                    <td class="overtime @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                    <td class="overtime @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($allowanceCheck != 1)
-                    <td class="allowance-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                    <td class="allowance-fee @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($expresswayCheck != 1)
-                    <td class="expressway-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                    <td class="expressway-fee @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($parkingCheck != 1)
-                    <td class="parking-fee @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                    <td class="parking-fee @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
                 @if ($vehicleCheck != 1)
-                    <td class="vehicle @if($setRowCount == 4) h-10 @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
+                    <td class="vehicle @if($setRowCount == 4) h-10 @elseif($setRowCount == 2) set-row-2-heigth @endif"><p class="@if($setRowCount == 4) f-s-7 @endif">&nbsp;</p></td>
                 @endif
             </tr>
         @endfor

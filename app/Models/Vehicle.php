@@ -11,7 +11,24 @@ class Vehicle extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['place_name','class_number','hiragana','number','company_id'];
+    protected $fillable = [
+        'ownership_type',
+        'ownership_id',
+        'employee_id',
+        'vehicle_type',
+        'category',
+        'brand_name',
+        'model',
+        'inspection_expiration_date',
+        'place_name',
+        'class_number',
+        'hiragana',
+        'number'
+    ];
+
+    protected $casts = [
+        'inspection_expiration_date' => 'datetime',
+    ];
 
     public function shifts()
     {
@@ -21,5 +38,15 @@ class Vehicle extends Model
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function ownership()
+    {
+        return $this->morphTo();
+    }
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'employee_id');
     }
 }
