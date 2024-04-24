@@ -154,9 +154,11 @@ class VehicleController extends Controller
 
         // 使用者が月リースを選択してる場合、使用車両を変更
         $employee = Employee::find($request->employee_id);
-        if($employee->vehicle_rental_type == 1){
-            $employee->vehicle_id = $vehicle->id;
-            $employee->save();
+        if($employee != null){
+            if($employee->vehicle_rental_type == 1){
+                $employee->vehicle_id = $vehicle->id;
+                $employee->save();
+            }
         }
 
         return redirect()->route('vehicle.');
@@ -208,9 +210,11 @@ class VehicleController extends Controller
 
         // 使用者が月リースを選択してる場合、使用車両を変更
         $employee = Employee::find($request->employee_id);
-        if($employee->vehicle_rental_type == 1){
-            $employee->vehicle_id = $vehicle->id;
-            $employee->save();
+        if($employee != null){
+            if($employee->vehicle_rental_type == 1){
+                $employee->vehicle_id = $vehicle->id;
+                $employee->save();
+            }
         }
 
         return redirect()->route('vehicle.');
