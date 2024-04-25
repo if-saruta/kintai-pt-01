@@ -495,14 +495,14 @@
                                             <div class="item-cell">
                                                 @if ($spv->project)
                                                     @if ($spv->initial_project_name)
-                                                        <p class="" style="height: {{ $projectHeight }}px;">{{ $spv->initial_project_name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 1.5 }}px;">{{ $spv->initial_project_name }}</p>
                                                     @else
-                                                        <p class="" style="height: {{ $projectHeight }}px;">{{ $spv->project->name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 1.5 }}px;">{{ $spv->project->name }}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
-                                                    <p class="" style="color: red; height: {{ $projectHeight }}px;">{{ $spv->unregistered_project }}</p>
+                                                    <p class="" style="color: red; height: {{ $projectHeight / 1.5 }}px;">{{ $spv->unregistered_project }}</p>
                                                 @else
-                                                    <p class="" style="height: {{ $projectHeight }}px;"></p>
+                                                    <p class="" style="height: {{ $projectHeight / 1.5 }}px;"></p>
                                                 @endif
                                             </div>
                                             {{-- 配送料金 --}}
@@ -523,7 +523,7 @@
                                 @endforeach
                                 @for ($i = $am_check_count; $i < $max_count; $i++)
                                     <div class="txt-position-center">
-                                        <div class="item-cell"><p class="" style="height: {{ $projectHeight }}px;"></p></div>
+                                        <div class="item-cell"><p class="" style="height: {{ $projectHeight / 1.5 }}px;"></p></div>
                                         <div class="item-cell"><p class=""></p></div>
                                     </div>
                                 @endfor
@@ -537,14 +537,14 @@
                                             <div class="item-cell">
                                                 @if ($spv->project)
                                                     @if ($spv->initial_project_name)
-                                                        <p class="" style="height: {{ $projectHeight }}px;">{{ $spv->initial_project_name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 1.5 }}px;">{{ $spv->initial_project_name }}</p>
                                                     @else
-                                                        <p class="" style="height: {{ $projectHeight }}px;">{{ $spv->project->name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 1.5 }}px;">{{ $spv->project->name }}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
-                                                    <p class="" style="color: red; height: {{ $projectHeight }}px;">{{ $spv->unregistered_project }}</p>
+                                                    <p class="" style="color: red; height: {{ $projectHeight / 1.5 }}px;">{{ $spv->unregistered_project }}</p>
                                                 @else
-                                                    <p class="" style="height: {{ $projectHeight }}px;"></p>
+                                                    <p class="" style="height: {{ $projectHeight / 1.5 }}px;"></p>
                                                 @endif
                                             </div>
                                             {{-- 配送料金 --}}
@@ -565,7 +565,7 @@
                                 @endforeach
                                 @for ($i = $pm_check_count; $i < $max_count; $i++)
                                     <div class="txt-position-center">
-                                        <div class="item-cell"><p class="" style="height: {{ $projectHeight }}px;"></p></div>
+                                        <div class="item-cell"><p class="" style="height: {{ $projectHeight / 1.5 }}px;"></p></div>
                                         <div class="item-cell"><p class=""></p></div>
                                     </div>
                                 @endfor
@@ -642,14 +642,14 @@
                                             <div class="item-cell">
                                                 @if ($spv->project)
                                                     @if ($spv->initial_project_name)
-                                                        <p class="" style="height: {{ $projectHeight }}px;">{{ $spv->initial_project_name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 1.5 }}px;">{{ $spv->initial_project_name }}</p>
                                                     @else
-                                                        <p class="" style="height: {{ $projectHeight }}px;">{{ $spv->project->name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 1.5 }}px;">{{ $spv->project->name }}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
-                                                    <p class="" style="color: red; height: {{ $projectHeight }}px;">{{ $spv->unregistered_project }}</p>
+                                                    <p class="" style="color: red; height: {{ $projectHeight / 1.5 }}px;">{{ $spv->unregistered_project }}</p>
                                                 @else
-                                                    <p class="" style="height: {{ $projectHeight }}px;"></p>
+                                                    <p class="" style="height: {{ $projectHeight / 1.5 }}px;"></p>
                                                 @endif
                                             </div>
                                             {{-- 配送料金 --}}
@@ -670,7 +670,7 @@
                                 @endforeach
                                 @for ($i = $am_check_count; $i < $max_count; $i++)
                                     <div class="txt-position-center">
-                                        <div class="item-cell"><p class="" style="height: {{ $projectHeight }}px;"></p></div>
+                                        <div class="item-cell"><p class="" style="height: {{ $projectHeight / 1.5 }}px;"></p></div>
                                         <div class="item-cell"><p class=""></p></div>
                                     </div>
                                 @endfor
@@ -684,14 +684,14 @@
                                             <div class="item-cell">
                                                 @if ($spv->project)
                                                     @if ($spv->initial_project_name)
-                                                        <p class="" style="height: {{ $projectHeight }}px;">{{ $spv->initial_project_name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 1.5 }}px;">{{ $spv->initial_project_name }}</p>
                                                     @else
-                                                        <p class="" style="height: {{ $projectHeight }}px;">{{ $spv->project->name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 1.5 }}px;">{{ $spv->project->name }}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
-                                                    <p class="" style="color: red; height: {{ $projectHeight }}px;">{{ $spv->unregistered_project }}</p>
+                                                    <p class="" style="color: red; height: {{ $projectHeight / 1.5 }}px;">{{ $spv->unregistered_project }}</p>
                                                 @else
-                                                    <p class="" style="height: {{ $projectHeight }}px;"></p>
+                                                    <p class="" style="height: {{ $projectHeight / 1.5 }}px;"></p>
                                                 @endif
                                             </div>
                                             {{-- 配送料金 --}}
@@ -712,7 +712,7 @@
                                 @endforeach
                                 @for ($i = $pm_check_count; $i < $max_count; $i++)
                                     <div class="txt-position-center">
-                                        <div class="item-cell"><p class="" style="height: {{ $projectHeight }}px;"></p></div>
+                                        <div class="item-cell"><p class="" style="height: {{ $projectHeight / 1.5 }}px;"></p></div>
                                         <div class="item-cell"><p class=""></p></div>
                                     </div>
                                 @endfor
