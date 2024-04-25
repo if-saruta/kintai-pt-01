@@ -487,7 +487,7 @@
                                                         <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->project->name }}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
-                                                    <p class="" style="color: red; "height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
+                                                    <p class="" style="color: red; height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
                                                 @else
                                                     <p class="" style="height: {{ $projectHeight / 2 }}px;"></p>
                                                 @endif
@@ -549,7 +549,7 @@
                                                         <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->project->name }}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
-                                                    <p class="" style="color: red; "height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
+                                                    <p class="" style="color: red; height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
                                                 @else
                                                     <p class="" style="height: {{ $projectHeight / 2 }}px;"></p>
                                                 @endif
@@ -667,7 +667,7 @@
                                                         <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->project->name }}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
-                                                    <p class="" style="color: red; "height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
+                                                    <p class="" style="color: red; height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
                                                 @else
                                                     <p class="" style="height: {{ $projectHeight / 2 }}px;"></p>
                                                 @endif
@@ -729,7 +729,7 @@
                                                         <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->project->name }}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
-                                                    <p class="" style="color: red; "height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
+                                                    <p class="" style="color: red; height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
                                                 @else
                                                     <p class="" style="height: {{ $projectHeight / 2 }}px;"></p>
                                                 @endif
