@@ -392,8 +392,7 @@
                                                         @if($spv->shift->date == $date->format('Y-m-d'))
                                                             @if ($spv->shift->employee)
                                                                 @if ($spv->shift->employee->company_id == $company->id && $spv->project_id == $project->id)
-                                                                <input type="text" name="driver_price[{{$spv->id}}]"
-                                                                    value="{{ number_format($spv->driver_price)}}" class="txt-right-input commaInput">
+                                                                <input type="text" name="driver_price[{{$spv->id}}]" value="{{ number_format($spv->driver_price)}}" class="txt-right-input commaInput">
                                                                 @endif
                                                             @endif
                                                         @endif
