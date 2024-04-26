@@ -387,6 +387,8 @@
                                     $is_employee_open = true;
                                     // 1日ごとの最大案件数
                                     $max_count = 1;
+                                    // シフトがあるか
+                                    $hasShift = false;
                                     @endphp
                                     {{-- 最大案件数の計算 --}}
                                     @php
@@ -395,6 +397,7 @@
                                             $pm_count = 0;
                                             foreach ($shift->projectsVehicles as $spv) {
                                                 $count = 0;
+                                                $hasShift = true;
                                                 if($spv->time_of_day == 0){
                                                     $am_count++;
                                                 }
@@ -409,7 +412,7 @@
                                             }
                                         }
                                     @endphp
-                                    @if ($am_count != 0 || $pm_count != 0)
+                                    @if ($hasShift)
                                         <tr class="shift-calendar-table__body__row">
                                             @foreach ( $shiftData as $shift ) {{-- $shift == 1日のシフト --}}
                                                 {{-- 一周目だけ従業員表示 --}}
