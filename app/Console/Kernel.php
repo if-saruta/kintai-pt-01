@@ -14,8 +14,8 @@ class Kernel extends ConsoleKernel
     {
 
         // $schedule->command('send:inspection-notices --one-month')->dailyAt('10:00');
-        $schedule->command('send:inspection-notices --one-month')->dailyAt('14:58');
-        $schedule->command('send:inspection-notices --one-week')->dailyAt('14:58');
+        $schedule->command('send:inspection-notices --one-month')->everyMinute();
+        $schedule->command('send:inspection-notices --one-week')->everyMinute();
     }
 
     /**
