@@ -26,7 +26,9 @@ class InspectionNotice extends Mailable
 
     public function build()
     {
-        return $this->view('emails.inspectionNotice')
+        return $this
+        ->subject('車検の期日についてお知らせ')
+        ->view('emails.inspectionNotice')
         ->with([
             'vehicles' => $this->vehicles,
             'timeFrame' => $this->timeFrame
