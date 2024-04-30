@@ -19,7 +19,7 @@
             <div class="employee-name-box">
                 <div class="employee-name-box__inner">
                     <div class="employee-area">
-                        <p class="employee-area__head">従業員名</p>
+                        <p class="employee-area__head">ドライバー名</p>
                         <input type="text" name="name" class="c-input" placeholder="山田　太郎">
                         @if ($errors->has('name'))
                             <span class="invalid-feedback" role="alert">

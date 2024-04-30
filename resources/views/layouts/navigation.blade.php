@@ -78,6 +78,15 @@
                     <span class="nav-item__txt navTxt">{{ __('車両') }}</span>
                 </a>
                 @can('admin-higher')
+                <a href="{{ route('info-management.') }}"
+                    class="{{ request()->routeIs('info-management.*') ? 'active' : '' }} nav-item">
+                    <div class="icon-wrap">
+                        <i class="fa-solid fa-info"></i>
+                    </div>
+                    <span class="nav-item__txt navTxt">{{ __('情報管理') }}</span>
+                </a>
+                @endcan
+                @can('admin-higher')
                 <a href="{{ route('profile.edit') }}"
                     class="{{ request()->routeIs('profile.*') ? 'active' : '' }} nav-item">
                     <div class="icon-wrap">

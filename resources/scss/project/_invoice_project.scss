@@ -90,25 +90,29 @@
                 left: 50%;
                 transform: translate(-50%,-50%);
                 width: math.div(700,1280) * 100vw;
-                // height: math.div(500,800) * 100vh;
                 padding: 7rem 0;
+                // height: math.div(500,800) * 100vh;
                 border-radius: 1.5rem;
                 background-color: white;
                 &__inner{
-                    // position: absolute;
-                    // top: 50%;
-                    // left: 50%;
-                    // transform: translate(-50%,-50%);
                     width: math.div(600,1280) * 100vw;
                     margin: 0 auto;
                     display: flex;
                     flex-direction: column;
+                    box-sizing: border-box;
                     .head{
                         width: fit-content;
                         margin: 0 auto;
                         font-size: 2.6rem;
                         font-weight: $fw-bold;
                         color: $cBlack;
+                    }
+                    .modal-scroll{
+                        position: relative;
+                        overflow: scroll;
+                        display: flex;
+                        flex-direction: column;
+                        height: 40rem;
                     }
                     .title{
                         margin-top: 3rem;
@@ -363,6 +367,22 @@
                     tr{
                         height: 4rem;
                     }
+                    .thead-table-layout{
+                        display: table;
+                        table-layout: fixed;
+                        height: 4rem;
+                        width: 100%;
+                        &__cell{
+                            // width: 7rem;
+                            height: 100%;
+                            display: table-cell;
+                            vertical-align: middle;
+                            align-items: center;
+                            border: 0.5px solid black;
+                            border-top: 0px;
+                            border-bottom: 0px;
+                        }
+                    }
                 }
                 .border-right-bold{
                     border-right: 1.5px solid black;
@@ -415,6 +435,23 @@
                                 color: $cBlue;
                             }
                         }
+                        .tbody-table-layout{
+                            display: table;
+                            table-layout: fixed;
+                            height: 100%;
+                            width: 100%;
+                            &__cell{
+                                min-height: 6rem;
+                                display: table-cell;
+                                vertical-align: middle;
+                                border: 0.5px solid black;
+                                border-top: 0px;
+                                border-bottom: 0px;
+                            }
+                            &__cell:last-child{
+                                border-right: 0px;
+                            }
+                        }
                     }
                 }
                 .project-table-date{
@@ -451,9 +488,9 @@
         }
     }
     .clm-none{
-        display: none;
+        display: none!important;
     }
     .all-clm-none{
-        display: none;
+        display: none!important;
     }
 }

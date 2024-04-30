@@ -104,7 +104,7 @@
                                 <p class="input-area-item__head">所有者タイプ</p>
                                 <select name="ownership_type" id="ownerType" class="c-select" required>
                                     <option value="App\Models\Company" data-switch='0'>所属先</option>
-                                    <option value="App\Models\Employee" data-switch='1'>従業員</option>
+                                    <option value="App\Models\Employee" data-switch='1'>ドライバー</option>
                                 </select>
                             </div>
                             <div class="input-area-item ownerSelect">

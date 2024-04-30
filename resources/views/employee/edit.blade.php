@@ -11,7 +11,7 @@
             <div class="employee-name-box">
                 <div class="employee-name-box__inner">
                     <div class="employee-area">
-                        <p class="employee-area__head">従業員名</p>
+                        <p class="employee-area__head">ドライバー名</p>
                         @can('admin-higher')
                             <input type="text" name="name" value="{{$employee->name}}" class="c-input" placeholder="山田　太郎" required>
                         @else

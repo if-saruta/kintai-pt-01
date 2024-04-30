@@ -102,7 +102,7 @@
                                 <p class="input-area-item__head">所有者タイプ</p>
                                 <select name="ownership_type" id="ownerType" class="c-select">
                                     <option value="App\Models\Company" @if($findVehicle->ownership_type == 'App\Models\Company') selected @endif data-switch='0'>所属先</option>
-                                    <option value="App\Models\Employee" @if($findVehicle->ownership_type == 'App\Models\Employee') selected @endif data-switch='1'>従業員</option>
+                                    <option value="App\Models\Employee" @if($findVehicle->ownership_type == 'App\Models\Employee') selected @endif data-switch='1'>ドライバー</option>
                                 </select>
                             </div>
                             <div class="input-area-item ownerSelect @if($findVehicle->ownership_type != 'App\Models\Company') close @endif">

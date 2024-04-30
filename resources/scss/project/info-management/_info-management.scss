@@ -1,0 +1,68 @@
+@use "../../foundation/variables.scss" as *;
+@use "../../foundation/mixin.scss" as *;
+@use "sass:math";
+
+.--info-management-white-board{
+    margin-top: 4rem;
+    height: math.div(745,800) * 100vh;
+    &__index{
+        padding-top: 2rem;
+        margin-left: 2rem;
+        .btn-area{
+            display: flex;
+            gap: 2rem;
+        }
+        .info-list-wrap{
+            position: relative;
+            height: math.div(650,800) * 100vh;
+            overflow-y: scroll;
+            margin-top: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            .flex-box{
+                display: flex;
+                gap: 3rem;
+            }
+            .flex-center{
+                align-items: center;
+            }
+            &__list-item{
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+                &__input-box{
+                    width: fit-content;
+                    display: flex;
+                    align-items: flex-end;
+                    gap: 1rem;
+                    .w-late-input{
+                        width: 6.5rem;
+                    }
+                    .w-fee-input{
+                        width: 10rem;
+                    }
+                    .value-box{
+
+                    }
+                    .unit{
+                        // margin-bottom: 0.5rem;
+                    }
+                }
+                .under-line{
+                    padding-bottom: 0.5rem;
+                    border-bottom: 1px solid $cGreen;
+                }
+            }
+            .c-p-head{
+                font-size: 1.4rem;
+                font-weight: $fw-bold;
+                letter-spacing: 0.1rem;
+                color: $cBlack;
+            }
+        }
+        .--index{
+            gap: 3rem;
+        }
+    }
+}

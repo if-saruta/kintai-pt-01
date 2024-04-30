@@ -813,58 +813,113 @@
                                                     <i class="fa-solid fa-plus"></i>
                                                 </div>
                                             </div>
+                                            @php
+                                                $rental_type = $shiftProjectVehicles->first()->vehicle_rental_type; //契約種類を取得
+                                                if($rental_type == 1){ //月リースであれば、契約車両を取得
+                                                    $rental_vehicle_number = $shiftProjectVehicles->first()->rentalVehicle->number;
+                                                }
+                                                // その他情報
+                                                $tax_late = $InfoManagement->tax_late;
+                                                $monthly_lease_fee = $InfoManagement->monthly_lease_fee;
+                                                $monthly_lease_insurance_fee = $InfoManagement->monthly_lease_insurance_fee;
+                                                $monthly_lease_second_fee = $InfoManagement->monthly_lease_second_fee;
+                                                $monthly_lease_second_insurance_fee = $InfoManagement->monthly_lease_second_insurance_fee;
+                                                $prorated_lease_fee = $InfoManagement->prorated_lease_fee;
+                                                $prorated_insurance_fee = $InfoManagement->prorated_insurance_fee;
+                                                $admin_commission_rate = $InfoManagement->admin_commission_rate;
+                                                $admin_fee_switch = $InfoManagement->admin_fee_switch;
+                                                $max_admin_fee = $InfoManagement->max_admin_fee;
+                                                $min_admin_fee = $InfoManagement->min_admin_fee;
+                                                $transfer_fee = $InfoManagement->transfer_fee;
+
+                                                // 事務手数料のスイッチ
+                                                if($admin_fee_switch < $totalSalary){
+                                                    $admin_fee = $max_admin_fee;
+                                                }else{
+                                                    $admin_fee = $min_admin_fee;
+                                                }
+                                            @endphp
                                             <p class="txt">相殺分</p>
                                             <div class="total-info-table-wrap__box">
                                                 <table class="total-info-table">
                                                     <tbody id="totalCostTableBody">
                                                         <tr class="info-table-row">
-                                                            <th><input type="text" name="administrativeOutsourcing[name]" value="事務委託手数料(15%)"></th>
-                                                            <td><input type="text" name="administrativeOutsourcing[amount]" value="{{ number_format(round($totalSalary * 0.15)) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            <th><input type="text" name="administrativeOutsourcing[name]" value="事務委託手数料({{ round($admin_commission_rate) }}%)"></th>
+                                                            <td><input type="text" name="administrativeOutsourcing[amount]" value="{{ number_format(round($totalSalary * ($admin_commission_rate / 100))) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                         </tr>
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="administrative[name]" value="事務手数料"></th>
-                                                            <td><input type="text" name="administrative[amount]" value="{{ number_format(10000) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            <td><input type="text" name="administrative[amount]" value="{{ number_format($admin_fee) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                         </tr>
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="transfer[name]" value="振込手数料"></th>
-                                                            <td><input type="text" name="transfer[amount]" value="{{ number_format(600) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            <td><input type="text" name="transfer[amount]" value="{{ number_format($transfer_fee) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                         </tr>
-                                                        @if ($vehicle_rantal_type == 1 || $vehicle_rantal_type == 2)
+                                                        {{-- 月リース・なんでも --}}
+                                                        @if ($rental_type == 1 || $rental_type == 2)
                                                             <tr class="info-table-row">
-                                                                <th><input type="text" name="monthLease[name]" value="リース代　@if($vehicle_rantal_type == 1) 月契約No.{{ $vehicle_rantal_number }} @endif"></th>
-                                                                <td><input type="text" name="monthLease[amount]" value="{{ number_format(34090) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                                <th><input type="text" name="monthLease[name]" value="リース代　@if($rental_type == 1) 月契約No.{{ $rental_vehicle_number }} @else なんでも @endif"></th>
+                                                                <td><input type="text" name="monthLease[amount]" value="{{ number_format($monthly_lease_fee) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                             </tr>
                                                         @endif
-                                                        @if ($secondMachineCount != 0)
-                                                            @php
-                                                            
-                                                                $second_lease = 909;
-                                                                if ($vehicle_rantal_type == 0) {
-                                                                    $second_lease = 909;
-                                                                }
-                                                            @endphp
-                                                            <tr class="info-table-row">
-                                                                <th><input type="text" name="secondLease[name]" value="リース2台目(日割り)"></th>
-                                                                <td><input type="text" name="secondLease[amount]" value="{{ number_format($secondMachineCount * $second_lease) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
-                                                            </tr>
+                                                        {{-- 二代目以降 --}}
+                                                        @if ($rental_type == 0 || $rental_type == 1) {{-- 自車・月リース --}}
+                                                            @if ($secondMachineCount != 0)
+                                                                <tr class="info-table-row">
+                                                                    <th><input type="text" name="secondLease[name]" value="2台目"></th>
+                                                                    <td><input type="text" name="secondLease[amount]" value="{{ number_format($secondMachineCount * $monthly_lease_second_fee) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                                </tr>
+                                                            @endif
+                                                            @if ($thirdMachineCount != 0)
+                                                                <tr class="info-table-row">
+                                                                    <th><input type="text" name="thirdLease[name]" value="3台目"></th>
+                                                                    <td><input type="text" name="thirdLease[amount]" value="{{ number_format($thirdMachineCount * $monthly_lease_second_fee) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                                </tr>
+                                                            @endif
+                                                        @elseif($rental_type == 2) {{-- なんでもリース --}}
+                                                            @if ($thirdMachineCount != 0)
+                                                                <tr class="info-table-row">
+                                                                    <th><input type="text" name="secondLease[name]" value="2代目以降"></th>
+                                                                    <td><input type="text" name="secondLease[amount]" value="{{ number_format($thirdMachineCount * $monthly_lease_second_fee) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                                </tr>
+                                                            @endif
+                                                        @else                      {{-- 日割り --}}
+                                                            @if ($secondMachineCount != 0)
+                                                                <tr class="info-table-row">
+                                                                    <th><input type="text" name="secondLease[name]" value="日割りリース"></th>
+                                                                    <td><input type="text" name="secondLease[amount]" value="{{ number_format(($secondMachineCount + $thirdMachineCount) * $prorated_lease_fee) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                                </tr>
+                                                            @endif
                                                         @endif
-                                                        @if ($thirdMachineCount != 0)
+                                                        {{-- 保険料 --}}
+                                                        @if ($rental_type == 1 || $rental_type == 2) {{-- 月リース・なんでもリース --}}
                                                             <tr class="info-table-row">
-                                                                <th><input type="text" name="thirdLease[name]" value="リース3台目(日割り)"></th>
-                                                                <td><input type="text" name="thirdLease[amount]" value="{{ number_format($thirdMachineCount * 1000) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
-                                                            </tr>
-                                                        @endif
-                                                        @if ($vehicle_rantal_type == 1 || $vehicle_rantal_type == 2)
-                                                            <tr class="info-table-row">
-                                                                <th><input type="text" name="monthInsurance[name]" value="保険料　@if($vehicle_rantal_type == 1) 月契約No.{{ $vehicle_rantal_number }} @endif"></th>
+                                                                <th><input type="text" name="monthInsurance[name]" value="保険料　@if($rental_type == 1) 月契約No.{{ $rental_vehicle_number }} @endif"></th>
                                                                 <td><input type="text" name="monthInsurance[amount]" value="{{ number_format(13637) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                             </tr>
                                                         @endif
-                                                        @if ($secondMachineCount != 0)
-                                                            <tr class="info-table-row">
-                                                                <th><input type="text" name="secondInsurance[name]" value="保険料 2台目(日割り)"></th>
-                                                                <td><input type="text" name="secondInsurance[amount]" value="{{ number_format($secondMachineCount * 455) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
-                                                            </tr>
+                                                        {{-- 二代目以降保険料 --}}
+                                                        @if ($rental_type == 0 || $rental_type == 1) {{-- 自車・月リース --}}
+                                                            @if ($secondMachineCount != 0)
+                                                                <tr class="info-table-row">
+                                                                    <th><input type="text" name="secondInsurance[name]" value="保険料 2台目以降"></th>
+                                                                    <td><input type="text" name="secondInsurance[amount]" value="{{ number_format(($secondMachineCount + $thirdMachineCount) * $monthly_lease_second_insurance_fee) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                                </tr>
+                                                            @endif
+                                                        @elseif($rental_type == 2)                   {{-- なんでも月リース --}}
+                                                            @if ($thirdMachineCount != 0)
+                                                                <tr class="info-table-row">
+                                                                    <th><input type="text" name="secondInsurance[name]" value="保険料 2台目以降"></th>
+                                                                    <td><input type="text" name="secondInsurance[amount]" value="{{ number_format($thirdMachineCount * $monthly_lease_second_insurance_fee) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                                </tr>
+                                                            @endif
+                                                        @else                                       {{-- 日割り --}}
+                                                            @if ($secondMachineCount != 0)
+                                                                <tr class="info-table-row">
+                                                                    <th><input type="text" name="secondInsurance[name]" value="日割り保険料"></th>
+                                                                    <td><input type="text" name="secondInsurance[amount]" value="{{ number_format(($secondMachineCount + $thirdMachineCount) * $prorated_insurance_fee) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                                </tr>
+                                                            @endif
                                                         @endif
                                                     </tbody>
                                                 </table>
@@ -897,36 +952,53 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-                                    <table class="shift-info-table --vehicle-table">
-                                        <thead>
-                                            <tr>
-                                                <th>2台目車両</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($secondMachineArray as $number)
-                                                @if ($number != null)
+                                    @if ($rental_type != 2)
+                                        <table class="shift-info-table --vehicle-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>2台目車両</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($secondMachineArray as $number)
+                                                    @if ($number != null)
+                                                        <tr>
+                                                            <td>{{ $number }}</td>
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                        <table class="shift-info-table --vehicle-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>3台目車両</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($thirdMachineArray as $number)
                                                     <tr>
                                                         <td>{{ $number }}</td>
                                                     </tr>
-                                                @endif
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                    <table class="shift-info-table --vehicle-table">
-                                        <thead>
-                                            <tr>
-                                                <th>3台目車両</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($thirdMachineArray as $number)
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    @else
+                                        <table class="shift-info-table --vehicle-table">
+                                            <thead>
                                                 <tr>
-                                                    <td>{{ $number }}</td>
+                                                    <th>2台目車両</th>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($thirdMachineArray as $number)
+                                                    <tr>
+                                                        <td>{{ $number }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    @endif
                                 </div>
                             </div>
                         </div>

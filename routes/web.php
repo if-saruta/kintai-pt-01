@@ -11,6 +11,9 @@ use App\Http\Controllers\CsvIssueController;
 use App\Http\Controllers\PdfEditController;
 use App\Http\Controllers\PdfputController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\InfoManagementController;
+use App\Http\Controllers\MailSendController;
+
 use App\Models\Company;
 use App\Models\Employee;
 
@@ -179,6 +182,16 @@ Route::middleware('can:admin-higher')->group(function () {
         Route::post('/company-issue-pdf', [PdfputController::class, 'company_issue_pdf'])->name('company-issue-pdf');
         Route::post('/project-issue-pdf', [PdfputController::class, 'project_issue_pdf'])->name('project-issue-pdf');
     });
+
+    // 情報管理
+    Route::prefix('info-management')->name('info-management.')->group(function () {
+        Route::get('/', [InfoManagementController::class, 'index'])->name('');
+        Route::get('/edit', [InfoManagementController::class, 'edit'])->name('edit');
+        Route::post('/update', [InfoManagementController::class, 'updateOrCreate'])->name('update');
+    });
+
+    // メール
+    // Route::get('/mail', [MailSendController::class, 'send']);
 
     Route::get('/dompdf/pdf', [PdfputController::class, 'pdf_sample']);
 });

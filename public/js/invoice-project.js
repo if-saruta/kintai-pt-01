@@ -14,6 +14,35 @@ window.addEventListener('load', () => {
                 modal.style.display = 'none';
             })
         }
+
+        // form送信の制御
+        modal.addEventListener('submit', function(event) {
+            var hasDisplayCoValue = document.querySelectorAll('.hasDisplayCoValue');
+            var projectCheckBox = document.querySelectorAll('.projectCheckBox');
+            let isPermissionByCompany = false;
+            let isPermissionByProject = false;
+
+            // それぞれのcheckBoxを監視
+            for(let i = 0; i < hasDisplayCoValue.length; i++){
+                if(hasDisplayCoValue[i].checked){
+                    isPermissionByCompany = true;
+                }
+            }
+            for(let i = 0; i < projectCheckBox.length; i++){
+                if(projectCheckBox[i].checked){
+                    isPermissionByProject = true;
+                }
+            }
+
+            // formの制御
+            if(!isPermissionByCompany){
+                event.preventDefault();
+                alert('所属先はいずれか一つ以上選択してください');
+            }else if(!isPermissionByProject){
+                event.preventDefault();
+                alert('案件はいずれか一つ以上選択してください');
+            }
+        })
     }
     settingModalActive();
 
@@ -22,117 +51,24 @@ window.addEventListener('load', () => {
         const table = document.getElementById('calendarTable');
         const txtBoxLength = document.querySelectorAll('.txtBox').length;
         const numberBoxLength = document.querySelectorAll('.numberBox').length;
-        let totalWidth = 100 + (txtBoxLength * 110) + (numberBoxLength * 80);
+        let totalWidth = (txtBoxLength * 110) + (numberBoxLength * 80);
 
-        // table.style.width = totalWidth + 600 + 'px';
         table.style.width = totalWidth + 'px';
     }
     tableWidthSet();
 
-    const calendarClmActive = () => {
-        const checkBox = document.querySelectorAll('.viewClmCheck');
+    const cellHeightSet = () => {
+        const tableRow = document.querySelector('.tableRow');
+        const cellHeight = document.querySelectorAll('.cellHeight')
+        let height = tableRow.clientHeight;
 
-        for(let i = 0; i < checkBox.length; i++){
-            const className = checkBox[i].value;
-            const targetElem = document.querySelectorAll(`.${className}`);
-
-            if(checkBox[i].getAttribute('data-check') == 'one'){
-                if(checkBox[i].checked){
-                    for(let j = 0; j < targetElem.length; j++){
-                        targetElem[j].classList.add('clm-none');
-                    }
-                }else{
-                    for(let j = 0; j < targetElem.length; j++){
-                        targetElem[j].classList.remove('clm-none');
-                    }
-                }
-            }else{
-                if(checkBox[i].checked){
-                    for(let j = 0; j < targetElem.length; j++){
-                        targetElem[j].classList.add('all-clm-none');
-                    }
-                }else{
-                    for(let j = 0; j < targetElem.length; j++){
-                        targetElem[j].classList.remove('all-clm-none');
-                    }
-                }
-            }
+        for(let i = 0; i < cellHeight.length; i++){
+            cellHeight[i].style.height = height + 'px';
         }
 
-        const colspanCalc = () => {
-
-            var rightHead = document.querySelectorAll('.rightHead');
-            var coHead = document.querySelectorAll('.co-head');
-
-            const projectCountElem = document.getElementById('projectCount');
-            const projectCount = projectCountElem.value;
-            const clmHead = document.querySelectorAll('.clmHead');
-
-            const companyCountElem = document.getElementById('companyCount');
-            const companyCount = companyCountElem.value;
-            const coClmHead = document.querySelectorAll('.coClmHead');
-
-            let coCount = 0;
-            let count = 0;
-
-            if(projectCount > 1 || companyCount > 1){
-                for(let i = 0; i < clmHead.length; i++){
-                    if(!clmHead[i].classList.contains('clm-none') && !clmHead[i].classList.contains('all-clm-none')){
-                        count++;
-                    }
-                }
-                for(let i = 0; i < coClmHead.length; i++){
-                    if(!coClmHead[i].classList.contains('all-clm-none')){
-                        coCount++;
-                    }
-                }
-
-                for(let i = 0; i < rightHead.length; i++){
-                    //  現在のcolspanの値を取得（文字列として返されるので、整数に変換する）
-                    var currentColspan = parseInt(rightHead[i].getAttribute("colspan"));
-                    var newColspan = count / projectCount;
-                    rightHead[i].setAttribute("colspan", newColspan.toString());
-                    if(newColspan == 0){
-                        rightHead[i].classList.add('clm-none');
-                    }
-                }
-                for(let i = 0; i < coHead.length; i++){
-                    var newColspan = coCount / projectCount;
-                    coHead[i].setAttribute("colspan", newColspan.toString());
-                    if(newColspan == 0){
-                        coHead[i].classList.add('all-clm-none');
-                    }
-                }
-            }
-
-        }
-        colspanCalc();
     }
-    calendarClmActive();
+    cellHeightSet();
 
-    const setCheckByChecked = () => {
-        const setInvoiceElem = document.querySelectorAll('.setDisplayActiveInvoice');
-        const setCalendarElem = document.querySelectorAll('.setDisplayActiveByCalendar');
-        const hasCheck = document.querySelectorAll('.hasDisplayValue');
-
-        for(let i = 0; i < hasCheck.length; i++){
-            if(hasCheck[i].checked){
-                setInvoiceElem[i].value = 0;
-                setCalendarElem[i].value = 0;
-            }
-        }
-
-        const hasCoCheck = document.querySelectorAll('.hasDisplayCoValue');
-        const setCoCalendarElem = document.querySelectorAll('.setArrowCompanyByCalendar');
-        const setCoInvoiceElem = document.querySelectorAll('.setArrowCompanyByInvoice');
-        for(let i = 0; i < hasCoCheck.length; i++){
-            if(!hasCoCheck[i].checked){
-                setCoCalendarElem[i].value = hasCoCheck[i].getAttribute('data-company-id');
-                setCoInvoiceElem[i].value = hasCoCheck[i].getAttribute('data-company-id');
-            }
-        }
-    }
-    setCheckByChecked();
 
     // 削除モーダル
     const shiftDeleteModal = () => {
@@ -199,25 +135,4 @@ window.addEventListener('load', () => {
     }
     commmaActive();
 
-    // ボーダー区切り線の制御
-    const borderActive = () => {
-        const headBottom = document.querySelector('.head-bottom');
-        const clm = headBottom.querySelectorAll('.head-bottom-clm');
-        const headTop = document.querySelector('.projectInfoHead');
-        // colspan属性の値を取得
-        var colspanValue = headTop.getAttribute('colspan');
-        var companyCount = headTop.getAttribute('data-company-count');
-        var separatorIndex = (colspanValue / companyCount);
-
-        for(let i = 0; i < clm.length; i++){
-            if(i == 0) continue;
-            if(i % separatorIndex == 0){
-                if(clm[i - 1].classList.contains()){
-
-                }
-                clm[i - 1].classList.add('border-right-bold');
-            }
-        }
-    }
-    // borderActive();
 })

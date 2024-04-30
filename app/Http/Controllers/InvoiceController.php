@@ -15,6 +15,7 @@ use App\Models\ProjectEmployeePayment;
 use App\Models\Shift;
 use App\Models\ShiftProjectVehicle;
 use App\Models\Vehicle;
+use App\Models\InfoManagement;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Yasumi\Yasumi;
@@ -270,11 +271,13 @@ class InvoiceController extends Controller
         // 祝日を取得
         $holidays = $this->getHoliday($getYear);
         // 二代目以降の情報を取得
-        [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount] = $this->machineInfoExtract($shiftProjectVehicles, $dates);
-        // 案件情報を取得
+        [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount] = $this->rentalPlan($shiftProjectVehicles, $dates);
+        // その月の案件情報
         $projectInfoArray = $this->projectInfoExtract($shiftProjectVehicles);
         // 集計表情報を取得
         [$totalSalary, $totalAllowance, $totalParking, $totalExpressWay, $totalOverTime] = $this->totallingInfoExtract($shiftProjectVehicles);
+        // 情報管理を取得
+        $InfoManagement = InfoManagement::first();
 
         $warning = null;
         if ($shifts == null || $shifts->isEmpty()) {
@@ -283,7 +286,7 @@ class InvoiceController extends Controller
 
         return view('invoice.driverShift',
             compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'shiftProjectVehicles', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays', 'warning', 'secondMachineArray', 'thirdMachineArray', 'secondMachineCount', 'thirdMachineCount', 'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking', 'totalExpressWay', 'totalOverTime', 'findProjects', 'findClients',
-                    'selectedNarrowCheck', 'needRowCount', 'clientsId', 'projectsId', 'employeeId'));
+                    'selectedNarrowCheck', 'needRowCount', 'clientsId', 'projectsId', 'employeeId', 'InfoManagement'));
     }
 
     public function driverCalendarPDF(Request $request)
@@ -420,7 +423,7 @@ class InvoiceController extends Controller
         // 祝日を取得
         $holidays = $this->getHoliday($getYear);
         // 二代目以降の情報を取得
-        [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount] = $this->machineInfoExtract($shiftProjectVehicles, $dates);
+        [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount] = $this->monthLeasePlan($shiftProjectVehicles, $dates);
         // 案件情報を取得
         $projectInfoArray = $this->projectInfoExtract($shiftProjectVehicles);
         // 集計表情報を取得
@@ -454,44 +457,91 @@ class InvoiceController extends Controller
                             'monthLeaseAmount','secondLeaseName','secondLeaseAmount','thirdLeaseName','thirdLeaseAmount','monthInsuranceName','monthInsuranceAmount','secondInsuranceName','secondInsuranceAmount','CostOthers'));
     }
 
-    function addVehicle($vehicleNumber, &$secondMachineArray, &$thirdMachineArray, &$secondMachineCheck) {
-        if($vehicleNumber != '自車'){
-            if ($secondMachineCheck) {
-                if (!in_array($vehicleNumber, $secondMachineArray)) {
-                    $secondMachineArray[] = $vehicleNumber;
-                }
-                $secondMachineCheck = false;
-                return 1; // 2台目カウント増加
-            } else {
-                if(!in_array($vehicleNumber, $secondMachineArray)){
-                    if (!in_array($vehicleNumber, $thirdMachineArray)) {
-                        $thirdMachineArray[] = $vehicleNumber;
-                    }
-                    return 1; // 3台目カウント増加不要
-                }
-            }
-        }
-    }
-
-    function machineInfoExtract($shiftProjectVehicles, $dates)
+    // 0 : 自車, 1 : 月リース, 2 : なんでも月リース, 3 : 日割り
+    function rentalPlan($shiftProjectVehicles, $dates)
     {
         $secondMachineArray = [];
         $thirdMachineArray = [];
         $secondMachineCount = 0;
         $thirdMachineCount = 0;
 
+        $rental_type = $shiftProjectVehicles->first()->vehicle_rental_type;
+
+        if($rental_type == 0){ //自車
+            $this->myCarPlan($shiftProjectVehicles, $dates, $secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount);
+        }
+        if($rental_type == 1){ //月リース
+            $this->monthLeasePlan($shiftProjectVehicles, $dates, $secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount);
+        }
+        if($rental_type == 2){ //なんでも
+            $this->freeLeasePlan($shiftProjectVehicles, $dates, $secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount);
+        }
+        if($rental_type == 3){ //日割り
+            $this->dailyRatePlan($shiftProjectVehicles, $dates, $secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount);
+        }
+
+        return [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount];
+
+    }
+
+    // 自車
+    function myCarPlan($shiftProjectVehicles, $dates, &$secondMachineArray, &$thirdMachineArray, &$secondMachineCount, &$thirdMachineCount)
+    {
         foreach($dates as $date){
-            $secondMachineCheck = true;
+            $secondMachineCheck = true; //1日ごとに二代目の判定
+            $secondMachineArrayForDay = []; //1日ごとの二代目を格納
             foreach($shiftProjectVehicles as $spv){
                 if($spv->shift->date == $date->format('Y-m-d')){
-                    if(in_array($spv->vehicle_rental_type, [0, 1, 3])){
-                        $vehicleNumber = $spv->vehicle ? $spv->vehicle->number : $spv->unregistered_vehicle;
-                        if($vehicleNumber != null){
-                            if(!$spv->rental_vehicle_id || $spv->vehicle_id != $spv->rental_vehicle_id){
-                                if ($secondMachineCheck) {
-                                    $secondMachineCount += $this->addVehicle($vehicleNumber, $secondMachineArray, $thirdMachineArray, $secondMachineCheck);
-                                } else {
-                                    $thirdMachineCount += $this->addVehicle($vehicleNumber, $secondMachineArray, $thirdMachineArray, $secondMachineCheck);
+                    // その日に使用されている車両を格納
+                    $vehicleNumber = $spv->vehicle ? $spv->vehicle->number : $spv->unregistered_vehicle;
+                    if($vehicleNumber == '自車' || $vehicleNumber == null) continue; //自車の場合スキップ
+                    if($secondMachineCheck){
+                        if(!in_array($vehicleNumber, $secondMachineArray)){
+                            $secondMachineArray[] = $vehicleNumber;
+                            $secondMachineArrayForDay[] = $vehicleNumber;
+                        }
+                        $secondMachineCheck = false;
+                        $secondMachineCount++; //2代目の件数を増やす
+                    }else{
+                        if(!in_array($vehicleNumber, $secondMachineArrayForDay)){
+                            if (!in_array($vehicleNumber, $thirdMachineArray)) {
+                                $thirdMachineArray[] = $vehicleNumber;
+                                $thirdMachineCount++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // 月リース
+    function monthLeasePlan($shiftProjectVehicles, $dates, &$secondMachineArray, &$thirdMachineArray, &$secondMachineCount, &$thirdMachineCount)
+    {
+        // 契約している車両のナンバーを格納
+        $rental_vehicle_number = $shiftProjectVehicles->first()->rentalVehicle->number;
+
+        foreach($dates as $date){
+            $secondMachineCheck = true; //1日ごとに二代目の判定
+            $secondMachineArrayForDay = []; //1日ごとの二代目を格納
+            foreach($shiftProjectVehicles as $spv){
+                if($spv->shift->date == $date->format('Y-m-d')){
+                    // その日に使用されている車両を格納
+                    $vehicleNumber = $spv->vehicle ? $spv->vehicle->number : $spv->unregistered_vehicle;
+                    if($vehicleNumber == '自車' || $vehicleNumber == null) continue; //自車の場合スキップ
+                    if($vehicleNumber != $rental_vehicle_number){ //契約車両と使用車両が一致なのか判定
+                        if($secondMachineCheck){
+                            if(!in_array($vehicleNumber, $secondMachineArray)){
+                                $secondMachineArray[] = $vehicleNumber;
+                                $secondMachineArrayForDay[] = $vehicleNumber;
+                            }
+                            $secondMachineCheck = false;
+                            $secondMachineCount++; //2代目の件数を増やす
+                        }else{
+                            if(!in_array($vehicleNumber, $secondMachineArrayForDay)){
+                                if (!in_array($vehicleNumber, $thirdMachineArray)) {
+                                    $thirdMachineArray[] = $vehicleNumber;
+                                    $thirdMachineCount++;
                                 }
                             }
                         }
@@ -499,9 +549,67 @@ class InvoiceController extends Controller
                 }
             }
         }
+    }
+    // なんでも月リース
+    function freeLeasePlan($shiftProjectVehicles, $dates, &$secondMachineArray, &$thirdMachineArray, &$secondMachineCount, &$thirdMachineCount)
+    {
+        foreach($dates as $date){
+            $secondMachineCheck = true; //1日ごとに二代目の判定
+            $secondMachineArrayForDay = []; //1日ごとの二代目を格納
+            foreach($shiftProjectVehicles as $spv){
+                if($spv->shift->date == $date->format('Y-m-d')){
+                    // その日に使用されている車両を格納
+                    $vehicleNumber = $spv->vehicle ? $spv->vehicle->number : $spv->unregistered_vehicle;
+                    if($vehicleNumber == '自車' || $vehicleNumber == null) continue; //自車の場合スキップ
+                    if($secondMachineCheck){
+                        if(!in_array($vehicleNumber, $secondMachineArray)){
+                            $secondMachineArray[] = $vehicleNumber;
+                            $secondMachineArrayForDay[] = $vehicleNumber;
+                        }
+                        $secondMachineCheck = false;
+                        $secondMachineCount++; //2代目の件数を増やす
+                    }else{
+                        if(!in_array($vehicleNumber, $secondMachineArrayForDay)){
+                            if (!in_array($vehicleNumber, $thirdMachineArray)) {
+                                $thirdMachineArray[] = $vehicleNumber;
+                                $thirdMachineCount++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-
-        return [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount];
+    // 日割り
+    function dailyRatePlan($shiftProjectVehicles, $dates, &$secondMachineArray, &$thirdMachineArray, &$secondMachineCount, &$thirdMachineCount)
+    {
+        foreach($dates as $date){
+            $secondMachineCheck = true; //1日ごとに二代目の判定
+            $secondMachineArrayForDay = []; //1日ごとの二代目を格納
+            foreach($shiftProjectVehicles as $spv){
+                if($spv->shift->date == $date->format('Y-m-d')){
+                    // その日に使用されている車両を格納
+                    $vehicleNumber = $spv->vehicle ? $spv->vehicle->number : $spv->unregistered_vehicle;
+                    if($vehicleNumber == '自車' || $vehicleNumber == null) continue; //自車の場合スキップ
+                    if($secondMachineCheck){
+                        if(!in_array($vehicleNumber, $secondMachineArray)){
+                            $secondMachineArray[] = $vehicleNumber;
+                            $secondMachineArrayForDay[] = $vehicleNumber;
+                        }
+                        $secondMachineCheck = false;
+                        $secondMachineCount++; //2代目の件数を増やす
+                    }else{
+                        if(!in_array($vehicleNumber, $secondMachineArrayForDay)){
+                            if (!in_array($vehicleNumber, $thirdMachineArray)) {
+                                $thirdMachineArray[] = $vehicleNumber;
+                                $thirdMachineCount++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     function projectInfoExtract($shiftProjectVehicles)
@@ -601,11 +709,16 @@ class InvoiceController extends Controller
         $clients = Client::where('id', '!=', 1)->get();
         $getClient = Client::find($clientId);
 
+        // 検索された最初は絞り込みがないため、初期値はfalse
+        $hasNarrow = $request->input('hasNarrow', false);
+
         // 列の表示・非表示
         $selectedDisplayCheck = $request->input('displayCheck', []);
         $selectedDisplayCoCheck = $request->input('displayCoCheck', []);
         // 案件の絞り込み
         $narrowProjectIds = $request->input('narrowProjects', []);
+        // 所属で分けるか
+        $separateByCompany = $request->input('separateByCompany', 'true');
 
         // シフトを検索・取得
         $ShiftProjectVehiclesByClient = ShiftProjectVehicle::with('shift', 'shift.employee.company', 'project')
@@ -639,12 +752,20 @@ class InvoiceController extends Controller
                 // Company にアクセス
                 $company = $spv->shift->employee->company;
                 if (!in_array($company->id, $companyIds)) {
-                    $companyIds[] = $company->id;;
+                    $companyIds[] = $company->id;
+                }
+                if(!$hasNarrow){
+                    if (!in_array($company->id, $selectedDisplayCoCheck)) {
+                        $selectedDisplayCoCheck[] = $company->id;
+                    }
                 }
             }
         }
-        // 所属先データ取得
         $getCompanies = Company::whereIn('id', $companyIds)->get();
+
+        if(!$hasNarrow){
+            $selectedDisplayCheck = ['salaryClm','retailClm','expressClm','parkingClm'];
+        }
 
         // 全日にちを取得
         $dates = $this->createDate($getYear, $getMonth);
@@ -657,7 +778,7 @@ class InvoiceController extends Controller
         return view('invoice.projectShift',
             compact('projects', 'clients', 'clientId', 'getClient', 'ShiftProjectVehicles', 'getCompanies',
                     'getYear', 'getMonth', 'dates', 'warning',
-                    'selectedDisplayCheck', 'selectedDisplayCoCheck', 'narrowProjects', 'narrowProjectIds'));
+                    'selectedDisplayCheck', 'selectedDisplayCoCheck', 'narrowProjects', 'narrowProjectIds', 'hasNarrow', 'separateByCompany'));
     }
 
     public function projectCalendarPDF(Request $request)
@@ -666,12 +787,17 @@ class InvoiceController extends Controller
         $getYear = $request->year;
         $getMonth = $request->month;
 
-        $retailCheck = $request->input('retailCheck');
-        $salaryCheck = $request->input('salaryCheck');
-        $expresswayCheck = $request->input('expresswayCheck');
-        $parkingCheck = $request->input('parkingCheck');
-        $selectedCompanies = $request->input('company', []);
+        $selectedDisplayCheck = $request->selectedDisplayCheck;
+        $selectedCompanies = $request->input('narrowCompany', []);
         $selectedProjectIds = $request->input('narrowProjectIds', []);
+
+        // 所属分割
+        $separateByCompany = $request->separateByCompany;
+
+        $retailCheck = 0;
+        if(in_array('retailClm', $selectedDisplayCheck)){
+            $retailCheck = 1;
+        }
 
         $projects = Project::where('client_id', $clientId)
                     ->when(!empty($selectedProjectIds), function($query) use ($selectedProjectIds){
@@ -717,17 +843,18 @@ class InvoiceController extends Controller
         $dates = $this->createDate($getYear, $getMonth);
 
         $clientName = $client->name;
+
         // pdfの向きの設定
         $direction = '';
         if($request->action == "beside" ){
             $direction = 'landscape';
         }
-        $pdf =  PDF::loadView('issue-calendar-pdf.project-calendar', compact('projects', 'clients', 'client', 'ShiftProjectVehicles', 'getCompanies', 'getYear', 'getMonth', 'dates', 'retailCheck', 'salaryCheck', 'expresswayCheck', 'parkingCheck'))->setPaper('a4', $direction);
+        $pdf =  PDF::loadView('issue-calendar-pdf.project-calendar', compact('projects', 'clients', 'client', 'ShiftProjectVehicles', 'getYear', 'getMonth', 'dates', 'retailCheck', 'selectedDisplayCheck', 'getCompanies', 'selectedCompanies', 'separateByCompany'))->setPaper('a4', $direction);
         $fileName = "{$getMonth}月_{$clientName}.pdf";
 
         return $pdf->download($fileName); //生成されるファイル名
 
-        return view('issue-calendar-pdf.project-calendar', compact('projects', 'clients', 'client', 'ShiftProjectVehicles', 'getCompanies', 'getYear', 'getMonth', 'dates', 'retailCheck', 'salaryCheck', 'expresswayCheck', 'parkingCheck'));
+        return view('issue-calendar-pdf.project-calendar', compact('projects', 'clients', 'client', 'ShiftProjectVehicles', 'getYear', 'getMonth', 'dates', 'retailCheck', 'selectedDisplayCheck', 'getCompanies', 'selectedCompanies', 'separateByCompany'));
     }
 
 

@@ -152,10 +152,7 @@ class PdfEditController extends Controller
         $getMonth = $request->month;
 
         // 表示・非表示
-        $retailCheck = $request->input('salary_check');
-        $salaryCheck = $request->input('retail_check');
-        $expresswayCheck = $request->input('expressway_check');
-        $parkingCheck = $request->input('parking_check');
+        $selectedDisplayCheck = $request->input('selectedDisplayCheck', []);
         $selectedCompanies = $request->input('companyByInvoice', []);
         $selectedProjectIds = $request->input('narrowInvoiceProjectIds', []);
 
@@ -258,7 +255,7 @@ class PdfEditController extends Controller
 
         $expresswayData = [];
 
-        if($expresswayCheck == 1){
+        if(in_array('expressClm', $selectedDisplayCheck)){
             foreach ($ShiftProjectVehicles as $spv) {
                 $projectName = $spv->project->name;
                 $date = Carbon::parse($spv->shift->date);
@@ -303,7 +300,7 @@ class PdfEditController extends Controller
 
         $parkingData = [];
 
-        if($parkingCheck == 1){
+        if(in_array('parkingClm', $selectedDisplayCheck)){
             foreach ($ShiftProjectVehicles as $spv) {
                 $projectName = $spv->project->name;
                 $date = Carbon::parse($spv->shift->date);
