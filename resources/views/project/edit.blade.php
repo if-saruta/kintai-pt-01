@@ -209,6 +209,10 @@
                                                 @endforeach
                                                 @if ($project->allowances->count() == 0)
                                                     <div class="allowance__content__item">
+                                                        <div class="input-wrap required">
+                                                            <p class="">必須</p>
+                                                            <input type="checkbox" name="editProjects[{{$project->id}}][is_required]" value="1">
+                                                        </div>
                                                         <div class="input-wrap">
                                                             <p class="">手当名</p>
                                                             <input type="text" class="c-input" name="editProjects[{{$project->id}}][allowance_name]" placeholder="リーダー手当">

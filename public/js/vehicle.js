@@ -26,6 +26,21 @@ window.addEventListener('load', () => {
                     ownerSelect[0].querySelector('.owner-select').removeAttribute('required');
                 }
             })
+
+            const initialSelectedOption = ownerType.options[ownerType.selectedIndex];
+            const initialInfo = initialSelectedOption.getAttribute('data-switch');
+            // 0 : 所属先を表示 1 : 従業員表示
+            if(initialInfo == 0){
+                ownerSelect[0].classList.remove('close');
+                ownerSelect[0].querySelector('.owner-select').setAttribute('required', '');
+                ownerSelect[1].classList.add('close');
+                ownerSelect[1].querySelector('.owner-select').removeAttribute('required');
+            }else{
+                ownerSelect[1].classList.remove('close');
+                ownerSelect[1].querySelector('.owner-select').setAttribute('required', '');
+                ownerSelect[0].classList.add('close');
+                ownerSelect[0].querySelector('.owner-select').removeAttribute('required');
+            }
         }
     }
     ownerSwitchActive();

@@ -221,7 +221,7 @@ class ProjectController extends Controller
                         'name' => $projectData['allowance_name'],
                         'retail_amount' => $removeCommasAndCastToInt($projectData['allowance_retail_amount']),
                         'driver_amount' => $removeCommasAndCastToInt($projectData['allowance_driver_amount']),
-                        'is_required' => $projectData['is_required'],
+                        'is_required' => $projectData['is_required'] ?? 0,
                     ]);
                 }
             }
