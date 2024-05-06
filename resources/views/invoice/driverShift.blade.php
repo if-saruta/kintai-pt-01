@@ -317,6 +317,8 @@
                                     $needRowCountWarning = 'シフトの数が指定した行数を上回っています';
                                 }
                             }
+
+                            $rental_type = null;
                         @endphp
                         <p class="need-row-count-warning-txt">{{ $needRowCountWarning }}</p>
                         {{-- カレンダー --}}
@@ -451,7 +453,7 @@
                                                                 @php
                                                                     $rowCount++;
                                                                     // 貸出形態と貸出車両を格納
-                                                                    $vehicle_rantal_type = $spv->vehicle_rental_type;
+                                                                    $rental_type = $spv->vehicle_rental_type;
                                                                     if ($spv->rentalVehicle) {
                                                                         $vehicle_rantal_number = $spv->rentalVehicle->number;
                                                                     }
@@ -668,7 +670,7 @@
                                                                 @php
                                                                     $rowCount++;
                                                                     // 貸出形態と貸出車両を格納
-                                                                    $vehicle_rantal_type = $spv->vehicle_rental_type;
+                                                                    $rental_type = $spv->vehicle_rental_type;
                                                                     if ($spv->rentalVehicle) {
                                                                         $vehicle_rantal_number = $spv->rentalVehicle->number;
                                                                     }
@@ -829,23 +831,23 @@
                                                 </div>
                                             </div>
                                             @php
-                                                $rental_type = $shiftProjectVehicles->first()->vehicle_rental_type; //契約種類を取得
+                                                // $rental_type = $shiftProjectVehicles->first()->vehicle_rental_type; //契約種類を取得
                                                 if($rental_type == 1){ //月リースであれば、契約車両を取得
                                                     $rental_vehicle_number = $shiftProjectVehicles->first()->rentalVehicle->number;
                                                 }
                                                 // その他情報
-                                                $tax_late = $InfoManagement->tax_late;
-                                                $monthly_lease_fee = $InfoManagement->monthly_lease_fee;
-                                                $monthly_lease_insurance_fee = $InfoManagement->monthly_lease_insurance_fee;
-                                                $monthly_lease_second_fee = $InfoManagement->monthly_lease_second_fee;
-                                                $monthly_lease_second_insurance_fee = $InfoManagement->monthly_lease_second_insurance_fee;
-                                                $prorated_lease_fee = $InfoManagement->prorated_lease_fee;
-                                                $prorated_insurance_fee = $InfoManagement->prorated_insurance_fee;
-                                                $admin_commission_rate = $InfoManagement->admin_commission_rate;
-                                                $admin_fee_switch = $InfoManagement->admin_fee_switch;
-                                                $max_admin_fee = $InfoManagement->max_admin_fee;
-                                                $min_admin_fee = $InfoManagement->min_admin_fee;
-                                                $transfer_fee = $InfoManagement->transfer_fee;
+                                                $tax_late = $InfoManagement->tax_late ?? 10;
+                                                $monthly_lease_fee = $InfoManagement->monthly_lease_fee ?? 34090;
+                                                $monthly_lease_insurance_fee = $InfoManagement->monthly_lease_insurance_fee ?? 13637;
+                                                $monthly_lease_second_fee = $InfoManagement->monthly_lease_second_fee ?? 909;
+                                                $monthly_lease_second_insurance_fee = $InfoManagement->monthly_lease_second_insurance_fee ?? 455;
+                                                $prorated_lease_fee = $InfoManagement->prorated_lease_fee ?? 1364;
+                                                $prorated_insurance_fee = $InfoManagement->prorated_insurance_fee ?? 455;
+                                                $admin_commission_rate = $InfoManagement->admin_commission_rate ?? 15;
+                                                $admin_fee_switch = $InfoManagement->admin_fee_switch ?? 100000;
+                                                $max_admin_fee = $InfoManagement->max_admin_fee ?? 10000;
+                                                $min_admin_fee = $InfoManagement->min_admin_fee ?? 5000;
+                                                $transfer_fee = $InfoManagement->transfer_fee ?? 600;
 
                                                 // 事務手数料のスイッチ
                                                 if($admin_fee_switch < $totalSalary){

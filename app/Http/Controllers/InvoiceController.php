@@ -530,7 +530,14 @@ class InvoiceController extends Controller
     function monthLeasePlan($shiftProjectVehicles, $dates, &$secondMachineArray, &$thirdMachineArray, &$secondMachineCount, &$thirdMachineCount)
     {
         // 契約している車両のナンバーを格納
-        $rental_vehicle_number = $shiftProjectVehicles->first()->rentalVehicle->number;
+        $rental_vehicle_number = null;
+
+        foreach($shiftProjectVehicles as $spv){
+            if($spv->rentalVehicle){
+                $rental_vehicle_number = $spv->rentalVehicle->number;
+                break;
+            }
+        }
 
         foreach($dates as $date){
             $secondMachineCheck = true; //1日ごとに二代目の判定
