@@ -211,7 +211,7 @@
                                         </div>
                                         @endif
                                     </div>
-                                    <div class="allowance projectAllowanceContainer">
+                                    {{-- <div class="allowance projectAllowanceContainer">
                                         <div class="allowance-item projectAllowanceItem">
                                             <div class="allowance__name">
                                                 <p class="">手当名</p>
@@ -224,13 +224,13 @@
                                             <i class="fa-solid fa-circle-minus delete-circle projectAllowanecDelete"></i>
                                         </div>
                                         <i class="fa-solid fa-circle-plus plus-circle projectAllowanceAdd" data-project-id="{{$project->id}}"></i>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         @endforeach
                     </div>
                 </div>
-                <div class="other-allowance">
+                {{-- <div class="other-allowance">
                     <p class="input-head">その他手当</p>
                     <div class="other-allowance__input-area" id="otherAllowanceContainer">
                         <div class="input-item-box">
@@ -246,7 +246,7 @@
                         </div>
                         <i class="fa-solid fa-circle-plus plus-circle" id="otherAllowanceAdd"></i>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </form>
         {{-- <form action="{{ route('employee.csv') }}" method="POST" enctype="multipart/form-data">

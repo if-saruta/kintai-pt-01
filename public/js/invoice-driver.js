@@ -232,7 +232,7 @@ window.addEventListener('load', () => {
         }
 
     }
-    allowanceModal();
+    // allowanceModal();
 
     const vehicleModal = () => {
         const mainVehicle = document.querySelectorAll('.mainVehicle');

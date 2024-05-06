@@ -19,6 +19,9 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.js'])
 
+        {{-- jQuery --}}
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
     </head>
     <body class="antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900 all-wrap">

@@ -101,6 +101,7 @@ Route::middleware('can:admin-higher')->group(function () {
         Route::get('/selectWeek', [ShiftController::class, 'selectWeek'])->name('selectWeek');
         Route::post('/selectWeek', [ShiftController::class, 'selectWeek'])->name('selectWeek');
         Route::post('/store', [ShiftController::class, 'store'])->name('store');
+        Route::post('/weekStore', [ShiftController::class, 'weekStore'])->name('weekStore');
 
         Route::get('/edit', [ShiftController::class, 'selectWeek'])->name('edit');
         Route::post('/edit', [ShiftController::class, 'selectWeek'])->name('edit');
@@ -129,6 +130,10 @@ Route::middleware('can:admin-higher')->group(function () {
         // PDF発行
         Route::post('/allViewPdf', [PdfputController::class, 'allViewDownloadPdf'])->name('allViewPdf');
     });
+
+    Route::get('/fetch-data/{id}', [ShiftController::class, 'fetchData']);
+    Route::get('/fetch-project-data/{id}', [ShiftController::class, 'fetchProjectData']);
+    Route::get('/fetch-project-amount/{projectId}/{employeeId}', [ShiftController::class, 'fetchProjectAmount']);
 
     Route::prefix('csv-issue')->name('csv-issue.')->group(function () {
         Route::get('/', [CsvIssueController::class, 'index'])->name('');

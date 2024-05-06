@@ -178,9 +178,9 @@
                                                     </div>
                                                     <div class="data__row__clm --project projectNameBox register">
                                                         @if ($data['initial_project_name'] != null)
-                                                            <input type="text" value="{{$data['initial_project_name']}}" class="input charter-input" readonly>
+                                                            <input type="text" value="{{$data['initial_project_name']}}" class="input charter-input" @if($data['project']['is_suspended'] == 1) style="color: red;" @endif readonly>
                                                         @else
-                                                            <input type="text" value="{{$data['project']['name']}}" class="input charter-input" readonly>
+                                                            <input type="text" value="{{$data['project']['name']}}" class="input charter-input" @if($data['project']['is_suspended'] == 1) style="color: red;" @endif readonly>
                                                         @endif
                                                         {{-- モーダルに値を渡す --}}
                                                         <input hidden type="text" value="{{$data['id']}}" class="setId">

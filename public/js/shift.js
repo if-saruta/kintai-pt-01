@@ -42,153 +42,331 @@ window.addEventListener('DOMContentLoaded', () => {
     loadCommmaActive();
 
     const inputCommma = (target) => {
-            // 入力値からカンマを削除し、数値に変換
-            var value = target.replace(/,/g, '');
-            var numberValue = parseInt(value, 10);
+        // 入力値からカンマを削除し、数値に変換
+        var value = target.replace(/,/g, '');
+        var numberValue = parseInt(value, 10);
 
-            // isNaN関数で数値かどうかをチェック
-            if (!isNaN(numberValue)) {
-                // 数値をロケールに応じた文字列に変換（例: "1,234"）
-                return numberValue.toLocaleString();
-            } else {
-                // 数値でない場合は入力を空にする
-                return target.value = '';
-            }
+        // isNaN関数で数値かどうかをチェック
+        if (!isNaN(numberValue)) {
+            // 数値をロケールに応じた文字列に変換（例: "1,234"）
+            return numberValue.toLocaleString();
+        } else {
+            // 数値でない場合は入力を空にする
+            return target.value = '';
+        }
     }
+
+    /**
+     * ***************************************************************************
+     * ******************            編集モーダル            ***********************
+     * ***************************************************************************
+     */
 
     const modalActive = () => {
         const modal = document.getElementById('shiftModal');
-        const target = document.querySelectorAll('.targetShift');
-        const closeElem = document.querySelectorAll('.modalClose');
 
 
-        for(let i = 0; i < target.length; i++){
-            target[i].addEventListener('click', () => {
-                modal.style.display = 'block';
-                setValue(target[i]);
-                changeRadio();
-                commmaActive();
+        if(modal != null){
+            const target = document.querySelectorAll('.targetShift');
+            const closeElem = document.querySelectorAll('.modalClose');
+            const editClientWrap = document.getElementById('editClientWrap');
+            const editAllowanceWrap = modal.querySelector('#editAllowanceWrap');
+            const allowanceCt = modal.querySelector('#allowanceCt');
+
+            let fetchEmployeeId = null;
+            let shiftPvId = null;
+
+            for(let i = 0; i < target.length; i++){
+                target[i].addEventListener('click', () => {
+                    modal.style.display = 'block';
+                    setValue(target[i]);
+                    changeRadio();
+                    commmaActive();
+                    let firstProject = target[i].querySelector('.editProjectId');
+                    let employee = target[i].querySelector('.employeeId');
+                    if(firstProject){
+                        let firstProjectId = firstProject.value;
+                        let employeeId = null;
+                        if(employee != null){
+                            employeeId = employee.value;
+                        }
+                        fetchAllowance(firstProjectId);
+                        fetchAmount(firstProjectId, employeeId);
+                    }
+                    if(employee){
+                        fetchEmployeeId = employee.value;
+                    }
+                })
+            }
+            for(let i = 0; i < closeElem.length; i++){
+                closeElem[i].addEventListener('click', () => {
+                    modal.style.display = 'none';
+                    returnInitialState();
+                    commmaActive();
+                })
+            }
+            const setValue = (target) => {
+                setId = document.getElementById('setShiftId');
+                let setEmployee = document.getElementById('setEmployeeName');
+                let setProject = document.getElementById('projectInput');
+                let projectSelect = document.getElementById('projectSelect');
+                let setVehicle = document.getElementById('vehicleInput');
+                let vehicleSelect = document.getElementById('vehicleSelect');
+                let setRetail = document.getElementById('retailInput');
+                let setSalary = document.getElementById('salaryInput');
+                let setYear = document.querySelector('.setYear');
+                let setMonth = document.querySelector('.setMonth');
+                let setDate = document.querySelector('.setDate');
+                let setPart = document.querySelector('.setPart');
+
+                // モーダルのtext・valueの書き換え
+                shiftPvId = target.querySelector('.shiftId').value;
+                setId.value = target.querySelector('.shiftId').value;
+                setProject.placeholder = target.querySelector('.projectName').value;
+                setVehicle.placeholder = target.querySelector('.vehicleNumber').value;
+                setRetail.value = inputCommma(target.querySelector('.retailPrice').value);
+                setSalary.value = inputCommma(target.querySelector('.salaryPrice').value);
+                setEmployee.innerHTML = target.querySelector('.employeeName').value;
+                setYear.innerHTML = target.querySelector('.findYear').value;
+                setMonth.innerHTML = target.querySelector('.findMonth').value;
+                setDate.innerHTML = target.querySelector('.findDate').value;
+                if(target.querySelector('.timeOfPart').value == 0){
+                    setPart.innerHTML = '午前の案件';
+                }else{
+                    setPart.innerHTML = '午後の案件';
+                }
+
+                // 取得した案件をchecked
+                for(let i = 0; i < projectSelect.options.length; i++){
+                    if (projectSelect.options[i].text === target.querySelector('.projectName').value) {
+                        // 一致するオプションが見つかったら、selected 属性を設定
+                        projectSelect.options[i].selected = true;
+                        break; // マッチしたらループを抜ける
+                    }
+                }
+
+                // 取得した車両をchecked
+                for(let i = 0; i < vehicleSelect.options.length; i++){
+                    if (vehicleSelect.options[i].text === target.querySelector('.vehicleNumber').value) {
+                        // 一致するオプションが見つかったら、selected 属性を設定
+                        vehicleSelect.options[i].selected = true;
+                        break; // マッチしたらループを抜ける
+                    }
+                }
+            }
+
+
+            // 案件・車両の入力方法の切り替え
+            const changeRadio = () => {
+                const projectInput = document.getElementById('projectInput');
+                const projectSelect = document.getElementById('projectSelect');
+                const vehicleInput = document.getElementById('vehicleInput');
+                const vehicleSelect = document.getElementById('vehicleSelect');
+
+                const projectRadio = document.querySelectorAll('.projectRadio');
+                const vehicleRadio = document.querySelectorAll('.vehicleRadio');
+
+                for(let i = 0; i < projectRadio.length; i++){
+                    projectRadio[i].addEventListener('change', () => {
+                        projectInput.style.display = 'none';
+                        projectSelect.style.display = 'none';
+                        clientAddActive(projectRadio[i]);
+                        if(projectRadio[i].value == '0'){
+                            projectSelect.style.display = "block"
+                        }else{
+                            projectInput.style.display = "block";
+                        }
+                    })
+                }
+
+                for(let i = 0; i < vehicleRadio.length; i++){
+                    vehicleRadio[i].addEventListener('change', () => {
+                        vehicleInput.style.display = 'none';
+                        vehicleSelect.style.display = 'none';
+                        if(vehicleRadio[i].value == '0'){
+                            vehicleSelect.style.display = "block"
+                        }else{
+                            vehicleInput.style.display = "block";
+                        }
+
+                    })
+                }
+            }
+
+            const clientSwitchRadio = modal.querySelectorAll('.clientSwitchRadio');
+            const clientExistingArea = modal.querySelector('#editclientExistingArea');
+            const clientCreateArea = modal.querySelector('#editclientCreateArea');
+            const clientSelect = modal.querySelector('.clientSelect');
+            const clientInput = modal.querySelectorAll('.clientInput');
+
+            // 案件が新規作成の場合のクラインアント入力画面の制御
+            const clientAddActive = (radio) => {
+                // 新規か既存案件の切り替え
+                if(radio.value == '0'){
+                    // 非表示
+                    modal.classList.remove('create-add-client-active');
+                    editClientWrap.classList.remove('add-client');
+                    // 必須を解除
+                    clientSelect.required = false;
+                    for(let i = 0; i < clientInput.length; i++){
+                        clientInput[i].required = false;
+                    }
+                    // 手当がある場合は表示
+                    if(modal.classList.contains('create-add-allowance-active')){
+                        editAllowanceWrap.classList.add('add-allowance');
+                    }
+
+                }else{
+                    // 表示
+                    modal.classList.add('create-add-client-active');
+                    editClientWrap.classList.add('add-client');
+                    // 必須を付与
+                    clientSelect.required = true;
+                    // 手当を非表示
+                    editAllowanceWrap.classList.remove('add-allowance');
+                }
+
+                // 新規か既存クライアントの切り替え
+                for(let i = 0; i < clientSwitchRadio.length; i++){
+                    clientSwitchRadio[i].addEventListener('change', () => {
+                        if(clientSwitchRadio[i].value == '0'){
+                            clientExistingArea.style.display = 'flex';
+                            clientCreateArea.style.display = 'none';
+                            // 必須を付与
+                            clientSelect.required = true;
+                            for(let i = 0; i < clientInput.length; i++){
+                                clientInput[i].required = false;
+                            }
+                        }else{
+                            clientExistingArea.style.display = 'none';
+                            clientCreateArea.style.display = 'flex';
+                            // 必須を付与
+                            clientSelect.required = false;
+                            for(let i = 0; i < clientInput.length; i++){
+                                clientInput[i].required = true;
+                            }
+                        }
+                    })
+                }
+            }
+
+            const projectSelect = document.getElementById('projectSelect');
+            projectSelect.addEventListener('change', function(){
+                let projectId = this.value;
+                fetchAllowance(projectId);
+                fetchAmount(projectId, fetchEmployeeId);
             })
+
+            // 手当の情報を取得
+            function fetchAllowance(id){
+                allowanceCt.innerHTML = '';
+                fetch(`/fetch-data/${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => response.json())
+                .then(allowances => { //取得したデータを表示
+                    // 取得したデータがない場合
+                    if (!allowances || allowances.length === 0) {
+                        modal.classList.remove('create-add-allowance-active');
+                        editAllowanceWrap.classList.remove('add-allowance');
+                        return;
+                    }
+                    allowances.forEach(allowance => {
+                        modal.classList.add('create-add-allowance-active');
+                        editAllowanceWrap.classList.add('add-allowance');
+                        let newDiv = document.createElement('div');
+                        let checked = null;
+                        allowance.shift_allowance.forEach(shiftAllowance => {
+                            if(shiftAllowance['shift_project_vehicle_id'] == shiftPvId){
+                                checked = 'checked';
+                            }
+                        });
+                        newDiv.innerHTML = `
+                            <div class="check-box-item">
+                                <label for="">
+                                    <input type="checkbox" name="allowance[]" value="${allowance['id']}" ${checked}>
+                                    ${allowance['name']}
+                                </label>
+                            </div>
+                        `
+                        allowanceCt.append(newDiv);
+                    })
+                })
+                .catch(error => console.error('Error:', error));
+            }
+
+            // 案件の金額を取得
+            let setRetail = document.getElementById('retailInput');
+            let setSalary = document.getElementById('salaryInput');
+            function fetchAmount(projectId, employeeId){
+                fetch(`/fetch-project-amount/${projectId}/${employeeId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => response.json())
+                .then(project => { //取得したデータを表示
+                    // 取得したデータがない場合
+                    if (!project) return;
+                    setRetail.value = inputCommma(String(project['retail']));
+                    setSalary.value = inputCommma(String(project['driver']));
+                })
+                .catch(error => console.error('Error:', error));
+            }
+
+
+            // 初期状態に戻す
+            const returnInitialState = () => {
+                const projectSelect = document.getElementById('projectSelect');
+                const vehicleSelect = document.getElementById('vehicleSelect');
+                const projectRadio = document.querySelectorAll('.projectRadio');
+                const vehicleRadio = document.querySelectorAll('.vehicleRadio');
+
+                projectSelect.options[0].selected = true;
+                vehicleSelect.options[0].selected = true;
+                projectRadio[0].checked = true;
+                vehicleRadio[0].checked = true;
+
+                const projectInput = document.getElementById('projectInput');
+                const vehicleInput = document.getElementById('vehicleInput');
+
+                projectInput.style.display = 'none';
+                projectSelect.style.display = 'block';
+                vehicleInput.style.display = 'none';
+                vehicleSelect.style.display = 'block';
+
+                // クライアント
+                modal.classList.remove('create-add-client-active');
+                editClientWrap.classList.remove('add-client');
+                // 手当
+                modal.classList.remove('create-add-allowance-active');
+                allowanceCt.innerHTML = '';
+                editAllowanceWrap.classList.remove('add-allowance');
+            }
         }
-        for(let i = 0; i < closeElem.length; i++){
-            closeElem[i].addEventListener('click', () => {
-                modal.style.display = 'none';
-                returnInitialState();
-                commmaActive();
-            })
-        }
+
     }
     modalActive();
 
-    const setValue = (target) => {
-        let setId = document.getElementById('setShiftId');
-        let setEmployee = document.getElementById('setEmployeeName');
-        let setProject = document.getElementById('projectInput');
-        let projectSelect = document.getElementById('projectSelect');
-        let setVehicle = document.getElementById('vehicleInput');
-        let vehicleSelect = document.getElementById('vehicleSelect');
-        let setRetail = document.getElementById('retailInput');
-        let setSalary = document.getElementById('salaryInput');
-        let setYear = document.querySelector('.setYear');
-        let setMonth = document.querySelector('.setMonth');
-        let setDate = document.querySelector('.setDate');
-        let setPart = document.querySelector('.setPart');
 
-        // モーダルのtext・valueの書き換え
-        setId.value = target.querySelector('.shiftId').value;
-        setProject.placeholder = target.querySelector('.projectName').value;
-        setVehicle.placeholder = target.querySelector('.vehicleNumber').value;
-        setRetail.value = inputCommma(target.querySelector('.retailPrice').value);
-        setSalary.value = inputCommma(target.querySelector('.salaryPrice').value);
-        setEmployee.innerHTML = target.querySelector('.employeeName').value;
-        setYear.innerHTML = target.querySelector('.findYear').value;
-        setMonth.innerHTML = target.querySelector('.findMonth').value;
-        setDate.innerHTML = target.querySelector('.findDate').value;
-        if(target.querySelector('.timeOfPart').value == 0){
-            setPart.innerHTML = '午前の案件';
-        }else{
-            setPart.innerHTML = '午後の案件';
-        }
 
-        // 取得した案件をchecked
-        for(let i = 0; i < projectSelect.options.length; i++){
-            if (projectSelect.options[i].text === target.querySelector('.projectName').value) {
-                // 一致するオプションが見つかったら、selected 属性を設定
-                projectSelect.options[i].selected = true;
-                break; // マッチしたらループを抜ける
-            }
-        }
 
-        // 取得した車両をchecked
-        for(let i = 0; i < vehicleSelect.options.length; i++){
-            if (vehicleSelect.options[i].text === target.querySelector('.vehicleNumber').value) {
-                // 一致するオプションが見つかったら、selected 属性を設定
-                vehicleSelect.options[i].selected = true;
-                break; // マッチしたらループを抜ける
-            }
-        }
-    }
 
-    const changeRadio = () => {
-        const projectInput = document.getElementById('projectInput');
-        const projectSelect = document.getElementById('projectSelect');
-        const vehicleInput = document.getElementById('vehicleInput');
-        const vehicleSelect = document.getElementById('vehicleSelect');
-
-        const projectRadio = document.querySelectorAll('.projectRadio');
-        const vehicleRadio = document.querySelectorAll('.vehicleRadio');
-
-        for(let i = 0; i < projectRadio.length; i++){
-            projectRadio[i].addEventListener('change', () => {
-                projectInput.style.display = 'none';
-                projectSelect.style.display = 'none';
-                if(projectRadio[i].value == '0'){
-                    projectSelect.style.display = "block"
-                }else{
-                    projectInput.style.display = "block";
-                }
-            })
-        }
-
-        for(let i = 0; i < vehicleRadio.length; i++){
-            vehicleRadio[i].addEventListener('change', () => {
-                vehicleInput.style.display = 'none';
-                vehicleSelect.style.display = 'none';
-                if(vehicleRadio[i].value == '0'){
-                    vehicleSelect.style.display = "block"
-                }else{
-                    vehicleInput.style.display = "block";
-                }
-
-            })
-        }
-    }
-
-    const returnInitialState = () => {
-        const projectSelect = document.getElementById('projectSelect');
-        const vehicleSelect = document.getElementById('vehicleSelect');
-        const projectRadio = document.querySelectorAll('.projectRadio');
-        const vehicleRadio = document.querySelectorAll('.vehicleRadio');
-
-        projectSelect.options[0].selected = true;
-        vehicleSelect.options[0].selected = true;
-        projectRadio[0].checked = true;
-        vehicleRadio[0].checked = true;
-
-        const projectInput = document.getElementById('projectInput');
-        const vehicleInput = document.getElementById('vehicleInput');
-
-        projectInput.style.display = 'none';
-        projectSelect.style.display = 'block';
-        vehicleInput.style.display = 'none';
-        vehicleSelect.style.display = 'block';
-    }
-
+    /**
+     * *************************************************************************
+     * ***************             新規作成モーダル               *****************
+     * *************************************************************************
+     */
     const modal = document.getElementById('createShiftModal');
     // シフト新規作成モーダルの挙動を制御
     const createModalActive = () => {
         const targetElem = document.querySelectorAll('.createBtn');
-        // const modal = document.getElementById('createShiftModal');
         const closeElem = document.querySelectorAll('.createCloseModal');
 
         // モダールに値をセット
@@ -257,7 +435,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // 新規と既存のラジオボタンで表示inputを制御
+        // 案件と車両の新規と既存のラジオボタンで表示inputを制御
         const changeRadio = (target) => {
             const projectInput = document.getElementById('createProjectInput');
             const projectSelect = document.getElementById('createProjectSelect');
@@ -295,24 +473,48 @@ window.addEventListener('DOMContentLoaded', () => {
                     }else{
                         vehicleInput.style.display = "block";
                     }
-
                 })
             }
         }
 
-        // クライアント入力画面の挙動を制御
+        /**
+         * 右側表示に関するコード
+         */
+        // クライアントに関する要素を取得
+        const createClientWrap = document.getElementById('createClientWrap');
         const clientSwitch = document.querySelectorAll('.clientSwitchRadio'); //既存か新規のラジオボタン
         const clientExistingView = document.getElementById('clientExistingArea'); //既存のview
         const clientCreateView = document.getElementById('clientCreateArea'); //新規のview
         const clientSelect = clientExistingView.querySelector('.clientSelect');
         const clientInput = clientCreateView.querySelectorAll('.clientInput'); //新規input
+
+        // 手当に関する要素を取得
+        const allowanceParent = document.getElementById('createAllowanceWrap');
+        const allowanceCt = modal.querySelector('#allowanceCt');
+        const createProjectSelect = document.getElementById('createProjectSelect');
+
+        // クライアントの挙動を制御
         const clientViewActive = (projectRadio) => {
             // 既存・新規で表示の切り替え
             if(projectRadio.value == '0'){
-                modal.classList.remove('create-client-active');
+                modal.classList.remove('create-add-client-active');
+                createClientWrap.classList.remove('add-client');
+                clientSelect.required = false;
+                for(let j = 0; j < clientInput.length; j++){ //inputの必須項目変更
+                    clientInput[j].required = false;
+                }
+
+                // 手当が非表示されていた場合、表示に変更
+                if(modal.classList.contains('create-add-allowance-active')){
+                    allowanceParent.classList.add('add-allowance');
+                }
             }else{
-                modal.classList.add('create-client-active');
+                createClientWrap.classList.add('add-client');
+                modal.classList.add('create-add-client-active');
                 clientSelect.required = true; //初期値として必須項目に変更
+
+                // 手当が表示されていた場合非表示に変更
+                allowanceParent.classList.remove('add-allowance');
             }
 
             for(let i = 0; i < clientSwitch.length; i++){
@@ -335,6 +537,57 @@ window.addEventListener('DOMContentLoaded', () => {
                 })
             }
         }
+
+        // 手当の挙動を制御
+        const projectViewActive = () => {
+
+            createProjectSelect.addEventListener('change', function() {
+                // 選択されたプロジェクトのIDを変数に格納
+                projectId = this.value;
+                // 表示箇所をリセット
+                allowanceCt.innerHTML = '';
+
+                fetchProject(projectId);
+            })
+
+            // 取得したIDをもとにAjax通信でデータを取得
+            function fetchProject(id){
+                fetch(`/fetch-data/${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => response.json())
+                .then(allowances => { //取得したデータを表示
+                    // 取得したデータがない場合
+                    if (!allowances || allowances.length === 0) {
+                        modal.classList.remove('create-add-allowance-active');
+                        allowanceParent.classList.remove('add-allowance');
+                        return;
+                    }
+                    allowances.forEach(allowance => {
+                        modal.classList.add('create-add-allowance-active');
+                        allowanceParent.classList.add('add-allowance');
+                        let newDiv = document.createElement('div');
+                        newDiv.innerHTML = `
+                            <div class="check-box-item">
+                                <label for="">
+                                    <input type="checkbox" name="allowance[]" value="${allowance['id']}">
+                                    ${allowance['name']}
+                                </label>
+                            </div>
+                        `
+                        allowanceCt.append(newDiv);
+                    })
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+        projectViewActive();
+
+
 
         // モーダルが閉じた時にすべてのデータを初期値にする
         const CreateReturnInitialState = () => {
@@ -363,7 +616,7 @@ window.addEventListener('DOMContentLoaded', () => {
             salaryInput.value = '';
 
             // クライアント
-            modal.classList.remove('create-client-active'); //クライアントviewを非表示
+            modal.classList.remove('create-add-client-active'); //クライアントviewを非表示
             clientSwitch[0].checked = true; //既存案件のラジオをtrue
             clientExistingView.style.display = 'block'; //既存クライアントviewを表示
             clientCreateView.style.display = 'none'; //新規クライアントviewを非表示
@@ -371,6 +624,12 @@ window.addEventListener('DOMContentLoaded', () => {
             for(let i = 0; i < clientInput.length; i++){
                 clientInput[i].value = '';
             }
+            createClientWrap.classList.remove('add-client');
+
+            // 手当
+            allowanceCt.innerHTML = '';
+            modal.classList.remove('create-add-allowance-active');
+            allowanceParent.classList.remove('add-allowance');
         }
         // 開ける
         for(let i = 0; i < targetElem.length; i++){
@@ -439,8 +698,6 @@ window.addEventListener('DOMContentLoaded', () => {
                 }
                 // ファイル名をどこかに表示する（例えば、idがfileNameのdiv要素内）
                 setFileName.textContent = fileName;
-
-
             });
         }
 
@@ -571,4 +828,28 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
     settingModalActive();
+
+    const employeeModalActive = () => {
+        const modal = document.getElementById('employeeModal');
+        const openBtn = document.querySelector('.employeeModalOpen');
+        const closeBtn = document.querySelectorAll('.employeeModalClose');
+
+        if(modal){
+            openBtn.addEventListener('click', () => {
+                modal.style.display = 'block';
+            })
+
+            for(let i = 0; i < closeBtn.length; i++){
+                closeBtn[i].addEventListener('click', () => {
+                    modal.style.display = 'none';
+                })
+            }
+        }
+    }
+    employeeModalActive();
+
+
 })
+
+
+

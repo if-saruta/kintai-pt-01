@@ -70,8 +70,15 @@
                                         {{-- チャーター --}}
                                         <div class="charter-box">
                                             <label for="charter" class="input-head">チャーター案件</label>
-                                            <div class="toggle">
+                                            <div class="toggle isCharter">
                                                 <input type="checkbox" name="projects[0][is_charter]" value="1" class="toggle-input isCharter" id="charter" />
+                                            </div>
+                                        </div>
+                                        {{-- 休止 --}}
+                                        <div class="suspended-box">
+                                            <label for="charter" class="input-head">休止</label>
+                                            <div class="toggle">
+                                                <input type="checkbox" name="projects[0][is_suspended]" value="1" class="toggle-input"/>
                                             </div>
                                         </div>
                                         {{-- ドライバー価格形式 --}}
@@ -158,6 +165,35 @@
                                                 <div class="input-item">
                                                     <label for="" class="label-txt">残業1時間あたりの時給</label>
                                                     <input type="text" name="projects[0][overtime_hourly_wage]" class="c-input" placeholder="000">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{-- 手当 --}}
+                                        <div class="allowance">
+                                            <div class="allowance__head">
+                                                <p class="input-head">手当</p>
+                                                {{-- <div class="plus-box allowanceAddBtn" id="allowanceAddBtn">
+                                                    <i class="fa-solid fa-plus allowanceAddIcon"></i>
+                                                </div> --}}
+                                            </div>
+                                            <div class="allowance__content" id="allowanceCt">
+                                                <div class="allowance__content__item">
+                                                    <div class="input-wrap required">
+                                                        <p class="">必須</p>
+                                                        <input type="checkbox" name="projects[0][is_required]" value="1">
+                                                    </div>
+                                                    <div class="input-wrap">
+                                                        <p class="">手当名</p>
+                                                        <input type="text" class="c-input" name="projects[0][allowance_name]" placeholder="リーダー手当">
+                                                    </div>
+                                                    <div class="input-wrap">
+                                                        <p class="">手当上代</p>
+                                                        <input type="text" class="c-input commaInput" name="projects[0][allowance_retail_amount]" placeholder="1,000">
+                                                    </div>
+                                                    <div class="input-wrap">
+                                                        <p class="">手当ドライバー</p>
+                                                        <input type="text" class="c-input commaInput" name="projects[0][allowance_driver_amount]" placeholder="1,000">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -289,6 +325,13 @@
                                 <input type="checkbox" name="projects[${newProjectIndex}][is_charter]" class="toggle-input" value="1" id="charter${newProjectIndex}" />
                             </div>
                         </div>
+                        {{-- 休止 --}}
+                        <div class="suspended-box">
+                            <label for="charter" class="input-head">休止</label>
+                            <div class="toggle">
+                                <input type="checkbox" name="projects[${newProjectIndex}][is_suspended]" value="1" class="toggle-input"/>
+                            </div>
+                        </div>
                         {{-- ドライバー価格形式 --}}
                         <div class="salary-type-box">
                             <div class="head input-head">
@@ -373,6 +416,37 @@
                                 <div class="input-item">
                                     <label for="" class="label-txt">残業1時間あたりの時給</label>
                                     <input type="text" name="projects[${newProjectIndex}][overtime_hourly_wage]" class="c-input" placeholder="000">
+                                </div>
+                            </div>
+                        </div>
+                        {{-- 手当 --}}
+                        <div class="allowance">
+                            <div class="allowance__head">
+                                <p class="input-head">手当</p>
+                                {{--
+                                    <div class="plus-box allowanceAddBtn" id="allowanceAddBtn">
+                                        <i class="fa-solid fa-plus allowanceAddIcon"></i>
+                                    </div>
+                                    --}}
+                            </div>
+                            <div class="allowance__content" id="allowanceCt">
+                                <div class="allowance__content__item">
+                                    <div class="input-wrap required">
+                                        <p class="">必須</p>
+                                        <input type="checkbox" name="projects[${newProjectIndex}][is_required]" value="1">
+                                    </div>
+                                    <div class="input-wrap">
+                                        <p class="">手当名</p>
+                                        <input type="text" class="c-input" name="projects[${newProjectIndex}][allowance_name]" placeholder="リーダー手当">
+                                    </div>
+                                    <div class="input-wrap">
+                                        <p class="">手当上代</p>
+                                        <input type="text" class="c-input commaInput" name="projects[${newProjectIndex}][allowance_retail_amount]" placeholder="1,000">
+                                    </div>
+                                    <div class="input-wrap">
+                                        <p class="">手当ドライバー</p>
+                                        <input type="text" class="c-input commaInput" name="projects[${newProjectIndex}][allowance_driver_amount]" placeholder="1,000">
+                                    </div>
                                 </div>
                             </div>
                         </div>

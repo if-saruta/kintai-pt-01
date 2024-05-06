@@ -664,10 +664,12 @@
         @endif
 
         @if (!empty($allowanceName) || !empty($allowanceAmount))
+        @foreach ($allowanceName as $index => $name )
         <tr>
-            <th>{{ $allowanceName }}</th>
-            <td>{{ number_format($allowanceAmount) }}</td>
+            <th>{{ $name }}</th>
+            <td>{{ $allowanceAmount[$index] }}</td>
         </tr>
+        @endforeach
         @endif
 
         @if (!empty($taxName) || !empty($taxAmount))

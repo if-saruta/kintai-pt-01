@@ -14,6 +14,9 @@
                     @csrf
                     <input hidden name="witch" value="page01" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                        @foreach ($narrowEmployeeId as $EmployeeId)
+                            <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                        @endforeach
                     <button class="{{ request()->routeIs('shift.', 'shift.selectWeek') ? 'active' : '' }} link">
                         <span class="">全表示</span>
                     </button>
@@ -24,6 +27,9 @@
                     @csrf
                     <input hidden name="witch" value="page02" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                        @foreach ($narrowEmployeeId as $EmployeeId)
+                            <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                        @endforeach
                     <button class="{{ request()->routeIs('shift.employeeShowShift*') ? 'active' : '' }} link">
                         <span class="">稼働表</span>
                     </button>
@@ -33,6 +39,9 @@
                     @csrf
                     <input hidden name="witch" value="page03" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                        @foreach ($narrowEmployeeId as $EmployeeId)
+                            <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                        @endforeach
                     <button class="{{ request()->routeIs('shift.employeePriceShift*') ? 'active' : '' }} link">
                         @can('admin-higher')
                             <span class="">ドライバー価格</span>
@@ -47,6 +56,9 @@
                     @csrf
                     <input hidden name="witch" value="page04" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                        @foreach ($narrowEmployeeId as $EmployeeId)
+                            <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                        @endforeach
                     <button class="{{ request()->routeIs('shift.projectPriceShift*') ? 'active' : '' }} link">
                         <span class="">上代閲覧用</span>
                     </button>
@@ -57,6 +69,9 @@
                     @csrf
                     <input hidden name="witch" value="page05" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                        @foreach ($narrowEmployeeId as $EmployeeId)
+                            <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                        @endforeach
                     <button class="{{ request()->routeIs('shift.projectCount') ? 'active' : '' }} link">
                         <span class="">案件数用</span>
                     </button>
@@ -69,6 +84,9 @@
                         @csrf
                         <input hidden name="witch" value="page06" type="text">
                         <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                            @foreach ($narrowEmployeeId as $EmployeeId)
+                            <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                        @endforeach
                         <button class="{{ request()->routeIs('shift.edit*') ? 'active' : '' }} icon-block__button">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </button>
@@ -111,6 +129,9 @@
                         @csrf
                         <input type="hidden" name="date" value="{{$startOfWeek}}">
                         <input type="hidden" name="action" value="previous">
+                        @foreach ($narrowEmployeeId as $EmployeeId)
+                            <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                        @endforeach
                         <input hidden name="witch" value="page04" type="text">
                         <button type="submit" class="">
                             <i class="fa-solid fa-angle-left date-angle"></i>
@@ -140,11 +161,17 @@
                         @csrf
                         <input type="hidden" name="date" value="{{$endOfWeek}}">
                         <input type="hidden" name="action" value="next">
+                        @foreach ($narrowEmployeeId as $EmployeeId)
+                            <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                        @endforeach
                         <input hidden name="witch" value="page04" type="text">
                         <button type="submit" class="">
                             <i class="fa-solid fa-angle-right date-angle"></i>
                         </button>
                     </form>
+                </div>
+                <div class="shift-calendar__setting --common-page-postion c-back-btn --green employeeModalOpen">
+                    <i class="fa-solid fa-user"></i>
                 </div>
                 {{-- カレンダー検索 --}}
                 <form action="{{route('shift.projectPriceShiftSelectWeek')}}" class="datepicker" method="POST">
@@ -172,11 +199,11 @@
                                 @foreach ( $convertedDates as $date )
                                     <th colspan="2" class="txt">
                                         @if ($holidays->isHoliday($date))
-                                            <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
+                                            <p class="" style="color: black;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                         @elseif ($date->isSaturday())
                                             <p class="" style="color: skyblue;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                         @elseif($date->isSunday())
-                                            <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
+                                            <p class="" style="color: black;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                         @else
                                             <p class="">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                         @endif
@@ -192,7 +219,7 @@
                             </tr>
                         </thead>
                         <tbody class="shift-calendar-table__body">
-                            @foreach ( $sortedShiftDataByEmployee as $employeeId => $shiftData )
+                            @foreach ( $shiftDataByEmployee as $employeeId => $shiftData )
                                 @php
                                 // 一周目だけ従業員表示
                                 $is_employee_open = true;
@@ -240,7 +267,7 @@
                                                         @if ($shift->employee)
                                                             <p class="">{{$shift->employee->name}}</p>
                                                         @else
-                                                            <p class="" style="color: red;">{{$shift->unregistered_employee}}</p>
+                                                            <p class="" style="color: black;">{{$shift->unregistered_employee}}</p>
                                                         @endif
                                                     </div>
                                                 </td>
@@ -254,18 +281,41 @@
                                                 $pm_check_count = 0;
                                             @endphp
                                             {{-- 午前 --}}
-                                            <td class="table-cell">
+                                            <td class="table-cell not-vertical">
                                                 @foreach ( $shift->projectsVehicles as $spv )
                                                     @if ($spv->time_of_day == 0)
                                                     <div class="table-cell__item">
                                                         @if ($spv->project)
+                                                            @php
+                                                                $red = '';
+                                                                $check = '';
+                                                                foreach ($spv->project->allowances as $allowance) {
+                                                                    if($allowance->is_required == 1){
+                                                                        foreach($missingRequiredAllowancesByDate as $date => $allowanceData){
+                                                                            foreach($allowanceData as $name){
+                                                                                if($shift->date == $date && $allowance->name == $name){
+                                                                                    $red = 'red';
+                                                                                    $check = '';
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        if($spv->shiftAllowance){
+                                                                            $check = 'allowance-flag';
+                                                                        }
+                                                                    }
+                                                                }
+                                                                if($spv->project->is_suspended == 1){
+                                                                    $red = 'red';
+                                                                }
+                                                            @endphp
                                                             @if ($spv->initial_project_name)
-                                                                <p class="table-cell__item__row setHightElem">{{$spv->initial_project_name}}</p>
+                                                                <p class="table-cell__item__row setHightElem {{ $check }}">{{$spv->initial_project_name}}</p>
                                                             @else
-                                                                <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                                                <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{{$spv->project->name}}</p>
                                                             @endif
                                                         @elseif($spv->unregistered_project)
-                                                            <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
+                                                            <p class="table-cell__item__row setHightElem" style="color: black;">
+                                                                {{$spv->unregistered_project}}</p>
                                                         @else
                                                             <p class="table-cell__item__row setHightElem"></p>
                                                         @endif
@@ -290,18 +340,41 @@
                                                 @endfor
                                             </td>
                                             {{-- 午後 --}}
-                                            <td class="table-cell --table-cell-pm">
+                                            <td class="table-cell --table-cell-pm not-vertical">
                                                 @foreach ( $shift->projectsVehicles as $spv )
                                                     @if ($spv->time_of_day == 1)
                                                     <div class="table-cell__item">
                                                         @if ($spv->project)
+                                                            @php
+                                                                $red = '';
+                                                                $check = '';
+                                                                foreach ($spv->project->allowances as $allowance) {
+                                                                    if($allowance->is_required == 1){
+                                                                        foreach($missingRequiredAllowancesByDate as $date => $allowanceData){
+                                                                            foreach($allowanceData as $name){
+                                                                                if($shift->date == $date && $allowance->name == $name){
+                                                                                    $red = 'red';
+                                                                                    $check = '';
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        if($spv->shiftAllowance){
+                                                                            $check = 'allowance-flag';
+                                                                        }
+                                                                    }
+                                                                }
+                                                                if($spv->project->is_suspended == 1){
+                                                                    $red = 'red';
+                                                                }
+                                                            @endphp
                                                             @if ($spv->initial_project_name)
-                                                                <p class="table-cell__item__row setHightElem">{{$spv->initial_project_name}}</p>
+                                                                <p class="table-cell__item__row setHightElem {{ $check }}">{{$spv->initial_project_name}}</p>
                                                             @else
-                                                                <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                                                <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{{$spv->project->name}}</p>
                                                             @endif
                                                         @elseif($spv->unregistered_project)
-                                                            <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
+                                                            <p class="table-cell__item__row setHightElem" style="color: black;">
+                                                                {{$spv->unregistered_project}}</p>
                                                         @else
                                                             <p class="table-cell__item__row setHightElem"></p>
                                                         @endif
@@ -394,16 +467,43 @@
                                                 $pm_check_count = 0;
                                             @endphp
                                             {{-- 午前 --}}
-                                            <td class="table-cell">
+                                            <td class="table-cell not-vertical">
                                                 @foreach ( $shift->projectsVehicles as $spv )
                                                     @if ($spv->time_of_day == 0)
                                                     <div class="table-cell__item">
                                                         @if ($spv->project)
-                                                        <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                                            @php
+                                                                $red = '';
+                                                                $check = '';
+                                                                foreach ($spv->project->allowances as $allowance) {
+                                                                    if($allowance->is_required == 1){
+                                                                        foreach($missingRequiredAllowancesByDate as $date => $allowanceData){
+                                                                            foreach($allowanceData as $name){
+                                                                                if($shift->date == $date && $allowance->name == $name){
+                                                                                    $red = 'red';
+                                                                                    $check = '';
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        if($spv->shiftAllowance){
+                                                                            $check = 'allowance-flag';
+                                                                        }
+                                                                    }
+                                                                }
+                                                                if($spv->project->is_suspended == 1){
+                                                                    $red = 'red';
+                                                                }
+                                                            @endphp
+                                                            @if ($spv->initial_project_name)
+                                                                <p class="table-cell__item__row setHightElem {{ $check }}">{{$spv->initial_project_name}}</p>
+                                                            @else
+                                                                <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{{$spv->project->name}}</p>
+                                                            @endif
                                                         @elseif($spv->unregistered_project)
-                                                        <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
+                                                            <p class="table-cell__item__row setHightElem" style="color: black;">
+                                                                {{$spv->unregistered_project}}</p>
                                                         @else
-                                                        <p class="table-cell__item__row setHightElem"></p>
+                                                            <p class="table-cell__item__row setHightElem"></p>
                                                         @endif
                                                         <p class="table-cell__item__row">
                                                             @if ($spv->retail_price)
@@ -426,16 +526,43 @@
                                                 @endfor
                                             </td>
                                             {{-- 午後 --}}
-                                            <td class="table-cell --table-cell-pm">
+                                            <td class="table-cell --table-cell-pm not-vertical">
                                                 @foreach ( $shift->projectsVehicles as $spv )
                                                     @if ($spv->time_of_day == 1)
                                                     <div class="table-cell__item">
                                                         @if ($spv->project)
-                                                        <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                                            @php
+                                                                $red = '';
+                                                                $check = '';
+                                                                foreach ($spv->project->allowances as $allowance) {
+                                                                    if($allowance->is_required == 1){
+                                                                        foreach($missingRequiredAllowancesByDate as $date => $allowanceData){
+                                                                            foreach($allowanceData as $name){
+                                                                                if($shift->date == $date && $allowance->name == $name){
+                                                                                    $red = 'red';
+                                                                                    $check = '';
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        if($spv->shiftAllowance){
+                                                                            $check = 'allowance-flag';
+                                                                        }
+                                                                    }
+                                                                }
+                                                                if($spv->project->is_suspended == 1){
+                                                                    $red = 'red';
+                                                                }
+                                                            @endphp
+                                                            @if ($spv->initial_project_name)
+                                                                <p class="table-cell__item__row setHightElem {{ $check }}">{{$spv->initial_project_name}}</p>
+                                                            @else
+                                                                <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{{$spv->project->name}}</p>
+                                                            @endif
                                                         @elseif($spv->unregistered_project)
-                                                        <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
+                                                            <p class="table-cell__item__row setHightElem" style="color: black;">
+                                                                {{$spv->unregistered_project}}</p>
                                                         @else
-                                                        <p class="table-cell__item__row setHightElem"></p>
+                                                            <p class="table-cell__item__row setHightElem"></p>
                                                         @endif
                                                         <p class="table-cell__item__row">
                                                             @if ($spv->retail_price)
@@ -467,6 +594,32 @@
                     @else
                     <p class="shift-warning-txt">{{$startOfWeek}}〜{{$endOfWeek}}のシフトはありません</p>
                     @endif
+                </div>
+            </div>
+            {{-- 設定モーダル --}}
+            <div class="shift-setting-modal" id="employeeModal">
+                <div class="shift-setting-modal__bg employeeModalClose"></div>
+                <div class="shift-setting-modal__white-board --common-setting-white-board">
+                    <form action="{{ route('shift.projectPriceShiftSelectWeek') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="date" value="{{$startOfWeek}}">
+                        <input hidden name="witch" value="page04" type="text">
+                        <div class="shift-setting-modal__white-board__inner">
+                            <p class="title">絞り込み</p>
+                            <div class="select-radio --common-select-check-box">
+                                @foreach ($employeeList as $employeeData)
+                                    <label for="">
+                                        <input type="checkbox" value="{{ $employeeData->id }}" @if(in_array($employeeData->id, $narrowEmployeeId)) checked @endif name="narrowEmployeeId[]">
+                                        {{ $employeeData->name }}
+                                    </label>
+                                @endforeach
+                            </div>
+                            <div class="btn-area">
+                                <button class="c-save-btn btn">絞り込む</button>
+                                <div class="c-back-btn employeeModalClose">戻る</div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
 

@@ -33,8 +33,9 @@ class PdfEditController extends Controller
         // 合計テーブルのデータを受け取り
         $totalSalaryName = $request->input('totalSalary.name'); //給与合計
         $totalSalaryAmount = $removeCommasAndCastToInt($request->input('totalSalary.amount')); //給与合計
-        $allowanceName = $request->input('allowance.name'); //手当
-        $allowanceAmount = $removeCommasAndCastToInt($request->input('allowance.amount')); //手当
+        $allowanceName = $request->input('allowanceName', []);
+        $allowanceAmount = $request->input('allowanceAmount', []);
+        $allowanceCount = $request->input('allowanceCount', []);
         $taxName = $request->input('tax.name'); //消費税
         $taxAmount = $removeCommasAndCastToInt($request->input('tax.amount')); //消費税
         $expressWayAmount = $removeCommasAndCastToInt($request->input('expressWayAmount')); //高速代
@@ -42,6 +43,20 @@ class PdfEditController extends Controller
         $overtimeAmount = $removeCommasAndCastToInt($request->input('overtimeAmount')); //残業代
         $otherNames = $request->input('otherName', []); //追加項目名
         $otherAmounts = $request->input('otherAmount', []); //追加項目金額
+
+        $allowanceArray = [];
+        $totalAllowanceAmount = 0;
+        foreach($allowanceName as $index => $name){
+            if(!empty($name) && !empty($allowanceAmount[$index])){
+                $allowanceArray[] = [
+                    'name' => $name,
+                    'amount' => $removeCommasAndCastToInt($allowanceAmount[$index]),
+                    'count' => $allowanceCount[$index]
+                ];
+                $totalAllowanceAmount += $removeCommasAndCastToInt($allowanceAmount[$index]);
+            }
+        }
+
         // 追加項目の空でない名前と金額のペアを新しい配列に追加
         $others = [];
         foreach ($otherNames as $index => $name) {
@@ -125,7 +140,7 @@ class PdfEditController extends Controller
                 compact('getYear', 'getMonth', 'today', 'employeeInfo', 'companies', 'banks'
                         ,'allowanceName'
                         ,'totalSalaryAmount', 'allowanceAmount','taxAmount', 'etc', 'others'
-                        ,'invoiceAmountCheck', 'invoiceAllowanceCheck'
+                        ,'invoiceAmountCheck', 'invoiceAllowanceCheck', 'allowanceArray', 'totalAllowanceAmount'
                         // 費用項目
                         ,'administrativeOutsourcingName', 'administrativeOutsourcingAmount',
                         'administrativeName', 'administrativeAmount',
@@ -177,6 +192,7 @@ class PdfEditController extends Controller
             ->orderBy('shifts.date', 'asc')
             ->select('shift_project_vehicle.*') // ShiftProjectVehicleのカラムのみを選択
             ->get();
+
         // 案件での絞り込み
         $ShiftProjectVehicles = $ShiftProjectVehiclesByClient->filter(function ($spv) use ($selectedProjectIds){
             if(!empty($selectedProjectIds)){
@@ -342,6 +358,40 @@ class PdfEditController extends Controller
             }
         }
 
-        return view('edit-pdf.project-edit-pdf', compact('total_retail', 'total_count', 'today', 'projectData', 'expresswayData', 'parkingData', 'clientId', 'getClient', 'getCompanies','getYear', 'getMonth'));
+        $allowanceArray = [];
+        foreach($ShiftProjectVehicles as $spv){
+            $date = Carbon::parse($spv->shift->date);
+            if($spv->project){
+                foreach($spv->project->allowances as $allowance){
+                    if(!isset($allowanceArray[$allowance->name])){
+                        $allowanceArray[$allowance->name] = [
+                            'dates' => '',
+                            'allowance_dates' => '',
+                            'allowance_count' => 0,
+                            'allowance_amount' => $allowance->retail_amount,
+                            'total_allowance_amount' => 0,
+                            'project_name' => $spv->project->name
+                        ];
+                    }
+
+                    $formattedDate = $date->format('j'); // 日付のみ
+                    if(empty($allowanceArray[$allowance->name]['dates'])){
+                        $formattedDate = $date->format('n/j'); // 最初の日付は月/日
+                    }
+                    if (!str_contains($allowanceArray[$allowance->name]['dates'], $formattedDate)) {
+                        $allowanceArray[$allowance->name]['dates'] .= (empty($parkingData[$allowance->name]['dates']) ? '' : ',') . $formattedDate;
+                    }
+                    if ($allowance->retail_amount && !str_contains($allowanceArray[$allowance->name]['allowance_dates'], $formattedDate)) {
+                        $allowanceArray[$allowance->name]['allowance_dates'] .= (empty($allowanceArray[$allowance->name]['allowance_dates']) ? '' : ',') . $formattedDate;
+                        $allowanceArray[$allowance->name]['allowance_count']++;
+                        $allowanceArray[$allowance->name]['total_allowance_amount'] += $allowance->retail_amount;
+
+                        $total_retail += $allowance->retail_amount;
+                    }
+                }
+            }
+        }
+
+        return view('edit-pdf.project-edit-pdf', compact('total_retail', 'total_count', 'today', 'projectData', 'expresswayData', 'parkingData', 'allowanceArray', 'clientId', 'getClient', 'getCompanies','getYear', 'getMonth'));
     }
 }

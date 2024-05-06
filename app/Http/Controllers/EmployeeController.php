@@ -110,39 +110,39 @@ class EmployeeController extends Controller
         }
 
         // 案件別手当の登録
-        $allowanceNames = $request->input('allowanceName');
-        $allowanceAmounts = $request->input('allowanceAmount');
-        // 各プロジェクトと手当を処理
-        if($allowanceNames){
-            foreach ($allowanceNames as $projectId => $names) {
-                foreach ($names as $index => $name) {
-                    $amount = $allowanceAmounts[$projectId][$index] ?? null;
+        // $allowanceNames = $request->input('allowanceName');
+        // $allowanceAmounts = $request->input('allowanceAmount');
+        // // 各プロジェクトと手当を処理
+        // if($allowanceNames){
+        //     foreach ($allowanceNames as $projectId => $names) {
+        //         foreach ($names as $index => $name) {
+        //             $amount = $allowanceAmounts[$projectId][$index] ?? null;
 
-                    AllowanceByProject::create([
-                        'employee_id' => $employee->id,
-                        'project_id' => $projectId,
-                        'allowanceName' => $name,
-                        'amount' => $removeCommasAndCastToInt($amount),
-                    ]);
-                }
-            }
-        }
+        //             AllowanceByProject::create([
+        //                 'employee_id' => $employee->id,
+        //                 'project_id' => $projectId,
+        //                 'allowanceName' => $name,
+        //                 'amount' => $removeCommasAndCastToInt($amount),
+        //             ]);
+        //         }
+        //     }
+        // }
 
         // その他手当の登録
-        $allowanceOtherNames = $request->input('allowanceOtherName');
-        $allowanceOtherAmounts = $request->input('allowanceOtherAmount');
-        // 各手当名と金額を処理
-        if($allowanceOtherNames){
-            foreach ($allowanceOtherNames as $index => $name) {
-                $amount = $allowanceOtherAmounts[$index] ?? null;
+        // $allowanceOtherNames = $request->input('allowanceOtherName');
+        // $allowanceOtherAmounts = $request->input('allowanceOtherAmount');
+        // // 各手当名と金額を処理
+        // if($allowanceOtherNames){
+        //     foreach ($allowanceOtherNames as $index => $name) {
+        //         $amount = $allowanceOtherAmounts[$index] ?? null;
 
-                AllowanceByOther::create([
-                    'employee_id' => $employee->id,
-                    'allowanceName' => $name,
-                    'amount' => $removeCommasAndCastToInt($amount),
-                ]);
-            }
-        }
+        //         AllowanceByOther::create([
+        //             'employee_id' => $employee->id,
+        //             'allowanceName' => $name,
+        //             'amount' => $removeCommasAndCastToInt($amount),
+        //         ]);
+        //     }
+        // }
 
         // 登録済みのシフトの日付を取得
         $unDate = Shift::query()
@@ -240,87 +240,87 @@ class EmployeeController extends Controller
         }
 
         // 案件別手当データを更新
-        $allowanceProjectNamesEdit = $request->input('allowanceNameByEdit');
-        $allowanceProjectAmountsEdit = $request->input('allowanceAmountByEdit');
-        if($allowanceProjectNamesEdit){
-            foreach($allowanceProjectNamesEdit as $id => $value) {
-                $allowanceProject = AllowanceByProject::where('id', $id)
-                ->first();
+        // $allowanceProjectNamesEdit = $request->input('allowanceNameByEdit');
+        // $allowanceProjectAmountsEdit = $request->input('allowanceAmountByEdit');
+        // if($allowanceProjectNamesEdit){
+        //     foreach($allowanceProjectNamesEdit as $id => $value) {
+        //         $allowanceProject = AllowanceByProject::where('id', $id)
+        //         ->first();
 
-                $allowanceProject->allowanceName = $value;
-                $allowanceProject->amount = $removeCommasAndCastToInt($allowanceProjectAmountsEdit[$id]);
+        //         $allowanceProject->allowanceName = $value;
+        //         $allowanceProject->amount = $removeCommasAndCastToInt($allowanceProjectAmountsEdit[$id]);
 
-                $allowanceProject->save();
-            }
-        }
+        //         $allowanceProject->save();
+        //     }
+        // }
 
         // 新しく追加された案件別手当を登録
-        $allowanceNames = $request->input('allowanceName');
-        $allowanceAmounts = $request->input('allowanceAmount');
-        if($allowanceNames){
-            // 各プロジェクトと手当を処理
-            foreach ($allowanceNames as $projectId => $names) {
-                foreach ($names as $index => $name) {
-                    $amount = $allowanceAmounts[$projectId][$index] ?? null;
+        // $allowanceNames = $request->input('allowanceName');
+        // $allowanceAmounts = $request->input('allowanceAmount');
+        // if($allowanceNames){
+        //     // 各プロジェクトと手当を処理
+        //     foreach ($allowanceNames as $projectId => $names) {
+        //         foreach ($names as $index => $name) {
+        //             $amount = $allowanceAmounts[$projectId][$index] ?? null;
 
-                    AllowanceByProject::create([
-                        'employee_id' => $employee->id,
-                        'project_id' => $projectId,
-                        'allowanceName' => $name,
-                        'amount' => $removeCommasAndCastToInt($amount),
-                    ]);
-                }
-            }
-        }
+        //             AllowanceByProject::create([
+        //                 'employee_id' => $employee->id,
+        //                 'project_id' => $projectId,
+        //                 'allowanceName' => $name,
+        //                 'amount' => $removeCommasAndCastToInt($amount),
+        //             ]);
+        //         }
+        //     }
+        // }
 
         // 既存案件別手当の削除
-        $deleteId = $request->input('allowanceProjectDeleteId');
-        if($deleteId){
-            foreach($deleteId as $id){
-                $allowanceProject = AllowanceByProject::where('id', $id);
-                $allowanceProject->delete();
-            }
-        }
+        // $deleteId = $request->input('allowanceProjectDeleteId');
+        // if($deleteId){
+        //     foreach($deleteId as $id){
+        //         $allowanceProject = AllowanceByProject::where('id', $id);
+        //         $allowanceProject->delete();
+        //     }
+        // }
 
         // その他手当のデータを更新
-        $allowanceOtherNamesEdit = $request->input('allowanceOtherNameEdit');
-        $allowanceOtherAmountsEdit = $request->input('allowanceOtherAmountEdit');
-        if($allowanceOtherNamesEdit){
-            foreach($allowanceOtherNamesEdit as $id => $value){
-                $allowanceOther = AllowanceByOther::where('id', $id)
-                ->first();
+        // $allowanceOtherNamesEdit = $request->input('allowanceOtherNameEdit');
+        // $allowanceOtherAmountsEdit = $request->input('allowanceOtherAmountEdit');
+        // if($allowanceOtherNamesEdit){
+        //     foreach($allowanceOtherNamesEdit as $id => $value){
+        //         $allowanceOther = AllowanceByOther::where('id', $id)
+        //         ->first();
 
-                $allowanceOther->allowanceName = $value;
-                $allowanceOther->amount = $removeCommasAndCastToInt($allowanceOtherAmountsEdit[$id]);
+        //         $allowanceOther->allowanceName = $value;
+        //         $allowanceOther->amount = $removeCommasAndCastToInt($allowanceOtherAmountsEdit[$id]);
 
-                $allowanceOther->save();
-            }
-        }
+        //         $allowanceOther->save();
+        //     }
+        // }
 
         // その他手当の登録
-        $allowanceOtherNames = $request->input('allowanceOtherName');
-        $allowanceOtherAmounts = $request->input('allowanceOtherAmount');
-        // 各手当名と金額を処理
-        if($allowanceOtherNames){
-            foreach ($allowanceOtherNames as $index => $name) {
-                $amount = $allowanceOtherAmounts[$index] ?? null;
+        // $allowanceOtherNames = $request->input('allowanceOtherName');
+        // $allowanceOtherAmounts = $request->input('allowanceOtherAmount');
+        // // 各手当名と金額を処理
+        // if($allowanceOtherNames){
+        //     foreach ($allowanceOtherNames as $index => $name) {
+        //         $amount = $allowanceOtherAmounts[$index] ?? null;
 
-                AllowanceByOther::create([
-                    'employee_id' => $employee->id,
-                    'allowanceName' => $name,
-                    'amount' => $removeCommasAndCastToInt($amount),
-                ]);
-            }
-        }
+        //         AllowanceByOther::create([
+        //             'employee_id' => $employee->id,
+        //             'allowanceName' => $name,
+        //             'amount' => $removeCommasAndCastToInt($amount),
+        //         ]);
+        //     }
+        // }
 
-        // 既存その他手当の削除
-        $deleteId = $request->input('allowanceOtherDeleteId');
-        if($deleteId){
-            foreach($deleteId as $id){
-                $allowanceOther = AllowanceByOther::where('id', $id);
-                $allowanceOther->delete();
-            }
-        }
+        // // 既存その他手当の削除
+        // $deleteId = $request->input('allowanceOtherDeleteId');
+        // if($deleteId){
+        //     foreach($deleteId as $id){
+        //         $allowanceOther = AllowanceByOther::where('id', $id);
+        //         $allowanceOther->delete();
+        //     }
+        // }
 
         // 車両の変更があった場合、
         if($oldVehicleId != $employee->vehicle_id){

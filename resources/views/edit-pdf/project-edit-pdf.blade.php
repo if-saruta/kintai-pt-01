@@ -126,6 +126,14 @@
                                         <td class="table-data w-110"><input type="text" name="amount[]" value="{{ $data['total_parking_fee'] }}" class="input project-table-input changeElem amountElem project-edit-pdf-text-right commaInput"></td>
                                     </tr>
                                 @endforeach
+                                @foreach ($allowanceArray as $allowanceName => $data )
+                                    <tr class="tableRow">
+                                        <td class="table-item w-500"><input type="text" name="item[]" value="{{ $data['project_name'] }}手当 {{ $allowanceName }} ({{ $data['allowance_dates'] }})" class="input project-table-input changeElem project-edit-pdf-text-left"> <input checked type="checkbox" class="row-check-box"></td>
+                                        <td class="table-data w-100"><input type="text" name="number[]" value="{{ $data['allowance_count'] }}" class="input project-table-input changeElem cntElem project-edit-pdf-text-right"></td>
+                                        <td class="table-data w-100"><input type="text" name="until[]" value="{{ $data['allowance_amount'] }}" class="input project-table-input changeElem untilElem project-edit-pdf-text-right commaInput"></td>
+                                        <td class="table-data w-110"><input type="text" name="amount[]" value="{{ $data['total_allowance_amount'] }}" class="input project-table-input changeElem amountElem project-edit-pdf-text-right commaInput"></td>
+                                    </tr>
+                                @endforeach
                                 <tr class="tableRow">
                                     <td class="table-item w-500"><input type="text" name="item[]" value="" class="input project-table-input changeElem project-edit-pdf-text-left"> <input checked type="checkbox" class="row-check-box"></td>
                                     <td class="table-data w-100"><input type="text" name="number[]" value="" class="input project-table-input changeElem cntElem project-edit-pdf-text-right"></td>

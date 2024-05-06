@@ -45,4 +45,10 @@ class ShiftProjectVehicle extends Model
     {
         return $this->belongsTo(Vehicle::class, 'rental_vehicle_id')->withTrashed();
     }
+
+    public function shiftAllowance()
+    {
+        return $this->hasOne(ShiftProjectVehicleAllowance::class, 'shift_project_vehicle_id');
+    }
+
 }

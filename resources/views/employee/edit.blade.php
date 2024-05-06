@@ -313,7 +313,7 @@
                                                 </div>
                                             @endif
                                         </div>
-                                        <div class="allowance projectAllowanceContainer">
+                                        {{-- <div class="allowance projectAllowanceContainer">
                                             @foreach ($allowanceProjects as $allowanceProject)
                                                 @if($allowanceProject->project_id == $project->id)
                                                     <div class="allowance-item projectAllowanceItem">
@@ -330,13 +330,13 @@
                                                 @endif
                                             @endforeach
                                             <i class="fa-solid fa-circle-plus plus-circle projectAllowanceAdd" data-project-id="{{$project->id}}"></i>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             @endforeach
                         </div>
                     </div>
-                    <div class="other-allowance">
+                    {{-- <div class="other-allowance">
                         <p class="input-head">その他手当</p>
                         <div class="other-allowance__input-area" id="otherAllowanceContainer">
                             @foreach ($allowanceOthers as $allowanceOther)
@@ -354,7 +354,7 @@
                             @endforeach
                             <i class="fa-solid fa-circle-plus plus-circle" id="otherAllowanceAdd"></i>
                         </div>
-                    </div>
+                    </div> --}}
                 @endcan
             </div>
         </form>

@@ -303,7 +303,7 @@
                                                 <th rowspan="2" class="project-table-date">----</th>
                                                 {{-- 従業員名ヘッド --}}
                                                 @foreach ($narrowProjects as $project)
-                                                    <th colspan="{{ count($selectedDisplayCoCheck) }}" class="co-head border-right-bold">{{$project->name}}</th>
+                                                    <th colspan="{{ count($selectedDisplayCoCheck) }}" class="co-head border-right-bold" style="@if($project->is_suspended == 1) color: red; @endif">{{$project->name}}</th>
                                                 @endforeach
                                                 {{-- 上代合計ヘッド --}}
                                                 @if (in_array('retailClm', $selectedDisplayCheck))
@@ -312,7 +312,7 @@
                                                 {{-- 案件・所属先詳細ヘッド --}}
                                                 @if (!empty($selectedDisplayCheck))
                                                     @foreach ($narrowProjects as $project)
-                                                        <th class="rightHead projectInfoHead border-right-bold" data-company-count="{{$company_count}}">{{$project->name}}</th>
+                                                        <th class="rightHead projectInfoHead border-right-bold" data-company-count="{{$company_count}}" style="@if($project->is_suspended == 1) color: red; @endif">{{$project->name}}</th>
                                                     @endforeach
                                                 @endif
                                             </tr>

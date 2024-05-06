@@ -101,7 +101,7 @@ window.addEventListener('load', () => {
         }
 
     }
-    projectByAllowance();
+    // projectByAllowance();
 
     const projectByAllowanceDelete = () => {
         let container = document.getElementById('parentProjectAllowance');
@@ -123,7 +123,7 @@ window.addEventListener('load', () => {
             })
         }
     }
-    projectByAllowanceDelete();
+    // projectByAllowanceDelete();
 
     const otherAllowanceAdd = () => {
         const addBtn = document.getElementById('otherAllowanceAdd');
@@ -149,7 +149,7 @@ window.addEventListener('load', () => {
             })
         }
     }
-    otherAllowanceAdd();
+    // otherAllowanceAdd();
 
     const otherAllowanceDelete = () => {
         const container = document.getElementById('otherAllowanceContainer');
@@ -171,7 +171,7 @@ window.addEventListener('load', () => {
             })
         }
     }
-    otherAllowanceDelete();
+    // otherAllowanceDelete();
 
     // 貸出形態変更時の貸出車両のselelctの挙動を制御
     const vehicleSelectActive = () => {

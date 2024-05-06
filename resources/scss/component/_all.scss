@@ -2,6 +2,12 @@
 @use "../foundation/mixin.scss" as *;
 @use "sass:math";
 
+label{
+    cursor: default!important;
+}
+input{
+    cursor: pointer;
+}
 .input{
     width: 100%;
     height: 35px;

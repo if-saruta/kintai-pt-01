@@ -10,6 +10,31 @@
         transform: translate(-50%,-50%);
         font-size: 1.4rem;
     }
+    .edit-shift-warning-box{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        font-size: 1.4rem;
+    }
+    .shift-empty-form{
+        width: fit-content;
+        margin: 0 auto;
+        margin-top: 3rem;
+        &__button{
+            padding: 0.5rem 1rem;
+            font-size: 1.8rem;
+            font-weight: $fw-bold;
+            color: $cGreen;
+            border: 1px solid $cGreen;
+            border-radius: 0.5rem;
+            transition: 0.3s;
+        }
+        &__button:hover{
+            color: white;
+            background-color: $cGreen;
+        }
+    }
     .--shift-link-block{
         position: relative;
         gap: math.div(100,1280) * 100vw;
@@ -245,14 +270,32 @@
         }
         &__setting{
             position: absolute;
-            top: 3.3rem;
-            right: 24rem;
             width: 4rem;
             height: 2.5rem;
             border-radius: 0.5rem;
             i{
                 font-size: 1.8rem;
             }
+        }
+        .--green{
+            border: 2px solid $cGreen;
+            color: $cGreen;
+        }
+        .--green:hover{
+            background-color: $cGreen;
+            color: white;
+        }
+        .--common-page-postion{
+            top: 2.7rem;
+            left: 29.3%;
+        }
+        .--edit-page-postion{
+            top: 3.3rem;
+            right: 24rem;
+        }
+        .--edit-employee-page-postion{
+            top: 3.3rem;
+            right: 29.5rem;
         }
         .calendar-download-btn{
             position: absolute;
@@ -519,6 +562,19 @@
                                     flex-shrink: 0;
                                     border-bottom: 1px dashed $cGray;
                                 }
+                                .allowance-flag{
+                                    position: relative;
+                                    &::after{
+                                        content: "";
+                                        position: absolute;
+                                        top: 0;
+                                        right: 0;
+                                        border-top: 15px solid $cGreen;
+                                        border-right: 15px solid $cGreen;
+                                        border-bottom: 15px solid transparent;
+                                        border-left: 15px solid transparent;
+                                    }
+                                }
                                 &__row:nth-child(2){
                                     min-height: 4.2rem;
                                 }
@@ -627,7 +683,8 @@
                             width: 15rem;
                         }
                         &__count{
-                            width: 8rem;
+                            // width: 8rem;
+                            width: 10%;
                             font-size: 2rem;
                         }
                         .--count-f-s{
@@ -871,7 +928,7 @@
         left: 50%;
         transform: translate(-50%,-50%);
         z-index: 2;
-        width: math.div(700,1280) * 100vw;
+        min-width: math.div(700,1280) * 100vw;
         // height: math.div(600,800) * 100vh;
         padding-bottom: 6rem;
         border-radius: 1.5rem;
@@ -936,10 +993,22 @@
             }
         }
         .form-block{
-            width: 44rem;
+            width: fit-content;
             margin: 0 auto;
             margin-top: 5rem;
+            .all-input-area{
+                display: flex;
+                // justify-content: space-between;
+                gap: 5rem;
+                align-items: center;
+            }
+            .active-input-area{
+                display: flex;
+                flex-direction: column;
+                gap: 3rem;
+            }
             &__input-area{
+                width: 44rem;
                 display: flex;
                 flex-direction: column;
                 gap: 2.5rem;
@@ -958,6 +1027,55 @@
             }
             .client-area{
                 display: none;
+                width: 44rem;
+                flex-direction: column;
+                gap: 1rem;
+                &__head{
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1rem;
+                    font-size: 1.6rem;
+                    font-weight: $fw-bold;
+                }
+                &__existing-input{
+
+                }
+                &__create-input{
+                    display: flex;
+                    display: none;
+                    flex-direction: column;
+                    gap: 2rem;
+                    .item-title{
+                        font-size: 1.3rem;
+                    }
+                }
+
+            }
+            .allowance-area{
+                display: none;
+                flex-direction: column;
+                gap: 1.5rem;
+                &__head{
+                    font-size: 1.6rem;
+                    font-weight: $fw-bold;
+                }
+                &__check-box-area{
+                    display: flex;
+                    gap: 2rem;
+                    flex-wrap: wrap;
+                    .check-box-item{
+                        label{
+                            display: flex;
+                            align-items: center;
+                            gap: 1rem;
+                            font-size: 1.4rem;
+                            font-weight: $fw-bold;
+                        }
+                    }
+                }
+            }
+            .add-allowance{
+                display: flex;
             }
             .check-area{
                 display: flex;
@@ -1022,10 +1140,38 @@
         }
     }
 }
+.not-vertical{
+    vertical-align: top!important;
+}
 .shift-create-modal{
     display: block;
     display: none;
 }
+.add-white-board{
+    width: math.div(1100,1280) * 100vw;
+}
+.create-add-allowance-active{
+    .shift-edit-modal__white-board{
+        width: math.div(1100,1280) * 100vw;
+        .form-block{
+            width: 85%;
+        }
+    }
+}
+.create-add-client-active{
+    .shift-edit-modal__white-board{
+        width: math.div(1100,1280) * 100vw;
+        .form-block{
+            width: 85%;
+        }
+    }
+}
+.add-client{
+    display: flex!important;
+}
+
+
+
 .shift-setting-modal{
     display: none;
     position: fixed;
@@ -1079,6 +1225,12 @@
                     gap: 1rem;
                 }
             }
+            .--common-select-check-box{
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2rem;
+                width: math.div(1000,1280) * 100vw;
+            }
             .btn-area{
                 width: fit-content;
                 margin: 0 auto;
@@ -1092,48 +1244,11 @@
             }
         }
     }
-}
-
-.create-client-active{
-    .shift-edit-modal__white-board{
-        width: math.div(1100,1280) * 100vw;
-        .form-block{
-            width: 85%;
-            .all-input-area{
-                display: flex;
-                align-items: center;
-                flex-direction: row-reverse;
-                justify-content: space-between;
-                .client-area{
-                    width: 44rem;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 1rem;
-                    &__head{
-                        display: flex;
-                        flex-direction: column;
-                        gap: 1rem;
-                        font-size: 1.6rem;
-                        font-weight: $fw-bold;
-                    }
-                    &__existing-input{
-
-                    }
-                    &__create-input{
-                        display: flex;
-                        display: none;
-                        flex-direction: column;
-                        gap: 2rem;
-                        .item-title{
-                            font-size: 1.3rem;
-                        }
-                    }
-                }
-                .form-block__input-area{
-                    width: 44rem;
-                }
-            }
-        }
+    .--common-setting-white-board{
+        width: auto;
+        padding: 3rem 5rem;
     }
 }
+
+
 

@@ -371,10 +371,16 @@
                                                                 {{-- 案件名 --}}
                                                                 <td class="w-project shiftActive editShift">
                                                                     @if ($spv->project)
+                                                                        @php
+                                                                            $suspendedValidation = '';
+                                                                            if($spv->project->is_suspended == 1){
+                                                                                $suspendedValidation = 'red';
+                                                                            }
+                                                                        @endphp
                                                                         @if ($spv->initial_project_name)
-                                                                            <p class="">{{ $spv->initial_project_name }}</p>
+                                                                            <p class="" style="color:{{ $suspendedValidation }};">{{ $spv->initial_project_name }}</p>
                                                                         @else
-                                                                            <p class="">{{ $spv->project->name }}</p>
+                                                                            <p class="" style="color:{{ $suspendedValidation }};">{{ $spv->project->name }}</p>
                                                                         @endif
                                                                     @else
                                                                         <p class="" style="color: red;">{{ $spv->unregistered_project }}</p>
@@ -393,15 +399,15 @@
                                                                 <td class="w-amount overtimeRow"><input type="text" value="{{ number_format($spv->overtime_fee) }}" name="overtime_fee[{{$spv->id}}]" class="commaInput"></td>
                                                                 {{-- 手当 --}}
                                                                 <td class="w-amount allowance-area allowanceRow">
-                                                                    <input type="text" value="{{ number_format($spv->total_allowance) }}" name="allowance[{{$spv->id}}]" class="allowance-input commaInput" readonly>
-                                                                    @if ($spv->project)
+                                                                    <input type="text" value="{{ number_format($spv->total_allowance) }}" name="allowance[{{$spv->id}}]" class="allowance-input commaInput">
+                                                                    {{-- @if ($spv->project)
                                                                         @foreach ($allowanceProject as $value)
                                                                             @if ($value->project_id == $spv->project->id)
                                                                                 <input hidden class="allowanceName" type="text" value="{{$value->allowanceName}}">
                                                                                 <input hidden class="amount" type="text" value="{{$value->amount}}">
                                                                             @endif
                                                                         @endforeach
-                                                                    @endif
+                                                                    @endif --}}
                                                                 </td>
                                                                 {{-- 高速代 --}}
                                                                 <td class="w-amount expresswayRow"><input type="text" value="{{ number_format($spv->expressway_fee) }}" name="expressway_fee[{{$spv->id}}]" class="commaInput"></td>
@@ -580,10 +586,16 @@
                                                                 {{-- 案件名 --}}
                                                                 <td class="w-project shiftActive editShift">
                                                                     @if ($spv->project)
+                                                                        @php
+                                                                            $suspendedValidation = '';
+                                                                            if($spv->project->is_suspended == 1){
+                                                                                $suspendedValidation = 'red';
+                                                                            }
+                                                                        @endphp
                                                                         @if ($spv->initial_project_name)
-                                                                            <p class="">{{ $spv->initial_project_name }}</p>
+                                                                            <p class="" style="color:{{ $suspendedValidation }};">{{ $spv->initial_project_name }}</p>
                                                                         @else
-                                                                            <p class="">{{ $spv->project->name }}</p>
+                                                                            <p class="" style="color:{{ $suspendedValidation }};">{{ $spv->project->name }}</p>
                                                                         @endif
                                                                     @else
                                                                         <p class="" style="color: red;">{{ $spv->unregistered_project }}</p>
@@ -602,8 +614,8 @@
                                                                 <td class="w-amount overtimeRow"><input type="text" value="{{ number_format($spv->overtime_fee) }}" name="overtime_fee[{{$spv->id}}]" class="commaInput"></td>
                                                                 {{-- 手当 --}}
                                                                 <td class="w-amount allowance-area allowanceRow">
-                                                                    <input type="text" value="{{ number_format($spv->total_allowance) }}" name="allowance[{{$spv->id}}]" class="allowance-input commaInput" readonly>
-                                                                    @if ($spv->project)
+                                                                    <input type="text" value="{{ number_format($spv->total_allowance) }}" name="allowance[{{$spv->id}}]" class="allowance-input commaInput">
+                                                                    {{-- @if ($spv->project)
                                                                         @foreach ($allowanceProject as $value)
                                                                             @if ($value->project_id == $spv->project->id)
                                                                             <input hidden class="allowanceName" type="text"
@@ -612,7 +624,7 @@
                                                                                 value="{{$value->amount}}">
                                                                             @endif
                                                                         @endforeach
-                                                                    @endif
+                                                                    @endif --}}
                                                                 </td>
                                                                 {{-- 高速代 --}}
                                                                 <td class="w-amount expresswayRow"><input type="text" value="{{ number_format($spv->expressway_fee) }}" name="expressway_fee[{{$spv->id}}]" class="commaInput"></td>
@@ -787,10 +799,13 @@
                                                             <th><input type="text" name="totalSalary[name]" value="合計金額"></th>
                                                             <td><input type="text" name="totalSalary[amount]" value="{{ number_format($totalSalary) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                         </tr>
+                                                        @foreach ($allowanceArray as $allowanceName => $allowanceData)
                                                         <tr class="info-table-row">
-                                                            <th><input type="text" name="allowance[name]" value="案件別手当"></th>
-                                                            <td><input type="text" name="allowance[amount]" value="{{ number_format($totalAllowance) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            <th><input type="text" name="allowanceName[]" value="{{ $allowanceName }}"></th>
+                                                            <td><input type="text" name="allowanceAmount[]" value="{{ number_format($allowanceData['amount']) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            <input hidden type="text" name="allowanceCount[]" value="{{ $allowanceData['count'] }}">
                                                         </tr>
+                                                        @endforeach
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="tax[name]" value="消費税"></th>
                                                             <td><input type="text" name="tax[amount]" value="{{ number_format(round(($totalSalary + $totalAllowance) * 0.1)) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>

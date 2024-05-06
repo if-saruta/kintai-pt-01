@@ -14,6 +14,9 @@
                     @csrf
                     <input hidden name="witch" value="page01" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                        @foreach ($narrowEmployeeId as $EmployeeId)
+                            <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                        @endforeach
                     <button class="{{ request()->routeIs('shift.', 'shift.selectWeek') ? 'active' : '' }} link">
                         <span class="">全表示</span>
                     </button>
@@ -24,6 +27,9 @@
                     @csrf
                     <input hidden name="witch" value="page02" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                        @foreach ($narrowEmployeeId as $EmployeeId)
+                            <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                        @endforeach
                     <button class="{{ request()->routeIs('shift.employeeShowShift*') ? 'active' : '' }} link">
                         <span class="">稼働表</span>
                     </button>
@@ -33,6 +39,9 @@
                     @csrf
                     <input hidden name="witch" value="page03" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                        @foreach ($narrowEmployeeId as $EmployeeId)
+                            <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                        @endforeach
                     <button class="{{ request()->routeIs('shift.employeePriceShift*') ? 'active' : '' }} link">
                         @can('admin-higher')
                         <span class="">ドライバー価格</span>
@@ -47,6 +56,9 @@
                     @csrf
                     <input hidden name="witch" value="page04" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                        @foreach ($narrowEmployeeId as $EmployeeId)
+                            <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                        @endforeach
                     <button class="{{ request()->routeIs('shift.projectPriceShift*') ? 'active' : '' }} link">
                         <span class="">上代閲覧用</span>
                     </button>
@@ -57,6 +69,9 @@
                     @csrf
                     <input hidden name="witch" value="page05" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                        @foreach ($narrowEmployeeId as $EmployeeId)
+                            <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                        @endforeach
                     <button class="{{ request()->routeIs('shift.projectCount') ? 'active' : '' }} link">
                         <span class="">案件数用</span>
                     </button>
@@ -69,6 +84,9 @@
                     @csrf
                     <input hidden name="witch" value="page06" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                        @foreach ($narrowEmployeeId as $EmployeeId)
+                            <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                        @endforeach
                     <button class="{{ request()->routeIs('shift.edit*') ? 'active' : '' }} icon-block__button">
                         <i class="fa-solid fa-pen-to-square"></i>
                     </button>
@@ -107,6 +125,9 @@
                         @csrf
                         <input type="hidden" name="date" value="{{$startOfWeek}}">
                         <input type="hidden" name="action" value="previous">
+                        @foreach ($narrowEmployeeId as $EmployeeId)
+                            <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                        @endforeach
                         <input hidden name="witch" value="page06" type="text">
                         <button type="submit" class="">
                             <i class="fa-solid fa-angle-left date-angle"></i>
@@ -136,13 +157,19 @@
                         @csrf
                         <input type="hidden" name="date" value="{{$endOfWeek}}">
                         <input type="hidden" name="action" value="next">
+                        @foreach ($narrowEmployeeId as $EmployeeId)
+                            <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                        @endforeach
                         <input hidden name="witch" value="page06" type="text">
                         <button type="submit" class="">
                             <i class="fa-solid fa-angle-right date-angle"></i>
                         </button>
                     </form>
                 </div>
-                <div class="shift-calendar__setting c-back-btn settingModalOpen">
+                <div class="shift-calendar__setting --edit-employee-page-postion c-back-btn --green employeeModalOpen">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="shift-calendar__setting --edit-page-postion c-back-btn settingModalOpen">
                     <i class="fa-solid fa-gear"></i>
                 </div>
                 {{-- カレンダー検索 --}}
@@ -172,11 +199,11 @@
                                 @foreach ( $convertedDates as $date )
                                 <th colspan="2" class="txt">
                                     @if ($holidays->isHoliday($date))
-                                        <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd')}})</p>
+                                        <p class="" style="color: black;">{{$date->format('j')}}日({{ $date->isoFormat('ddd')}})</p>
                                     @elseif ($date->isSaturday())
                                         <p class="" style="color: skyblue;">{{$date->format('j')}}日({{$date->isoFormat('ddd') }})</p>
                                     @elseif($date->isSunday())
-                                        <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd')}})</p>
+                                        <p class="" style="color: black;">{{$date->format('j')}}日({{ $date->isoFormat('ddd')}})</p>
                                     @else
                                         <p class="">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                     @endif
@@ -195,12 +222,12 @@
                             </tr>
                         </thead>
                         <tbody class="shift-calendar-table__body">
-                            @foreach ( $sortedShiftDataByEmployee as $employeeId => $shiftData )
+                            @foreach ( $shiftDataByEmployee as $employeeId => $shiftData )
                             @php
                                 // 一周目だけ従業員表示
                                 $is_employee_open = true;
                                 // 1日ごとの最大案件数
-                                $max_count = 1;
+                                $max_count = 0;
                             @endphp
                             {{-- 最大案件数の計算 --}}
                             @php
@@ -237,7 +264,7 @@
                                                 @if ($shift->employee)
                                                     <p class="">{{$shift->employee->name}}</p>
                                                 @else
-                                                    <p class="" style="color: red;">{{$shift->unregistered_employee}}</p>
+                                                    <p class="" style="color: black;">{{$shift->unregistered_employee}}</p>
                                                 @endif
                                             </div>
                                         </td>
@@ -270,6 +297,7 @@
                                         <input hidden type="text" value="0" class="timeOfPart">
                                         @if ($spv->project)
                                             <input hidden type="text" value="{{$spv->project->name}}" name="" class="projectName">
+                                            <input hidden type="text" value="{{ $spv->project->id }}" class="editProjectId">
                                         @else
                                             <input hidden type="text" value="{{$spv->unregistered_project}}" name="" class="projectName">
                                         @endif
@@ -282,18 +310,41 @@
                                             <input hidden type="text" value="{{$spv->driver_price}}" name="" class="salaryPrice">
                                         @if ($shift->employee)
                                             <input hidden type="text" value="{{$shift->employee->name}}" class="employeeName">
+                                            <input hidden type="text" value="{{ $shift->employee->id }}" class="employeeId">
                                         @endif
                                         <input hidden type="text" value="" name="">
 
                                         {{-- データ表示 --}}
                                         @if ($spv->project)
+                                            @php
+                                                $red = '';
+                                                $check = '';
+                                                foreach ($spv->project->allowances as $allowance) {
+                                                    if($allowance->is_required == 1){
+                                                        foreach($missingRequiredAllowancesByDate as $date => $allowanceData){
+                                                            foreach($allowanceData as $name){
+                                                                if($shift->date == $date && $allowance->name == $name){
+                                                                    $red = 'red';
+                                                                    $check = '';
+                                                                }
+                                                            }
+                                                        }
+                                                        if($spv->shiftAllowance){
+                                                            $check = 'allowance-flag';
+                                                        }
+                                                    }
+                                                }
+                                                if($spv->project->is_suspended == 1){
+                                                    $red = 'red';
+                                                }
+                                            @endphp
                                             @if ($spv->initial_project_name)
-                                                <p class="table-cell__item__row setHightElem">{{$spv->initial_project_name}}</p>
+                                                <p class="table-cell__item__row setHightElem {{ $check }}">{{$spv->initial_project_name}}</p>
                                             @else
-                                                <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                                                <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{{$spv->project->name}}</p>
                                             @endif
                                         @elseif($spv->unregistered_project)
-                                            <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
+                                            <p class="table-cell__item__row setHightElem" style="color: black;">{{$spv->unregistered_project}}</p>
                                         @else
                                             <p class="table-cell__item__row setHightElem"></p>
                                         @endif
@@ -304,7 +355,7 @@
                                             yellow;" @endif>No.{{$spv->vehicle->number}}</p>
                                         @elseif($spv->unregistered_vehicle)
                                         @if ($spv->unregistered_vehicle != '自車')
-                                        <p class="table-cell__item__row vehicle-row" style="color: red;">
+                                        <p class="table-cell__item__row vehicle-row" style="color: black;">
                                             No.{{$spv->unregistered_vehicle}}</p>
                                         @else
                                         <p class="table-cell__item__row vehicle-row">
@@ -332,8 +383,8 @@
                                     @php
                                     $is_check = true;
                                     @endphp
-                                    @for ($i = $am_check_count; $i <= $max_count; $i++) <div
-                                        class="table-cell__item --empty-item">
+                                    @for ($i = $am_check_count; $i <= $max_count; $i++)
+                                    <div class="table-cell__item --empty-item">
                                         @if ($is_check)
                                         <div class="create-project createBtn">
                                             <button class="create-project__button">
@@ -376,31 +427,55 @@
                         <input hidden type="text" value="{{$findDate}}" class="findDate">
                         <input hidden type="text" value="1" class="timeOfPart">
                         @if ($spv->project)
-                        <input hidden type="text" value="{{$spv->project->name}}" name="" class="projectName">
+                            <input hidden type="text" value="{{$spv->project->name}}" name="" class="projectName">
+                            <input hidden type="text" value="{{ $spv->project->id }}" class="editProjectId">
                         @else
-                        <input hidden type="text" value="{{$spv->unregistered_project}}" name="" class="projectName">
+                            <input hidden type="text" value="{{$spv->unregistered_project}}" name="" class="projectName">
                         @endif
                         @if ($spv->vehicle)
-                        <input hidden type="text" value="{{$spv->vehicle->number}}" name="" class="vehicleNumber">
+                            <input hidden type="text" value="{{$spv->vehicle->number}}" name="" class="vehicleNumber">
                         @else
-                        <input hidden type="text" value="{{$spv->unregistered_vehicle}}" name="" class="vehicleNumber">
+                            <input hidden type="text" value="{{$spv->unregistered_vehicle}}" name="" class="vehicleNumber">
                         @endif
-                        <input hidden type="text" value="{{$spv->retail_price}}" name="" class="retailPrice">
-                        <input hidden type="text" value="{{$spv->driver_price}}" name="" class="salaryPrice">
+                            <input hidden type="text" value="{{$spv->retail_price}}" name="" class="retailPrice">
+                            <input hidden type="text" value="{{$spv->driver_price}}" name="" class="salaryPrice">
                         @if ($shift->employee)
-                        <input hidden type="text" value="{{$shift->employee->name}}" class="employeeName">
+                            <input hidden type="text" value="{{$shift->employee->name}}" class="employeeName">
+                            <input hidden type="text" value="{{ $shift->employee->id }}" class="employeeId">
                         @endif
                         <input hidden type="text" value="" name="">
 
                         {{-- データ表示 --}}
                         @if ($spv->project)
+                            @php
+                                $red = '';
+                                $check = '';
+                                foreach ($spv->project->allowances as $allowance) {
+                                    if($allowance->is_required == 1){
+                                        foreach($missingRequiredAllowancesByDate as $date => $allowanceData){
+                                            foreach($allowanceData as $name){
+                                                if($shift->date == $date && $allowance->name == $name){
+                                                    $red = 'red';
+                                                    $check = '';
+                                                }
+                                            }
+                                        }
+                                        if($spv->shiftAllowance){
+                                            $check = 'allowance-flag';
+                                        }
+                                    }
+                                }
+                                if($spv->project->is_suspended == 1){
+                                    $red = 'red';
+                                }
+                            @endphp
                         @if ($spv->initial_project_name)
-                        <p class="table-cell__item__row setHightElem">{{$spv->initial_project_name}}</p>
+                            <p class="table-cell__item__row setHightElem {{ $check }}">{{$spv->initial_project_name}}</p>
                         @else
-                        <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                            <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{{$spv->project->name}}</p>
                         @endif
                         @elseif($spv->unregistered_project)
-                        <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}
+                        <p class="table-cell__item__row setHightElem" style="color: black;">{{$spv->unregistered_project}}
                         </p>
                         @else
                         <p class="table-cell__item__row setHightElem"></p>
@@ -412,7 +487,7 @@
                             @endif>No.{{$spv->vehicle->number}}</p>
                         @elseif($spv->unregistered_vehicle)
                         @if ($spv->unregistered_vehicle != '自車')
-                        <p class="table-cell__item__row vehicle-row" style="color: red;">
+                        <p class="table-cell__item__row vehicle-row" style="color: black;">
                             No.{{$spv->unregistered_vehicle}}</p>
                         @else
                         <p class="table-cell__item__row vehicle-row">
@@ -540,48 +615,70 @@
                         <input hidden type="text" value="{{$findDate}}" class="findDate">
                         <input hidden type="text" value="0" class="timeOfPart">
                         @if ($spv->project)
-                        <input hidden type="text" value="{{$spv->project->name}}" name="" class="projectName">
+                            <input hidden type="text" value="{{$spv->project->name}}" name="" class="projectName">
+                            <input hidden type="text" value="{{ $spv->project->id }}" class="editProjectId">
                         @else
-                        <input hidden type="text" value="{{$spv->unregistered_project}}" name="" class="projectName">
+                            <input hidden type="text" value="{{$spv->unregistered_project}}" name="" class="projectName">
                         @endif
                         @if ($spv->vehicle)
-                        <input hidden type="text" value="{{$spv->vehicle->number}}" name="" class="vehicleNumber">
+                            <input hidden type="text" value="{{$spv->vehicle->number}}" name="" class="vehicleNumber">
                         @else
-                        <input hidden type="text" value="{{$spv->unregistered_vehicle}}" name="" class="vehicleNumber">
+                            <input hidden type="text" value="{{$spv->unregistered_vehicle}}" name="" class="vehicleNumber">
                         @endif
-                        <input hidden type="text" value="{{$spv->retail_price}}" name="" class="retailPrice">
-                        <input hidden type="text" value="{{$spv->driver_price}}" name="" class="salaryPrice">
+                            <input hidden type="text" value="{{$spv->retail_price}}" name="" class="retailPrice">
+                            <input hidden type="text" value="{{$spv->driver_price}}" name="" class="salaryPrice">
                         @if ($shift->employee)
-                        <input hidden type="text" value="{{$shift->employee->name}}" class="employeeName">
+                            <input hidden type="text" value="{{$shift->employee->name}}" class="employeeName">
                         @else
-                        <input hidden type="text" value="{{$shift->unregistered_employee}}" class="employeeName">
+                            <input hidden type="text" value="{{$shift->unregistered_employee}}" class="employeeName">
                         @endif
                         <input hidden type="text" value="" name="">
 
                         {{-- データ表示 --}}
                         @if ($spv->project)
-                        <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                            @php
+                                $red = '';
+                                $check = '';
+                                foreach ($spv->project->allowances as $allowance) {
+                                    if($allowance->is_required == 1){
+                                        foreach($missingRequiredAllowancesByDate as $date => $allowanceData){
+                                            foreach($allowanceData as $name){
+                                                if($shift->date == $date && $allowance->name == $name){
+                                                    $red = 'red';
+                                                    $check = '';
+                                                }
+                                            }
+                                        }
+                                        if($spv->shiftAllowance){
+                                            $check = 'allowance-flag';
+                                        }
+                                    }
+                                }
+                                if($spv->project->is_suspended == 1){
+                                    $red = 'red';
+                                }
+                            @endphp
+                            @if ($spv->initial_project_name)
+                                <p class="table-cell__item__row setHightElem {{ $check }}">{{$spv->initial_project_name}}</p>
+                            @else
+                                <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{{$spv->project->name}}</p>
+                            @endif
                         @elseif($spv->unregistered_project)
-                        <p class="table-cell__item__row setHightElem" style="color: red;">
-                            {{$spv->unregistered_project}}</p>
+                            <p class="table-cell__item__row setHightElem" style="color: black;">{{$spv->unregistered_project}}</p>
                         @else
-                        <p class="table-cell__item__row setHightElem"></p>
+                            <p class="table-cell__item__row setHightElem"></p>
                         @endif
                         {{-- 車両 --}}
                         @if ($spv->vehicle)
-                        <p class="table-cell__item__row vehicle-row" @if(in_array($spv->vehicle->id,
-                            $MultipleDailyUsesVehiclesArray[$shift->date])) style="background-color: yellow;"
-                            @endif>No.{{$spv->vehicle->number}}</p>
+                            <p class="table-cell__item__row vehicle-row" @if(in_array($spv->vehicle->id, $MultipleDailyUsesVehiclesArray[$shift->date])) style="background-color: yellow;" @endif>No.{{$spv->vehicle->number}}</p>
                         @elseif($spv->unregistered_vehicle)
                         @if ($spv->unregistered_vehicle != '自車')
-                        <p class="table-cell__item__row vehicle-row" style="color: red;">
-                            No.{{$spv->unregistered_vehicle}}</p>
+                            <p class="table-cell__item__row vehicle-row" style="color: black;">No.{{$spv->unregistered_vehicle}}</p>
                         @else
-                        <p class="table-cell__item__row vehicle-row">
-                            No.{{$spv->unregistered_vehicle}}</p>
+                            <p class="table-cell__item__row vehicle-row">No.{{$spv->unregistered_vehicle}}</p>
                         @endif
                         @else
-                        <p class="table-cell__item__row vehicle-row"></p>
+                            <p class="table-cell__item__row vehicle-row"></p>
                         @endif
                         <p class="table-cell__item__row --retail-back-ground-color">
                             @if ($spv->retail_price)
@@ -642,47 +739,71 @@
                 <input hidden type="text" value="{{$findDate}}" class="findDate">
                 <input hidden type="text" value="1" class="timeOfPart">
                 @if ($spv->project)
-                <input hidden type="text" value="{{$spv->project->name}}" name="" class="projectName">
+                    <input hidden type="text" value="{{$spv->project->name}}" name="" class="projectName">
+                    <input hidden type="text" value="{{ $spv->project->id }}" class="editProjectId">
                 @else
-                <input hidden type="text" value="{{$spv->unregistered_project}}" name="" class="projectName">
+                    <input hidden type="text" value="{{$spv->unregistered_project}}" name="" class="projectName">
                 @endif
                 @if ($spv->vehicle)
-                <input hidden type="text" value="{{$spv->vehicle->number}}" name="" class="vehicleNumber">
+                    <input hidden type="text" value="{{$spv->vehicle->number}}" name="" class="vehicleNumber">
                 @else
-                <input hidden type="text" value="{{$spv->unregistered_vehicle}}" name="" class="vehicleNumber">
+                    <input hidden type="text" value="{{$spv->unregistered_vehicle}}" name="" class="vehicleNumber">
                 @endif
-                <input hidden type="text" value="{{$spv->retail_price}}" name="" class="retailPrice">
-                <input hidden type="text" value="{{$spv->driver_price}}" name="" class="salaryPrice">
+                    <input hidden type="text" value="{{$spv->retail_price}}" name="" class="retailPrice">
+                    <input hidden type="text" value="{{$spv->driver_price}}" name="" class="salaryPrice">
                 @if ($shift->employee)
-                <input hidden type="text" value="{{$shift->employee->name}}" class="employeeName">
+                    <input hidden type="text" value="{{$shift->employee->name}}" class="employeeName">
                 @else
-                <input hidden type="text" value="{{$shift->unregistered_employee}}" class="employeeName">
+                    <input hidden type="text" value="{{$shift->unregistered_employee}}" class="employeeName">
                 @endif
-                <input hidden type="text" value="" name="">
+                    <input hidden type="text" value="" name="">
 
                 {{-- データ表示 --}}
                 @if ($spv->project)
-                <p class="table-cell__item__row setHightElem">{{$spv->project->name}}</p>
+                    @php
+                        $red = '';
+                        $check = '';
+                        foreach ($spv->project->allowances as $allowance) {
+                            if($allowance->is_required == 1){
+                                foreach($missingRequiredAllowancesByDate as $date => $allowanceData){
+                                    foreach($allowanceData as $name){
+                                        if($shift->date == $date && $allowance->name == $name){
+                                            $red = 'red';
+                                            $check = '';
+                                        }
+                                    }
+                                }
+                                if($spv->shiftAllowance){
+                                    $check = 'allowance-flag';
+                                }
+                            }
+                        }
+                        if($spv->project->is_suspended == 1){
+                            $red = 'red';
+                        }
+                    @endphp
+                    @if ($spv->initial_project_name)
+                        <p class="table-cell__item__row setHightElem {{ $check }}">{{$spv->initial_project_name}}</p>
+                    @else
+                        <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{{$spv->project->name}}</p>
+                    @endif
                 @elseif($spv->unregistered_project)
-                <p class="table-cell__item__row setHightElem" style="color: red;">{{$spv->unregistered_project}}</p>
+                    <p class="table-cell__item__row setHightElem" style="color: black;">{{$spv->unregistered_project}}</p>
                 @else
-                <p class="table-cell__item__row setHightElem"></p>
+                    <p class="table-cell__item__row setHightElem"></p>
                 @endif
                 {{-- 車両 --}}
                 @if ($spv->vehicle)
-                <p class="table-cell__item__row vehicle-row" @if(in_array($spv->vehicle->id,
-                    $MultipleDailyUsesVehiclesArray[$shift->date])) style="background-color: yellow;"
-                    @endif>No.{{$spv->vehicle->number}}</p>
+                    <p class="table-cell__item__row vehicle-row" @if(in_array($spv->vehicle->id, $MultipleDailyUsesVehiclesArray[$shift->date])) style="background-color: yellow;" @endif>No.{{$spv->vehicle->number}}</p>
                 @elseif($spv->unregistered_vehicle)
                 @if ($spv->unregistered_vehicle != '自車')
-                <p class="table-cell__item__row vehicle-row" style="color: red;">
-                    No.{{$spv->unregistered_vehicle}}</p>
+                    <p class="table-cell__item__row vehicle-row" style="color: black;">No.{{$spv->unregistered_vehicle}}</p>
                 @else
                 <p class="table-cell__item__row vehicle-row">
                     No.{{$spv->unregistered_vehicle}}</p>
                 @endif
                 @else
-                <p class="table-cell__item__row vehicle-row"></p>
+                    <p class="table-cell__item__row vehicle-row"></p>
                 @endif
                 <p class="table-cell__item__row --retail-back-ground-color">
                     @if ($spv->retail_price)
@@ -736,7 +857,15 @@
         </tbody>
         </table>
         @else
-        <p class="shift-warning-txt">{{$startOfWeek}}〜{{$endOfWeek}}のシフトはありません</p>
+        <div class="edit-shift-warning-box">
+            <p class="edit-shift-warning-box__warning-txt">{{$startOfWeek}}〜{{$endOfWeek}}のシフトはありません</p>
+            <form action="{{ route('shift.weekStore') }}" method="POST" class="shift-empty-form">
+                @csrf
+                <input type="text" hidden name="startOfWeek" value="{{ $startOfWeek }}">
+                <input type="text" hidden name="endOfWeek" value="{{ $endOfWeek }}">
+                <button class="shift-empty-form__button">シフトを作成</button>
+            </form>
+        </div>
         @endif
         </div>
         </div>
@@ -768,60 +897,106 @@
                 @csrf
                 <input hidden value="{{$startOfWeek}}" name="startOfWeek" type="text">
                 <input hidden type="text" id="setShiftId" name="setId">
-                <div class="form-block__input-area">
-                    {{-- プロジェクト --}}
-                    <div class="form-block__item">
-                        <p class="item-title">案件</p>
-                        <div class="check-area">
-                            <div class="check-area__item">
-                                <input checked type="radio" value="0" class="projectRadio" id="02" name="projectRadio">
-                                <label for="02">既存案件</label>
+                <div class="all-input-area">
+                    <div class="form-block__input-area">
+                        {{-- プロジェクト --}}
+                        <div class="form-block__item">
+                            <p class="item-title">案件</p>
+                            <div class="check-area">
+                                <div class="check-area__item">
+                                    <input checked type="radio" value="0" class="projectRadio" id="02" name="projectRadio">
+                                    <label for="02">既存案件</label>
+                                </div>
+                                <div class="check-area__item">
+                                    <input type="radio" value="1" class="projectRadio" id="01" name="projectRadio">
+                                    <label for="01">新規案件</label>
+                                </div>
                             </div>
-                            <div class="check-area__item">
-                                <input type="radio" value="1" class="projectRadio" id="01" name="projectRadio">
-                                <label for="01">新規案件</label>
+                            <input name="projectInput" type="text" class="c-input modal-input" id="projectInput">
+                            <select name="projectSelect" id="projectSelect" class="c-select modal-select">
+                                <option value="">選択してください</option>
+                                @foreach ($projects as $project)
+                                <option value="{{$project->id}}">{{$project->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        {{-- 車両 --}}
+                        <div class="form-block__item">
+                            <p class="item-title">ナンバー</p>
+                            <div class="check-area">
+                                <div class="check-area__item">
+                                    <input checked type="radio" value="0" class="vehicleRadio" id="03" name="vehicleRadio">
+                                    <label for="03">既存車両</label>
+                                </div>
+                                <div class="check-area__item">
+                                    <input type="radio" value="1" class="vehicleRadio" id="04" name="vehicleRadio">
+                                    <label for="04">新規車両</label>
+                                </div>
+                            </div>
+                            <input type="text" class="c-input modal-input" id="vehicleInput" name="vehicleInput">
+                            <select name="vehicleSelect" id="vehicleSelect" class="c-select modal-select">
+                                <option value="">選択してください</option>
+                                @foreach ($vehicles as $vehicle)
+                                <option value="{{$vehicle->id}}">{{$vehicle->number}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        {{-- 上代 --}}
+                        <div class="form-block__item">
+                            <p class="item-title">上代</p>
+                            <input type="text" class="c-input commaInput" id="retailInput" name="retailInput" placeholder="1,000">
+                        </div>
+                        {{-- 給与 --}}
+                        <div class="form-block__item">
+                            <p class="item-title">給与</p>
+                            <input type="text" class="c-input commaInput" id="salaryInput" name="salaryInput"
+                                placeholder="1,000">
+                        </div>
+                    </div>
+                    <div class="active-input-area">
+                        {{-- クライアント --}}
+                        <div class="client-area" id="editClientWrap">
+                            <div class="client-area__head add-client__head">
+                                <p class="">クライアント</p>
+                                <div class="check-area">
+                                    <div class="check-area__item">
+                                        <input checked type="radio" name="clientSwitch" id="editclientSwitch01" value="0" class="clientSwitchRadio">
+                                        <label for="editclientSwitch01">既存クライアント</label>
+                                    </div>
+                                    <div class="check-area__item">
+                                        <input type="radio"  name="clientSwitch" id="editclientSwitch02" value="1" class="clientSwitchRadio">
+                                        <label for="editclientSwitch02">新規クライアント</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="client-area-input-area">
+                                <div class="client-area__existing-input" id="editclientExistingArea">
+                                    <select name="clientExistingId" id="" class="c-select clientSelect">
+                                        <option value="">選択してください</option>
+                                        @foreach ($clients as $client)
+                                            <option value="{{ $client->id }}">{{ $client->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="client-area__create-input" id="editclientCreateArea">
+                                    <div class="form-block__item">
+                                        <p class="item-title">クライアント名</p>
+                                        <input type="text" name="clientName" class="c-input clientInput" placeholder="株式会社⚪︎⚪︎">
+                                    </div>
+                                    <div class="form-block__item">
+                                        <p class="item-title">クライアント名(PDF使用時)</p>
+                                        <input type="text" name="clientPdfName" class="c-input clientInput" placeholder="株式会社⚪︎⚪︎">
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <input name="projectInput" type="text" class="c-input modal-input" id="projectInput">
-                        <select name="projectSelect" id="projectSelect" class="c-select modal-select">
-                            <option value="">選択してください</option>
-                            @foreach ($projects as $project)
-                            <option value="{{$project->id}}">{{$project->name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    {{-- 車両 --}}
-                    <div class="form-block__item">
-                        <p class="item-title">ナンバー</p>
-                        <div class="check-area">
-                            <div class="check-area__item">
-                                <input checked type="radio" value="0" class="vehicleRadio" id="03" name="vehicleRadio">
-                                <label for="03">既存車両</label>
-                            </div>
-                            <div class="check-area__item">
-                                <input type="radio" value="1" class="vehicleRadio" id="04" name="vehicleRadio">
-                                <label for="04">新規車両</label>
+                        {{-- 手当 --}}
+                        <div class="allowance-area" id="editAllowanceWrap">
+                            <p class="allowance-area__head">手当</p>
+                            <div class="allowance-area__check-box-area" id="allowanceCt">
+
                             </div>
                         </div>
-                        <input type="text" class="c-input modal-input" id="vehicleInput" name="vehicleInput">
-                        <select name="vehicleSelect" id="vehicleSelect" class="c-select modal-select">
-                            <option value="">選択してください</option>
-                            @foreach ($vehicles as $vehicle)
-                            <option value="{{$vehicle->id}}">{{$vehicle->number}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    {{-- 上代 --}}
-                    <div class="form-block__item">
-                        <p class="item-title">上代</p>
-                        <input type="text" class="c-input commaInput" id="retailInput" name="retailInput"
-                            placeholder="1,000">
-                    </div>
-                    {{-- 給与 --}}
-                    <div class="form-block__item">
-                        <p class="item-title">給与</p>
-                        <input type="text" class="c-input commaInput" id="salaryInput" name="salaryInput"
-                            placeholder="1,000">
                     </div>
                 </div>
                 {{-- ボタン --}}
@@ -871,42 +1046,6 @@
                 <input hidden type="text" id="createSetId" name="setId">
                 <input hidden type="text" id="createSetPart" name="part">
                 <div class="all-input-area">
-                    {{-- クライアント --}}
-                    <div class="client-area">
-                        <div class="client-area__head">
-                            <p class="">クライアント</p>
-                            <div class="check-area">
-                                <div class="check-area__item">
-                                    <input checked type="radio" name="clientSwitch" id="clientSwitch01" value="0" class="clientSwitchRadio">
-                                    <label for="clientSwitch01">既存クライアント</label>
-                                </div>
-                                <div class="check-area__item">
-                                    <input type="radio"  name="clientSwitch" id="clientSwitch02" value="1" class="clientSwitchRadio">
-                                    <label for="clientSwitch02">新規クライアント</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="client-area-input-area">
-                            <div class="client-area__existing-input" id="clientExistingArea">
-                                <select name="clientExistingId" id="" class="c-select clientSelect">
-                                    <option value="">選択してください</option>
-                                    @foreach ($clients as $client)
-                                        <option value="{{ $client->id }}">{{ $client->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="client-area__create-input" id="clientCreateArea">
-                                <div class="form-block__item">
-                                    <p class="item-title">クライアント名</p>
-                                    <input type="text" name="clientName" class="c-input clientInput" placeholder="株式会社⚪︎⚪︎">
-                                </div>
-                                <div class="form-block__item">
-                                    <p class="item-title">クライアント名(PDF使用時)</p>
-                                    <input type="text" name="clientPdfName" class="c-input clientInput" placeholder="株式会社⚪︎⚪︎">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="form-block__input-area">
                         {{-- プロジェクト --}}
                         <div class="form-block__item">
@@ -928,8 +1067,10 @@
                             <select name="projectSelect" id="createProjectSelect" class="c-select modal-select">
                                 <option value="">選択してください</option>
                                 @foreach ($projects as $project)
-                                <option value="{{$project->id}}" data-retail-amount="{{ $project->retail_price }}"
-                                    data-driver-amount="{{ $project->driver_price }}">{{$project->name}}</option>
+                                <option value="{{$project->id}}"
+                                    data-retail-amount="{{ $project->retail_price }}"
+                                    data-driver-amount="{{ $project->driver_price }}"
+                                    >{{$project->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -968,6 +1109,51 @@
                             <p class="item-title">給与</p>
                             <input type="text" class="c-input commaInput" id="createSalaryInput" name="salaryInput"
                                 placeholder="1,000">
+                        </div>
+                    </div>
+                    <div class="active-input-area">
+                        {{-- クライアント --}}
+                        <div class="client-area" id="createClientWrap">
+                            <div class="client-area__head add-client__head">
+                                <p class="">クライアント</p>
+                                <div class="check-area">
+                                    <div class="check-area__item">
+                                        <input checked type="radio" name="clientSwitch" id="clientSwitch01" value="0" class="clientSwitchRadio">
+                                        <label for="clientSwitch01">既存クライアント</label>
+                                    </div>
+                                    <div class="check-area__item">
+                                        <input type="radio"  name="clientSwitch" id="clientSwitch02" value="1" class="clientSwitchRadio">
+                                        <label for="clientSwitch02">新規クライアント</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="client-area-input-area">
+                                <div class="client-area__existing-input" id="clientExistingArea">
+                                    <select name="clientExistingId" id="" class="c-select clientSelect">
+                                        <option value="">選択してください</option>
+                                        @foreach ($clients as $client)
+                                            <option value="{{ $client->id }}">{{ $client->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="client-area__create-input" id="clientCreateArea">
+                                    <div class="form-block__item">
+                                        <p class="item-title">クライアント名</p>
+                                        <input type="text" name="clientName" class="c-input clientInput" placeholder="株式会社⚪︎⚪︎">
+                                    </div>
+                                    <div class="form-block__item">
+                                        <p class="item-title">クライアント名(PDF使用時)</p>
+                                        <input type="text" name="clientPdfName" class="c-input clientInput" placeholder="株式会社⚪︎⚪︎">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{-- 手当 --}}
+                        <div class="allowance-area" id="createAllowanceWrap">
+                            <p class="allowance-area__head">手当</p>
+                            <div class="allowance-area__check-box-area" id="allowanceCt">
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1016,7 +1202,35 @@
             </form>
         </div>
     </div>
-
+    {{-- 従業員モーダル --}}
+    <div class="shift-setting-modal" id="employeeModal">
+        <div class="shift-setting-modal__bg employeeModalClose"></div>
+        <div class="shift-setting-modal__white-board --common-setting-white-board">
+            <form action="{{ route('shift.editSelectWeek') }}" method="POST">
+                @csrf
+                <input type="hidden" name="date" value="{{$startOfWeek}}">
+                <input hidden name="witch" value="page06" type="text">
+                <div class="shift-setting-modal__white-board__inner">
+                    <p class="title">絞り込み</p>
+                    <div class="select-radio --common-select-check-box">
+                        @foreach ($employeeList as $employeeData)
+                            <label for="">
+                                <input type="checkbox" value="{{ $employeeData->id }}" @if(in_array($employeeData->id, $narrowEmployeeId)) checked @endif name="narrowEmployeeId[]">
+                                {{ $employeeData->name }}
+                            </label>
+                        @endforeach
+                    </div>
+                    <div class="btn-area">
+                        <button class="c-save-btn btn">絞り込む</button>
+                        <div class="c-back-btn employeeModalClose">戻る</div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+<script>
+var missingRequiredAllowancesByDate = @json($missingRequiredAllowancesByDate);
+</script>
 
 </x-app-layout>
 

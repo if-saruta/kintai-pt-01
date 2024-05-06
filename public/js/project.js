@@ -66,29 +66,36 @@ window.addEventListener('DOMContentLoaded', () => {
         const toggle = e.target;
         if(toggle.classList.contains('toggle')){
             toggle.classList.toggle('checked');
-            // 親要素を取得
-            const listItem = toggle.closest('.list-item');
-            // 取得した親要素の上代・ドライバー価格のinputを取得
-            const retailInput = listItem.querySelector('.retailInput');
-            const salaryInput = listItem.querySelector('.salaryInput');
 
             if(toggle.classList.contains('checked')){
                 toggle.querySelector('.toggle-input').checked = true;
-                // 歩合日給と被らないように
-                retailInput.classList.add('charterActive');
             }else{
                 toggle.querySelector('.toggle-input').checked = false;
-                // 歩合日給と被らないように
-                retailInput.classList.remove('charterActive');
             }
 
-            if(!retailInput.classList.contains('not-input')){
+            if(toggle.classList.contains('isCharter')){
+                // 親要素を取得
+                const listItem = toggle.closest('.list-item');
+                // 取得した親要素の上代・ドライバー価格のinputを取得
+                const retailInput = listItem.querySelector('.retailInput');
+                const salaryInput = listItem.querySelector('.salaryInput');
+
                 if(toggle.classList.contains('checked')){
-                    retailInput.querySelector('.c-input').removeAttribute('required');
-                    salaryInput.querySelector('.c-input').removeAttribute('required');
+                    // 歩合日給と被らないように
+                    retailInput.classList.add('charterActive');
                 }else{
-                    retailInput.querySelector('.c-input').setAttribute('required', '');
-                    salaryInput.querySelector('.c-input').setAttribute('required', '');
+                    // 歩合日給と被らないように
+                    retailInput.classList.remove('charterActive');
+                }
+
+                if(!retailInput.classList.contains('not-input')){
+                    if(toggle.classList.contains('checked')){
+                        retailInput.querySelector('.c-input').removeAttribute('required');
+                        salaryInput.querySelector('.c-input').removeAttribute('required');
+                    }else{
+                        retailInput.querySelector('.c-input').setAttribute('required', '');
+                        salaryInput.querySelector('.c-input').setAttribute('required', '');
+                    }
                 }
             }
         }
@@ -217,7 +224,57 @@ window.addEventListener('DOMContentLoaded', () => {
         commmaActive();
     });
 
+    const allowanceActive = () => {
+        const projectsContainer = document.getElementById('projectsContainer');
+        // const addBtn = document.getElementById('allowanceAddBtn');
+        // const allowanceCt = document.getElementById('allowanceCt');
 
+        // 新規手当追加コード
+        projectsContainer.addEventListener('click', (e) => {
+            let addBtn = e.target;
+            if(addBtn.classList.contains('allowanceAddBtn') || addBtn.classList.contains('allowanceAddIcon')){
+                let allowanceParent = addBtn.closest('.allowance');
+                let allowanceCt = allowanceParent.querySelector('.allowance__content');
+                // div要素を作成
+                let createDiv = document.createElement('div');
+                // 名前を追加
+                createDiv.className = 'allowance__content__item';
+                // 作成した要素に要素を追加
+                createDiv.innerHTML = `
+                <div class="allowance__content__item">
+                    <div class="input-wrap">
+                        <p class="">手当名</p>
+                        <input type="text" class="c-input" name="allowance_name[]" placeholder="リーダー手当">
+                    </div>
+                    <div class="input-wrap">
+                        <p class="">手当上代</p>
+                        <input type="text" class="c-input" name="allowance_retail_amount[]" placeholder="1,000">
+                    </div>
+                    <div class="input-wrap">
+                        <p class="">手当ドライバー</p>
+                        <input type="text" class="c-input" name="allowance_driver_amount[]" placeholder="1,000">
+                    </div>
+                    <div class="delete-box">
+                        <i class="fa-solid fa-minus minus-icon"></i>
+                    </div>
+                </div>
+                `;
+                // 親要素に追加
+                allowanceCt.appendChild(createDiv);
+            }
+        });
+
+        // 削除コード
+        allowanceCt.addEventListener('click', (e) => {
+            let clickElement = e.target;
+
+            if(clickElement.classList.contains('delete-box') || clickElement.classList.contains('minus-icon')){
+                let parent = clickElement.closest('.allowance__content__item');
+                parent.parentNode.remove();
+            }
+        })
+    }
+    // allowanceActive();
 
 
 })

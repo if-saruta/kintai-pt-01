@@ -244,9 +244,12 @@ class PdfputController extends Controller
                     }
                 }
             }
-            $projects = Project::all();
+            $projects = Project::where('client_id', '!=', '1')->get();
+            $projectsGroupByClient = $projects->GroupBy(function ($project) {
+                return $project->client_id;
+            });
 
-            $pdf = PDF::loadView('shift-calendar-pdf.projectCountShift', compact('shifts', 'shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projects', 'unregistered_project'))->setPaper('a4');
+            $pdf = PDF::loadView('shift-calendar-pdf.projectCountShift', compact('shifts', 'shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projects', 'projectsGroupByClient', 'unregistered_project'))->setPaper('a4');
             $fileName = "{$date->format('Y')}年_{$startOfWeekCarbon->format('n')}月{$startOfWeekCarbon->format('j')}日~{$endOfWeekCarbon->format('n')}月{$endOfWeekCarbon->format('j')}日_案件数シフト.pdf";
         }else{
             $pdf = PDF::loadView('shift-calendar-pdf.allViewShift', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projectHeight'))->setPaper('a4', 'landscape');

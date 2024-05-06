@@ -196,7 +196,9 @@ class InvoiceController extends Controller
         $employees = Employee::all();
         $findEmployee = Employee::find($employeeId);
 
-        $projects = Project::where('client_id', '!=', '1')->get();
+        $projects = Project::where('client_id', '!=', '1')
+                            ->where('is_suspended', '!=', '1')
+                            ->get();
         $allowanceProject = AllowanceByProject::where('employee_id', $findEmployee->id)->get();
 
         $vehicles = Vehicle::all();
@@ -275,7 +277,7 @@ class InvoiceController extends Controller
         // その月の案件情報
         $projectInfoArray = $this->projectInfoExtract($shiftProjectVehicles);
         // 集計表情報を取得
-        [$totalSalary, $totalAllowance, $totalParking, $totalExpressWay, $totalOverTime] = $this->totallingInfoExtract($shiftProjectVehicles);
+        [$totalSalary, $totalAllowance, $totalParking, $totalExpressWay, $totalOverTime, $allowanceArray] = $this->totallingInfoExtract($shiftProjectVehicles);
         // 情報管理を取得
         $InfoManagement = InfoManagement::first();
 
@@ -286,7 +288,7 @@ class InvoiceController extends Controller
 
         return view('invoice.driverShift',
             compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'shiftProjectVehicles', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays', 'warning', 'secondMachineArray', 'thirdMachineArray', 'secondMachineCount', 'thirdMachineCount', 'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking', 'totalExpressWay', 'totalOverTime', 'findProjects', 'findClients',
-                    'selectedNarrowCheck', 'needRowCount', 'clientsId', 'projectsId', 'employeeId', 'InfoManagement'));
+                    'selectedNarrowCheck', 'needRowCount', 'clientsId', 'projectsId', 'employeeId', 'InfoManagement', 'allowanceArray'));
     }
 
     public function driverCalendarPDF(Request $request)
@@ -308,8 +310,8 @@ class InvoiceController extends Controller
         // 合計テーブルのデータを受け取り
         $totalSalaryName = $request->input('totalSalary.name'); //給与合計
         $totalSalaryAmount = str_replace([',', '，'], '', $request->input('totalSalary.amount')); //給与合計
-        $allowanceName = $request->input('allowance.name'); //手当
-        $allowanceAmount = str_replace([',', '，'], '', $request->input('allowance.amount')); //手当
+        // $allowanceName = $request->input('allowance.name'); //手当
+        // $allowanceAmount = str_replace([',', '，'], '', $request->input('allowance.amount')); //手当
         $taxName = $request->input('tax.name'); //消費税
         $taxAmount = str_replace([',', '，'], '', $request->input('tax.amount')); //消費税
         $expressWayName = $request->input('expressWayName'); //高速代
@@ -320,6 +322,10 @@ class InvoiceController extends Controller
         $overtimeAmount = str_replace([',', '，'], '', $request->input('overtimeAmount')); //残業代
         $otherNames = $request->input('otherName', []); //追加項目名
         $otherAmounts = $request->input('otherAmount', []); //追加項目金額
+
+        $allowanceName = $request->input('allowanceName', []);
+        $allowanceAmount = $request->input('allowanceAmount', []);
+
         // 追加項目の空でない名前と金額のペアを新しい配列に追加
         $others = [];
         foreach ($otherNames as $index => $name) {
@@ -423,20 +429,20 @@ class InvoiceController extends Controller
         // 祝日を取得
         $holidays = $this->getHoliday($getYear);
         // 二代目以降の情報を取得
-        [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount] = $this->monthLeasePlan($shiftProjectVehicles, $dates);
+        // [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount] = $this->monthLeasePlan($shiftProjectVehicles, $dates);
         // 案件情報を取得
         $projectInfoArray = $this->projectInfoExtract($shiftProjectVehicles);
         // 集計表情報を取得
-        [$totalSalary, $totalAllowance, $totalParking, $totalExpressWay, $totalOverTime] = $this->totallingInfoExtract($shiftProjectVehicles);
+        [$totalSalary, $totalAllowance, $totalParking, $totalExpressWay, $totalOverTime, $allowanceArray] = $this->totallingInfoExtract($shiftProjectVehicles);
 
         $pdf =  PDF::loadView('issue-calendar-pdf.driver-calendar',
-                    compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays', 'secondMachineArray',
-                            'thirdMachineArray', 'secondMachineCount', 'thirdMachineCount', 'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking',
+                    compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays',
+                             'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking',
                             'totalExpressWay', 'totalOverTime', 'textarea', 'amountCheck', 'allowanceCheck', 'expresswayCheck', 'parkingCheck', 'vehicleCheck', 'overtimeCheck',
                             'setRowCount', 'shiftProjectVehicles',
                             // ドライバー価格
                             'totalSalaryName','totalSalaryAmount','allowanceName','allowanceAmount','taxName','taxAmount','expressWayAmount','parkingAmount','overtimeAmount','others',
-                            'parkingName', 'expressWayName', 'overtimeName',
+                            'parkingName', 'expressWayName', 'overtimeName','allowanceArray',
                             // 費用関連
                             'administrativeOutsourcingName','administrativeOutsourcingAmount','administrativeName','administrativeAmount','transferName','transferAmount','monthLeaseName',
                             'monthLeaseAmount','secondLeaseName','secondLeaseAmount','thirdLeaseName','thirdLeaseAmount','monthInsuranceName','monthInsuranceAmount','secondInsuranceName','secondInsuranceAmount','CostOthers'
@@ -464,6 +470,11 @@ class InvoiceController extends Controller
         $thirdMachineArray = [];
         $secondMachineCount = 0;
         $thirdMachineCount = 0;
+
+        // シフトがなければ処理に進む前に返す
+        if($shiftProjectVehicles->isEmpty()){
+            return [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount];
+        }
 
         $rental_type = $shiftProjectVehicles->first()->vehicle_rental_type;
 
@@ -638,6 +649,8 @@ class InvoiceController extends Controller
         $totalParking = 0;
         $totalExpressWay = 0;
         $totalOverTime = 0;
+        $allowanceArray = [];
+        $allowanceCountArray = [];
 
         foreach($shiftProjectVehicles as $spv){
             $totalSalary += $spv->driver_price;
@@ -645,9 +658,21 @@ class InvoiceController extends Controller
             $totalParking += $spv->parking_fee;
             $totalExpressWay += $spv->expressway_fee;
             $totalOverTime += $spv->overtime_fee;
+
+            if($spv->project){
+                foreach($spv->project->allowances as $allowance){
+                    if(!isset($allowanceArray[$allowance->name])){
+                        $allowanceArray[$allowance->name]['amount'] = $allowance->driver_amount;
+                        $allowanceArray[$allowance->name]['count'] = 1;
+                    }else{
+                        $allowanceArray[$allowance->name]['amount'] += $allowance->driver_amount;
+                        $allowanceArray[$allowance->name]['count']++;
+                    }
+                }
+            }
         }
 
-        return [$totalSalary, $totalAllowance, $totalParking, $totalExpressWay, $totalOverTime];
+        return [$totalSalary, $totalAllowance, $totalParking, $totalExpressWay, $totalOverTime, $allowanceArray];
     }
 
 
@@ -1232,7 +1257,9 @@ class InvoiceController extends Controller
             $warning = "選択されたシフトは登録されていません";
         }
 
-        $projectsByCharter = project::where('is_charter', 1)->get();
+        $projectsByCharter = project::where('is_charter', 1)
+                                    ->where('is_suspended', '!=', '1')
+                                    ->get();
         $employees = Employee::all();
 
         return view('invoice.charterShift', compact('ShiftProjectVehicles', 'shiftArray', 'unregisterProjectShift', 'clients', 'getYear', 'getMonth', 'warning', 'dates', 'projectsByCharter', 'employees', 'includedClients', 'narrowClientId'));

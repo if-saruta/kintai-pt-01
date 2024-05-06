@@ -44,10 +44,10 @@
             height: 30px;
         }
         .project-clm{
-            width: 300px;
+            width: 30%;
         }
         .date-clm{
-            width: 63.57px;
+            width: 10%;
             height: 20px;
         }
         .total-row td{
@@ -74,37 +74,45 @@
                     @endif
                 </th>
             @endforeach
+            <th class="date-clm">合計</th>
         </thead>
         <tbody>
-            @foreach ($projects as $project)
-                @if($project->client->id != 1)
-                    <tr>
-                        <td class="project-clm">
-                            <p class="">{{ $project->name }}</p>
-                        </td>
-                        @foreach ( $convertedDates as $date )
+            @foreach ($projectsGroupByClient as $clientId => $projects)
+                @foreach ($projects as $project)
+                    @if($project->client->id != 1)
+                        <tr>
+                            <td class="project-clm">
+                                <p class="">{{ $project->name }}</p>
+                            </td>
                             @php
-                                $project_count = 0;
-                                foreach ($shifts as $shift) {
-                                    if ($shift->date == $date->format('Y-m-d')) {
-                                        foreach ($shift->projectsVehicles as $spv) {
-                                            if($spv->project){
-                                                if($spv->project->id == $project->id){
-                                                    $project_count++;
+                                $projectTotalCount = 0;
+                            @endphp
+                            @foreach ( $convertedDates as $date )
+                                @php
+                                    $project_count = 0;
+                                    foreach ($shifts as $shift) {
+                                        if ($shift->date == $date->format('Y-m-d')) {
+                                            foreach ($shift->projectsVehicles as $spv) {
+                                                if($spv->project){
+                                                    if($spv->project->id == $project->id){
+                                                        $project_count++;
+                                                        $projectTotalCount++;
+                                                    }
                                                 }
                                             }
                                         }
                                     }
-                                }
-                            @endphp
-                            <td class="date-clm">
-                                @if ($project_count != 0)
-                                    {{$project_count}}
-                                @endif
-                            </td>
-                        @endforeach
-                    </tr>
-                @endif
+                                @endphp
+                                <td class="date-clm">
+                                    @if ($project_count != 0)
+                                        {{$project_count}}
+                                    @endif
+                                </td>
+                            @endforeach
+                            <td class="date-clm">{{ $projectTotalCount != 0 ? $projectTotalCount : '' }}</td>
+                        </tr>
+                    @endif
+                @endforeach
             @endforeach
 
             @foreach ( $unregistered_project as $unProject )
@@ -112,6 +120,9 @@
                     <td class="project-clm">
                         <p class="" style="color: red;">{{ $unProject }}</p>
                     </td>
+                    @php
+                        $unProjectTotalCount = 0;
+                    @endphp
                     @foreach ( $convertedDates as $date )
                         @php
                             $unProject_count = 0;
@@ -121,6 +132,7 @@
                                         if($spv->unregistered_project){
                                             if($spv->unregistered_project == $unProject){
                                                 $unProject_count++;
+                                                $unProjectTotalCount++;
                                             }
                                         }
                                     }
@@ -133,6 +145,7 @@
                             @endif
                         </td>
                     @endforeach
+                    <td class="date-clm">{{ $unProjectTotalCount != 0 ? $unProjectTotalCount : '' }}</td>
                 </tr>
             @endforeach
 
@@ -161,6 +174,7 @@
                         {{$day_count}}
                     </td>
                 @endforeach
+                <td class="date-clm"></td>
             </tr>
         </tbody>
     </table>

@@ -229,6 +229,11 @@
                                 align-items: center;
                                 gap: 2rem;
                             }
+                            .suspended-box{
+                                display: flex;
+                                align-items: center;
+                                gap: 2rem;
+                            }
                             .salary-type-box{
                                 display: flex;
                                 flex-direction: column;
@@ -363,6 +368,90 @@
                                                 input{
                                                     width: 12rem;
                                                 }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            .allowance{
+                                &__head{
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 1rem;
+                                    .plus-box{
+                                        position: relative;
+                                        width: 3rem;
+                                        height: 3rem;
+                                        border-radius: 50%;
+                                        border: 1px solid $cGreen;
+                                        background-color: $cGreen;
+                                        cursor: pointer;
+                                        transition: 0.3s;
+                                        i{
+                                            position: absolute;
+                                            top: 50%;
+                                            left: 50%;
+                                            transform: translate(-50%,-50%);
+                                            font-size: 1.2rem;
+                                            color: white;
+                                        }
+                                    }
+                                    .plus-box:hover{
+                                        background-color: white;
+                                        i{
+                                            color: $cGreen;
+                                        }
+                                    }
+                                }
+                                &__content{
+                                    margin-top: 1rem;
+                                    margin-left: 1.5rem;
+                                    display: flex;
+                                    flex-direction: column;
+                                    gap: 2rem;
+                                    &__item{
+                                        position: relative;
+                                        width: fit-content;
+                                        display: flex;
+                                        gap: 2rem;
+                                        .input-wrap{
+                                            display: flex;
+                                            flex-direction: column;
+                                            gap: 1rem;
+                                            p{
+                                                font-size: 1.2rem;
+                                                font-weight: $fw-bold;
+                                            }
+                                        }
+                                        .required{
+                                            input{
+                                                margin-top: 0.8rem;
+                                            }
+                                        }
+                                        .delete-box{
+                                            position: absolute;
+                                            right: -5rem;
+                                            top: 2.8rem;
+                                            width: 3rem;
+                                            height: 3rem;
+                                            border-radius: 50%;
+                                            border: 1px solid $cRed;
+                                            background-color: $cRed;
+                                            cursor: pointer;
+                                            transition: 0.3s;
+                                            i{
+                                                position: absolute;
+                                                top: 50%;
+                                                left: 50%;
+                                                transform: translate(-50%,-50%);
+                                                font-size: 1.2rem;
+                                                color: white;
+                                            }
+                                        }
+                                        .delete-box:hover{
+                                            background-color: white;
+                                            i{
+                                                color: $cRed;
                                             }
                                         }
                                     }

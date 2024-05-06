@@ -81,8 +81,14 @@
                                         {{-- チャーター --}}
                                         <div class="charter-box">
                                             <label for="charter" class="input-head">チャーター案件</label>
-                                            <div class="toggle @if($project->is_charter == 1) checked @endif">
+                                            <div class="toggle isCharter @if($project->is_charter == 1) checked @endif">
                                                 <input type="checkbox" name="editProjects[{{$project->id}}][is_charter]" @if($project->is_charter == 1) checked @endif value="1" class="toggle-input" id="charter" />
+                                            </div>
+                                        </div>
+                                        <div class="suspended-box">
+                                            <label for="charter" class="input-head">休止</label>
+                                            <div class="toggle @if($project->is_suspended == 1) checked @endif">
+                                                <input type="checkbox" name="editProjects[{{$project->id}}][is_suspended]" @if($project->is_suspended == 1) checked @endif value="1" class="toggle-input"/>
                                             </div>
                                         </div>
                                         {{-- ドライバー価格形式 --}}
@@ -170,6 +176,53 @@
                                                     <label for="" class="label-txt">残業1時間あたりの時給</label>
                                                     <input type="text" name="editProjects[{{$project->id}}][overtime_hourly_wage]" class="c-input" value="{{$project->overtime_hourly_wage}}">
                                                 </div>
+                                            </div>
+                                        </div>
+                                        {{-- 手当 --}}
+                                        <div class="allowance">
+                                            <div class="allowance__head">
+                                                <p class="input-head">手当</p>
+                                                {{-- <div class="plus-box allowanceAddBtn" id="allowanceAddBtn">
+                                                    <i class="fa-solid fa-plus allowanceAddIcon"></i>
+                                                </div> --}}
+                                            </div>
+                                            <div class="allowance__content" id="allowanceCt">
+                                                @foreach ($project->allowances as $allowance)
+                                                    <div class="allowance__content__item">
+                                                        <div class="input-wrap required">
+                                                            <p class="">必須</p>
+                                                            <input type="checkbox" name="editProjects[{{$project->id}}][allowances][{{ $allowance->id }}][is_required]" value="1" @if($allowance->is_required == 1) checked @endif>
+                                                        </div>
+                                                        <div class="input-wrap">
+                                                            <p class="">手当名</p>
+                                                            <input type="text" class="c-input" name="editProjects[{{$project->id}}][allowances][{{ $allowance->id }}][allowance_name]" value="{{ $allowance->name }}" placeholder="リーダー手当">
+                                                        </div>
+                                                        <div class="input-wrap">
+                                                            <p class="">手当上代</p>
+                                                            <input type="text" class="c-input commaInput" name="editProjects[{{$project->id}}][allowances][{{ $allowance->id }}][allowance_retail_amount]" value="{{ number_format($allowance->retail_amount) }}" placeholder="1,000">
+                                                        </div>
+                                                        <div class="input-wrap">
+                                                            <p class="">手当ドライバー</p>
+                                                            <input type="text" class="c-input commaInput" name="editProjects[{{$project->id}}][allowances][{{ $allowance->id }}][allowance_driver_amount]" value="{{ number_format($allowance->driver_amount) }}" placeholder="1,000">
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                                @if ($project->allowances->count() == 0)
+                                                    <div class="allowance__content__item">
+                                                        <div class="input-wrap">
+                                                            <p class="">手当名</p>
+                                                            <input type="text" class="c-input" name="editProjects[{{$project->id}}][allowance_name]" placeholder="リーダー手当">
+                                                        </div>
+                                                        <div class="input-wrap">
+                                                            <p class="">手当上代</p>
+                                                            <input type="text" class="c-input commaInput" name="editProjects[{{$project->id}}][allowance_retail_amount]" placeholder="1,000">
+                                                        </div>
+                                                        <div class="input-wrap">
+                                                            <p class="">手当ドライバー</p>
+                                                            <input type="text" class="c-input commaInput" name="editProjects[{{$project->id}}][allowance_driver_amount]" placeholder="1,000">
+                                                        </div>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                         {{-- 従業員別ドライバー価格 --}}
@@ -308,6 +361,13 @@
                             <input type="checkbox" name="projects[${newProjectIndex}][is_charter]" class="toggle-input" value="1" id="charter${newProjectIndex}" />
                         </div>
                     </div>
+                    {{-- 休止 --}}
+                    <div class="suspended-box">
+                        <label for="charter" class="input-head">休止</label>
+                        <div class="toggle">
+                            <input type="checkbox" name="projects[${newProjectIndex}][is_suspended]" value="1" class="toggle-input"/>
+                        </div>
+                    </div>
                     {{-- ドライバー価格形式 --}}
                     <div class="salary-type-box">
                         <div class="head input-head">
@@ -395,6 +455,37 @@
                             </div>
                         </div>
                     </div>
+                    {{-- 手当 --}}
+                        <div class="allowance">
+                            <div class="allowance__head">
+                                <p class="input-head">手当</p>
+                                {{--
+                                    <div class="plus-box allowanceAddBtn" id="allowanceAddBtn">
+                                        <i class="fa-solid fa-plus allowanceAddIcon"></i>
+                                    </div>
+                                    --}}
+                            </div>
+                            <div class="allowance__content" id="allowanceCt">
+                                <div class="allowance__content__item">
+                                    <div class="input-wrap required">
+                                        <p class="">必須</p>
+                                        <input type="checkbox" name="projects[${newProjectIndex}][is_required]" value="1">
+                                    </div>
+                                    <div class="input-wrap">
+                                        <p class="">手当名</p>
+                                        <input type="text" class="c-input" name="projects[${newProjectIndex}][allowance_name]" placeholder="リーダー手当">
+                                    </div>
+                                    <div class="input-wrap">
+                                        <p class="">手当上代</p>
+                                        <input type="text" class="c-input commaInput" name="projects[${newProjectIndex}][allowance_retail_amount]" placeholder="1,000">
+                                    </div>
+                                    <div class="input-wrap">
+                                        <p class="">手当ドライバー</p>
+                                        <input type="text" class="c-input commaInput" name="projects[${newProjectIndex}][allowance_driver_amount]" placeholder="1,000">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     {{-- 従業員別ドライバー価格 --}}
                     <div class="employee-salary">
                         <p class="input-head">従業員別ドライバー価格</p>

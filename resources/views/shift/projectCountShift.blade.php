@@ -14,6 +14,9 @@
                     @csrf
                     <input hidden name="witch" value="page01" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                    @foreach ($narrowEmployeeId as $EmployeeId)
+                        <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                    @endforeach
                     <button class="{{ request()->routeIs('shift.', 'shift.selectWeek') ? 'active' : '' }} link">
                         <span class="">全表示</span>
                     </button>
@@ -24,6 +27,9 @@
                     @csrf
                     <input hidden name="witch" value="page02" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                    @foreach ($narrowEmployeeId as $EmployeeId)
+                        <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                    @endforeach
                     <button class="{{ request()->routeIs('shift.employeeShowShift*') ? 'active' : '' }} link">
                         <span class="">稼働表</span>
                     </button>
@@ -33,6 +39,9 @@
                     @csrf
                     <input hidden name="witch" value="page03" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                    @foreach ($narrowEmployeeId as $EmployeeId)
+                        <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                    @endforeach
                     <button class="{{ request()->routeIs('shift.employeePriceShift*') ? 'active' : '' }} link">
                         @can('admin-higher')
                             <span class="">ドライバー価格</span>
@@ -47,6 +56,9 @@
                     @csrf
                     <input hidden name="witch" value="page04" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                    @foreach ($narrowEmployeeId as $EmployeeId)
+                        <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                    @endforeach
                     <button class="{{ request()->routeIs('shift.projectPriceShift*') ? 'active' : '' }} link">
                         <span class="">上代閲覧用</span>
                     </button>
@@ -57,6 +69,9 @@
                     @csrf
                     <input hidden name="witch" value="page05" type="text">
                     <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                    @foreach ($narrowEmployeeId as $EmployeeId)
+                        <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                    @endforeach
                     <button class="{{ request()->routeIs('shift.projectCount*') ? 'active' : '' }} link">
                         <span class="">案件数用</span>
                     </button>
@@ -69,6 +84,9 @@
                         @csrf
                         <input hidden name="witch" value="page06" type="text">
                         <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                        @foreach ($narrowEmployeeId as $EmployeeId)
+                            <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                        @endforeach
                         <button class="{{ request()->routeIs('shift.edit*') ? 'active' : '' }} icon-block__button">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </button>
@@ -179,40 +197,51 @@
                                         @endif
                                     </th>
                                 @endforeach
+                                <th>合計</th>
                             </tr>
                         </thead>
                         <tbody class="shift-calendar-table__body">
-                            @foreach ($projects as $project)
-                                @if($project->client->id != 1)
-                                <tr class="shift-calendar-table__body__row --count-row">
-                                    <td class="--count-row__project"><p class="">{{$project->name}}</p></td>
-                                    @foreach ( $convertedDates as $date )
+                            @foreach ($projectsGroupByClient as $clientId => $projects)
+                                @foreach ($projects as $project)
+                                    @if($project->client->id != 1)
+                                    <tr class="shift-calendar-table__body__row --count-row">
+                                        <td class="--count-row__project"><p class="">{{$project->name}}</p></td>
                                         @php
-                                            $project_count = 0;
-                                            foreach ($shifts as $shift) {
-                                                if ($shift->date == $date->format('Y-m-d')) {
-                                                    foreach ($shift->projectsVehicles as $spv) {
-                                                        if($spv->project){
-                                                            if($spv->project->id == $project->id){
-                                                                $project_count++;
+                                            $projectTotalCount = 0;
+                                        @endphp
+                                        @foreach ( $convertedDates as $date )
+                                            @php
+                                                $project_count = 0;
+                                                foreach ($shifts as $shift) {
+                                                    if ($shift->date == $date->format('Y-m-d')) {
+                                                        foreach ($shift->projectsVehicles as $spv) {
+                                                            if($spv->project){
+                                                                if($spv->project->id == $project->id){
+                                                                    $project_count++;
+                                                                    $projectTotalCount++;
+                                                                }
                                                             }
                                                         }
                                                     }
                                                 }
-                                            }
-                                        @endphp
-                                        <td class="--count-row__count">
-                                            @if ($project_count != 0)
-                                                {{$project_count}}
-                                            @endif
-                                        </td>
-                                    @endforeach
-                                </tr>
-                                @endif
+                                            @endphp
+                                            <td class="--count-row__count">
+                                                @if ($project_count != 0)
+                                                    {{$project_count}}
+                                                @endif
+                                            </td>
+                                        @endforeach
+                                        <td class="--count-row__count">{{ $projectTotalCount != 0 ? $projectTotalCount : '' }}</td>
+                                    </tr>
+                                    @endif
+                                @endforeach
                             @endforeach
                             @foreach ($unregistered_project as $unProject)
                                 <tr class="shift-calendar-table__body__row --count-row">
                                     <td class="--count-row__project" style="color: red;">{{$unProject}}</td>
+                                    @php
+                                        $unProjectTotalCount = 0;
+                                    @endphp
                                     @foreach ( $convertedDates as $date )
                                         @php
                                             $unProject_count = 0;
@@ -222,6 +251,7 @@
                                                         if($spv->unregistered_project){
                                                             if($spv->unregistered_project == $unProject){
                                                                 $unProject_count++;
+                                                                $unProjectTotalCount++;
                                                             }
                                                         }
                                                     }
@@ -234,6 +264,7 @@
                                             @endif
                                         </td>
                                     @endforeach
+                                    <td class="--count-f-s">{{ $unProjectTotalCount != 0 ? $unProjectTotalCount : '' }}</td>
                                 </tr>
                             @endforeach
                             <tr class="shift-calendar-table__body__row --count-row --total-row-count">
@@ -258,6 +289,7 @@
                                         {{$day_count}}
                                     </td>
                                 @endforeach
+                                <td></td>
                             </tr>
                         </tbody>
                     </table>
