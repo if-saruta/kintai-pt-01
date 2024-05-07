@@ -177,9 +177,18 @@
                         検索
                     </button>
                 </form>
+                {{-- シフトが一件でもあるか判定 --}}
+                @php
+                    $hasAllShift = false;
+                    foreach ($shifts as $shift) {
+                        foreach($shift->projectsVehicles as $spv){
+                            $hasAllShift = true;
+                        }
+                    }
+                @endphp
                 {{-- カレンダー表示 --}}
                 <div class="shift-calendar__main">
-                    @if(!$shifts->isEmpty())
+                    @if($hasAllShift)
                     <table class="shift-calendar-table shift-count-table">
                         <thead class="shift-calendar-table__head">
                             <tr class="shift-calendar-table__head__day">

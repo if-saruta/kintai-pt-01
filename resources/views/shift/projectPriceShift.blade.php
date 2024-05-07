@@ -186,9 +186,20 @@
                         検索
                     </button>
                 </form>
+                {{-- シフトが一件でもあるか判定 --}}
+                @php
+                    $hasAllShift = false;
+                    foreach ($shiftDataByEmployee as $employeeId => $shiftData) {
+                        foreach($shiftData as $shift){
+                            foreach($shift->projectsVehicles as $spv){
+                                $hasAllShift = true;
+                            }
+                        }
+                    }
+                @endphp
                 {{-- カレンダー表示 --}}
                 <div class="shift-calendar__main">
-                    @if(!$shiftDataByEmployee->isEmpty())
+                    @if($hasAllShift)
                     <div class="company-view" id="companyView">
 
                     </div>
@@ -600,16 +611,22 @@
             <div class="shift-setting-modal" id="employeeModal">
                 <div class="shift-setting-modal__bg employeeModalClose"></div>
                 <div class="shift-setting-modal__white-board --common-setting-white-board">
-                    <form action="{{ route('shift.projectPriceShiftSelectWeek') }}" method="POST">
+                    <form action="{{ route('shift.selectWeek') }}" method="POST">
                         @csrf
                         <input type="hidden" name="date" value="{{$startOfWeek}}">
-                        <input hidden name="witch" value="page04" type="text">
+                        <input hidden name="witch" value="page01" type="text">
                         <div class="shift-setting-modal__white-board__inner">
                             <p class="title">絞り込み</p>
+                            <div class="all-check-box">
+                                <label for="">
+                                    <input type="checkbox" checked class="bulkChangeEmployeeCheckBox">
+                                    全てをチェックにする
+                                </label>
+                            </div>
                             <div class="select-radio --common-select-check-box">
                                 @foreach ($employeeList as $employeeData)
                                     <label for="">
-                                        <input type="checkbox" value="{{ $employeeData->id }}" @if(in_array($employeeData->id, $narrowEmployeeId)) checked @endif name="narrowEmployeeId[]">
+                                        <input type="checkbox" value="{{ $employeeData->id }}" @if(in_array($employeeData->id, $narrowEmployeeId)) checked @endif name="narrowEmployeeId[]" class="employeeCheckBox">
                                         {{ $employeeData->name }}
                                     </label>
                                 @endforeach

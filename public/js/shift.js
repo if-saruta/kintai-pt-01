@@ -848,6 +848,58 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     employeeModalActive();
 
+    /**
+     * **************************************************************
+     * *******************    従業員絞り込み    ***********************
+     * **************************************************************
+     */
+
+    const employeeArrowActive = () => {
+        const bulkChangeEmployeeCheckBox = document.querySelector('.bulkChangeEmployeeCheckBox');
+        const employeeCheckBox = document.querySelectorAll('.employeeCheckBox');
+
+        // 一つでもチェックがついていなければ一括チェックボックスのチェックを外す
+        const bulkCheckBoxFalseActive = (checkBox) => {
+            if(!checkBox.checked){
+                bulkChangeEmployeeCheckBox.checked = false;
+            }
+        }
+        for(let i = 0; i < employeeCheckBox.length; i++){
+            // 初期読み込み時
+            bulkCheckBoxFalseActive(employeeCheckBox[i])
+
+            // 従業員チェックボックスがクリック時
+            employeeCheckBox[i].addEventListener('click', () => {
+                bulkCheckBoxFalseActive(employeeCheckBox[i])
+
+                // 全てチェックがついていれば一括チェックボックスにもチェックを付与する
+                let isChecked = true;
+                for(let j = 0; j < employeeCheckBox.length; j++){
+                    if(!employeeCheckBox[j].checked){
+                        isChecked = false;
+                    }
+                }
+                if(isChecked){
+                    bulkChangeEmployeeCheckBox.checked = true;
+                }
+            })
+        }
+
+        // 一括チェックボックスクリック時
+        bulkChangeEmployeeCheckBox.addEventListener('click', () => {
+            if(bulkChangeEmployeeCheckBox.checked){
+                checkBoxCheckedActive();
+            }
+        })
+        // 全てにチェックを入れる
+        const checkBoxCheckedActive = () => {
+            for(let i = 0; i < employeeCheckBox.length; i++){
+                employeeCheckBox[i].checked = true;
+            }
+        }
+    }
+    employeeArrowActive();
+
 
 })
 

@@ -229,6 +229,7 @@ class ShiftController extends Controller
                 }
             }
         }
+
         // シフトがある従業員を取得
         $employeeList = Employee::whereIn('id', $employeeIdList)->get();
         if(empty($narrowEmployeeId)){
@@ -328,6 +329,22 @@ class ShiftController extends Controller
                 $projects = Project::where('is_suspended', '!=', '1')->get();
                 $vehicles = Vehicle::all();
                 $clients = Client::where('id', '!=', 1)->get();
+
+                // 編集画面ではシフトがない従業員も必要なので再度宣言
+                $employeeIdList = [];
+                foreach($shifts as $shift){
+                    if(!in_array($shift->employee_id, $employeeIdList)){
+                        $narrowShift = $shift;
+                        $employeeIdList[] = $shift->employee_id;
+                    }
+                }
+                // シフトがある従業員を取得
+                $employeeList = Employee::whereIn('id', $employeeIdList)->get();
+                if(empty($narrowEmployeeId)){
+                    $narrowEmployeeId = $employeeIdList;
+                }
+
+
                 return view('shift.edit', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'clients', 'projects', 'vehicles', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates','holidays', 'MultipleDailyUsesVehiclesArray', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate'));
             }
         } else {

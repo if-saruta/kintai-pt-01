@@ -1210,6 +1210,15 @@
                 font-weight: $fw-bold;
                 color: $cBlack;
             }
+            .all-check-box{
+                font-size: 1.5rem;
+                font-weight: $fw-bold;
+                label{
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                }
+            }
             .select-radio{
                 width: fit-content;
                 margin: 0 auto;
