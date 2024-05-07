@@ -509,9 +509,9 @@ class InvoiceController extends Controller
                     if($secondMachineCheck){
                         if(!in_array($vehicleNumber, $secondMachineArray)){
                             $secondMachineArray[] = $vehicleNumber;
-                            $secondMachineArrayForDay[] = $vehicleNumber;
                         }
                         $secondMachineCheck = false;
+                        $secondMachineArrayForDay[] = $vehicleNumber;
                         $secondMachineCount++; //2代目の件数を増やす
                     }else{
                         if(!in_array($vehicleNumber, $secondMachineArrayForDay)){
@@ -551,9 +551,9 @@ class InvoiceController extends Controller
                         if($secondMachineCheck){
                             if(!in_array($vehicleNumber, $secondMachineArray)){
                                 $secondMachineArray[] = $vehicleNumber;
-                                $secondMachineArrayForDay[] = $vehicleNumber;
                             }
                             $secondMachineCheck = false;
+                            $secondMachineArrayForDay[] = $vehicleNumber;
                             $secondMachineCount++; //2代目の件数を増やす
                         }else{
                             if(!in_array($vehicleNumber, $secondMachineArrayForDay)){
@@ -582,9 +582,9 @@ class InvoiceController extends Controller
                     if($secondMachineCheck){
                         if(!in_array($vehicleNumber, $secondMachineArray)){
                             $secondMachineArray[] = $vehicleNumber;
-                            $secondMachineArrayForDay[] = $vehicleNumber;
                         }
                         $secondMachineCheck = false;
+                        $secondMachineArrayForDay[] = $vehicleNumber;
                         $secondMachineCount++; //2代目の件数を増やす
                     }else{
                         if(!in_array($vehicleNumber, $secondMachineArrayForDay)){
@@ -613,9 +613,9 @@ class InvoiceController extends Controller
                     if($secondMachineCheck){
                         if(!in_array($vehicleNumber, $secondMachineArray)){
                             $secondMachineArray[] = $vehicleNumber;
-                            $secondMachineArrayForDay[] = $vehicleNumber;
                         }
                         $secondMachineCheck = false;
+                        $secondMachineArrayForDay[] = $vehicleNumber;
                         $secondMachineCount++; //2代目の件数を増やす
                     }else{
                         if(!in_array($vehicleNumber, $secondMachineArrayForDay)){
@@ -667,13 +667,15 @@ class InvoiceController extends Controller
             $totalOverTime += $spv->overtime_fee;
 
             if($spv->project){
-                foreach($spv->project->allowances as $allowance){
-                    if(!isset($allowanceArray[$allowance->name])){
-                        $allowanceArray[$allowance->name]['amount'] = $allowance->driver_amount;
-                        $allowanceArray[$allowance->name]['count'] = 1;
-                    }else{
-                        $allowanceArray[$allowance->name]['amount'] += $allowance->driver_amount;
-                        $allowanceArray[$allowance->name]['count']++;
+                if($spv->shiftAllowance){
+                    foreach($spv->project->allowances as $allowance){
+                        if(!isset($allowanceArray[$allowance->name])){
+                            $allowanceArray[$allowance->name]['amount'] = $allowance->driver_amount;
+                            $allowanceArray[$allowance->name]['count'] = 1;
+                        }else{
+                            $allowanceArray[$allowance->name]['amount'] += $allowance->driver_amount;
+                            $allowanceArray[$allowance->name]['count']++;
+                        }
                     }
                 }
             }
