@@ -1209,7 +1209,7 @@
             <form action="{{ route('shift.selectWeek') }}" method="POST">
                 @csrf
                 <input type="hidden" name="date" value="{{$startOfWeek}}">
-                <input hidden name="witch" value="page01" type="text">
+                <input hidden name="witch" value="page06" type="text">
                 <div class="shift-setting-modal__white-board__inner">
                     <p class="title">絞り込み</p>
                     <div class="all-check-box">
@@ -1235,7 +1235,7 @@
         </div>
     </div>
 
-    
+
 <script>
 var missingRequiredAllowancesByDate = @json($missingRequiredAllowancesByDate);
 </script>
