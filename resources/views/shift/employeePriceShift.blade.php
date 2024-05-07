@@ -612,7 +612,7 @@
         <div class="shift-setting-modal" id="employeeModal">
             <div class="shift-setting-modal__bg employeeModalClose"></div>
             <div class="shift-setting-modal__white-board --common-setting-white-board">
-                <form action="{{ route('shift.selectWeek') }}" method="POST">
+                <form action="{{ route('shift.employeePriceShiftSelectWeek') }}" method="POST">
                     @csrf
                     <input type="hidden" name="date" value="{{$startOfWeek}}">
                     <input hidden name="witch" value="page03" type="text">
