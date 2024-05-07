@@ -831,10 +831,10 @@
                                                 </div>
                                             </div>
                                             @php
-                                                // $rental_type = $shiftProjectVehicles->first()->vehicle_rental_type; //契約種類を取得
-                                                if($rental_type == 1){ //月リースであれば、契約車両を取得
-                                                    $rental_vehicle_number = $shiftProjectVehicles->first()->rentalVehicle->number;
-                                                }
+
+                                                // if($rental_type == 1){ //月リースであれば、契約車両を取得
+                                                //     $rental_vehicle_number = $shiftProjectVehicles->first()->rentalVehicle->number;
+                                                // }
                                                 // その他情報
                                                 $tax_late = $InfoManagement->tax_late ?? 10;
                                                 $monthly_lease_fee = $InfoManagement->monthly_lease_fee ?? 34090;
@@ -875,7 +875,7 @@
                                                         {{-- 月リース・なんでも --}}
                                                         @if ($rental_type == 1 || $rental_type == 2)
                                                             <tr class="info-table-row">
-                                                                <th><input type="text" name="monthLease[name]" value="リース代　@if($rental_type == 1) 月契約No.{{ $rental_vehicle_number }} @else なんでも @endif"></th>
+                                                                <th><input type="text" name="monthLease[name]" value="リース代　@if($rental_type == 1) 月契約No.{{ $vehicle_rantal_number }} @else なんでも @endif"></th>
                                                                 <td><input type="text" name="monthLease[amount]" value="{{ number_format($monthly_lease_fee) }}" class="commaInput"> <div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                             </tr>
                                                         @endif
@@ -911,7 +911,7 @@
                                                         {{-- 保険料 --}}
                                                         @if ($rental_type == 1 || $rental_type == 2) {{-- 月リース・なんでもリース --}}
                                                             <tr class="info-table-row">
-                                                                <th><input type="text" name="monthInsurance[name]" value="保険料　@if($rental_type == 1) 月契約No.{{ $rental_vehicle_number }} @endif"></th>
+                                                                <th><input type="text" name="monthInsurance[name]" value="保険料　@if($rental_type == 1) 月契約No.{{ $vehicle_rantal_number }} @endif"></th>
                                                                 <td><input type="text" name="monthInsurance[amount]" value="{{ number_format(13637) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
                                                             </tr>
                                                         @endif
