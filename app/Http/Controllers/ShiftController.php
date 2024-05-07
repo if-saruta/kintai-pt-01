@@ -221,7 +221,7 @@ class ShiftController extends Controller
         // シフトがある従業員のIDを格納
         $employeeIdList = [];
         foreach($shifts as $shift){
-            if($shift->projectsVehicles->count() == 0) continue;
+            // if($shift->projectsVehicles->count() == 0) continue;
             foreach($shift->projectsVehicles as $spv){
                 if(!in_array($shift->employee_id, $employeeIdList)){
                     $narrowShift = $shift;
@@ -229,7 +229,6 @@ class ShiftController extends Controller
                 }
             }
         }
-
         // シフトがある従業員を取得
         $employeeList = Employee::whereIn('id', $employeeIdList)->get();
         if(empty($narrowEmployeeId)){
@@ -343,7 +342,16 @@ class ShiftController extends Controller
                 if(empty($narrowEmployeeId)){
                     $narrowEmployeeId = $employeeIdList;
                 }
+                // 従業員絞り込みシフトを抽出
+                $narrowShiftsByEmployee = $shifts->filter(function ($shift) use($narrowEmployeeId) {
+                    if(in_array($shift->employee_id, $narrowEmployeeId)){
+                        return $shift;
+                    }
+                });
 
+                $shiftDataByEmployee = $narrowShiftsByEmployee->groupBy(function ($shift) {
+                    return $shift->employee_id;
+                });
 
                 return view('shift.edit', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'clients', 'projects', 'vehicles', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates','holidays', 'MultipleDailyUsesVehiclesArray', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate'));
             }
@@ -555,7 +563,7 @@ class ShiftController extends Controller
 
         return redirect()->route('shift.edit')->with([
             'date' => $startOfWeek,
-            'page' => 'page06'
+            'page' => 'page06',
         ]);
     }
 

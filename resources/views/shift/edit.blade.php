@@ -856,20 +856,19 @@
         @endforeach
         </tbody>
         </table>
-        @else
-        <div class="edit-shift-warning-box">
-            <p class="edit-shift-warning-box__warning-txt">{{$startOfWeek}}〜{{$endOfWeek}}のシフトはありません</p>
-            <form action="{{ route('shift.weekStore') }}" method="POST" class="shift-empty-form">
-                @csrf
-                <input type="text" hidden name="startOfWeek" value="{{ $startOfWeek }}">
-                <input type="text" hidden name="endOfWeek" value="{{ $endOfWeek }}">
-                <button class="shift-empty-form__button">シフトを作成</button>
-            </form>
-        </div>
-        @endif
-        </div>
-        </div>
-
+                    @else
+                        <div class="edit-shift-warning-box">
+                            <p class="edit-shift-warning-box__warning-txt">{{$startOfWeek}}〜{{$endOfWeek}}のシフトはありません</p>
+                            <form action="{{ route('shift.weekStore') }}" method="POST" class="shift-empty-form">
+                                @csrf
+                                <input type="text" hidden name="startOfWeek" value="{{ $startOfWeek }}">
+                                <input type="text" hidden name="endOfWeek" value="{{ $endOfWeek }}">
+                                <button class="shift-empty-form__button">シフトを作成</button>
+                            </form>
+                        </div>
+                    @endif
+                </div>
+            </div>
         </div>
 
 
