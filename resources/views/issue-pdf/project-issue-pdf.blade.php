@@ -117,35 +117,40 @@
         }
         .table-item{
             position: relative;
-            height: 25px;
+            min-height: 25px;
             border: 1px solid black;
+            vertical-align: middle;
         }
         .table-item-txt{
-            position: absolute;
+            margin-left: 10px;
+            /* position: absolute;
             top: 50%;
             left: 15px;
-            transform: translateY(-50%);
+            transform: translateY(-50%); */
         }
         .table-data{
             position: relative;
             height: 25px;
             text-align: center;
+            vertical-align: middle;
             border: 1px solid black;
         }
         .table-data-txt{
-            position: absolute;
+            /* position: absolute;
             top: 50%;
-            transform: translateY(-50%);
+            transform: translateY(-50%); */
         }
         .mini-table-data{
             position: relative;
             height: 25px;
             border: 1px solid black;
+            vertical-align: middle;
+            text-align: center;
         }
         .mini-table-data-txt{
-            position: absolute;
+            /* position: absolute;
             top: 50%;
-            transform: translateY(-50%);
+            transform: translateY(-50%); */
         }
         .bank{
             margin-top: 50px;
@@ -161,10 +166,13 @@
             transform: translate(-50%,-50%);
         }
         .--right{
-            right: 5px;
+            /* right: 5px; */
+            text-align: right;
+            margin-right: 5px;
         }
         .--left{
-            left: 5px;
+            text-align: left;
+            margin-left: 5px;
         }
         .w-401{
             width: 401px;
@@ -225,7 +233,7 @@
             @foreach ($item as $index => $value)
                 <tr>
                     <td class="table-item w-400"><p class="table-item-txt">{{$value}}</p></td>
-                    <td class="table-data w-100"><p class="table-data-txt --center">{{$number[$index]}}</p></td>
+                    <td class="table-data w-100"><p class="table-data-txt">{{$number[$index]}}</p></td>
                     <td class="table-data w-100">
                         @if ($until[$index] != 0)
                             <p class="table-data-txt --right">{{$until[$index]}}</p>

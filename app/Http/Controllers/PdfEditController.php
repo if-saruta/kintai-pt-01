@@ -362,31 +362,33 @@ class PdfEditController extends Controller
         foreach($ShiftProjectVehicles as $spv){
             $date = Carbon::parse($spv->shift->date);
             if($spv->project){
-                foreach($spv->project->allowances as $allowance){
-                    if(!isset($allowanceArray[$allowance->name])){
-                        $allowanceArray[$allowance->name] = [
-                            'dates' => '',
-                            'allowance_dates' => '',
-                            'allowance_count' => 0,
-                            'allowance_amount' => $allowance->retail_amount,
-                            'total_allowance_amount' => 0,
-                            'project_name' => $spv->project->name
-                        ];
-                    }
+                if($spv->shiftAllowance){
+                    foreach($spv->project->allowances as $allowance){
+                        if(!isset($allowanceArray[$allowance->name])){
+                            $allowanceArray[$allowance->name] = [
+                                'dates' => '',
+                                'allowance_dates' => '',
+                                'allowance_count' => 0,
+                                'allowance_amount' => $allowance->retail_amount,
+                                'total_allowance_amount' => 0,
+                                'project_name' => $spv->project->name
+                            ];
+                        }
 
-                    $formattedDate = $date->format('j'); // 日付のみ
-                    if(empty($allowanceArray[$allowance->name]['dates'])){
-                        $formattedDate = $date->format('n/j'); // 最初の日付は月/日
-                    }
-                    if (!str_contains($allowanceArray[$allowance->name]['dates'], $formattedDate)) {
-                        $allowanceArray[$allowance->name]['dates'] .= (empty($parkingData[$allowance->name]['dates']) ? '' : ',') . $formattedDate;
-                    }
-                    if ($allowance->retail_amount && !str_contains($allowanceArray[$allowance->name]['allowance_dates'], $formattedDate)) {
-                        $allowanceArray[$allowance->name]['allowance_dates'] .= (empty($allowanceArray[$allowance->name]['allowance_dates']) ? '' : ',') . $formattedDate;
-                        $allowanceArray[$allowance->name]['allowance_count']++;
-                        $allowanceArray[$allowance->name]['total_allowance_amount'] += $allowance->retail_amount;
+                        $formattedDate = $date->format('j'); // 日付のみ
+                        if(empty($allowanceArray[$allowance->name]['dates'])){
+                            $formattedDate = $date->format('n/j'); // 最初の日付は月/日
+                        }
+                        if (!str_contains($allowanceArray[$allowance->name]['dates'], $formattedDate)) {
+                            $allowanceArray[$allowance->name]['dates'] .= (empty($parkingData[$allowance->name]['dates']) ? '' : ',') . $formattedDate;
+                        }
+                        if ($allowance->retail_amount && !str_contains($allowanceArray[$allowance->name]['allowance_dates'], $formattedDate)) {
+                            $allowanceArray[$allowance->name]['allowance_dates'] .= (empty($allowanceArray[$allowance->name]['allowance_dates']) ? '' : ',') . $formattedDate;
+                            $allowanceArray[$allowance->name]['allowance_count']++;
+                            $allowanceArray[$allowance->name]['total_allowance_amount'] += $allowance->retail_amount;
 
-                        $total_retail += $allowance->retail_amount;
+                            $total_retail += $allowance->retail_amount;
+                        }
                     }
                 }
             }

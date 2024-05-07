@@ -333,15 +333,16 @@ class ShiftController extends Controller
                 $employeeIdList = [];
                 foreach($shifts as $shift){
                     if(!in_array($shift->employee_id, $employeeIdList)){
-                        $narrowShift = $shift;
                         $employeeIdList[] = $shift->employee_id;
                     }
                 }
+                $narrowEmployeeId = $request->input('narrowEmployeeId') ?? session('narrowEmployeeId');
                 // シフトがある従業員を取得
                 $employeeList = Employee::whereIn('id', $employeeIdList)->get();
                 if(empty($narrowEmployeeId)){
                     $narrowEmployeeId = $employeeIdList;
                 }
+
                 // 従業員絞り込みシフトを抽出
                 $narrowShiftsByEmployee = $shifts->filter(function ($shift) use($narrowEmployeeId) {
                     if(in_array($shift->employee_id, $narrowEmployeeId)){
@@ -661,7 +662,8 @@ class ShiftController extends Controller
 
         return redirect()->route('shift.edit')->with([
             'date' => $date, // 例として固定の日付を設定
-            'page' => 'page06'
+            'page' => 'page06',
+            'narrowEmployeeId' => $request->input('narrowEmployeeId', [])
         ]);
     }
 

@@ -896,6 +896,9 @@
                 @csrf
                 <input hidden value="{{$startOfWeek}}" name="startOfWeek" type="text">
                 <input hidden type="text" id="setShiftId" name="setId">
+                @foreach ($narrowEmployeeId as $EmployeeId)
+                    <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                @endforeach
                 <div class="all-input-area">
                     <div class="form-block__input-area">
                         {{-- プロジェクト --}}
@@ -1044,6 +1047,9 @@
                 <input hidden value="{{$startOfWeek}}" name="startOfWeek" type="text">
                 <input hidden type="text" id="createSetId" name="setId">
                 <input hidden type="text" id="createSetPart" name="part">
+                @foreach ($narrowEmployeeId as $EmployeeId)
+                    <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                @endforeach
                 <div class="all-input-area">
                     <div class="form-block__input-area">
                         {{-- プロジェクト --}}
