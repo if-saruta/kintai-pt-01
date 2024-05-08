@@ -49,14 +49,14 @@
                         </div>
                         <div class="flex-box">
                             <div class="info-list-wrap__list-item">
-                                <p class="c-p-head">月リース料(2代目)</p>
+                                <p class="c-p-head">月リース料(2台目)</p>
                                 <div class="info-list-wrap__list-item__input-box">
                                     <input type="text" class="c-input w-fee-input commaInput" name="monthly_lease_second_fee" @if($info != null) value="{{ $info->monthly_lease_second_fee }}" @endif placeholder="1,000" required>
                                     <p class="c-p-head">円</p>
                                 </div>
                             </div>
                             <div class="info-list-wrap__list-item">
-                                <p class="c-p-head">月リース保険料(2代目)</p>
+                                <p class="c-p-head">月リース保険料(2台目)</p>
                                 <div class="info-list-wrap__list-item__input-box">
                                     <input type="text" class="c-input w-fee-input commaInput" name="monthly_lease_second_insurance_fee" @if($info != null) value="{{ $info->monthly_lease_second_insurance_fee }}" @endif placeholder="1,000" required>
                                     <p class="c-p-head">円</p>
