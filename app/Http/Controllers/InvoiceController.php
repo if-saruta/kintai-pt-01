@@ -286,6 +286,9 @@ class InvoiceController extends Controller
             $warning = "選択したシフトは登録されいません";
         }
 
+        // 一時的にメモリ制限を増やす
+        ini_set('memory_limit', '256M');
+
         return view('invoice.driverShift',
             compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'shiftProjectVehicles', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays', 'warning', 'secondMachineArray', 'thirdMachineArray', 'secondMachineCount', 'thirdMachineCount', 'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking', 'totalExpressWay', 'totalOverTime', 'findProjects', 'findClients',
                     'selectedNarrowCheck', 'needRowCount', 'clientsId', 'projectsId', 'employeeId', 'InfoManagement', 'allowanceArray'));
@@ -434,6 +437,9 @@ class InvoiceController extends Controller
         $projectInfoArray = $this->projectInfoExtract($shiftProjectVehicles);
         // 集計表情報を取得
         [$totalSalary, $totalAllowance, $totalParking, $totalExpressWay, $totalOverTime, $allowanceArray] = $this->totallingInfoExtract($shiftProjectVehicles);
+
+        // 一時的にメモリ制限を増やす
+        ini_set('memory_limit', '256M');
 
         $pdf =  PDF::loadView('issue-calendar-pdf.driver-calendar',
                     compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays',
@@ -811,7 +817,7 @@ class InvoiceController extends Controller
 
         // 一時的にメモリ制限を増やす
         ini_set('memory_limit', '256M');
-        
+
         return view('invoice.projectShift',
             compact('projects', 'clients', 'clientId', 'getClient', 'ShiftProjectVehicles', 'getCompanies',
                     'getYear', 'getMonth', 'dates', 'warning',
@@ -888,6 +894,9 @@ class InvoiceController extends Controller
         }
         $pdf =  PDF::loadView('issue-calendar-pdf.project-calendar', compact('projects', 'clients', 'client', 'ShiftProjectVehicles', 'getYear', 'getMonth', 'dates', 'retailCheck', 'selectedDisplayCheck', 'getCompanies', 'selectedCompanies', 'separateByCompany'))->setPaper('a4', $direction);
         $fileName = "{$getMonth}月_{$clientName}.pdf";
+
+        // 一時的にメモリ制限を増やす
+        ini_set('memory_limit', '256M');
 
         return $pdf->download($fileName); //生成されるファイル名
 
