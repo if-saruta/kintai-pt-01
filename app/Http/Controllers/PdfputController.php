@@ -152,7 +152,7 @@ class PdfputController extends Controller
         // return view('issue-pdf.project-issue-pdf', compact('invoiceNumber', 'name', 'subjectWithBreaks', 'companyInfoWithBreaks'
         // ,'item', 'number', 'until', 'amount', 'subTotalRetail'
         // ,'tax', 'totalRetail', 'bankNameInfoWithBreaks', 'today'
-        // ,'taxTable01', 'taxTable02', 'taxTable03', 'taxTable04'));
+        // ,'taxTable01', 'taxTable02', 'taxTable03', 'taxTable04', 'image_data'));
 
         $fileName = "{$today->format('Y-m-d')}_{$pdfName}.pdf";
 

@@ -73,7 +73,9 @@
             font-size: 13px
         }
         .table{
+            width: 715px;
             margin-top: 20px;
+            table-layout: fixed;
             border-collapse:collapse;
             font-size: 13px;
         }
@@ -120,13 +122,13 @@
             min-height: 25px;
             border: 1px solid black;
             vertical-align: middle;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            white-space: normal;
         }
         .table-item-txt{
             margin-left: 10px;
-            /* position: absolute;
-            top: 50%;
-            left: 15px;
-            transform: translateY(-50%); */
+            word-wrap: break-word;
         }
         .table-data{
             position: relative;
@@ -136,9 +138,6 @@
             border: 1px solid black;
         }
         .table-data-txt{
-            /* position: absolute;
-            top: 50%;
-            transform: translateY(-50%); */
         }
         .mini-table-data{
             position: relative;
@@ -148,9 +147,7 @@
             text-align: center;
         }
         .mini-table-data-txt{
-            /* position: absolute;
-            top: 50%;
-            transform: translateY(-50%); */
+
         }
         .bank{
             margin-top: 50px;
@@ -166,7 +163,6 @@
             transform: translate(-50%,-50%);
         }
         .--right{
-            /* right: 5px; */
             text-align: right;
             margin-right: 5px;
         }
@@ -179,6 +175,7 @@
         }
         .w-400{
             width: 400px;
+            width: 56.2%;
         }
         .w-201{
             width: 201px;
@@ -196,6 +193,9 @@
             display: block;
             content: "";
             padding: -5px 0;
+        }
+        .w-table-amount-row{
+            width: 15.5%;
         }
 
     </style>
@@ -239,7 +239,7 @@
                             <p class="table-data-txt --right">{{$until[$index]}}</p>
                         @endif
                     </td>
-                    <td class="table-data w-110">
+                    <td class="table-data w-110 w-table-amount-row">
                         @if ($amount[$index] != 0)
                             <p class="table-data-txt --right">{{$amount[$index]}}</p>
                         @endif
