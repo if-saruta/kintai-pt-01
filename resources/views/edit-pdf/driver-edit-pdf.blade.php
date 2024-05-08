@@ -189,6 +189,9 @@
                                         {{-- 従業員情報 --}}
                                         <div class="employee-info">
                                             <input type="text" hidden name="employeeId" value="{{$employeeInfo->id}}">
+                                            @if ($employeeInfo->company_name)
+                                                <p class="employee-name">{{ $employeeInfo->company_name }}</p>
+                                            @endif
                                             <p class="employee-name">{{$employeeInfo->name}}</p>
                                             <div class="">
                                                 〒{{$employeeInfo->post_code}} <br>

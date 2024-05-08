@@ -62,6 +62,12 @@
                             @endforeach
                     </select>
                 </div>
+                <div class="company --company-name">
+                    <div class="head">
+                        <p class="input-head">会社名</p>
+                    </div>
+                    <input type="text" name="company_name" class="c-input" placeholder="株式会社">
+                </div>
                 <div class="address-area">
                     <div class="address-area__input-box --post-code">
                         <div class="head">

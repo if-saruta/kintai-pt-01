@@ -276,7 +276,7 @@
                                     <td class="--count-f-s">{{ $unProjectTotalCount != 0 ? $unProjectTotalCount : '' }}</td>
                                 </tr>
                             @endforeach
-                            <tr class="shift-calendar-table__body__row --count-row --total-row-count">
+                            {{-- <tr class="shift-calendar-table__body__row --count-row --total-row-count">
                                 <td class="">合計</td>
                                 @foreach ( $convertedDates as $date )
                                     @php
@@ -299,7 +299,7 @@
                                     </td>
                                 @endforeach
                                 <td></td>
-                            </tr>
+                            </tr> --}}
                         </tbody>
                     </table>
                     @else

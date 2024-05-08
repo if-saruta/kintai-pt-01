@@ -60,6 +60,7 @@ class EmployeeController extends Controller
 
         if($request->rental_type == 1){
             $employee = Employee::create([
+                'company_name' => $request->company_name,
                 'register_number' => $request->register_number,
                 'name' => $request->name,
                 'initials' => $request->initial,
@@ -76,6 +77,7 @@ class EmployeeController extends Controller
             ]);
         }else{
             $employee = Employee::create([
+                'company_name' => $request->company_name,
                 'register_number' => $request->register_number,
                 'name' => $request->name,
                 'initials' => $request->initial,
@@ -198,6 +200,7 @@ class EmployeeController extends Controller
         $oldVehicleId = $employee->vehicle_id;
 
         // 従業員データを更新
+        $employee->company_name = $request->company_name;
         $employee->register_number = $request->register_number;
         $employee->name = $request->name;
         $employee->initials = $request->initial;

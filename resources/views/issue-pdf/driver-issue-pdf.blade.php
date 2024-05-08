@@ -295,7 +295,7 @@
 
         .employee-info {
             position: absolute;
-            bottom: 730px;
+            bottom: 740px;
             right: 0px;
             /* max-width: 260px;
             width: 260px; */
@@ -308,9 +308,11 @@
             white-space: wrap;
             word-wrap: break-word;
         }
-
+        .company-name{
+            font-size: 16px
+        }
         .employee-name {
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .title {
@@ -449,6 +451,9 @@
             <p class="">{{ $today->format('Y') }}年 {{ $today->format('n') }}月 20日</p>
         </div>
         <div class="employee-info">
+            @if ($employee->company_name)
+                <p class="company-name">{{ $employee->company_name }}</p>
+            @endif
             <p class="employee-name">{{$employee->name}}</p>
             <p class="employee-info-main">
                 〒{{$employee->post_code}} <br>

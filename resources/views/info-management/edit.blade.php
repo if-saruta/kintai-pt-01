@@ -19,14 +19,14 @@
                             <div class="info-list-wrap__list-item">
                                 <p class="c-p-head">税率</p>
                                 <div class="info-list-wrap__list-item__input-box">
-                                    <input type="text" class="c-input w-late-input" name="tax_rate" @if($info != null) value="{{ $info->tax_rate }}" @endif placeholder="10" >
+                                    <input type="text" class="c-input w-late-input" name="tax_rate" @if($info != null) value="{{ $info->tax_rate }}" @endif placeholder="10" required>
                                     <p class="c-p-head">%</p>
                                 </div>
                             </div>
                             <div class="info-list-wrap__list-item">
                                 <p class="c-p-head">値引率</p>
                                 <div class="info-list-wrap__list-item__input-box">
-                                    <input type="text" class="c-input w-late-input" name="discount_rate" @if($info != null) value="{{ $info->discount_rate }}" @endif placeholder="10" >
+                                    <input type="text" class="c-input w-late-input" name="discount_rate" @if($info != null) value="{{ $info->discount_rate }}" @endif placeholder="10" required>
                                     <p class="c-p-head">%</p>
                                 </div>
                             </div>
@@ -35,14 +35,14 @@
                             <div class="info-list-wrap__list-item">
                                 <p class="c-p-head">月リース料</p>
                                 <div class="info-list-wrap__list-item__input-box">
-                                    <input type="text" class="c-input w-fee-input commaInput" name="monthly_lease_fee" @if($info != null) value="{{ $info->monthly_lease_fee }}" @endif placeholder="1,000" >
+                                    <input type="text" class="c-input w-fee-input commaInput" name="monthly_lease_fee" @if($info != null) value="{{ $info->monthly_lease_fee }}" @endif placeholder="1,000" required>
                                     <p class="c-p-head">円</p>
                                 </div>
                             </div>
                             <div class="info-list-wrap__list-item">
                                 <p class="c-p-head">月リース保険料</p>
                                 <div class="info-list-wrap__list-item__input-box">
-                                    <input type="text" class="c-input w-fee-input commaInput" name="monthly_lease_insurance_fee" @if($info != null) value="{{ $info->monthly_lease_insurance_fee }}" @endif placeholder="1,000" >
+                                    <input type="text" class="c-input w-fee-input commaInput" name="monthly_lease_insurance_fee" @if($info != null) value="{{ $info->monthly_lease_insurance_fee }}" @endif placeholder="1,000" required>
                                     <p class="c-p-head">円</p>
                                 </div>
                             </div>
@@ -51,14 +51,14 @@
                             <div class="info-list-wrap__list-item">
                                 <p class="c-p-head">月リース料(2代目)</p>
                                 <div class="info-list-wrap__list-item__input-box">
-                                    <input type="text" class="c-input w-fee-input commaInput" name="monthly_lease_second_fee" @if($info != null) value="{{ $info->monthly_lease_second_fee }}" @endif placeholder="1,000" >
+                                    <input type="text" class="c-input w-fee-input commaInput" name="monthly_lease_second_fee" @if($info != null) value="{{ $info->monthly_lease_second_fee }}" @endif placeholder="1,000" required>
                                     <p class="c-p-head">円</p>
                                 </div>
                             </div>
                             <div class="info-list-wrap__list-item">
                                 <p class="c-p-head">月リース保険料(2代目)</p>
                                 <div class="info-list-wrap__list-item__input-box">
-                                    <input type="text" class="c-input w-fee-input commaInput" name="monthly_lease_second_insurance_fee" @if($info != null) value="{{ $info->monthly_lease_second_insurance_fee }}" @endif placeholder="1,000" >
+                                    <input type="text" class="c-input w-fee-input commaInput" name="monthly_lease_second_insurance_fee" @if($info != null) value="{{ $info->monthly_lease_second_insurance_fee }}" @endif placeholder="1,000" required>
                                     <p class="c-p-head">円</p>
                                 </div>
                             </div>
@@ -67,14 +67,14 @@
                             <div class="info-list-wrap__list-item">
                                 <p class="c-p-head">日割りリース料</p>
                                 <div class="info-list-wrap__list-item__input-box">
-                                    <input type="text" class="c-input w-fee-input commaInput" name="prorated_lease_fee" @if($info != null) value="{{ $info->prorated_lease_fee }}" @endif placeholder="1,000" >
+                                    <input type="text" class="c-input w-fee-input commaInput" name="prorated_lease_fee" @if($info != null) value="{{ $info->prorated_lease_fee }}" @endif placeholder="1,000" required>
                                     <p class="c-p-head">円</p>
                                 </div>
                             </div>
                             <div class="info-list-wrap__list-item">
                                 <p class="c-p-head">日割り保険料</p>
                                 <div class="info-list-wrap__list-item__input-box">
-                                    <input type="text" class="c-input w-fee-input commaInput" name="prorated_insurance_fee" @if($info != null) value="{{ $info->prorated_insurance_fee }}" @endif placeholder="1,000" >
+                                    <input type="text" class="c-input w-fee-input commaInput" name="prorated_insurance_fee" @if($info != null) value="{{ $info->prorated_insurance_fee }}" @endif placeholder="1,000" required>
                                     <p class="c-p-head">円</p>
                                 </div>
                             </div>
@@ -82,7 +82,7 @@
                         <div class="info-list-wrap__list-item">
                             <p class="c-p-head">業務委託率</p>
                             <div class="info-list-wrap__list-item__input-box">
-                                <input type="text" class="c-input w-late-input" name="admin_commission_rate" @if($info != null) value="{{ $info->admin_commission_rate }}" @endif placeholder="10" >
+                                <input type="text" class="c-input w-late-input" name="admin_commission_rate" @if($info != null) value="{{ $info->admin_commission_rate }}" @endif placeholder="10" required>
                                 <p class="c-p-head">%</p>
                             </div>
                         </div>
@@ -90,16 +90,16 @@
                             <p class="c-p-head">事務手数料</p>
                             <div class="flex-box">
                                 <div class="info-list-wrap__list-item__input-box">
-                                    <input type="text" class="c-input w-fee-input commaInput" name="min_admin_fee" @if($info != null) value="{{ $info->min_admin_fee }}" @endif placeholder="1,000" >
+                                    <input type="text" class="c-input w-fee-input commaInput" name="min_admin_fee" @if($info != null) value="{{ $info->min_admin_fee }}" @endif placeholder="1,000" required>
                                     <p class="c-p-head">円</p>
                                 </div>
                                 <div class="info-list-wrap__list-item__input-box flex-center">
                                     <p class="c-p-head">＞</p>
-                                    <input type="text" class="c-input w-fee-input commaInput" name="admin_fee_switch" @if($info != null) value="{{ $info->admin_fee_switch }}" @endif placeholder="1,000" >
+                                    <input type="text" class="c-input w-fee-input commaInput" name="admin_fee_switch" @if($info != null) value="{{ $info->admin_fee_switch }}" @endif placeholder="1,000" required>
                                     <p class="c-p-head">＜</p>
                                 </div>
                                 <div class="info-list-wrap__list-item__input-box">
-                                    <input type="text" class="c-input w-fee-input commaInput" name="max_admin_fee" @if($info != null) value="{{ $info->max_admin_fee }}" @endif placeholder="1,000" >
+                                    <input type="text" class="c-input w-fee-input commaInput" name="max_admin_fee" @if($info != null) value="{{ $info->max_admin_fee }}" @endif placeholder="1,000" required>
                                     <p class="c-p-head">円</p>
                                 </div>
                             </div>
@@ -107,7 +107,7 @@
                         <div class="info-list-wrap__list-item">
                             <p class="c-p-head">振込手数料</p>
                             <div class="info-list-wrap__list-item__input-box">
-                                <input type="text" class="c-input w-fee-input commaInput" name="transfer_fee" @if($info != null) value="{{ $info->transfer_fee }}" @endif placeholder="1,000" >
+                                <input type="text" class="c-input w-fee-input commaInput" name="transfer_fee" @if($info != null) value="{{ $info->transfer_fee }}" @endif placeholder="1,000" required>
                                 <p class="c-p-head">円</p>
                             </div>
                         </div>
