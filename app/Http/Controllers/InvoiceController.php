@@ -809,6 +809,9 @@ class InvoiceController extends Controller
             $warning = "選択されたシフトは登録されていません";
         }
 
+        // 一時的にメモリ制限を増やす
+        ini_set('memory_limit', '256M');
+        
         return view('invoice.projectShift',
             compact('projects', 'clients', 'clientId', 'getClient', 'ShiftProjectVehicles', 'getCompanies',
                     'getYear', 'getMonth', 'dates', 'warning',
