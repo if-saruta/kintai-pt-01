@@ -279,7 +279,7 @@
                                             </div>
                                             {{-- 給与 --}}
                                             <div class="active-box__item">
-                                                <p class="">給与</p>
+                                                <p class="">ドライバー価格</p>
                                                 <input type="text" name="createSalary" class="c-input setDriverPrice" placeholder="9000" required>
                                             </div>
                                         </div>

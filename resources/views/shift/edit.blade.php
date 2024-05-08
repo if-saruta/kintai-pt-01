@@ -950,7 +950,7 @@
                         </div>
                         {{-- 給与 --}}
                         <div class="form-block__item">
-                            <p class="item-title">給与</p>
+                            <p class="item-title">ドライバー価格</p>
                             <input type="text" class="c-input commaInput" id="salaryInput" name="salaryInput"
                                 placeholder="1,000">
                         </div>
@@ -1111,7 +1111,7 @@
                         </div>
                         {{-- 給与 --}}
                         <div class="form-block__item">
-                            <p class="item-title">給与</p>
+                            <p class="item-title">ドライバー価格</p>
                             <input type="text" class="c-input commaInput" id="createSalaryInput" name="salaryInput"
                                 placeholder="1,000">
                         </div>
