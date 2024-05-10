@@ -362,8 +362,7 @@
                                             @foreach ( $dates as $date )
                                             <tr class="tableRow">
                                                 {{-- 日付 --}}
-                                                <td class="project-table-date">{{ $date->format('n') }}月{{
-                                                    $date->format('j') }}日({{ $date->isoFormat('ddd') }})</td>
+                                                <td class="project-table-date">{{ $date->format('n') }}月{{ $date->format('j') }}日({{ $date->isoFormat('ddd') }})</td>
                                                     @php //1日ごとの上代の合計額の格納変数
                                                         $tmp_total_retail_day = null;
                                                         $hasShift = false;

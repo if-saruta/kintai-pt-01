@@ -898,7 +898,9 @@ class ShiftController extends Controller
                                     $value = $this->cleanString($value);
                                     $vehicleNumbers = explode('/', $value);
                                     foreach ($vehicleNumbers as $index => $vehicleNumber) {
-                                        $organizedData[$date][$employeeName][0][$index][] = $vehicleNumber;
+                                        if(isset($organizedData[$date][$employeeName][0][$index])){
+                                            $organizedData[$date][$employeeName][0][$index][] = $vehicleNumber;
+                                        }
                                     }
                                 } else {
                                     // 午後の車両
@@ -906,7 +908,9 @@ class ShiftController extends Controller
                                     $value = $this->cleanString($value);
                                     $vehicleNumbers = explode('/', $value);
                                     foreach ($vehicleNumbers as $index => $vehicleNumber) {
-                                        $organizedData[$date][$employeeName][1][$index][] = $vehicleNumber;
+                                        if(isset($organizedData[$date][$employeeName][1][$index])){
+                                            $organizedData[$date][$employeeName][1][$index][] = $vehicleNumber;
+                                        }
                                     }
                                 }
                             }

@@ -431,8 +431,6 @@ class InvoiceController extends Controller
         $dates = $this->createDate($getYear, $getMonth);
         // 祝日を取得
         $holidays = $this->getHoliday($getYear);
-        // 二代目以降の情報を取得
-        // [$secondMachineArray, $thirdMachineArray, $secondMachineCount, $thirdMachineCount] = $this->monthLeasePlan($shiftProjectVehicles, $dates);
         // 案件情報を取得
         $projectInfoArray = $this->projectInfoExtract($shiftProjectVehicles);
         // 集計表情報を取得
@@ -507,6 +505,7 @@ class InvoiceController extends Controller
         foreach($dates as $date){
             $secondMachineCheck = true; //1日ごとに二代目の判定
             $secondMachineArrayForDay = []; //1日ごとの二代目を格納
+            $thirdMachineArrayForDay = []; //1日ごとの3代目を格納
             foreach($shiftProjectVehicles as $spv){
                 if($spv->shift->date == $date->format('Y-m-d')){
                     // その日に使用されている車両を格納
@@ -521,8 +520,11 @@ class InvoiceController extends Controller
                         $secondMachineCount++; //2代目の件数を増やす
                     }else{
                         if(!in_array($vehicleNumber, $secondMachineArrayForDay)){
-                            if (!in_array($vehicleNumber, $thirdMachineArray)) {
-                                $thirdMachineArray[] = $vehicleNumber;
+                            if(!in_array($vehicleNumber, $thirdMachineArrayForDay)){
+                                if (!in_array($vehicleNumber, $thirdMachineArray)) {
+                                    $thirdMachineArray[] = $vehicleNumber;
+                                }
+                                $thirdMachineArrayForDay[] = $vehicleNumber;
                                 $thirdMachineCount++;
                             }
                         }
@@ -547,7 +549,8 @@ class InvoiceController extends Controller
 
         foreach($dates as $date){
             $secondMachineCheck = true; //1日ごとに二代目の判定
-            $secondMachineArrayForDay = []; //1日ごとの二代目を格納
+            $secondMachineArrayForDay = []; //1日ごとの2代目を格納
+            $thirdMachineArrayForDay = []; //1日ごとの3代目を格納
             foreach($shiftProjectVehicles as $spv){
                 if($spv->shift->date == $date->format('Y-m-d')){
                     // その日に使用されている車両を格納
@@ -563,8 +566,11 @@ class InvoiceController extends Controller
                             $secondMachineCount++; //2代目の件数を増やす
                         }else{
                             if(!in_array($vehicleNumber, $secondMachineArrayForDay)){
-                                if (!in_array($vehicleNumber, $thirdMachineArray)) {
-                                    $thirdMachineArray[] = $vehicleNumber;
+                                if(!in_array($vehicleNumber, $thirdMachineArrayForDay)){
+                                    if (!in_array($vehicleNumber, $thirdMachineArray)) {
+                                        $thirdMachineArray[] = $vehicleNumber;
+                                    }
+                                    $thirdMachineArrayForDay[] = $vehicleNumber;
                                     $thirdMachineCount++;
                                 }
                             }
@@ -580,6 +586,7 @@ class InvoiceController extends Controller
         foreach($dates as $date){
             $secondMachineCheck = true; //1日ごとに二代目の判定
             $secondMachineArrayForDay = []; //1日ごとの二代目を格納
+            $thirdMachineArrayForDay = []; //1日ごとの3代目を格納
             foreach($shiftProjectVehicles as $spv){
                 if($spv->shift->date == $date->format('Y-m-d')){
                     // その日に使用されている車両を格納
@@ -594,8 +601,11 @@ class InvoiceController extends Controller
                         $secondMachineCount++; //2代目の件数を増やす
                     }else{
                         if(!in_array($vehicleNumber, $secondMachineArrayForDay)){
-                            if (!in_array($vehicleNumber, $thirdMachineArray)) {
-                                $thirdMachineArray[] = $vehicleNumber;
+                            if(!in_array($vehicleNumber, $thirdMachineArrayForDay)){
+                                if (!in_array($vehicleNumber, $thirdMachineArray)) {
+                                    $thirdMachineArray[] = $vehicleNumber;
+                                }
+                                $thirdMachineArrayForDay[] = $vehicleNumber;
                                 $thirdMachineCount++;
                             }
                         }
@@ -611,6 +621,7 @@ class InvoiceController extends Controller
         foreach($dates as $date){
             $secondMachineCheck = true; //1日ごとに二代目の判定
             $secondMachineArrayForDay = []; //1日ごとの二代目を格納
+            $thirdMachineArrayForDay = []; //1日ごとの3代目を格納
             foreach($shiftProjectVehicles as $spv){
                 if($spv->shift->date == $date->format('Y-m-d')){
                     // その日に使用されている車両を格納
@@ -625,8 +636,11 @@ class InvoiceController extends Controller
                         $secondMachineCount++; //2代目の件数を増やす
                     }else{
                         if(!in_array($vehicleNumber, $secondMachineArrayForDay)){
-                            if (!in_array($vehicleNumber, $thirdMachineArray)) {
-                                $thirdMachineArray[] = $vehicleNumber;
+                            if(!in_array($vehicleNumber, $thirdMachineArrayForDay)){
+                                if (!in_array($vehicleNumber, $thirdMachineArray)) {
+                                    $thirdMachineArray[] = $vehicleNumber;
+                                }
+                                $thirdMachineArrayForDay[] = $vehicleNumber;
                                 $thirdMachineCount++;
                             }
                         }

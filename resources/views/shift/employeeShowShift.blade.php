@@ -143,8 +143,7 @@
                                 <p class="fs-14">{{$monday->format('Y')}}<span class="fs-10">年</span></p>
                             </div>
                             <div class="date__txt">
-                                <p class="fs-16">{{$monday->format('n')}}<span
-                                        class="fs-10">月</span>{{$monday->format('j')}}<span class="fs-10">日</span></p>
+                                <p class="fs-16">{{$monday->format('n')}}<span class="fs-10">月</span>{{$monday->format('j')}}<span class="fs-10">日</span></p>
                             </div>
                         </div>
                         <div class="date">
@@ -212,7 +211,7 @@
                                         @if ($holidays->isHoliday($date))
                                             <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                         @elseif ($date->isSaturday())
-                                            <p class="" style="color: skyblue;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
+                                            <p class="" style="color: rgb(0, 123, 255);">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                         @elseif($date->isSunday())
                                             <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                         @else

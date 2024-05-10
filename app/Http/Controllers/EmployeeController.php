@@ -69,6 +69,7 @@ class EmployeeController extends Controller
                 'building_name' => $request->building_name,
                 'phone_number' => $request->phone,
                 'employment_status' => $request->status,
+                'transfer_fee' => $removeCommasAndCastToInt($request->transfer_fee),
                 'company_id' => $request->company,
                 'is_invoice' => $request->invoice,
                 'vehicle_rental_type' => $request->rental_type,
@@ -86,6 +87,7 @@ class EmployeeController extends Controller
                 'building_name' => $request->building_name,
                 'phone_number' => $request->phone,
                 'employment_status' => $request->status,
+                'transfer_fee' => $removeCommasAndCastToInt($request->transfer_fee),
                 'company_id' => $request->company,
                 'is_invoice' => $request->invoice,
                 'vehicle_rental_type' => $request->rental_type,
@@ -211,6 +213,7 @@ class EmployeeController extends Controller
         $employee->employment_status = $request->status;
         $employee->company_id = $request->company;
         $employee->employment_status = $request->status;
+        $employee->transfer_fee = $removeCommasAndCastToInt($request->transfer_fee);
         $employee->is_invoice = $request->invoice;
         $employee->vehicle_rental_type = $request->rental_type;
         $employee->remarks = $request->remarks;

@@ -214,8 +214,13 @@ class PdfputController extends Controller
             $pdf = PDF::loadView('shift-calendar-pdf.allViewShift', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projectHeight'))->setPaper('a4', 'landscape');
             $fileName = "{$date->format('Y')}年_{$startOfWeekCarbon->format('n')}月{$startOfWeekCarbon->format('j')}日~{$endOfWeekCarbon->format('n')}月{$endOfWeekCarbon->format('j')}日_全表示シフト.pdf";
         }elseif($shift_type == 'employeeShow'){
-            $pdf = PDF::loadView('shift-calendar-pdf.employeeShowShift', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projectHeight'))->setPaper('a4', 'landscape');
-            $fileName = "{$date->format('Y')}年_{$startOfWeekCarbon->format('n')}月{$startOfWeekCarbon->format('j')}日~{$endOfWeekCarbon->format('n')}月{$endOfWeekCarbon->format('j')}日_稼働表シフト.pdf";
+            // その月の第何週目かを計算
+            $weekOfMonth = $date->weekOfMonth;
+
+            $title = "{$startOfWeekCarbon->format('n')}月第{$weekOfMonth}週目稼働表確定版";
+
+            $pdf = PDF::loadView('shift-calendar-pdf.employeeShowShift', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projectHeight', 'title'))->setPaper('a4', 'landscape');
+            $fileName = "{$date->format('Y')}年{$startOfWeekCarbon->format('n')}月第{$weekOfMonth}週目稼働表確定版.pdf";
 
         }elseif($shift_type == 'employeePrice'){
             $pdf = PDF::loadView('shift-calendar-pdf.employeePriceShift', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projectHeight'))->setPaper('a4', 'landscape');

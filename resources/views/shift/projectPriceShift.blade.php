@@ -212,7 +212,7 @@
                                         @if ($holidays->isHoliday($date))
                                             <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                         @elseif ($date->isSaturday())
-                                            <p class="" style="color: skyblue;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
+                                            <p class="" style="color: rgb(0, 123, 255);">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                         @elseif($date->isSunday())
                                             <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                                         @else

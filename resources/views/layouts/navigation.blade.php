@@ -4,10 +4,25 @@
         <div class="nav__top__link">
             <!-- Logo -->
             <div class="logo-block">
-                @can('admin-higher')
+                {{-- @can('admin-higher')
                     <a href="{{ route('shift.') }}" class="logo-block__inner">
                         <div class="logo-block__inner__img" id="logoImg">
                             <img class="" src="{{ asset('img/logo.png') }}" alt="">
+                        </div>
+                        <p class="logo-block__inner__txt navTxt">matthew</p>
+                    </a>
+                @else
+                    <a href="{{ route('shift.employeeShowShift') }}" class="logo-block__inner">
+                        <div class="logo-block__inner__img" id="logoImg">
+                            <img class="" src="{{ asset('img/logo.png') }}" alt="">
+                        </div>
+                        <p class="logo-block__inner__txt navTxt">matthew</p>
+                    </a>
+                @endcan --}}
+                @can('admin-higher')
+                    <a href="{{ route('shift.') }}" class="logo-block__inner">
+                        <div class="logo-block__inner__img --hgl-logo" id="logoImg">
+                            H.G.L
                         </div>
                         <p class="logo-block__inner__txt navTxt">matthew</p>
                     </a>

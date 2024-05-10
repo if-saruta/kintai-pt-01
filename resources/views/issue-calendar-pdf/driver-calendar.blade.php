@@ -275,7 +275,15 @@
             @if($spv->shift->date == $date->format('Y-m-d'))
                 <tr>
                   @if ($count == 0)
-                    <td rowspan="{{ $setRowCount }}" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                    @if ($holidays->isHoliday($date))
+                        <td rowspan="{{ $setRowCount }}" style="color: red;" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                    @elseif ($date->isSaturday())
+                        <td rowspan="{{ $setRowCount }}" style="color: rgb(0, 123, 255);" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                    @elseif($date->isSunday())
+                        <td rowspan="{{ $setRowCount }}" style="color: red;" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                    @else
+                        <td rowspan="{{ $setRowCount }}" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                    @endif
                   @endif
 
                   @php
@@ -475,7 +483,15 @@
             @if($spv->shift->date== $date->format('Y-m-d'))
                 <tr>
                   @if ($count == 0)
-                    <td rowspan="{{ $setRowCount }}" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                    @if ($holidays->isHoliday($date))
+                        <td rowspan="{{ $setRowCount }}" style="color: red;" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                    @elseif ($date->isSaturday())
+                        <td rowspan="{{ $setRowCount }}" style="color: rgb(0, 123, 255);" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                    @elseif($date->isSunday())
+                        <td rowspan="{{ $setRowCount }}" style="color: red;" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                    @else
+                        <td rowspan="{{ $setRowCount }}" class="date"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                    @endif
                   @endif
 
                   @php

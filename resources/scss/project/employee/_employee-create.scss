@@ -65,6 +65,17 @@
                 border-radius: 0.5rem;
                 background-color: $cGreen;
             }
+            .any{
+                white-space: nowrap;
+                padding: 0.25rem 0.9rem;
+                font-size: 1rem;
+                font-weight: $fw-bold;
+                letter-spacing: 0.1rem;
+                border-radius: 0.5rem;
+                color: $cGreen;
+                background-attachment: white;
+                border: 1px solid $cGreen;
+            }
         }
         .input-head{
             white-space: nowrap;

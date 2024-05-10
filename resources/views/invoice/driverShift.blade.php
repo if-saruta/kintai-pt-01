@@ -355,6 +355,9 @@
                                             @endphp
                                             @if ($date->format('d') < 16)
                                                 {{-- 日付　休日、祝日の分岐 --}}
+                                                @php
+                                                    // なんでも月リース
+                                                @endphp
                                                 @foreach ( $shiftProjectVehicles as $spv )
                                                     @if ($spv->shift->date == $date->format('Y-m-d'))
                                                         {{-- @foreach ( $shift->projectsVehicles as $spv ) --}}
@@ -363,7 +366,7 @@
                                                                     @if ($holidays->isHoliday($date))
                                                                         <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @elseif ($date->isSaturday())
-                                                                        <td rowspan="{{ $needRowCount }}" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                        <td rowspan="{{ $needRowCount }}" style="color: rgb(0, 123, 255);" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @elseif($date->isSunday())
                                                                         <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @else
@@ -438,6 +441,16 @@
                                                                                 @endif
                                                                             @endif
                                                                         @endif
+                                                                    @elseif($spv->vehicle_rental_type == 2)
+                                                                        @if($spv->vehicle)
+                                                                            @if ($spv->vehicle->number != '自車')
+                                                                                <input type="text" value="{{ $spv->vehicle->number }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
+                                                                            @endif
+                                                                        @else
+                                                                            @if ($spv->unregistered_vehicle != '自車')
+                                                                                <input style="color: red;" type="text" value="{{ $spv->unregistered_vehicle }}" name="vehicle[{{$spv->id}}]" class="mainVehicle" readonly>
+                                                                            @endif
+                                                                        @endif
                                                                     @elseif($spv->vehicle_rental_type == 3)
                                                                         @if($spv->vehicle)
                                                                             @if ($spv->vehicle->number != '自車')
@@ -470,7 +483,7 @@
                                                             @if ($holidays->isHoliday($date))
                                                                 <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                             @elseif ($date->isSaturday())
-                                                                <td rowspan="{{ $needRowCount }}" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                <td rowspan="{{ $needRowCount }}" style="color: rgb(0, 123, 255);" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                             @elseif($date->isSunday())
                                                                 <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                             @else
@@ -503,7 +516,7 @@
                                                                 @if ($holidays->isHoliday($date))
                                                                     <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                 @elseif ($date->isSaturday())
-                                                                    <td rowspan="{{ $needRowCount }}" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    <td rowspan="{{ $needRowCount }}" style="color: rgb(0, 123, 255);" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                 @elseif($date->isSunday())
                                                                     <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                 @else
@@ -578,7 +591,7 @@
                                                                     @if ($holidays->isHoliday($date))
                                                                         <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @elseif ($date->isSaturday())
-                                                                        <td rowspan="{{ $needRowCount }}" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                        <td rowspan="{{ $needRowCount }}" style="color: rgb(0, 123, 255);" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @elseif($date->isSunday())
                                                                         <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                     @else
@@ -687,7 +700,7 @@
                                                             @if ($holidays->isHoliday($date))
                                                                 <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                             @elseif ($date->isSaturday())
-                                                                <td rowspan="{{ $needRowCount }}" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                <td rowspan="{{ $needRowCount }}" style="color: rgb(0, 123, 255);" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                             @elseif($date->isSunday())
                                                                 <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                             @else
@@ -720,7 +733,7 @@
                                                                 @if ($holidays->isHoliday($date))
                                                                     <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                 @elseif ($date->isSaturday())
-                                                                    <td rowspan="{{ $needRowCount }}" style="color: skyblue;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
+                                                                    <td rowspan="{{ $needRowCount }}" style="color: rgb(0, 123, 255);" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                 @elseif($date->isSunday())
                                                                     <td rowspan="{{ $needRowCount }}" style="color: red;" class="w-amount"><p class="">{{ $date->format('j') }}({{ $date->isoFormat('ddd') }})</p></td>
                                                                 @else
@@ -847,7 +860,7 @@
                                                 $admin_fee_switch = $InfoManagement->admin_fee_switch ?? 100000;
                                                 $max_admin_fee = $InfoManagement->max_admin_fee ?? 10000;
                                                 $min_admin_fee = $InfoManagement->min_admin_fee ?? 5000;
-                                                $transfer_fee = $InfoManagement->transfer_fee ?? 600;
+                                                $transfer_fee = $findEmployee->transfer_fee ?? 0;
 
                                                 // 事務手数料のスイッチ
                                                 if($admin_fee_switch < $totalSalary){

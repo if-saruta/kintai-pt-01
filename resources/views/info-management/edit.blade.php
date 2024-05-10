@@ -104,13 +104,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="info-list-wrap__list-item">
+                        {{-- <div class="info-list-wrap__list-item">
                             <p class="c-p-head">振込手数料</p>
                             <div class="info-list-wrap__list-item__input-box">
                                 <input type="text" class="c-input w-fee-input commaInput" name="transfer_fee" @if($info != null) value="{{ $info->transfer_fee }}" @endif placeholder="1,000" required>
                                 <p class="c-p-head">円</p>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </form>
             </div>

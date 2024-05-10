@@ -95,15 +95,15 @@
                             <p class="required">必須</p>
                         </div>
                         @can('admin-higher')
-                            <input type="text" name="address" value="{{$employee->address}}" class="c-input" placeholder="東京都渋谷区道玄坂0-0-0 hogehogefugafugaマンション 1F" required>
+                            <input type="text" name="address" value="{{$employee->address}}" class="c-input" placeholder="東京都渋谷区道玄坂0-0-0" required>
                         @else
-                            <input type="text" name="address" value="{{$employee->address}}" class="c-input" placeholder="東京都渋谷区道玄坂0-0-0 hogehogefugafugaマンション 1F" readonly>
+                            <input type="text" name="address" value="{{$employee->address}}" class="c-input" placeholder="東京都渋谷区道玄坂0-0-0" readonly>
                         @endcan
                     </div>
                     <div class="address-area__input-box --address">
                         <div class="head">
                             <p class="input-head">建物名</p>
-                            <p class="required">任意</p>
+                            <p class="any">任意</p>
                         </div>
                         @can('admin-higher')
                             <input type="text" name="building_name" value="{{ $employee->building_name }}" class="c-input" placeholder="建物名など">
@@ -116,7 +116,7 @@
                     <div class="phone-area__input-box">
                         <div class="head">
                             <p class="input-head">電話番号</p>
-                            <p class="required">必須</p>
+                            <p class="any">任意</p>
                         </div>
                         @can('admin-higher')
                             <input type="text" name="phone" class="c-input" value="{{ $employee->phone_number }}" placeholder="000-0000-0000">
@@ -186,6 +186,19 @@
                                 <input type="text" name="account_holder_name" value="{{$employee->bankAccounts->first()->account_holder_name}}" class="c-input" placeholder="ヤマダ タロウ" readonly>
                             @endcan
                         </div>
+                    </div>
+                </div>
+                <div class="phone-area">
+                    <div class="phone-area__input-box">
+                        <div class="head">
+                            <p class="input-head">振込手数料</p>
+                            <p class="required">必須</p>
+                        </div>
+                        @can('admin-higher')
+                            <input type="text" name="transfer_fee" value="{{ $employee->transfer_fee }}" class="c-input commaInput" placeholder="000" required>
+                        @else
+                            <input type="text" name="transfer_fee" value="{{ $employee->transfer_fee }}" class="c-input commaInput" placeholder="000" readonly>
+                        @endcan
                     </div>
                 </div>
                 <div class="invoice-check">

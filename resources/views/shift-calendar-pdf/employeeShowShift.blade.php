@@ -284,7 +284,7 @@
         }
 
         @page {
-            margin-top: 25px;
+            margin-top: 80px;
             margin-bottom: 5px;
             margin-left: 40px;
             margin-right: 5px;
@@ -386,8 +386,22 @@
             vertical-align: middle;
             height: 20px;
         }
+        .title{
+            width: fit-content;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        header{
+            position: fixed;
+            top: -30px;
+            left: 0px;
+            right: 0px;
+        }
     </style>
 
+    <header>
+        <h1 class="title">{{ $title }}</h1>
+    </header>
     <table>
         {{-- ヘッド --}}
         <thead>
@@ -399,7 +413,7 @@
                         @if ($holidays->isHoliday($date))
                             <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                         @elseif ($date->isSaturday())
-                            <p class="" style="color: skyblue;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
+                            <p class="" style="color: rgb(0, 123, 255);">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                         @elseif($date->isSunday())
                             <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                         @else

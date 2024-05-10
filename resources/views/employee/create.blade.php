@@ -86,7 +86,7 @@
                     <div class="address-area__input-box --address">
                         <div class="head">
                             <p class="input-head">建物名</p>
-                            <p class="required">任意</p>
+                            <p class="any">任意</p>
                         </div>
                         <input type="text" name="building_name" class="c-input" placeholder="建物名など">
                     </div>
@@ -95,7 +95,7 @@
                     <div class="phone-area__input-box">
                         <div class="head">
                             <p class="input-head">電話番号</p>
-                            <p class="required">必須</p>
+                            <p class="any">任意</p>
                         </div>
                         <input type="text" name="phone" class="c-input" placeholder="000-0000-0000">
                     </div>
@@ -134,6 +134,15 @@
                             <p class="">口座名義人</p>
                             <input type="text" name="account_holder_name" class="c-input" placeholder="ヤマダ タロウ" required>
                         </div>
+                    </div>
+                </div>
+                <div class="phone-area">
+                    <div class="phone-area__input-box">
+                        <div class="head">
+                            <p class="input-head">振込手数料</p>
+                            <p class="required">必須</p>
+                        </div>
+                        <input type="text" name="transfer_fee" class="c-input commaInput" placeholder="000" required>
                     </div>
                 </div>
                 <div class="invoice-check">
