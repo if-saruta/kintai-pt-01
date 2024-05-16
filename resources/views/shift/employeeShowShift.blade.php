@@ -9,18 +9,18 @@
         <div class="main__link-block --shift-link-block">
             <div class="main__link-block__tags">
                 @can('admin-higher')
-                <form action="{{route('shift.')}}" method="POST"
-                    class="main__link-block__item --shift-link-block__item">
-                    @csrf
-                    <input hidden name="witch" value="page01" type="text">
-                    <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                    <form action="{{route('shift.')}}" method="POST"
+                        class="main__link-block__item --shift-link-block__item">
+                        @csrf
+                        <input hidden name="witch" value="page01" type="text">
+                        <input hidden type="text" name="date" value="{{$startOfWeek}}">
                         @foreach ($narrowEmployeeId as $EmployeeId)
                             <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
                         @endforeach
-                    <button class="{{ request()->routeIs('shift.', 'shift.selectWeek') ? 'active' : '' }} link">
-                        <span class="">全表示</span>
-                    </button>
-                </form>
+                        <button class="{{ request()->routeIs('shift.', 'shift.selectWeek') ? 'active' : '' }} link">
+                            <span class="">全表示</span>
+                        </button>
+                    </form>
                 @endcan
                 <form action="{{route('shift.employeeShowShift')}}" method="POST"
                     class="main__link-block__item --shift-link-block__item">
@@ -34,6 +34,7 @@
                         <span class="">稼働表</span>
                     </button>
                 </form>
+                @can('user-higher')
                 <form action="{{route('shift.employeePriceShift')}}" method="POST"
                     class="main__link-block__item --shift-link-block__item">
                     @csrf
@@ -50,6 +51,7 @@
                         @endcan
                     </button>
                 </form>
+                @endcan
                 @can('admin-higher')
                 <form action="{{route('shift.projectPriceShift')}}" method="POST"
                     class="main__link-block__item --shift-link-block__item">
@@ -64,6 +66,7 @@
                     </button>
                 </form>
                 @endcan
+                @can('user-higher')
                 <form action="{{route('shift.projectCount')}}" method="POST"
                     class="main__link-block__item --shift-link-block__item">
                     @csrf
@@ -76,6 +79,7 @@
                         <span class="">案件数用</span>
                     </button>
                 </form>
+                @endcan
             </div>
             @can('admin-higher')
                 <div class="--shift-link-block__btn-area">
@@ -84,7 +88,7 @@
                         @csrf
                         <input hidden name="witch" value="page06" type="text">
                         <input hidden type="text" name="date" value="{{$startOfWeek}}">
-                        @foreach ($narrowEmployeeId as $EmployeeId)
+                            @foreach ($narrowEmployeeId as $EmployeeId)
                             <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
                         @endforeach
                         <button class="{{ request()->routeIs('shift.edit*') ? 'active' : '' }} icon-block__button">
@@ -110,6 +114,7 @@
             ?>
             <div class="shift-calendar">
                 {{-- シフトPDFダウンロード --}}
+                @can('user-higher')
                 <div class="calendar-download">
                     <form action="{{ route('shift.allViewPdf') }}" method="POST">
                         @csrf
@@ -123,6 +128,7 @@
                         <button class="calendar-download-btn">ダウンロード</button>
                     </form>
                 </div>
+                @endcan
                 {{-- 日付の表示 --}}
                 <div class="shift-calendar__date">
                     <form action="{{route('shift.employeeShowShiftSelectWeek')}}" method="POST">
@@ -132,13 +138,16 @@
                         @foreach ($narrowEmployeeId as $EmployeeId)
                             <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
                         @endforeach
+                        @can('user-higher')
                         <input hidden name="witch" value="page02" type="text">
+                        @endcan
                         <button type="submit" class="">
                             <i class="fa-solid fa-angle-left date-angle"></i>
                         </button>
                     </form>
                     <div class="shift-calendar__date__show">
-                        <div class="date">
+                        <p class="week-of-month">{{$monday->format('Y')}}年{{$monday->format('n')}}月第{{ $weekOfMonth }}週目 稼働表</p>
+                        {{-- <div class="date">
                             <div class="date__txt">
                                 <p class="fs-14">{{$monday->format('Y')}}<span class="fs-10">年</span></p>
                             </div>
@@ -154,7 +163,7 @@
                                 <p class="fs-16">{{$sunday->format('n')}}<span
                                         class="fs-10">月</span>{{$sunday->format('j')}}<span class="fs-10">日</span></p>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     <form action="{{route('shift.employeeShowShiftSelectWeek')}}" method="POST">
                         @csrf
@@ -163,15 +172,19 @@
                         @foreach ($narrowEmployeeId as $EmployeeId)
                             <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
                         @endforeach
+                        @can('user-higher')
                         <input hidden name="witch" value="page02" type="text">
+                        @endcan
                         <button type="submit" class="">
                             <i class="fa-solid fa-angle-right date-angle"></i>
                         </button>
                     </form>
                 </div>
+                @can('user-higher')
                 <div class="shift-calendar__setting --common-page-postion c-back-btn --green employeeModalOpen">
                     <i class="fa-solid fa-user"></i>
                 </div>
+                @endcan
                 {{-- カレンダー検索 --}}
                 <form action="{{route('shift.employeeShowShiftSelectWeek')}}" class="datepicker" method="POST">
                     @csrf
@@ -180,7 +193,9 @@
                             <input type="date" id="date" name="date" class="datepicker__input">
                         </label>
                     </div>
+                    @can('user-higher')
                     <input hidden name="witch" value="page02" type="text">
+                    @endcan
                     <button type="submit" class="datepicker__button">
                         検索
                     </button>
@@ -327,7 +342,11 @@
                                                         @endif
                                                         {{-- 車両 --}}
                                                         @if ($spv->vehicle)
-                                                            <p class="table-cell__item__row" @if(in_array($spv->vehicle->id, $MultipleDailyUsesVehiclesArray[$shift->date])) style="background-color: yellow;" @endif>No.{{$spv->vehicle->number}}</p>
+                                                            @can('user-higher')
+                                                                <p class="table-cell__item__row" @if(in_array($spv->vehicle->id, $MultipleDailyUsesVehiclesArray[$shift->date])) style="background-color: yellow;" @endif>No.{{$spv->vehicle->number}}</p>
+                                                            @else
+                                                                <p class="table-cell__item__row">No.{{$spv->vehicle->number}}</p>
+                                                            @endcan
                                                         @elseif($spv->unregistered_vehicle)
                                                             @if ($spv->unregistered_vehicle != '自車')
                                                                 <p class="table-cell__item__row" style="color: black;">
@@ -392,7 +411,11 @@
                                                         @endif
                                                         {{-- 車両 --}}
                                                         @if ($spv->vehicle)
-                                                            <p class="table-cell__item__row" @if(in_array($spv->vehicle->id, $MultipleDailyUsesVehiclesArray[$shift->date])) style="background-color: yellow;" @endif>No.{{$spv->vehicle->number}}</p>
+                                                            @can('user-higher')
+                                                                <p class="table-cell__item__row" @if(in_array($spv->vehicle->id, $MultipleDailyUsesVehiclesArray[$shift->date])) style="background-color: yellow;" @endif>No.{{$spv->vehicle->number}}</p>
+                                                            @else
+                                                                <p class="table-cell__item__row">No.{{$spv->vehicle->number}}</p>
+                                                            @endcan
                                                         @elseif($spv->unregistered_vehicle)
                                                             @if ($spv->unregistered_vehicle != '自車')
                                                                 <p class="table-cell__item__row" style="color: black;">

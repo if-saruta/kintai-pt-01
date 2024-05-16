@@ -33,6 +33,7 @@
                         <span class="">稼働表</span>
                     </button>
                 </form>
+                @can('user-higher')
                 <form action="{{route('shift.employeePriceShift')}}" method="POST"
                     class="main__link-block__item --shift-link-block__item">
                     @csrf
@@ -49,6 +50,7 @@
                         @endcan
                     </button>
                 </form>
+                @endcan
                 @can('admin-higher')
                 <form action="{{route('shift.projectPriceShift')}}" method="POST"
                     class="main__link-block__item --shift-link-block__item">
@@ -63,6 +65,7 @@
                     </button>
                 </form>
                 @endcan
+                @can('user-higher')
                 <form action="{{route('shift.projectCount')}}" method="POST"
                     class="main__link-block__item --shift-link-block__item">
                     @csrf
@@ -75,6 +78,7 @@
                         <span class="">案件数用</span>
                     </button>
                 </form>
+                @endcan
             </div>
             @can('admin-higher')
                 <div class="--shift-link-block__btn-area">
@@ -150,7 +154,8 @@
                         </button>
                     </form>
                     <div class="shift-calendar__date__show">
-                        <div class="date">
+                        <p class="week-of-month">{{$monday->format('Y')}}年{{$monday->format('n')}}月第{{ $weekOfMonth }}週目 全表示</p>
+                        {{-- <div class="date">
                             <div class="date__txt">
                                 <p class="fs-14">{{$monday->format('Y')}}<span class="fs-10">年</span></p>
                             </div>
@@ -167,7 +172,7 @@
                                 <p class="fs-16">{{$sunday->format('n')}}<span
                                         class="fs-10">月</span>{{$sunday->format('j')}}<span class="fs-10">日</span></p>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     {{-- 進む --}}
                     <form action="{{route('shift.selectWeek')}}" method="POST">

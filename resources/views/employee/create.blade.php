@@ -23,7 +23,7 @@
                         <input type="text" name="name" class="c-input" placeholder="山田　太郎">
                         @if ($errors->has('name'))
                             <span class="invalid-feedback" role="alert">
-                            tttt
+
                           </span>
                         @endif
                     </div>
@@ -65,6 +65,7 @@
                 <div class="company --company-name">
                     <div class="head">
                         <p class="input-head">会社名</p>
+                        <p class="any">任意</p>
                     </div>
                     <input type="text" name="company_name" class="c-input" placeholder="株式会社">
                 </div>

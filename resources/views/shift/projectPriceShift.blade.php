@@ -138,24 +138,7 @@
                         </button>
                     </form>
                     <div class="shift-calendar__date__show">
-                        <div class="date">
-                            <div class="date__txt">
-                                <p class="fs-14">{{$monday->format('Y')}}<span class="fs-10">年</span></p>
-                            </div>
-                            <div class="date__txt">
-                                <p class="fs-16">{{$monday->format('n')}}<span
-                                        class="fs-10">月</span>{{$monday->format('j')}}<span class="fs-10">日</span></p>
-                            </div>
-                        </div>
-                        <div class="date">
-                            <div class="date__txt">
-                                <p class="fs-14">{{$sunday->format('Y')}}<span class="fs-10">年</span></p>
-                            </div>
-                            <div class="date__txt">
-                                <p class="fs-16">{{$sunday->format('n')}}<span
-                                        class="fs-10">月</span>{{$sunday->format('j')}}<span class="fs-10">日</span></p>
-                            </div>
-                        </div>
+                        <p class="week-of-month">{{$monday->format('Y')}}年{{$monday->format('n')}}月第{{ $weekOfMonth }}週目 上代閲覧用</p>
                     </div>
                     <form action="{{route('shift.projectPriceShiftSelectWeek')}}" method="POST">
                         @csrf
@@ -181,7 +164,7 @@
                             <input type="date" id="date" name="date" class="datepicker__input">
                         </label>
                     </div>
-                    <input hidden name="witch" value="page4" type="text">
+                    <input hidden name="witch" value="page04" type="text">
                     <button type="submit" class="datepicker__button">
                         検索
                     </button>

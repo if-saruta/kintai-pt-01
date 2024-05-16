@@ -120,7 +120,7 @@
                     </div>
                 </div>
                 {{-- 日付の表示 --}}
-                <div class="shift-calendar__date">
+                <div class="shift-calendar__date --edit-shift-calendar-date">
                     <form action="{{route('shift.editSelectWeek')}}" method="POST">
                         @csrf
                         <input type="hidden" name="date" value="{{$startOfWeek}}">
@@ -259,7 +259,7 @@
                                 @foreach ( $shiftData as $shift ) {{-- $shift == 1日のシフト --}}
                                     {{-- 一周目だけ従業員表示 --}}
                                     @if ($is_employee_open)
-                                        <td class="table-employee-name">
+                                        <td class="table-employee-name edit-employee-name-td shiftMemoOpen" data-employee-id="{{ $shift->employee_id }}">
                                             <div class="table-employee-name__block">
                                                 @if ($shift->employee)
                                                     <p class="">{{$shift->employee->name}}</p>
@@ -391,6 +391,7 @@
                                                 新規作成
                                             </button>
                                             <input hidden value="{{$shift->id}}" class="createShiftId" type="text">
+                                            <input hidden type="text" value="{{ $shift->employee_id }}" class="createEmployeeId">
                                             <input hidden type="text" value="{{$findYear}}" class="createFindYear">
                                             <input hidden type="text" value="{{$findMonth}}" class="createFindMonth">
                                             <input hidden type="text" value="{{$findDate}}" class="createFindDate">
@@ -520,6 +521,7 @@
                                 新規作成
                             </button>
                             <input hidden value="{{$shift->id}}" class="createShiftId" type="text">
+                            <input hidden type="text" value="{{ $shift->employee_id }}" class="createEmployeeId">
                             <input hidden type="text" value="{{$findYear}}" class="createFindYear">
                             <input hidden type="text" value="{{$findMonth}}" class="createFindMonth">
                             <input hidden type="text" value="{{$findDate}}" class="createFindDate">
@@ -704,6 +706,7 @@
                                 新規作成
                             </button>
                             <input hidden value="{{$shift->id}}" class="createShiftId" type="text">
+                            <input hidden type="text" value="{{ $shift->employee_id }}" class="createEmployeeId">
                             <input hidden type="text" value="{{$findYear}}" class="createFindYear">
                             <input hidden type="text" value="{{$findMonth}}" class="createFindMonth">
                             <input hidden type="text" value="{{$findDate}}" class="createFindDate">
@@ -829,6 +832,7 @@
                         新規作成
                     </button>
                     <input hidden value="{{$shift->id}}" class="createShiftId" type="text">
+                    <input hidden type="text" value="{{ $shift->employee_id }}" class="createEmployeeId">
                     <input hidden type="text" value="{{$findYear}}" class="createFindYear">
                     <input hidden type="text" value="{{$findMonth}}" class="createFindMonth">
                     <input hidden type="text" value="{{$findDate}}" class="createFindDate">
@@ -915,7 +919,7 @@
                                 </div>
                             </div>
                             <input name="projectInput" type="text" class="c-input modal-input" id="projectInput">
-                            <select name="projectSelect" id="projectSelect" class="c-select modal-select">
+                            <select name="projectSelect" id="projectSelect" class="c-select modal-select projectSelect editProjectSelect">
                                 <option value="">選択してください</option>
                                 @foreach ($projects as $project)
                                 <option value="{{$project->id}}">{{$project->name}}</option>
@@ -1067,15 +1071,11 @@
                                     <label for="createProjectRadio02">新規案件</label>
                                 </div>
                             </div>
-                            <input name="projectInput" type="text" class="c-input modal-input" id="createProjectInput"
-                                placeholder="案件名">
-                            <select name="projectSelect" id="createProjectSelect" class="c-select modal-select">
+                            <input name="projectInput" type="text" class="c-input modal-input" id="createProjectInput" placeholder="案件名">
+                            <select name="projectSelect" id="createProjectSelect" class="c-select modal-select createProjectSelect">
                                 <option value="">選択してください</option>
                                 @foreach ($projects as $project)
-                                <option value="{{$project->id}}"
-                                    data-retail-amount="{{ $project->retail_price }}"
-                                    data-driver-amount="{{ $project->driver_price }}"
-                                    >{{$project->name}}</option>
+                                <option value="{{$project->id}}" data-retail-amount="{{ $project->retail_price }}" data-driver-amount="{{ $project->driver_price }}">{{$project->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -1179,11 +1179,25 @@
     <div class="shift-setting-modal" id="settingModal">
         <div class="shift-setting-modal__bg settingModalClose"></div>
         <div class="shift-setting-modal__white-board">
-            <form action="{{ route('shift.bulkReflection') }}" method="POST">
-                @csrf
-                <input hidden value="{{$startOfWeek}}" name="startOfWeek" type="text">
-                <input hidden value="{{$endOfWeek}}" name="endOfWeek" type="text">
-                <div class="shift-setting-modal__white-board__inner">
+            <div class="shift-setting-modal__white-board__inner">
+                {{-- シフトPDFダウンロード --}}
+                <div class="calendar-download">
+                    <form action="{{ route('shift.allViewPdf') }}" method="POST">
+                        @csrf
+                        {{-- 日付 --}}
+                        <input hidden name="startOfWeek" value="{{ $startOfWeek }}" type="text">
+                        <input hidden name="endOfWeek" value="{{ $endOfWeek }}" type="text">
+                        {{-- 案件のhegiht --}}
+                        <input hidden name="projectHeight" value="" id="projectHeight" type="text">
+                        {{-- シフトの種類 --}}
+                        <input hidden name="shiftType" value="definitive" type="text">
+                        <button class="calendar-download-btn">確定版ダウンロード</button>
+                    </form>
+                </div>
+                <form action="{{ route('shift.bulkReflection') }}" method="POST">
+                    @csrf
+                    <input hidden value="{{$startOfWeek}}" name="startOfWeek" type="text">
+                    <input hidden value="{{$endOfWeek}}" name="endOfWeek" type="text">
                     <p class="title">編集</p>
                     <div class="select-radio">
                         <label for="">
@@ -1203,11 +1217,11 @@
                         <button class="c-save-btn btn" onclick='return confirm("上書き保存されます。よろしいですか？")'>反映</button>
                         <div class="c-back-btn settingModalClose">戻る</div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-    {{-- 設定モーダル --}}
+    {{-- 従業員モーダル --}}
     <div class="shift-setting-modal" id="employeeModal">
         <div class="shift-setting-modal__bg employeeModalClose"></div>
         <div class="shift-setting-modal__white-board --common-setting-white-board">
@@ -1239,13 +1253,47 @@
             </form>
         </div>
     </div>
+    <div class="employee-memo-modal" id="shiftMemoModal">
+        <div class="employee-memo-modal__bg shiftMemoClose"></div>
+        <div class="employee-memo-modal__succsess-buner" id="succsessBunner">
+            <p class="">正常に保存されました</p>
+        </div>
+        <div class="employee-memo-modal__error-buner" id="errorBunner">
+            <p class="">正常に保存されませんでした</p>
+        </div>
+        <div class="employee-memo-modal__white-board">
+            <div class="employee-memo-modal__white-board__inner">
+                <div class="main-content">
+                    <p class="">備考欄</p>
+                    <textarea name="shift_memo" id="shiftMemo" cols="30" rows="10" class="c-textarea"></textarea>
+                    <div class="btn-area">
+                        <button class="c-save-btn memo-save-btn" id="memoSaveBtn">登録</button>
+                        <div class="c-back-btn memo-back-btn shiftMemoClose">戻る</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 <script>
 var missingRequiredAllowancesByDate = @json($missingRequiredAllowancesByDate);
 </script>
 
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+<script>
+    // document.addEventListener('DOMContentLoaded', () => {
+    //     $('.projectSelect').select2();
+    //     $('.projectSelect').on('change', function (e) {
+
+    //     })
+    // });
+</script>
+
 </x-app-layout>
 
 {{-- script --}}
 <script src="{{asset('js/shift.js')}}"></script>
+
+

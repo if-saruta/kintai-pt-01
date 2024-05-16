@@ -20,7 +20,9 @@
         @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.js'])
 
         {{-- jQuery --}}
-        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css">
 
     </head>
     <body class="antialiased">

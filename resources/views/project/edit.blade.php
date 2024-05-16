@@ -202,7 +202,7 @@
                                                             <input type="text" class="c-input commaInput" name="editProjects[{{$project->id}}][allowances][{{ $allowance->id }}][allowance_retail_amount]" value="{{ number_format($allowance->retail_amount) }}" placeholder="1,000">
                                                         </div>
                                                         <div class="input-wrap">
-                                                            <p class="">手当ドライバー</p>
+                                                            <p class="">手当ドライバー価格</p>
                                                             <input type="text" class="c-input commaInput" name="editProjects[{{$project->id}}][allowances][{{ $allowance->id }}][allowance_driver_amount]" value="{{ number_format($allowance->driver_amount) }}" placeholder="1,000">
                                                         </div>
                                                     </div>
@@ -222,7 +222,7 @@
                                                             <input type="text" class="c-input commaInput" name="editProjects[{{$project->id}}][allowance_retail_amount]" placeholder="1,000">
                                                         </div>
                                                         <div class="input-wrap">
-                                                            <p class="">手当ドライバー</p>
+                                                            <p class="">手当ドライバー価格</p>
                                                             <input type="text" class="c-input commaInput" name="editProjects[{{$project->id}}][allowance_driver_amount]" placeholder="1,000">
                                                         </div>
                                                     </div>
@@ -484,7 +484,7 @@
                                         <input type="text" class="c-input commaInput" name="projects[${newProjectIndex}][allowance_retail_amount]" placeholder="1,000">
                                     </div>
                                     <div class="input-wrap">
-                                        <p class="">手当ドライバー</p>
+                                        <p class="">手当ドライバー価格</p>
                                         <input type="text" class="c-input commaInput" name="projects[${newProjectIndex}][allowance_driver_amount]" placeholder="1,000">
                                     </div>
                                 </div>

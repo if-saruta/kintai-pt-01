@@ -196,7 +196,10 @@ class InvoiceController extends Controller
         $employees = Employee::all();
         $findEmployee = Employee::find($employeeId);
 
+        $sagawa = Client::where('name', '佐川急便株式会社')->first();
+        $sagawaId = $sagawa ? $sagawa->id : 1;
         $projects = Project::where('client_id', '!=', '1')
+                            ->where('client_id', '!=', $sagawaId)
                             ->where('is_suspended', '!=', '1')
                             ->get();
         $allowanceProject = AllowanceByProject::where('employee_id', $findEmployee->id)->get();
@@ -247,18 +250,18 @@ class InvoiceController extends Controller
         $shiftProjectVehiclesByEmployee = $query->get();
 
         // コレクションのfilterメソッドを使用してフィルタリング
-        $shiftProjectVehicles = $shiftProjectVehiclesByEmployee->filter(function ($spv) use ($projectsId, $clientsId) {
+        $shiftProjectVehicles = $shiftProjectVehiclesByEmployee->filter(function ($spv) use ($projectsId, $clientsId, $sagawaId) {
             if(!empty($clientsId) || !empty($projectsId)){
                 if($spv->project){
                     // client_idは排除
-                    if($spv->project->client_id != 1){
+                    if($spv->project->client_id != 1 && $spv->project->client_id != $sagawaId){
                         return in_array($spv->project->id, $projectsId) || in_array($spv->project->client_id, $clientsId);
                     }
                 }
             }else{
                 if($spv->project){
                     // client_idは排除
-                    if($spv->project->client_id != 1){
+                    if($spv->project->client_id != 1 && $spv->project->client_id != $sagawaId){
                         return $spv;
                     }
                 }else{
@@ -712,7 +715,12 @@ class InvoiceController extends Controller
 
     public function projectShift()
     {
-        $clients = Client::where('id', '!=', 1)->get();
+        $sagawa = Client::where('name', '佐川急便株式会社')->first();
+        $sagawaId = $sagawa ? $sagawa->id : 1;
+        $clients = Client::where('id', '!=', 1)
+                        ->where('id', '!=' , $sagawaId)
+                        ->get();
+
         $ShiftProjectVehicles = null;
         $warning = null;
         $clientId = null;

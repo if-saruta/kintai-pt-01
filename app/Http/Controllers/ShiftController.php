@@ -43,6 +43,18 @@ class ShiftController extends Controller
         $allowances = ProjectAllowance::with('shiftAllowance')->where('project_id', $id)->get();
         return response()->json($allowances);
     }
+    public function fetchEmployeeData($id){
+        $employee = Employee::find($id);
+        return response()->json($employee);
+    }
+    public function storeMemo(Request $request)
+    {
+        $employee = Employee::find($request->id);
+        $employee->shift_memo = $request->memo;
+        $employee->save();
+
+        return response()->json(['message' => '投稿が保存されました！', 'employee' => $employee]);
+    }
     public function fetchProjectData($id)
     {
         $project = Project::find($id);
@@ -165,11 +177,18 @@ class ShiftController extends Controller
         // 必須手当の確認
         $missingRequiredAllowancesByDate = $this->requiredAllowanceCheck($allowanceCheckShifts);
 
+        // その月の第何週目かを計算
+        $date = new Carbon($startOfWeek);
+        $weekOfMonth = $date->weekOfMonth;
+
         $user = auth()->user();
         if($user->role == 1){
-            return view('shift.index', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'sortedShiftDataByEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'MultipleDailyUsesVehiclesArray', 'employeeList', 'narrowEmployeeId','missingRequiredAllowancesByDate'));
+            return view('shift.index', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'sortedShiftDataByEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'MultipleDailyUsesVehiclesArray', 'employeeList', 'narrowEmployeeId','missingRequiredAllowancesByDate', 'weekOfMonth'));
         }else{
-            return redirect()->route('shift.employeeShowShift');
+            return redirect()->route('shift.employeeShowShift')->with([
+                'date' => $startOfWeek,
+                'page' => 'page02',
+            ]);
         }
     }
 
@@ -290,15 +309,18 @@ class ShiftController extends Controller
 
         $user = auth()->user();
 
+        // その月の第何週目かを計算
+        $date = new Carbon($startOfWeek);
+        $weekOfMonth = $date->weekOfMonth;
         if ($page) {
             if ($page == 'page01') {
-                return view('shift.index', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'MultipleDailyUsesVehiclesArray', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate'));
+                return view('shift.index', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'MultipleDailyUsesVehiclesArray', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate', 'weekOfMonth'));
             } elseif ($page == 'page02') {
-                return view('shift.employeeShowShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'MultipleDailyUsesVehiclesArray', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate'));
+                return view('shift.employeeShowShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'MultipleDailyUsesVehiclesArray', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate', 'weekOfMonth'));
             } elseif ($page == 'page03') {
-                return view('shift.employeePriceShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate'));
+                return view('shift.employeePriceShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate', 'weekOfMonth'));
             } elseif ($page == 'page04') {
-                return view('shift.projectPriceShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate'));
+                return view('shift.projectPriceShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate', 'weekOfMonth'));
             } elseif ($page == 'page05') {
                 $shiftDataByDay = $shifts->groupBy(function ($shift) {
                     return $shift->date;
@@ -318,12 +340,16 @@ class ShiftController extends Controller
                         }
                     }
                 }
-                $projects = Project::where('client_id', '!=', '1')->get();
+                $sagawa = Client::where('name', '佐川急便株式会社')->first();
+                $sagawaId = $sagawa ? $sagawa->id : 1;
+                $projects = Project::where('client_id', '!=', '1')
+                                    ->where('client_id', '!=', $sagawaId)
+                                    ->get();
                 $projectsGroupByClient = $projects->GroupBy(function ($project) {
                     return $project->client_id;
                 });
 
-                return view('shift.projectCountShift', compact('shifts', 'unregistered_project', 'projects', 'projectsGroupByClient', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates','holidays', 'employeeList', 'narrowEmployeeId'));
+                return view('shift.projectCountShift', compact('shifts', 'unregistered_project', 'projects', 'projectsGroupByClient', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates','holidays', 'employeeList', 'narrowEmployeeId', 'weekOfMonth'));
             } elseif ($page == 'page06') {
                 $projects = Project::where('is_suspended', '!=', '1')->get();
                 $vehicles = Vehicle::all();
@@ -357,10 +383,25 @@ class ShiftController extends Controller
                 return view('shift.edit', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'clients', 'projects', 'vehicles', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates','holidays', 'MultipleDailyUsesVehiclesArray', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate'));
             }
         } else {
-            if($user->role <= 10){
-                return view('shift.index', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates','holidays', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate'));
-            }else if($user->role > 10){
-                return view('shift.employeeShowShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate'));
+            if($user->role <= 1){
+                return view('shift.index', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates','holidays', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate', 'weekOfMonth'));
+            }else if($user->role <= 2){
+                return view('shift.employeeShowShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'MultipleDailyUsesVehiclesArray', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate', 'weekOfMonth'));
+            }else if($user->role <= 3){
+                // 従業員絞り込みシフトを抽出
+                $shifts = Shift::with('employee', 'projectsVehicles.project', 'projectsVehicles.vehicle')
+                ->whereBetween('date', [$startOfWeek, $endOfWeek])
+                ->where('employee_id', $user->employee_id)
+                ->get();
+
+                $shiftDataByEmployee = $shifts->groupBy(function ($shift) {
+                    return $shift->employee_id;
+                });
+
+                $shiftDataByUnEmployee = [];
+                $missingRequiredAllowancesByDate = [];
+
+                return view('shift.employeeShowShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'MultipleDailyUsesVehiclesArray', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate', 'weekOfMonth'));
             }
         }
     }

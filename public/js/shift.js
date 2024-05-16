@@ -76,17 +76,24 @@ window.addEventListener('DOMContentLoaded', () => {
             let fetchEmployeeId = null;
             let shiftPvId = null;
 
+            // プログラムによる変更のフラグを初期化
+            let isProgrammaticChange = false;
+
             for(let i = 0; i < target.length; i++){
+                // モーダルを開く
                 target[i].addEventListener('click', () => {
                     modal.style.display = 'block';
                     setValue(target[i]);
                     changeRadio();
                     commmaActive();
+
                     let firstProject = target[i].querySelector('.editProjectId');
                     let employee = target[i].querySelector('.employeeId');
+
                     if(firstProject){
                         let firstProjectId = firstProject.value;
                         let employeeId = null;
+                        setSelect2ValueProgrammatically(firstProjectId);
                         if(employee != null){
                             employeeId = employee.value;
                         }
@@ -98,6 +105,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     }
                 })
             }
+            // モーダルを閉じる
             for(let i = 0; i < closeElem.length; i++){
                 closeElem[i].addEventListener('click', () => {
                     modal.style.display = 'none';
@@ -105,6 +113,15 @@ window.addEventListener('DOMContentLoaded', () => {
                     commmaActive();
                 })
             }
+
+            // オプションの選択をプログラムで行う関数
+            function setSelect2ValueProgrammatically(value) {
+                isProgrammaticChange = true; // フラグを立てる
+                $('.editProjectSelect').val(value).trigger('change');
+                isProgrammaticChange = false; // フラグをリセット
+            }
+
+            // モーダル内の値をセットする
             const setValue = (target) => {
                 setId = document.getElementById('setShiftId');
                 let setEmployee = document.getElementById('setEmployeeName');
@@ -159,7 +176,7 @@ window.addEventListener('DOMContentLoaded', () => {
             // 案件・車両の入力方法の切り替え
             const changeRadio = () => {
                 const projectInput = document.getElementById('projectInput');
-                const projectSelect = document.getElementById('projectSelect');
+                const projectSelect = modal.querySelector('.select2-container');
                 const vehicleInput = document.getElementById('vehicleInput');
                 const vehicleSelect = document.getElementById('vehicleSelect');
 
@@ -250,11 +267,22 @@ window.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            const projectSelect = document.getElementById('projectSelect');
-            projectSelect.addEventListener('change', function(){
-                let projectId = this.value;
-                fetchAllowance(projectId);
-                fetchAmount(projectId, fetchEmployeeId);
+            // 案件に基づく情報を表示
+            $('.editProjectSelect').select2();
+            $('.editProjectSelect').on('change', function (e) {
+                // プログラムによる変更の場合は何もしない
+                if (isProgrammaticChange) return;
+
+                // 選択されたデータを取得
+                var data = $(this).select2('data');
+                let projectId = data[0]['id'];
+
+                if(projectId != ''){
+                    fetchAllowance(projectId);
+                }
+                if(projectId != '' && fetchEmployeeId != ''){
+                    fetchAmount(projectId, fetchEmployeeId);
+                }
             })
 
             // 手当の情報を取得
@@ -341,6 +369,8 @@ window.addEventListener('DOMContentLoaded', () => {
                 vehicleInput.style.display = 'none';
                 vehicleSelect.style.display = 'block';
 
+                $('.editProjectSelect').val(null).trigger('change');
+
                 // クライアント
                 modal.classList.remove('create-add-client-active');
                 editClientWrap.classList.remove('add-client');
@@ -368,6 +398,9 @@ window.addEventListener('DOMContentLoaded', () => {
     const createModalActive = () => {
         const targetElem = document.querySelectorAll('.createBtn');
         const closeElem = document.querySelectorAll('.createCloseModal');
+        let setRetail = document.getElementById('createRetailInput');
+        let setSalary = document.getElementById('createSalaryInput');
+        let employeeId = null;
 
         // モダールに値をセット
         const setValue = (target) => {
@@ -384,6 +417,8 @@ window.addEventListener('DOMContentLoaded', () => {
             setYear.innerHTML = target.querySelector('.createFindYear').value;
             setMonth.innerHTML = target.querySelector('.createFindMonth').value;
             setDay.innerHTML = target.querySelector('.createFindDate').value;
+            employeeId = target.querySelector('.createEmployeeId').value;
+
             if(target.querySelector('.createTimeOfPart').value == 0){
                 setTxtPart.innerHTML = "午前の案件";
                 setPart.value = 0;
@@ -393,52 +428,42 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // 案件select変化時の上代と給与の金額をセット
-        const projectSelect = document.getElementById('createProjectSelect');
-        const createRetailInput = document.getElementById('createRetailInput');
-        const createSalaryInput = document.getElementById('createSalaryInput');
-        const paymentSelect = document.getElementById('paymentSelect');
-        if(projectSelect != null){
-            function displaySelectedOption(target) {
-                // 編集中の従業員IDを取得
-                const employeeId = target.querySelector('.createEmployeeName').getAttribute('data-employee-id');
-                // 選択されている案件IDを取得
-                const projectId = projectSelect.options[projectSelect.selectedIndex].value;
-                // 条件が一致する給与を検索
-                let paymentAmount = 0;
-                for(let i = 0; i < paymentSelect.options.length; i++){
-                    // オプションを格納
-                    var optionElem = paymentSelect.options[i];
-                    var paymentProjectId = optionElem.getAttribute('data-payment-project-id'); //オプションのデータ属性を取得
-                    var paymentEmployeeId = optionElem.getAttribute('data-payment-employee-id'); //オプションのデータ属性を取得
-                    // 選択されている案件と比較
-                    if(paymentProjectId == projectId && paymentEmployeeId == employeeId){
-                        paymentAmount = optionElem.value;
-                        break;
-                    }
-                }
-
-                // 上代の金額取得
-                const projectAmount = projectSelect.options[projectSelect.selectedIndex].getAttribute('data-retail-amount');
-                // ドライバー価格の取得
-                const driverAmount = projectSelect.options[projectSelect.selectedIndex].getAttribute('data-driver-amount');
-
-                // 金額をセット
-                if(projectAmount != null){
-                    createRetailInput.value = inputCommma(projectAmount);
-                }
-                if(paymentAmount != 0){ //案件別給与が一致していれば
-                    createSalaryInput.value = inputCommma(paymentAmount);
-                }else if(driverAmount != null){
-                    createSalaryInput.value = inputCommma(driverAmount);
-                }
+        // 上代・給与を自動設定
+        $('.createProjectSelect').select2();
+        $('.createProjectSelect').on('change', function (e) {
+            var data = $(this).select2('data');
+            let projectId = data[0]['id'];
+            if(projectId != '' && employeeId != ''){
+                fetchAmount(projectId, employeeId);
             }
+            if(projectId != ''){
+                projectViewActive(projectId);
+            }
+        })
+
+        function fetchAmount(projectId, employeeId){
+            fetch(`/fetch-project-amount/${projectId}/${employeeId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(project => { //取得したデータを表示
+                // 取得したデータがない場合
+                if (!project) return;
+                setRetail.value = inputCommma(String(project['retail']));
+                setSalary.value = inputCommma(String(project['driver']));
+            })
+            .catch(error => console.error('Error:', error));
         }
+
 
         // 案件と車両の新規と既存のラジオボタンで表示inputを制御
         const changeRadio = (target) => {
             const projectInput = document.getElementById('createProjectInput');
-            const projectSelect = document.getElementById('createProjectSelect');
+            const projectSelect = modal.querySelector('.select2-container');
             const vehicleInput = document.getElementById('createVehicleInput');
             const vehicleSelect = document.getElementById('createVehicleSelect');
 
@@ -452,7 +477,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     if(projectRadio[i].value == '0'){
                         projectSelect.style.display = "block";
                         // 上代・給与の値をセット
-                        displaySelectedOption(target);
+                        // displaySelectedOption(target);
                         clientViewActive(projectRadio[i]);
                     }else{
                         projectInput.style.display = "block";
@@ -539,16 +564,15 @@ window.addEventListener('DOMContentLoaded', () => {
         }
 
         // 手当の挙動を制御
-        const projectViewActive = () => {
+        const projectViewActive = (projectId) => {
 
-            createProjectSelect.addEventListener('change', function() {
-                // 選択されたプロジェクトのIDを変数に格納
-                projectId = this.value;
-                // 表示箇所をリセット
-                allowanceCt.innerHTML = '';
+            // 表示箇所をリセット
+            allowanceCt.innerHTML = '';
 
+            if(projectId != ''){
                 fetchProject(projectId);
-            })
+            }
+
 
             // 取得したIDをもとにAjax通信でデータを取得
             function fetchProject(id){
@@ -585,7 +609,6 @@ window.addEventListener('DOMContentLoaded', () => {
                 .catch(error => console.error('Error:', error));
             }
         }
-        projectViewActive();
 
 
 
@@ -615,6 +638,8 @@ window.addEventListener('DOMContentLoaded', () => {
             retailInput.value = '';
             salaryInput.value = '';
 
+            $('.createProjectSelect').val(null).trigger('change');
+
             // クライアント
             modal.classList.remove('create-add-client-active'); //クライアントviewを非表示
             clientSwitch[0].checked = true; //既存案件のラジオをtrue
@@ -637,7 +662,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 modal.style.display = "block";
                 setValue(targetElem[i]);
                 changeRadio(targetElem[i]);
-                displaySelectedOption(targetElem[i]);
+                // displaySelectedOption(targetElem[i]);
                 // 選択が変更されたときに選択されているオプションを表示
                 projectSelect.addEventListener('change', () => {
                     displaySelectedOption(targetElem[i])
@@ -658,6 +683,11 @@ window.addEventListener('DOMContentLoaded', () => {
         createModalActive();
     }
 
+    /**
+     * ********************************************************************
+     * **************************   CSV   *********************************
+     * ********************************************************************
+     */
     // csvファイルのインポートの挙動を制御
     const csvActive = () => {
         const input = document.querySelector('.csvInput');
@@ -901,7 +931,91 @@ window.addEventListener('DOMContentLoaded', () => {
     employeeArrowActive();
 
 
+    /**
+     * **************************************************************
+     * *******************      シフトメモ      ***********************
+     * **************************************************************
+     */
+    const shiftMemoActive = () => {
+        const modal = document.getElementById('shiftMemoModal');
+        const open = document.querySelectorAll('.shiftMemoOpen');
+        const close = document.querySelectorAll('.shiftMemoClose');
+        const shiftMemo = document.getElementById('shiftMemo');
+        const saveBtn = document.getElementById('memoSaveBtn');
+        const succsessBunner = document.getElementById('succsessBunner');
+        const errorBunner = document.getElementById('errorBunner');
+
+        let employeeId = null;
+
+        if(modal != null){
+            for(let i = 0; i < open.length; i++){
+                open[i].addEventListener('click', () => {
+                    modal.style.display = 'block';
+
+                    // 従業員IDを取得
+                    employeeId = open[i].getAttribute('data-employee-id');
+                    // 従業員IDをもとにデータを取得
+                    function fetchEmployee(id){
+                        fetch(`/fetch-employee-data/${id}`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(employee => { //取得したデータを表示
+                            // テキストエリアにメモを表示
+                            shiftMemo.value = employee['shift_memo'];
+                        })
+                        .catch(error => console.error('Error:', error));
+                    }
+                    fetchEmployee(employeeId);
+                })
+            }
+
+            saveBtn.addEventListener('click', () => {
+                succsessBunner.classList.remove('bunner-animation');
+                errorBunner.classList.remove('bunner-animation');
+                // メモの値を取得
+                const memoData = shiftMemo.value;
+                // json形式に変換
+                const data = {
+                    memo : memoData,
+                    id : employeeId
+                }
+                fetch('/store-memo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    succsessBunner.classList.add('bunner-animation');
+                })
+                .catch((error) => {
+                    errorBunner.classList.add('bunner-animation');
+                });
+            })
+
+
+            // 閉じる処理
+            for(let i = 0; i < close.length; i++){
+                close[i].addEventListener('click', () => {
+                    modal.style.display = 'none';
+                    succsessBunner.classList.remove('bunner-animation');
+                    errorBunner.classList.remove('bunner-animation');
+                    shiftMemo.value = '';
+                })
+            }
+        }
+    }
+    shiftMemoActive();
 })
+
 
 
 

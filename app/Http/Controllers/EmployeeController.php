@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AllowanceByOther;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use App\Models\AllowanceByOther;
+use App\Models\User;
 use App\Models\Employee;
 use App\Models\BankAccount;
 use App\Models\Company;
@@ -361,6 +363,32 @@ class EmployeeController extends Controller
         }catch (\Exception $e){
             return redirect()->route('employee.')->with('alert', 'シフトに登録されている従業員は現在は削除できない仕様にしてあります。ご了承ください。');
         }
+    }
+
+    public function register($id)
+    {
+        $employee = Employee::find($id);
+        $user = User::where('employee_id', $id)->first();
+
+        return view('employee.register', compact('employee', 'user'));
+    }
+
+    public function registerStore(Request $request)
+    {
+        // バリデーションを追加
+        $request->validate([
+            'employee_id' => 'required|integer|exists:employees,id', // 既存の従業員IDであることを確認
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $request->employee_id . ',employee_id',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        User::updateOrCreate(
+            ['employee_id' => $request->employee_id],
+            ['name' => $request->name, 'email' => $request->email, 'password' => Hash::make($request->password), 'employee_id' => $request->employee_id, 'role' => 3]
+        );
+
+        return redirect()->route('employee.');
     }
 
 

@@ -25,6 +25,9 @@
                                     <p class="w-status txt">{{$employee->employment_status}}</p>
                                     <p class="w-Affiliation txt">{{$employee->company->name}}</p>
                                     @can('admin-higher')
+                                        <a href="{{ route('employee.register', ['id' => $employee->id]) }}" class="login-info">
+                                            <p class="">ログイン情報</p>
+                                        </a>
                                         <a href="{{route('employee.edit', ["id" => $employee->id])}}" class="edit-btn action-btn">
                                             <div class="edit-btn__inner">
                                                 <i class="fa-solid fa-pen-to-square"></i>

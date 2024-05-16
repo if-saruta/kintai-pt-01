@@ -191,7 +191,7 @@
                                                         <input type="text" class="c-input commaInput" name="projects[0][allowance_retail_amount]" placeholder="1,000">
                                                     </div>
                                                     <div class="input-wrap">
-                                                        <p class="">手当ドライバー</p>
+                                                        <p class="">手当ドライバー価格</p>
                                                         <input type="text" class="c-input commaInput" name="projects[0][allowance_driver_amount]" placeholder="1,000">
                                                     </div>
                                                 </div>
@@ -444,7 +444,7 @@
                                         <input type="text" class="c-input commaInput" name="projects[${newProjectIndex}][allowance_retail_amount]" placeholder="1,000">
                                     </div>
                                     <div class="input-wrap">
-                                        <p class="">手当ドライバー</p>
+                                        <p class="">手当ドライバー価格</p>
                                         <input type="text" class="c-input commaInput" name="projects[${newProjectIndex}][allowance_driver_amount]" placeholder="1,000">
                                     </div>
                                 </div>

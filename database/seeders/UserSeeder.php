@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     {
         User::insert([
             ['name' => 'admin', 'email' => 'admin@admin.com', 'password' => bcrypt('Z5gNKDTz'), 'role' => 1],
-            ['name' => 'part', 'email' => 'part@part.com', 'password' => bcrypt('K8wXRYvM'), 'role' => 11],
+            ['name' => 'part', 'email' => 'part@part.com', 'password' => bcrypt('K8wXRYvM'), 'role' => 2],
             // 他のプロジェクトデータをここに追加
         ]);
     }

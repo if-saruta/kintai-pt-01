@@ -12,6 +12,7 @@ use App\Http\Controllers\PdfEditController;
 use App\Http\Controllers\PdfputController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\InfoManagementController;
+use App\Http\Controllers\DefinitiveShiftPdfController;
 use App\Http\Controllers\MailSendController;
 
 use App\Models\Company;
@@ -54,6 +55,8 @@ Route::middleware('can:admin-higher')->group(function () {
         Route::get('/edit/{id}', [EmployeeController::class, 'edit'])->name('edit');
         Route::post('/update/{id}', [EmployeeController::class, 'update'])->name('update');
         Route::get('/delete/{id}', [EmployeeController::class, 'delete'])->name('delete');
+        Route::get('/register/{id}', [EmployeeController::class, 'register'])->name('register');
+        Route::post('/registerStore', [EmployeeController::class, 'registerStore'])->name('registerStore');
         Route::post('/csv', [EmployeeController::class, 'csvImport'])->name('csv');
     });
 
@@ -132,6 +135,8 @@ Route::middleware('can:admin-higher')->group(function () {
     });
 
     Route::get('/fetch-data/{id}', [ShiftController::class, 'fetchData']);
+    Route::get('/fetch-employee-data/{id}', [ShiftController::class, 'fetchEmployeeData']);
+    Route::post('/store-memo', [ShiftController::class, 'storeMemo']);
     Route::get('/fetch-project-data/{id}', [ShiftController::class, 'fetchProjectData']);
     Route::get('/fetch-project-amount/{projectId}/{employeeId}', [ShiftController::class, 'fetchProjectAmount']);
 
@@ -147,6 +152,7 @@ Route::middleware('can:admin-higher')->group(function () {
         Route::get('/export/{employeeId}/{year}/{month}', [CsvIssueController::class, 'employeeCsvExport'])->name('export');
     });
 
+    // 請求書
     Route::prefix('invoice')->name('invoice.')->group(function () {
         Route::get('/', [InvoiceController::class, 'index'])->name('');
 
@@ -195,10 +201,19 @@ Route::middleware('can:admin-higher')->group(function () {
         Route::post('/update', [InfoManagementController::class, 'updateOrCreate'])->name('update');
     });
 
+    // 稼働表確定版一覧
+    Route::prefix('definitive-shift-pdf')->name('definitive.')->group(function () {
+        Route::get('/', [DefinitiveShiftPdfController::class, 'index'])->name('');
+        Route::get('/list-month/{year}', [DefinitiveShiftPdfController::class, 'listMonth'])->name('listMonth');
+        Route::get('/list-pdf/{year}/{month}', [DefinitiveShiftPdfController::class, 'listPdf'])->name('listPdf');
+        Route::get('/pdf-download/{year}/{month}/{fileName}', [DefinitiveShiftPdfController::class, 'pdfDownload'])->name('pdfDownload');
+    });
+
     // メール
     // Route::get('/mail', [MailSendController::class, 'send']);
 
     Route::get('/dompdf/pdf', [PdfputController::class, 'pdf_sample']);
+
 });
 
 // 一般ユーザー
@@ -222,44 +237,21 @@ Route::middleware('can:user-higher')->group(function () {
 
     Route::prefix('shift')->name('shift.')->group(function () {
         Route::get('/', [ShiftController::class, 'index'])->name('');
-        // Route::post('/', [ShiftController::class, 'selectWeek'])->name('');
+
         Route::get('/selectWeek', [ShiftController::class, 'selectWeek'])->name('selectWeek');
         Route::post('/selectWeek', [ShiftController::class, 'selectWeek'])->name('selectWeek');
-        // Route::post('/store', [ShiftController::class, 'store'])->name('store');
-
-        // Route::get('/edit', [ShiftController::class, 'selectWeek'])->name('edit');
-        // Route::post('/edit', [ShiftController::class, 'selectWeek'])->name('edit');
-        // Route::post('/edit/selectWeek', [ShiftController::class, 'selectWeek'])->name('editSelectWeek');
-
-        // Route::post('/update', [ShiftController::class, 'update'])->name('update');
-        // Route::post('/delete', [ShiftController::class, 'delete'])->name('delete');
 
         Route::get('/employeeShowShift', [ShiftController::class, 'selectWeek'])->name('employeeShowShift');
         Route::post('/employeeShowShift', [ShiftController::class, 'selectWeek'])->name('employeeShowShift');
         Route::post('/employeeShowShift/selectWeek', [ShiftController::class, 'selectWeek'])->name('employeeShowShiftSelectWeek');
-        // Route::get('/', [ShiftController::class, 'selectWeek'])->name('employeeShowShift');
-        // Route::get('/', [ShiftController::class, 'selectWeek'])->name('employeeShowShift');
-        // Route::match(['get', 'post'], '/employeeShowShift', [ShiftController::class, 'selectWeek'])->name('employeeShowShift');
-        // Route::post('/employeeShowShift/selectWeek', [ShiftController::class, 'selectWeek'])->name('employeeShowShiftSelectWeek');
 
         Route::post('/employeePriceShift', [ShiftController::class, 'selectWeek'])->name('employeePriceShift');
         Route::post('/employeePriceShift/selectWeek', [ShiftController::class, 'selectWeek'])->name('employeePriceShiftSelectWeek');
 
-        // Route::post('/projectPriceShift', [ShiftController::class, 'selectWeek'])->name('projectPriceShift');
-        // Route::post('/projectPriceShift/selectWeek', [ShiftController::class, 'selectWeek'])->name('projectPriceShiftSelectWeek');
-
         Route::post('/projectCount', [ShiftController::class, 'selectWeek'])->name('projectCount');
         Route::post('/projectCount/selectWeek', [ShiftController::class, 'selectWeek'])->name('projectCountSelectWeek');
 
-        // Route::get('/csv', [ShiftController::class, 'csv'])->name('csv');
-        // Route::post('/csv/import', [ShiftController::class, 'csvImport'])->name('csvImport');
     });
-
-    // Route::prefix('shiftImport')->name('shiftImport.')->group(function () {
-    //     Route::get('/', [ShiftController::class, 'shiftImport'])->name('');
-    //     Route::post('/confirm', [ShiftController::class, 'shiftConfirmCsv'])->name('confirm-csv');
-    //     Route::post('/shiftImport-Csv', [ShiftController::class, 'shiftImportCsv'])->name('Csv');
-    // });
 
     Route::prefix('csv-issue')->name('csv-issue.')->group(function () {
         Route::get('/', [CsvIssueController::class, 'index'])->name('');
@@ -307,6 +299,29 @@ Route::middleware('can:user-higher')->group(function () {
     });
 
     Route::get('/dompdf/pdf', [PdfputController::class, 'pdf_sample']);
+});
+
+// 一般ユーザー
+Route::middleware('can:driver-higher')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/home', function(){
+        return view('home');
+    })->name('home');
+
+    Route::prefix('shift')->name('shift.')->group(function () {
+        Route::get('/', [ShiftController::class, 'index'])->name('');
+
+        Route::get('/selectWeek', [ShiftController::class, 'selectWeek'])->name('selectWeek');
+        Route::post('/selectWeek', [ShiftController::class, 'selectWeek'])->name('selectWeek');
+
+        Route::get('/employeeShowShift', [ShiftController::class, 'selectWeek'])->name('employeeShowShift');
+        Route::post('/employeeShowShift', [ShiftController::class, 'selectWeek'])->name('employeeShowShift');
+        Route::post('/employeeShowShift/selectWeek', [ShiftController::class, 'selectWeek'])->name('employeeShowShiftSelectWeek');
+
+    });
 });
 
 

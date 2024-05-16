@@ -241,7 +241,7 @@
         position: relative;
         &__color-nav{
             position: absolute;
-            top: 3rem;
+            top: 2.7rem;
             left: 2rem;
             display: flex;
             gap: 2rem;
@@ -286,20 +286,23 @@
             color: white;
         }
         .--common-page-postion{
-            top: 2.7rem;
+            top: 2.3rem;
             left: 29.3%;
         }
         .--edit-page-postion{
-            top: 3.3rem;
+            top: 2.3rem;
             right: 24rem;
         }
         .--edit-employee-page-postion{
-            top: 3.3rem;
+            top: 2.3rem;
             right: 29.5rem;
+        }
+        .--edit-shift-calendar-date{
+            padding-top: 2rem;
         }
         .calendar-download-btn{
             position: absolute;
-            top: 3.3rem;
+            top: 2.3rem;
             right: 24rem;
             padding: 0.5rem 1rem;
             border: 1.5px solid #D927A9;
@@ -315,15 +318,20 @@
         }
         &__date{
             width: 30.5rem;
-            padding-top: 2.1rem;
+            padding-top: 2.5rem;
             display: flex;
             align-items: center;
             margin: 0 auto;
             &__show{
-                width: 20rem;
+                width: fit-content;
                 margin: 0 auto;
                 display: flex;
-                justify-content: space-between;
+                gap: 10rem;
+                .week-of-month{
+                    font-size: 1.4rem;
+                    font-weight: $fw-bold;
+                    text-align: center;
+                }
                 .date{
                     display: flex;
                     flex-direction: column;
@@ -353,7 +361,7 @@
         }
         .datepicker{
             position: absolute;
-            top: 3rem;
+            top: 2rem;
             right: 1.3rem;
             z-index: 1;
             width: 20.5rem;
@@ -405,7 +413,7 @@
             position: relative;
             overflow-y: scroll;
             height: math.div(580,800) * 100vh;
-            margin-top: 15px;
+            margin-top: 20px;
             padding-bottom: 5rem;
             display: flex;
             .company-view{
@@ -542,6 +550,13 @@
                                 align-items: center;
                                 justify-content: center;
                             }
+                        }
+                        .edit-employee-name-td{
+                            cursor: pointer;
+                            transition: 0.3s;
+                        }
+                        .edit-employee-name-td:hover{
+                            color: $cGreen;
                         }
                         .table-cell{
                             border-right: 1px dashed rgb(214, 214, 214);
@@ -882,6 +897,7 @@
 
     table{
         width: 100%;
+        height: 0rem;
         border-collapse: collapse;
       }
       table td{
@@ -1024,6 +1040,7 @@
                 .item-title{
                     font-size: 1.6rem;
                 }
+
             }
             .client-area{
                 display: none;
@@ -1206,6 +1223,7 @@
             .title{
                 width: fit-content;
                 margin: 0 auto;
+                margin-top: 3rem;
                 font-size: 2.6rem;
                 font-weight: $fw-bold;
                 color: $cBlack;
@@ -1252,11 +1270,168 @@
                 }
             }
         }
+        .calendar-download{
+            width: fit-content;
+            margin: 0 auto;
+            margin-top: 2rem;
+            .calendar-download-btn{
+                padding: 0.5rem 1rem;
+                border: 1.5px solid #D927A9;
+                border-radius: 0.5rem;
+                font-size: 1.4rem;
+                color: #D927A9;
+                font-weight: $fw-bold;
+                transition: 0.5s;
+            }
+            .calendar-download-btn:hover{
+                background-color: #D927A9;
+                color: white;
+            }
+        }
     }
     .--common-setting-white-board{
         width: auto;
         padding: 3rem 5rem;
     }
+}
+.employee-memo-modal{
+    display: none;
+    position: fixed;
+    z-index: 999999;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    &__bg{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        opacity: 0.5;
+    }
+    &__succsess-buner{
+        opacity: 0;
+        position: absolute;
+        z-index: 9999999;
+        top: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 30rem;
+        padding: 1rem 0;
+        background-color: $cGreen;
+        border-radius: 1rem;
+        p{
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+    }
+    &__error-buner{
+        opacity: 0;
+        position: absolute;
+        z-index: 9999999;
+        top: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 30rem;
+        padding: 1rem 0;
+        background-color: $cRed;
+        border-radius: 1rem;
+        p{
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+    }
+    .bunner-animation{
+        animation-name: move;
+        animation-duration: 2.5s;
+        @keyframes move {
+            0%{
+                top: 2rem;
+                opacity: 1;
+            }
+            30%{
+                opacity: 1;
+            }
+            100%{
+                top: 2rem;
+                opacity: 0;
+            }
+        }
+    }
+    &__white-board{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        width: 70%;
+        // height: 60%;
+        border-radius: 2rem;
+        background-color: white;
+        .main-content{
+            width: 90%;
+            margin: 0 auto;
+            padding: 5rem 0;
+            p{
+                text-align: center;
+                font-size: 2rem;
+                font-weight: bold;
+                margin-bottom: 2rem;
+            }
+            textarea{
+                height: math.div(400,800) * 100vh;
+            }
+            .btn-area{
+                width: fit-content;
+                margin: 0 auto;
+                margin-top: 3rem;
+                display: flex;
+                align-items: center;
+                gap: 3rem;
+                .memo-save-btn{
+                    width: 15rem;
+                    font-size: 1.8rem;
+                }
+                .memo-back-btn{
+                    width: 15rem;
+                }
+            }
+        }
+    }
+}
+
+.select2{
+    width: 100%!important;
+    font-size: 1.4rem!important;
+}
+.select2-selection{
+    border: 2px solid $cGreen!important;
+}
+.select2-container{
+    z-index: 99999999;
+}
+.select2-selection--single{
+    height: 4rem!important;
+}
+.select2-selection__rendered{
+    line-height: 2.5!important;
+}
+.select2-selection__arrow{
+    top: 7px!important;
+}
+.select2-dropdown{
+    font-size: 1.4rem!important;
+}
+.select2-search__field{
+    font-size: 1.4rem!important;
+}
+.select2-selection__rendered{
+    padding-left: 1.5rem!important;
 }
 
 

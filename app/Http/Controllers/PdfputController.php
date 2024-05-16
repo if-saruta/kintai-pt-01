@@ -10,6 +10,7 @@ use App\Models\Client;
 use App\Models\ShiftProject;
 use App\Models\ProjectEmployeePayment;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Yasumi\Yasumi;
@@ -256,6 +257,33 @@ class PdfputController extends Controller
 
             $pdf = PDF::loadView('shift-calendar-pdf.projectCountShift', compact('shifts', 'shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projects', 'projectsGroupByClient', 'unregistered_project'))->setPaper('a4');
             $fileName = "{$date->format('Y')}年_{$startOfWeekCarbon->format('n')}月{$startOfWeekCarbon->format('j')}日~{$endOfWeekCarbon->format('n')}月{$endOfWeekCarbon->format('j')}日_案件数シフト.pdf";
+        }elseif($shift_type == 'definitive'){
+            // シフト確定版
+            // その月の第何週目かを計算
+            $weekOfMonth = $date->weekOfMonth;
+            $title = "{$startOfWeekCarbon->format('n')}月第{$weekOfMonth}週目稼働表確定版";
+
+            // PDFを生成
+            $pdf = PDF::loadView('shift-calendar-pdf.employeeShowShift', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projectHeight', 'title'))->setPaper('a4', 'landscape');
+
+            // 保存するパスを年と月で指定
+            $path = "shift-calendar/{$date->format('Y')}/{$startOfWeekCarbon->format('n')}";
+
+            // ディレクトリが存在するか確認し、なければ作成
+            Storage::disk('public')->makeDirectory($path);
+
+            // ファイルの名前を指定
+            $fileName = "{$date->format('Y')}年{$startOfWeekCarbon->format('n')}月第{$weekOfMonth}週目稼働表確定版.pdf";
+
+            // PDFをpublicディスクに保存
+            Storage::disk('public')->put("{$path}/{$fileName}", $pdf->output());
+
+            $startOfWeek = $request->startOfWeek;
+            return redirect()->route('shift.edit')->with([
+                'date' => $startOfWeek,
+                'page' => 'page06'
+            ]);
+
         }else{
             $pdf = PDF::loadView('shift-calendar-pdf.allViewShift', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projectHeight'))->setPaper('a4', 'landscape');
             $fileName = "{$date->format('Y')}年_{$startOfWeekCarbon->format('n')}月{$startOfWeekCarbon->format('j')}日~{$endOfWeekCarbon->format('n')}月{$endOfWeekCarbon->format('j')}日_全表示シフト.pdf";
@@ -271,5 +299,6 @@ class PdfputController extends Controller
 
         return $holidays;
     }
+
 
 }

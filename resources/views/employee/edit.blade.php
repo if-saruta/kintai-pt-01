@@ -70,6 +70,7 @@
                 <div class="company --company-name">
                     <div class="head">
                         <p class="input-head">会社名</p>
+                        <p class="any">任意</p>
                     </div>
                     @can('admin-higher')
                         <input type="text" name="company_name" value="{{ $employee->company_name }}" class="c-input" placeholder="株式会社">
