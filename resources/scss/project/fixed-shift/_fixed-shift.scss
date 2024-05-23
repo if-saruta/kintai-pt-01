@@ -1,0 +1,73 @@
+@use "../../foundation/variables.scss" as *;
+@use "../../foundation/mixin.scss" as *;
+@use "sass:math";
+
+.fixed-shift-wrap{
+    width: 95%;
+    margin: 0 auto;
+    margin-top: 3rem;
+    .title{
+        font-size: 2rem;
+        font-weight: $fw-bold;
+    }
+    .project-name{
+        font-size: 1.8rem;
+        font-weight: $fw-bold;
+        margin-top: 2rem;
+    }
+    .create-fixed-shift-btn{
+        width: 10rem;
+        height: 3rem;
+        margin-top: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid $cGreen;
+        border-radius: 0.5rem;
+        font-size: 1.5rem;
+        font-weight: $fw-bold;
+        color: $cGreen;
+        transition: 0.3s;
+    }
+    .create-fixed-shift-btn:hover{
+        color: white;
+        background-color: $cGreen;
+    }
+    .back-btn{
+        margin-top: 3rem;
+    }
+
+    .fixed-shift-create{
+        margin-top: 3rem;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        .input-area{
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            &__title{
+                font-size: 1.4rem;
+                font-weight: $fw-bold;
+            }
+            &__check-box{
+                display: flex;
+                align-items: center;
+                gap: 2rem;
+                label{
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                    font-size: 1.2rem;
+                    font-weight: $fw-bold;
+                }
+            }
+        }
+        .--employee{
+            width: 15rem;
+        }
+    }
+}
+
+
+

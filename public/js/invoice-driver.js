@@ -298,6 +298,134 @@ window.addEventListener('load', () => {
     }
     vehicleModal();
 
+    // 残業代モーダル
+    const overtimeModal = () => {
+        const modal = document.getElementById('overtimeModal');
+        const openElem = document.querySelectorAll('.overtimeOpenTarget');
+        const closeElem = document.querySelectorAll('.overtimeCloseTarget');
+        const saveBtn = document.getElementById('overtimeSaveBtn');
+        const modalInput = document.getElementById('overtimeValueInput');
+        const overtimeType = document.querySelectorAll('.overtimeType');
+
+        const succsessBunner = document.getElementById('succsessBunner');
+        const errorBunner = document.getElementById('errorBunner');
+
+        const addComma = (argInput) => {
+            let value = argInput.value.replace(/,/g, ''); // カンマを一旦削除
+
+            // 値が数値かどうかを確認
+            if (!isNaN(value) && value.trim() !== '') {
+                let formattedValue = Number(value).toLocaleString();
+                argInput.value = formattedValue;
+            } else {
+                argInput.value = ''; // 非数値の場合は空にする
+            }
+        }
+
+        let input = null
+        // モダール表示
+        for(let i = 0; i < openElem.length; i++){
+            openElem[i].addEventListener('click', () => {
+                modal.style.display = 'block';
+                input = openElem[i];
+                setValue(input);
+            })
+
+            // 残業代が金額なのであればカンマをつける
+            if(openElem[i].getAttribute('data-over-time-type') == 'amount'){
+                addComma(openElem[i]);
+            }
+        }
+
+        // 保存されている値をセット
+        const setValue = (argInput) => {
+            modal.querySelector('.shiftPvId').value = input.getAttribute('data-shift-pv-id');
+            // 金額
+            modalInput.value = argInput.value;
+            // タイプ
+            let overtimeTypeValue = argInput.getAttribute('data-over-time-type');
+            // タイプが設定されていれば、付随するradioにchecked
+            if(overtimeTypeValue != ''){
+                overtimeType.forEach(type => {
+                    if(type.value == overtimeTypeValue){
+                        type.checked = true;
+                    }else{
+                        type.checked = false;
+                    }
+                });
+            }
+        }
+
+        // 金額を入力ならカンマをつける
+        modalInput.addEventListener('input', () => {
+            overtimeType.forEach(type => {
+                if (type.checked && type.value === 'amount') {
+                    addComma(modalInput);
+                }
+            });
+        });
+
+        // Ajaxでデータを保存
+        const sendValue = () => {
+            saveBtn.addEventListener('click', () => {
+                let shiftPvId = input.getAttribute('data-shift-pv-id');
+
+                // 入力された値を取得
+                let amount = modalInput.value;
+                let typeValue = '';
+                overtimeType.forEach(type => {
+                    if(type.checked){
+                        typeValue = type.value;
+                    }
+                });
+                // json形式に変換
+                const data = {
+                    id : shiftPvId,
+                    type : typeValue,
+                    amount : amount
+                }
+                // Ajax通信
+                fetch('/over-time-update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    input.value = amount;
+                    input.dataset.overTimeType = typeValue;
+                    // resultバナーを表示
+                    succsessBunner.classList.add('bunner-animation');
+                    setTimeout(() => {
+                        succsessBunner.classList.remove('bunner-animation');
+                    }, 2000);
+                })
+                .catch((error) => {
+                    // resultバナーを表示
+                    errorBunner.classList.add('bunner-animation');
+                    setTimeout(() => {
+                        errorBunner.classList.remove('bunner-animation');
+                    }, 2000);
+
+                    // console.log(error);
+                });
+            });
+        }
+        // sendValue();
+
+        // モダール非表示
+        for(let i = 0; i < closeElem.length; i++){
+            closeElem[i].addEventListener('click', () => {
+                modal.style.display = 'none';
+                modalInput.value = '';
+            })
+        }
+    }
+    overtimeModal();
+
     const itemActiveCheck = () => {
         const amountCheck = document.getElementById('narrowAmountCheck');
         const expressCheck = document.getElementById('narrowExpresswayCheck');

@@ -128,7 +128,6 @@ class InvoiceController extends Controller
 
     public function driverShiftUpdate(Request $request)
     {
-
         $expressway = $request->expressway_fee ?? [];
         $parking = $request->parking_fee ?? [];
         $overtimeFee = $request->overtime_fee ?? [];
@@ -198,6 +197,7 @@ class InvoiceController extends Controller
 
         $sagawa = Client::where('name', '佐川急便株式会社')->first();
         $sagawaId = $sagawa ? $sagawa->id : 1;
+
         $projects = Project::where('client_id', '!=', '1')
                             ->where('client_id', '!=', $sagawaId)
                             ->where('is_suspended', '!=', '1')
@@ -295,6 +295,22 @@ class InvoiceController extends Controller
         return view('invoice.driverShift',
             compact('employees', 'findEmployee', 'projects', 'vehicles', 'shifts', 'shiftProjectVehicles', 'allowanceProject', 'getYear', 'getMonth', 'dates','holidays', 'warning', 'secondMachineArray', 'thirdMachineArray', 'secondMachineCount', 'thirdMachineCount', 'projectInfoArray', 'projectInfoArray','totalSalary', 'totalAllowance', 'totalParking', 'totalExpressWay', 'totalOverTime', 'findProjects', 'findClients',
                     'selectedNarrowCheck', 'needRowCount', 'clientsId', 'projectsId', 'employeeId', 'InfoManagement', 'allowanceArray'));
+    }
+
+    public function overtimeUpdate(Request $request)
+    {
+        $shiftPv = ShiftProjectVehicle::find($request->id);
+        if($shiftPv != null){
+            $shiftPv->overtime_type = $request->overtime_type;
+            $shiftPv->overtime_fee = str_replace([',', '，'], '', $request->over_time_value);
+            $shiftPv->save();
+        }
+
+        return redirect()->route('invoice.searchShift')->with([
+            'employeeId' => $request->employeeId,
+            'year' => $request->year,
+            'month' => $request->month
+        ]);
     }
 
     public function driverCalendarPDF(Request $request)
@@ -687,9 +703,10 @@ class InvoiceController extends Controller
             $totalAllowance += $spv->total_allowance;
             $totalParking += $spv->parking_fee;
             $totalExpressWay += $spv->expressway_fee;
-            $totalOverTime += $spv->overtime_fee;
+            // $totalOverTime += $spv->overtime_fee;
 
             if($spv->project){
+                // 手当計算
                 if($spv->shiftAllowance){
                     foreach($spv->project->allowances as $allowance){
                         if(!isset($allowanceArray[$allowance->name])){
@@ -699,6 +716,17 @@ class InvoiceController extends Controller
                             $allowanceArray[$allowance->name]['amount'] += $allowance->driver_amount;
                             $allowanceArray[$allowance->name]['count']++;
                         }
+                    }
+                }
+                // 残業代
+                if($spv->overtime_type != null){
+                    if($spv->overtime_type == 'amount'){
+                        $totalOverTime += $spv->overtime_fee;
+                    }else{
+                        $hourly_wage = $spv->project->overtime_hourly_wage;
+                        $hourly = $spv->overtime_fee;
+                        $calc = $hourly * $hourly_wage;
+                        $totalOverTime += round($calc);
                     }
                 }
             }

@@ -6,6 +6,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\FixedShiftController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\CsvIssueController;
 use App\Http\Controllers\PdfEditController;
@@ -91,10 +92,17 @@ Route::middleware('can:admin-higher')->group(function () {
         Route::get('/delete/{id}', [ProjectController::class, 'delete'])->name('delete');
         Route::get('/projectDelete/{id}', [ProjectController::class, 'projectDelete'])->name('projectDelete');
         Route::get('/employee_payment_show/{id}', [ProjectController::class, 'employeePaymentShow'])->name('employeePaymentShow');
+
+        // 案件情報
         Route::get('/info/{id}', [ProjectController::class, 'info'])->name('info');
         Route::get('/info/{id}/edit', [ProjectController::class, 'infoEdit'])->name('infoEdit');
         Route::post('/info/update', [ProjectController::class, 'infoUpdate'])->name('infoUpdate');
         Route::post('/infoPdf', [ProjectController::class, 'infoPdf'])->name('infoPdf');
+
+        // 固定シフト
+        Route::get('/{id}/fixedShift', [FixedShiftController::class, 'index'])->name('fixedShift');
+        Route::get('/{id}/fixedShift/create', [FixedShiftController::class, 'create'])->name('fixedShiftCreate');
+
         Route::post('/csv', [ProjectController::class, 'csvImport'])->name('csv');
     });
 
@@ -160,6 +168,7 @@ Route::middleware('can:admin-higher')->group(function () {
         Route::get('/driver', [InvoiceController::class, 'driverShift'])->name('driverShift');
         Route::post('/driver-create', [InvoiceController::class, 'driverShiftCreate'])->name('driverShiftCreate');
         Route::post('/driver-update', [InvoiceController::class, 'driverShiftUpdate'])->name('driverShiftUpdate');
+        Route::post('/over-time-update', [InvoiceController::class, 'overTimeUpdate'])->name('overTimeUpdate');
         Route::post('/driver-calendar-pdf', [InvoiceController::class, 'driverCalendarPDF'])->name('driver-calendar-pdf');
 
         // 案件関連
@@ -301,7 +310,7 @@ Route::middleware('can:user-higher')->group(function () {
     Route::get('/dompdf/pdf', [PdfputController::class, 'pdf_sample']);
 });
 
-// 一般ユーザー
+// ドライバー
 Route::middleware('can:driver-higher')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

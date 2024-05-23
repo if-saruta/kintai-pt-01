@@ -144,63 +144,64 @@
                             <div class="setting-modal-wrap__white-board">
                                 <div class="setting-modal-wrap__white-board__inner">
                                     <p class="head">設定</p>
-                                    <p class="title">非表示項目</p>
-
-                                    <div class="check-area">
-                                        <div class="check-item">
-                                            <input type="checkbox" name="narrowCheck[]" value="1" class="" id="narrowAmountCheck" @if(in_array('1', $selectedNarrowCheck)) checked @endif>
-                                            <label for="">金額</label>
-                                        </div>
-                                        <div class="check-item">
-                                            <input type="checkbox" name="narrowCheck[]" value="2" class="" id="narrowAllowanceCheck" @if(in_array('2', $selectedNarrowCheck)) checked @endif>
-                                            <label for="">手当</label>
-                                        </div>
-                                        <div class="check-item">
-                                            <input type="checkbox" name="narrowCheck[]" value="3" class="" id="narrowExpresswayCheck" @if(in_array('3', $selectedNarrowCheck)) checked @endif>
-                                            <label for="">高速代</label>
-                                        </div>
-                                        <div class="check-item">
-                                            <input type="checkbox" name="narrowCheck[]" value="4" class="" id="narrowParkingCheck" @if(in_array('4', $selectedNarrowCheck)) checked @endif>
-                                            <label for="">パーキング代</label>
-                                        </div>
-                                        <div class="check-item">
-                                            <input type="checkbox" name="narrowCheck[]" value="5" class="" id="narrowVehicleCheck" @if(in_array('5', $selectedNarrowCheck)) checked @endif>
-                                            <label for="">2台目以降</label>
-                                        </div>
-                                        <div class="check-item">
-                                            <input type="checkbox" name="narrowCheck[]" value="6" class="" id="narrowOvertimeCheck" @if(in_array('6', $selectedNarrowCheck)) checked @endif>
-                                            <label for="">残業代</label>
-                                        </div>
-                                    </div>
-                                    <p class="title">クライアント絞り込み</p>
-                                    <div class="check-area">
-                                        @foreach ($findClients as $client)
+                                    <div class="inner-content">
+                                        <p class="title">非表示項目</p>
+                                        <div class="check-area">
                                             <div class="check-item">
-                                                <input type="checkbox" class="" value="{{ $client->id }}" name="clientsId[]" @if(in_array($client->id, $clientsId)) checked @endif>
-                                                <label for="">{{ $client->name }}</label>
+                                                <input type="checkbox" name="narrowCheck[]" value="1" class="" id="narrowAmountCheck" @if(in_array('1', $selectedNarrowCheck)) checked @endif>
+                                                <label for="">金額</label>
                                             </div>
-                                        @endforeach
-                                    </div>
-                                    <p class="title">案件絞り込み</p>
-                                    <div class="check-area">
-                                        @foreach ($findProjects as $project)
                                             <div class="check-item">
-                                                <input type="checkbox" class="" value="{{ $project->id }}" name="projectsId[]" @if(in_array($project->id, $projectsId)) checked @endif>
-                                                <label for="">{{ $project->name }}</label>
+                                                <input type="checkbox" name="narrowCheck[]" value="2" class="" id="narrowAllowanceCheck" @if(in_array('2', $selectedNarrowCheck)) checked @endif>
+                                                <label for="">手当</label>
                                             </div>
-                                        @endforeach
+                                            <div class="check-item">
+                                                <input type="checkbox" name="narrowCheck[]" value="3" class="" id="narrowExpresswayCheck" @if(in_array('3', $selectedNarrowCheck)) checked @endif>
+                                                <label for="">高速代</label>
+                                            </div>
+                                            <div class="check-item">
+                                                <input type="checkbox" name="narrowCheck[]" value="4" class="" id="narrowParkingCheck" @if(in_array('4', $selectedNarrowCheck)) checked @endif>
+                                                <label for="">パーキング代</label>
+                                            </div>
+                                            <div class="check-item">
+                                                <input type="checkbox" name="narrowCheck[]" value="5" class="" id="narrowVehicleCheck" @if(in_array('5', $selectedNarrowCheck)) checked @endif>
+                                                <label for="">2台目以降</label>
+                                            </div>
+                                            <div class="check-item">
+                                                <input type="checkbox" name="narrowCheck[]" value="6" class="" id="narrowOvertimeCheck" @if(in_array('6', $selectedNarrowCheck)) checked @endif>
+                                                <label for="">残業代</label>
+                                            </div>
+                                        </div>
+                                        <p class="title">クライアント絞り込み</p>
+                                        <div class="check-area">
+                                            @foreach ($findClients as $client)
+                                                <div class="check-item">
+                                                    <input type="checkbox" class="" value="{{ $client->id }}" name="clientsId[]" @if(in_array($client->id, $clientsId)) checked @endif>
+                                                    <label for="">{{ $client->name }}</label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <p class="title">案件絞り込み</p>
+                                        <div class="check-area">
+                                            @foreach ($findProjects as $project)
+                                                <div class="check-item">
+                                                    <input type="checkbox" class="" value="{{ $project->id }}" name="projectsId[]" @if(in_array($project->id, $projectsId)) checked @endif>
+                                                    <label for="">{{ $project->name }}</label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <p class="title">行数</p>
+                                        <select name="rowNeedCount" id="" class="c-select row-select">
+                                            <option value="">--</option>
+                                            @for ($i = 1; $i <= 10; $i++)
+                                                @if ($i == $needRowCount)
+                                                    <option selected value="{{ $i }}">{{ $i }}</option>
+                                                @else
+                                                    <option value="{{ $i }}">{{ $i }}</option>
+                                                @endif
+                                            @endfor
+                                        </select>
                                     </div>
-                                    <p class="title">行数</p>
-                                    <select name="rowNeedCount" id="" class="c-select row-select">
-                                        <option value="">--</option>
-                                        @for ($i = 1; $i <= 10; $i++)
-                                            @if ($i == $needRowCount)
-                                                <option selected value="{{ $i }}">{{ $i }}</option>
-                                            @else
-                                                <option value="{{ $i }}">{{ $i }}</option>
-                                            @endif
-                                        @endfor
-                                    </select>
                                     <div class="button-area">
                                         <button class="">
                                             絞り込み
@@ -300,9 +301,11 @@
                         </div>
 
                         @php
+                            $isNarrowCount = true;
                             // 基本の行数
                             if($needRowCount == null){
                                 $needRowCount = 3;
+                                $isNarrowCount = false;
                             }
                             $needRowCountWarning = null;
                             foreach ($dates as $date) {
@@ -314,7 +317,9 @@
                                 }
                                 if($dateCount > $needRowCount){
                                     $needRowCount = $dateCount;
-                                    $needRowCountWarning = 'シフトの数が指定した行数を上回っています';
+                                    if($isNarrowCount){
+                                        $needRowCountWarning = 'シフトの数が指定した行数を上回っています';
+                                    }
                                 }
                             }
 
@@ -401,7 +406,7 @@
                                                                 {{-- ドライバー価格 --}}
                                                                 <td class="w-amount amountRow"><input type="text" value="{{ number_format($spv->driver_price) }}" name="driver_price[{{$spv->id}}]" class="commaInput"></td>
                                                                 {{-- 残業代 --}}
-                                                                <td class="w-amount overtimeRow"><input type="text" value="{{ number_format($spv->overtime_fee) }}" name="overtime_fee[{{$spv->id}}]" class="commaInput"></td>
+                                                                <td class="w-amount overtimeRow"><input type="text" value="{{ floatval($spv->overtime_fee) }}" name="overtime_fee[{{$spv->id}}]" data-shift-pv-id="{{ $spv->id }}" data-over-time-type="{{ $spv->overtime_type }}" class="commaInput overtimeOpenTarget" readonly></td>
                                                                 {{-- 手当 --}}
                                                                 <td class="w-amount allowance-area allowanceRow">
                                                                     <input type="text" value="{{ number_format($spv->total_allowance) }}" name="allowance[{{$spv->id}}]" class="allowance-input commaInput">
@@ -626,7 +631,7 @@
                                                                 {{-- ドライバー価格 --}}
                                                                 <td class="w-amount amountRow"><input type="text" value="{{ number_format($spv->driver_price) }}" name="driver_price[{{$spv->id}}]" class="commaInput"></td>
                                                                 {{-- 残業代 --}}
-                                                                <td class="w-amount overtimeRow"><input type="text" value="{{ number_format($spv->overtime_fee) }}" name="overtime_fee[{{$spv->id}}]" class="commaInput"></td>
+                                                                <td class="w-amount overtimeRow"><input type="text" value="{{ floatval($spv->overtime_fee) }}" name="overtime_fee[{{$spv->id}}]" data-shift-pv-id="{{ $spv->id }}" data-over-time-type="{{ $spv->overtime_type }}" class="commaInput overtimeOpenTarget" readonly></td>
                                                                 {{-- 手当 --}}
                                                                 <td class="w-amount allowance-area allowanceRow">
                                                                     <input type="text" value="{{ number_format($spv->total_allowance) }}" name="allowance[{{$spv->id}}]" class="allowance-input commaInput">
@@ -1113,6 +1118,48 @@
             </div>
         </div>
     </div>
+
+    {{-- 残業モーダル --}}
+    <div class="overtime-modal-wrap" id="overtimeModal">
+        <span class="overtime-modal-wrap__bg overtimeCloseTarget"></span>
+        <div class="overtime-modal-wrap__succsess-buner" id="succsessBunner">
+            <p class="">正常に保存されました</p>
+        </div>
+        <div class="overtime-modal-wrap__error-buner" id="errorBunner">
+            <p class="">正常に保存されませんでした</p>
+        </div>
+        <form action="{{ route('invoice.overTimeUpdate') }}" method="POST">
+            @csrf
+            <input hidden type="text" name="id" class="shiftPvId">
+            <input hidden type="text" name="employeeId" value="{{$findEmployee->id}}">
+            <input hidden type="text" name="year" value="{{$getYear}}">
+            <input hidden type="text" name="month" value="{{$getMonth}}">
+
+            <div class="overtime-modal-wrap__modal">
+                <div class="overtime-modal-wrap__modal__inner">
+                    <p class="title">残業代</p>
+                    <div class="radio-area">
+                        <label for="">
+                            <input type="radio" name="overtime_type" value="amount" class="overtimeType" checked>
+                            金額を入力
+                        </label>
+                        <label for="">
+                            <input type="radio" name="overtime_type" value="time" class="overtimeType">
+                            時間を入力
+                        </label>
+                    </div>
+                    <div class="input-area">
+                        <input type="text" name="over_time_value" class="c-input" id="overtimeValueInput" placeholder="1,000">
+                    </div>
+                    <div class="btn-area">
+                        <button class="c-save-btn" id="overtimeSaveBtn">保存</button>
+                        <div class="c-back-btn overtimeCloseTarget">戻る</div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
     @endif
 
 </x-app-layout>

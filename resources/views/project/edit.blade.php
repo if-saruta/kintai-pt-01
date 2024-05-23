@@ -73,6 +73,9 @@
                                             <a href="{{ route('project.info', ['id' => $project->id]) }}" class="project-info-link projectInfoLink">
                                                 案件表
                                             </a>
+                                            <a href="{{ route('project.fixedShift', ['id' => $project->id]) }}" class="project-info-link projectInfoLink">
+                                                固定シフト
+                                            </a>
                                             <i class="fa-solid fa-angle-up angle"></i>
                                         </div>
                                     </div>
@@ -168,12 +171,12 @@
                                         <div class="over-time-box">
                                             <p class="input-head">残業</p>
                                             <div class="over-time-box__input-area">
-                                                <div class="input-item">
+                                                {{-- <div class="input-item">
                                                     <label for="" class="label-txt">見込み残業時間</label>
                                                     <input type="text" name="editProjects[{{$project->id}}][estimated_overtime_hours]" class="c-input" value="{{$project->estimated_overtime_hours}}">
-                                                </div>
+                                                </div> --}}
                                                 <div class="input-item">
-                                                    <label for="" class="label-txt">残業1時間あたりの時給</label>
+                                                    <label for="" class="label-txt">残業1時間あたりの価格</label>
                                                     <input type="text" name="editProjects[{{$project->id}}][overtime_hourly_wage]" class="c-input" value="{{$project->overtime_hourly_wage}}">
                                                 </div>
                                             </div>
@@ -449,12 +452,14 @@
                     <div class="over-time-box">
                         <p class="input-head">残業</p>
                         <div class="over-time-box__input-area">
+                            {{--
+                                <div class="input-item">
+                                    <label for="" class="label-txt">見込み残業時間</label>
+                                    <input type="text" name="projects[${newProjectIndex}][estimated_overtime_hours]" class="c-input" placeholder="000">
+                                </div>
+                                --}}
                             <div class="input-item">
-                                <label for="" class="label-txt">見込み残業時間</label>
-                                <input type="text" name="projects[${newProjectIndex}][estimated_overtime_hours]" class="c-input" placeholder="000">
-                            </div>
-                            <div class="input-item">
-                                <label for="" class="label-txt">残業1時間あたりの時給</label>
+                                <label for="" class="label-txt">残業1時間あたりの価格</label>
                                 <input type="text" name="projects[${newProjectIndex}][overtime_hourly_wage]" class="c-input" placeholder="000">
                             </div>
                         </div>

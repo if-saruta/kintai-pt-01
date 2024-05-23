@@ -65,7 +65,7 @@ class ProjectController extends Controller
                 'payment_type' => $projectData['payment_type'],
                 'retail_price' => $removeCommasAndCastToInt($projectData['retail_price']),
                 'driver_price' => $removeCommasAndCastToInt($projectData['driver_price']),
-                'estimated_overtime_hours' => $projectData['estimated_overtime_hours'],
+                // 'estimated_overtime_hours' => $projectData['estimated_overtime_hours'],
                 'overtime_hourly_wage' => $projectData['overtime_hourly_wage'],
                 'is_suspended' => $projectData['is_suspended'] ?? 0
             ]);
@@ -169,7 +169,7 @@ class ProjectController extends Controller
                 'payment_type' => $projectData['payment_type'],
                 'retail_price' => $removeCommasAndCastToInt($projectData['retail_price']),
                 'driver_price' => $removeCommasAndCastToInt($projectData['driver_price']),
-                'estimated_overtime_hours' => $projectData['estimated_overtime_hours'],
+                // 'estimated_overtime_hours' => $projectData['estimated_overtime_hours'],
                 'overtime_hourly_wage' => $projectData['overtime_hourly_wage'],
                 'registration_location' => 1,
                 'is_suspended' => $projectData['is_suspended'] ?? 0
@@ -253,7 +253,7 @@ class ProjectController extends Controller
                 'payment_type' => $projectData['payment_type'],
                 'retail_price' => $removeCommasAndCastToInt($projectData['retail_price']),
                 'driver_price' => $removeCommasAndCastToInt($projectData['driver_price']),
-                'estimated_overtime_hours' => $projectData['estimated_overtime_hours'],
+                // 'estimated_overtime_hours' => $projectData['estimated_overtime_hours'],
                 'overtime_hourly_wage' => $projectData['overtime_hourly_wage'],
                 'is_suspended' => $projectData['is_suspended'] ?? 0
             ]);
@@ -441,7 +441,7 @@ class ProjectController extends Controller
                 'payment_type' => $row['payment_type'],
                 'retail_price' => $row['retail_rpice'],
                 'driver_price' => $row['driver_price'],
-                'estimated_overtime_hours' => $row['estimated_overtime_hours'],
+                // 'estimated_overtime_hours' => $row['estimated_overtime_hours'],
                 'overtime_hourly_wage' => $row['overtime_hourly_wage']
             ]);
 

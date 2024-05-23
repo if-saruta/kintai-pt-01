@@ -158,12 +158,12 @@
                                         <div class="over-time-box">
                                             <p class="input-head">残業</p>
                                             <div class="over-time-box__input-area">
-                                                <div class="input-item">
+                                                {{-- <div class="input-item">
                                                     <label for="" class="label-txt">見込み残業時間</label>
                                                     <input type="text" name="projects[0][estimated_overtime_hours]" class="c-input" placeholder="000">
-                                                </div>
+                                                </div> --}}
                                                 <div class="input-item">
-                                                    <label for="" class="label-txt">残業1時間あたりの時給</label>
+                                                    <label for="" class="label-txt">残業1時間あたりの価格</label>
                                                     <input type="text" name="projects[0][overtime_hourly_wage]" class="c-input" placeholder="000">
                                                 </div>
                                             </div>
@@ -409,12 +409,12 @@
                         <div class="over-time-box">
                             <p class="input-head">残業</p>
                             <div class="over-time-box__input-area">
-                                <div class="input-item">
+                                {{-- <div class="input-item">
                                     <label for="" class="label-txt">見込み残業時間</label>
                                     <input type="text" name="projects[${newProjectIndex}][estimated_overtime_hours]" class="c-input" placeholder="000">
-                                </div>
+                                </div> --}}
                                 <div class="input-item">
-                                    <label for="" class="label-txt">残業1時間あたりの時給</label>
+                                    <label for="" class="label-txt">残業1時間あたりの価格</label>
                                     <input type="text" name="projects[${newProjectIndex}][overtime_hourly_wage]" class="c-input" placeholder="000">
                                 </div>
                             </div>
