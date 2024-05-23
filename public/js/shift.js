@@ -778,10 +778,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
         let max = 0;
         for(let i = 0; i < setElem.length; i++){
-            let hight = setElem[i].clientHeight;
-            if(max < hight){
-                max = hight;
+            let height = setElem[i].clientHeight;
+            if(max < height){
+                max = height;
             }
+        }
+
+        if(max < 100){
+            max = 100
         }
 
         for(let i = 0; i < setElem.length; i++){

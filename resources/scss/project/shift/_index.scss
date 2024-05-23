@@ -448,6 +448,7 @@
                         font-weight: $fw-bold;
                         letter-spacing: 0.1rem;
                         color: $cBlack;
+                        white-space: nowrap;
                     }
                     &::after{
                         content: "";
