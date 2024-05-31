@@ -321,11 +321,11 @@ class ShiftController extends Controller
             if ($page == 'page01') {
                 return view('shift.index', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'MultipleDailyUsesVehiclesArray', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate', 'weekOfMonth', 'allownaceShiftId'));
             } elseif ($page == 'page02') {
-                return view('shift.employeeShowShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'MultipleDailyUsesVehiclesArray', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate', 'weekOfMonth'));
+                return view('shift.employeeShowShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'MultipleDailyUsesVehiclesArray', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate', 'weekOfMonth', 'allownaceShiftId'));
             } elseif ($page == 'page03') {
-                return view('shift.employeePriceShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate', 'weekOfMonth'));
+                return view('shift.employeePriceShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate', 'weekOfMonth', 'allownaceShiftId'));
             } elseif ($page == 'page04') {
-                return view('shift.projectPriceShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate', 'weekOfMonth'));
+                return view('shift.projectPriceShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'employeeList', 'narrowEmployeeId', 'missingRequiredAllowancesByDate', 'weekOfMonth', 'allownaceShiftId'));
             } elseif ($page == 'page05') {
                 $shiftDataByDay = $shifts->groupBy(function ($shift) {
                     return $shift->date;

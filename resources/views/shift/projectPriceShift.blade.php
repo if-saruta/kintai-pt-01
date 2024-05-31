@@ -297,10 +297,10 @@
                                                                                 }
                                                                             }
                                                                         }
-                                                                        if($spv->shiftAllowance){
-                                                                            $check = 'allowance-flag';
-                                                                        }
                                                                     }
+                                                                }
+                                                                if(in_array($spv->id, $allownaceShiftId)){
+                                                                    $check = 'allowance-flag';
                                                                 }
                                                                 if($spv->project->is_suspended == 1){
                                                                     $red = 'red';
@@ -356,10 +356,10 @@
                                                                                 }
                                                                             }
                                                                         }
-                                                                        if($spv->shiftAllowance){
-                                                                            $check = 'allowance-flag';
-                                                                        }
                                                                     }
+                                                                }
+                                                                if(in_array($spv->id, $allownaceShiftId)){
+                                                                    $check = 'allowance-flag';
                                                                 }
                                                                 if($spv->project->is_suspended == 1){
                                                                     $red = 'red';
@@ -483,10 +483,10 @@
                                                                                 }
                                                                             }
                                                                         }
-                                                                        if($spv->shiftAllowance){
-                                                                            $check = 'allowance-flag';
-                                                                        }
                                                                     }
+                                                                }
+                                                                if(in_array($spv->id, $allownaceShiftId)){
+                                                                    $check = 'allowance-flag';
                                                                 }
                                                                 if($spv->project->is_suspended == 1){
                                                                     $red = 'red';
@@ -542,10 +542,10 @@
                                                                                 }
                                                                             }
                                                                         }
-                                                                        if($spv->shiftAllowance){
-                                                                            $check = 'allowance-flag';
-                                                                        }
                                                                     }
+                                                                }
+                                                                if(in_array($spv->id, $allownaceShiftId)){
+                                                                    $check = 'allowance-flag';
                                                                 }
                                                                 if($spv->project->is_suspended == 1){
                                                                     $red = 'red';
