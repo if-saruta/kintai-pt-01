@@ -148,91 +148,270 @@ window.addEventListener('load', () => {
     createEditModalActive()
 
     const allowanceModal = () => {
-        const targetArea = document.querySelectorAll('.allowance-area');
-        const modal = document.getElementById('allowance-modal');
-        const btn = document.querySelector('.allowance-modal-btn');
-        const closeBtn = document.querySelectorAll('.modalClose');
+        // 要素
+        const modal = document.getElementById('allowanceModal');
+        const targetElem = document.querySelectorAll('.allowance-input');
+        const closeElem = document.querySelectorAll('.modalClose');
+        const registerdWrap = document.getElementById('registerdWrap');
+        const createWrap = document.getElementById('createWrap');
+        const selectBox = document.getElementById('selectBox');
+        const createAllowanceForm = document.getElementById('createAllowanceForm');
+        const switchAllowances = document.querySelectorAll('.switchAllowance');
+        const createBtn = document.getElementById('allowanceCreateBtn');
+        const prevBtn = document.querySelector('.prevBtn');
+        const saveBtn = document.querySelector('.saveBtn');
+        const allowanceCreate = document.getElementById('allowanceCreate');
+        const selectAddBtn = document.getElementById('selectAddBtn');
+        // データ
+        const createAllowancePorjectId = document.getElementById('createAllowancePorjectId');
+        const shiftPvIdElem = modal.querySelectorAll('.shiftPvId');
+        const projectIdElem = modal.querySelector('.projectId');
+        // セレクトを挿入する親要素を取得
+        const allowanceList = document.getElementById('allowanceList');
+        // バナー
+        const succsessBunner = document.getElementById('succsessBunner');
+        const errorBunner = document.getElementById('errorBunner');
 
-        // 最後の入力保存する
-        var setInput = null;
-        // 手当の数
-        let count = 1;
+        let projectId = null;
+        let shiftPvId = null;
 
-        // プロジェクトごとにモーダルを作成
-        for(let i = 0; i < targetArea.length; i++){
-            targetArea[i].addEventListener('click', () => {
-                const names = targetArea[i].querySelectorAll('.allowanceName');
-                const amounts = targetArea[i].querySelectorAll('.amount');
-                const select = document.getElementById('allowanceSelect');
-                setInput = targetArea[i].querySelector('.allowance-input');
+        // ロードが必要か
+        let isLoad = false;
 
+        for(let i = 0; i < targetElem.length; i++){
+            targetElem[i].addEventListener('click', () => {
+                // モーダル表示
                 modal.style.display = 'block';
 
-                for(let j = 0; j < names.length; j++){
-                    var option = document.createElement("option");
-                    option.text = names[j].value
-                    option.value = amounts[j].value
-                    select.appendChild(option)
-                    count++
-                }
+                // 案件のidを取得・セット
+                projectId = targetElem[i].getAttribute('data-project-id');
+                projectIdElem.value = projectId;
+
+                // シフトのIDを取得
+                shiftPvId = targetElem[i].getAttribute('data-shift-pv-id');
+                shiftPvIdElem.forEach(elem => {
+                    elem.value = shiftPvId;
+                })
+
+                createList();
+                succsessBunner.classList.remove('bunner-animation');
+                errorBunner.classList.remove('bunner-animation');
             })
         }
 
-        // selectとinputの切り替え
-        const radio = document.querySelectorAll('.allowanceRadio');
-        const radioRalation = document.querySelectorAll('.radioRalation');
+        // 登録済みの手当を取得
+        const fetchAllowance = async () => {
+            try {
+                const response = await fetch(`/fetch-data/${projectId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                });
+                const allowances = await response.json();
+                return allowances;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+        // 登録済みの手当を表示
+        const createList = async () => {
+            let allowances = await fetchAllowance();
+            allowanceList.innerHTML = '';
+            allowances.forEach(allowance => {
+                allowance.shift_allowance.forEach(shiftPv => {
+                    // 操作しているシフトに手当が登録されているか
+                    if(shiftPv['id'] == shiftPvId){
+                        const newDiv = document.createElement('div');
+                        newDiv.className = 'registered-allownce__list__item';
 
-        for(let h = 0; h < radio.length; h++){
-            radio[h].addEventListener('change', () => {
-                for(let i = 0; i < radioRalation.length; i++){
-                    radioRalation[i].style.display = 'none';
-                }
-                radioRalation[h].style.display = 'block';
+                        newDiv.innerHTML = `
+                            <p class="allowance-name">${allowance['name']}</p>
+                            <p class="delete allowanceDeleteBtn" data-allowance-id="${allowance['id']}">削除</p>
+                        `;
+                        allowanceList.appendChild(newDiv);
+                    }
+                });
+            });
+        };
+
+        // 手当追加
+        createBtn.addEventListener('click', () => {
+            registerdWrap.style.display = 'none';
+            createWrap.style.display = 'block';
+            addAllowance();
+            switchRegisterdOrNew();
+        })
+        // セレクトタグの作成
+        const addAllowance = async () => {
+            // 手当を取得
+            let allowances = await fetchAllowance();
+            // selectを作成
+            const newSelect = document.createElement('select');
+            newSelect.className = 'c-select allowance-select';
+            newSelect.name = 'allowanceId';
+            // option初期値
+            const allowanceOption = document.createElement('option');
+            allowanceOption.value = '';
+            allowanceOption.text = '選択してください';
+            newSelect.appendChild(allowanceOption);
+
+            allowances.forEach(allowance => {
+                const allowanceOption = document.createElement('option');
+                allowanceOption.value = allowance['id'];
+                allowanceOption.text = allowance['name'];
+                newSelect.appendChild(allowanceOption);
+            })
+            selectBox.appendChild(newSelect);
+        }
+        // 既存か新規かを切り替え
+        const switchRegisterdOrNew = () => {
+            switchAllowances.forEach(switchBtn => {
+                switchBtn.addEventListener('click', () => {
+                    if(switchBtn.value == "registered"){
+                        selectBox.style.display = 'block';
+                        createAllowanceForm.style.display = 'none';
+                    }else{
+                        selectBox.style.display = 'none';
+                        createAllowanceForm.style.display = 'flex';
+                    }
+                })
             })
         }
 
-        // モーダルを初期化し選択されたデータを渡す
-        btn.addEventListener('click', () => {
-            const select = document.getElementById('allowanceSelect');
-            const input = document.getElementById('allowanceInput');
-            const radio = document.querySelectorAll('.allowanceRadio');
+        // 手当登録
+        saveBtn.addEventListener('click', () => {
+            switchAllowances.forEach(switchBtn => {
+                if(switchBtn.checked){
+                    if(switchBtn.value == "registered"){
+                        const form = document.getElementById('updateAllowanceForm');
+                        let formData = new FormData(form);
+                        succsessBunner.classList.remove('bunner-animation');
+                        errorBunner.classList.remove('bunner-animation');
 
-            new Promise((resolve) => {
-                if(radio[0].checked){
-                    const setAmount = select.value;
-                    setInput.value = setAmount;
-                    modal.style.display = 'none';
-                }else{
-                    const setAmount = input.value;
-                    setInput.value = setAmount;
-                    modal.style.display = 'none';
+                        // 通信
+                        fetch('/allowance-update', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            succsessBunner.classList.add('bunner-animation');
+                            backToFirstView();
+                            isLoad = true;
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            // alert('Failed to create shift.');
+                            errorBunner.classList.add('bunner-animation');
+                        });
+                    }else{ //手当新規作成
+
+                        // formごとデータを取得
+                        let allowanceCreateForm = document.getElementById('createAllowanceForm');
+                        let formData = new FormData(allowanceCreateForm);
+                        // バナーをリセット
+                        succsessBunner.classList.remove('bunner-animation');
+                        errorBunner.classList.remove('bunner-animation');
+
+                        // 通信
+                        fetch('/create-allowance', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            // console.log('Success:', data);
+                            // alert('Shift created successfully!');
+                            allowanceCreateForm.reset();
+                            succsessBunner.classList.add('bunner-animation');
+                            backToFirstView();
+                            isLoad = true;
+                        })
+                        .catch(error => {
+                            // console.error('Error:', error);
+                            // alert('Failed to create shift.');
+                            errorBunner.classList.add('bunner-animation');
+                        });
+                    }
                 }
-                resolve();
-            }).then(() => {
-                for(let k = 1; k < count; k++){
-                    select.remove(1);
-                }
-                input.value = null;
             })
         })
 
-        for(let i = 0; i< closeBtn.length; i++){
-            closeBtn[i].addEventListener('click', () => {
-                const select = document.getElementById('allowanceSelect');
-                const input = document.getElementById('allowanceInput');
+        // 手当削除の処理
+        registerdWrap.addEventListener('click', function (e) {
+            let deleteBtn = e.target;
 
-                // select・inputの値を初期化
-                input.value = null;
-                for(let k = 1; k < count; k++){
-                    select.remove(1);
+            if(deleteBtn.classList.contains('allowanceDeleteBtn')){
+                const confirmation = confirm('本当に削除しますか？');
+                if(confirmation){
+                    let allowanceId = deleteBtn.getAttribute('data-allowance-id');
+
+                    fetch(`/allowance-delete/${allowanceId}/${shiftPvId}`, {
+                        method: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                        // alert('Shift created successfully!');
+                        succsessBunner.classList.add('bunner-animation');
+                        backToFirstView();
+                        isLoad = true;
+                    })
+                    .catch(error => {
+                        // console.error('Error:', error);
+                        // alert('Failed to create shift.');
+                        errorBunner.classList.add('bunner-animation');
+                    });
                 }
-                // モーダルを閉じる
+            }
+        });
+
+        const backToFirstView = () => {
+            // 表示画面切り替え
+            registerdWrap.style.display = 'block';
+            createWrap.style.display = 'none';
+            // セレクトボックスリセット
+            selectBox.innerHTML = '';
+            // ラジオボタンリセット
+            switchAllowances[0].checked = true;
+            switchAllowances[1].checked = false;
+            selectBox.style.display = 'block';
+            createAllowanceForm.style.display = 'none';
+            // 登録済み手当を取得
+            createList();
+        }
+        // 前へ戻る
+        prevBtn.addEventListener('click', () => {
+            backToFirstView();
+        })
+
+
+        // モーダル閉じる時の処理
+        for(let i = 0; i < closeElem.length; i++){
+            closeElem[i].addEventListener('click', () => {
+                // モーダル非表示
                 modal.style.display = 'none';
+                allowanceList.innerHTML = '';
+                // ページをリロード
+                if(isLoad){
+                    location.reload();
+                }
             })
         }
 
     }
-    // allowanceModal();
+    allowanceModal();
 
     const vehicleModal = () => {
         const mainVehicle = document.querySelectorAll('.mainVehicle');

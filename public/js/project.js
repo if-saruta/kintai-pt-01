@@ -229,52 +229,95 @@ window.addEventListener('DOMContentLoaded', () => {
         // const addBtn = document.getElementById('allowanceAddBtn');
         // const allowanceCt = document.getElementById('allowanceCt');
 
-        // 新規手当追加コード
         projectsContainer.addEventListener('click', (e) => {
+
+            // 新規手当作成
             let addBtn = e.target;
             if(addBtn.classList.contains('allowanceAddBtn') || addBtn.classList.contains('allowanceAddIcon')){
+                // 手当全てを囲う親要素を取得
                 let allowanceParent = addBtn.closest('.allowance');
+                let allowanceIndex = allowanceParent.querySelectorAll('.allowance__content__item').length;
+
                 let allowanceCt = allowanceParent.querySelector('.allowance__content');
                 // div要素を作成
                 let createDiv = document.createElement('div');
                 // 名前を追加
                 createDiv.className = 'allowance__content__item';
-                // 作成した要素に要素を追加
-                createDiv.innerHTML = `
-                <div class="allowance__content__item">
-                    <div class="input-wrap">
-                        <p class="">手当名</p>
-                        <input type="text" class="c-input" name="allowance_name[]" placeholder="リーダー手当">
-                    </div>
-                    <div class="input-wrap">
-                        <p class="">手当上代</p>
-                        <input type="text" class="c-input" name="allowance_retail_amount[]" placeholder="1,000">
-                    </div>
-                    <div class="input-wrap">
-                        <p class="">手当ドライバー</p>
-                        <input type="text" class="c-input" name="allowance_driver_amount[]" placeholder="1,000">
-                    </div>
-                    <div class="delete-box">
-                        <i class="fa-solid fa-minus minus-icon"></i>
-                    </div>
-                </div>
-                `;
+
+                if(addBtn.getAttribute('data-state') == 'create'){
+                    // 追加された手当の案件のindex番号を取得
+                    let projectParent = addBtn.closest('.list-item');
+                    let projectIndex = projectParent.getAttribute('data-project-index');
+
+                    // 作成した要素に要素を追加
+                    createDiv.innerHTML = `
+                        <div class="allowance__content__item">
+                            <div class="input-wrap required">
+                                <p class="">必須</p>
+                                <input type="checkbox" name="projects[${projectIndex}][allowance][${allowanceIndex}][is_required]" value="1">
+                            </div>
+                            <div class="input-wrap">
+                                <p class="">手当名</p>
+                                <input type="text" class="c-input" name="projects[${projectIndex}][allowance][${allowanceIndex}][allowance_name]" placeholder="リーダー手当">
+                            </div>
+                            <div class="input-wrap">
+                                <p class="">手当上代</p>
+                                <input type="text" class="c-input" name="projects[${projectIndex}][allowance][${allowanceIndex}][allowance_retail_amount]" placeholder="1,000">
+                            </div>
+                            <div class="input-wrap">
+                                <p class="">手当ドライバー</p>
+                                <input type="text" class="c-input" name="projects[${projectIndex}][allowance][${allowanceIndex}][allowance_driver_amount]" placeholder="1,000">
+                            </div>
+                            <div class="delete-box deleteElem">
+                                <i class="fa-solid fa-minus minus-icon deleteElem"></i>
+                            </div>
+                        </div>
+                    `;
+                }else if(addBtn.getAttribute('data-state') == 'edit'){
+                    // 追加された手当の案件のindex番号を取得
+                    let projectParent = addBtn.closest('.list-item');
+                    let projectId = projectParent.getAttribute('data-project-id');
+
+                    // 作成した要素に要素を追加
+                    createDiv.innerHTML = `
+                        <div class="allowance__content__item">
+                            <div class="input-wrap required">
+                                <p class="">必須</p>
+                                <input type="checkbox" name="editProjects[${projectId}][allowance][${allowanceIndex}][is_required]" value="1">
+                            </div>
+                            <div class="input-wrap">
+                                <p class="">手当名</p>
+                                <input type="text" class="c-input" name="editProjects[${projectId}][allowance][${allowanceIndex}][allowance_name]" placeholder="リーダー手当">
+                            </div>
+                            <div class="input-wrap">
+                                <p class="">手当上代</p>
+                                <input type="text" class="c-input" name="editProjects[${projectId}][allowance][${allowanceIndex}][allowance_retail_amount]" placeholder="1,000">
+                            </div>
+                            <div class="input-wrap">
+                                <p class="">手当ドライバー</p>
+                                <input type="text" class="c-input" name="editProjects[${projectId}][allowance][${allowanceIndex}][allowance_driver_amount]" placeholder="1,000">
+                            </div>
+                            <div class="delete-box deleteElem">
+                                <i class="fa-solid fa-minus minus-icon deleteElem"></i>
+                            </div>
+                        </div>
+                    `;
+                }
                 // 親要素に追加
                 allowanceCt.appendChild(createDiv);
             }
-        });
 
-        // 削除コード
-        allowanceCt.addEventListener('click', (e) => {
+            // 削除コード
             let clickElement = e.target;
 
-            if(clickElement.classList.contains('delete-box') || clickElement.classList.contains('minus-icon')){
+            if(clickElement.classList.contains('deleteElem')){
                 let parent = clickElement.closest('.allowance__content__item');
                 parent.parentNode.remove();
             }
-        })
+        });
+
     }
-    // allowanceActive();
+    allowanceActive();
 
 
 })

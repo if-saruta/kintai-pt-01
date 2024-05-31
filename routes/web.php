@@ -91,6 +91,8 @@ Route::middleware('can:admin-higher')->group(function () {
         Route::post('/update/{id}', [ProjectController::class, 'update'])->name('update');
         Route::get('/delete/{id}', [ProjectController::class, 'delete'])->name('delete');
         Route::get('/projectDelete/{id}', [ProjectController::class, 'projectDelete'])->name('projectDelete');
+        // 手当削除
+        Route::get('allowanceDelete/{allowanceId}/{clientId}', [ProjectController::class, 'allowanceDelete'])->name('allowanceDelete');
         Route::get('/employee_payment_show/{id}', [ProjectController::class, 'employeePaymentShow'])->name('employeePaymentShow');
 
         // 案件情報
@@ -142,11 +144,15 @@ Route::middleware('can:admin-higher')->group(function () {
         Route::post('/allViewPdf', [PdfputController::class, 'allViewDownloadPdf'])->name('allViewPdf');
     });
 
+    // API
     Route::get('/fetch-data/{id}', [ShiftController::class, 'fetchData']);
     Route::get('/fetch-employee-data/{id}', [ShiftController::class, 'fetchEmployeeData']);
     Route::post('/store-memo', [ShiftController::class, 'storeMemo']);
     Route::get('/fetch-project-data/{id}', [ShiftController::class, 'fetchProjectData']);
     Route::get('/fetch-project-amount/{projectId}/{employeeId}', [ShiftController::class, 'fetchProjectAmount']);
+    Route::post('/create-allowance', [InvoiceController::class, 'allowanceCreate']);
+    Route::post('/allowance-update', [InvoiceController::class, 'allowanceUpdate']);
+    Route::get('/allowance-delete/{allowanceId}/{shiftPvId}', [InvoiceController::class, 'allowanceDelete']);
 
     Route::prefix('csv-issue')->name('csv-issue.')->group(function () {
         Route::get('/', [CsvIssueController::class, 'index'])->name('');
@@ -169,6 +175,7 @@ Route::middleware('can:admin-higher')->group(function () {
         Route::post('/driver-create', [InvoiceController::class, 'driverShiftCreate'])->name('driverShiftCreate');
         Route::post('/driver-update', [InvoiceController::class, 'driverShiftUpdate'])->name('driverShiftUpdate');
         Route::post('/over-time-update', [InvoiceController::class, 'overTimeUpdate'])->name('overTimeUpdate');
+        Route::get('/allowance-delete/{id}', [InvoiceController::class, 'allowanceDelete'])->name('allowanceDelete');
         Route::post('/driver-calendar-pdf', [InvoiceController::class, 'driverCalendarPDF'])->name('driver-calendar-pdf');
 
         // 案件関連

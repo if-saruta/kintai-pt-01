@@ -66,7 +66,7 @@ class ProjectController extends Controller
                 'retail_price' => $removeCommasAndCastToInt($projectData['retail_price']),
                 'driver_price' => $removeCommasAndCastToInt($projectData['driver_price']),
                 // 'estimated_overtime_hours' => $projectData['estimated_overtime_hours'],
-                'overtime_hourly_wage' => $projectData['overtime_hourly_wage'],
+                'overtime_hourly_wage' => $removeCommasAndCastToInt($projectData['overtime_hourly_wage']),
                 'is_suspended' => $projectData['is_suspended'] ?? 0
             ]);
 
@@ -95,20 +95,22 @@ class ProjectController extends Controller
 
 
             // 手当
-            if($projectData['allowance_name'] != null && $projectData['allowance_retail_amount'] != null && $projectData['allowance_driver_amount'] != null){
-                // 必須項目か確認
-                if(isset($projectData['is_required'])){
-                    $is_required = 1;
-                }else{
-                    $is_required = 0;
+            foreach($projectData['allowance'] as $allowanceData){
+                if($allowanceData['allowance_name'] != null && $allowanceData['allowance_retail_amount'] != null && $allowanceData['allowance_driver_amount'] != null){
+                    // 必須項目か確認
+                    if(isset($allowanceData['is_required'])){
+                        $is_required = 1;
+                    }else{
+                        $is_required = 0;
+                    }
+                    ProjectAllowance::create([
+                        'project_id' => $project->id,
+                        'name' => $allowanceData['allowance_name'],
+                        'retail_amount' => $removeCommasAndCastToInt($allowanceData['allowance_retail_amount']),
+                        'driver_amount' => $removeCommasAndCastToInt($allowanceData['allowance_driver_amount']),
+                        'is_required' => $is_required,
+                    ]);
                 }
-                ProjectAllowance::create([
-                    'project_id' => $project->id,
-                    'name' => $projectData['allowance_name'],
-                    'retail_amount' => $removeCommasAndCastToInt($projectData['allowance_retail_amount']),
-                    'driver_amount' => $removeCommasAndCastToInt($projectData['allowance_driver_amount']),
-                    'is_required' => $projectData['is_required'],
-                ]);
             }
 
             // 従業員別日給情報の保存
@@ -170,7 +172,7 @@ class ProjectController extends Controller
                 'retail_price' => $removeCommasAndCastToInt($projectData['retail_price']),
                 'driver_price' => $removeCommasAndCastToInt($projectData['driver_price']),
                 // 'estimated_overtime_hours' => $projectData['estimated_overtime_hours'],
-                'overtime_hourly_wage' => $projectData['overtime_hourly_wage'],
+                'overtime_hourly_wage' => $removeCommasAndCastToInt($projectData['overtime_hourly_wage']),
                 'registration_location' => 1,
                 'is_suspended' => $projectData['is_suspended'] ?? 0
             ]);
@@ -213,16 +215,25 @@ class ProjectController extends Controller
                     }
                 }
             }
+
+            if(isset($projectData['allowance'])){
             // 新規手当
-            if(isset($projectData['allowance_name'])){
-                if($projectData['allowance_name'] != null && $projectData['allowance_retail_amount'] != null && $projectData['allowance_driver_amount'] != null){
-                    ProjectAllowance::create([
-                        'project_id' => $project->id,
-                        'name' => $projectData['allowance_name'],
-                        'retail_amount' => $removeCommasAndCastToInt($projectData['allowance_retail_amount']),
-                        'driver_amount' => $removeCommasAndCastToInt($projectData['allowance_driver_amount']),
-                        'is_required' => $projectData['is_required'] ?? 0,
-                    ]);
+                foreach($projectData['allowance'] as $allowanceData){
+                    if($allowanceData['allowance_name'] != null && $allowanceData['allowance_retail_amount'] != null && $allowanceData['allowance_driver_amount'] != null){
+                        // 必須項目か確認
+                        if(isset($allowanceData['is_required'])){
+                            $is_required = 1;
+                        }else{
+                            $is_required = 0;
+                        }
+                        ProjectAllowance::create([
+                            'project_id' => $project->id,
+                            'name' => $allowanceData['allowance_name'],
+                            'retail_amount' => $removeCommasAndCastToInt($allowanceData['allowance_retail_amount']),
+                            'driver_amount' => $removeCommasAndCastToInt($allowanceData['allowance_driver_amount']),
+                            'is_required' => $is_required,
+                        ]);
+                    }
                 }
             }
 
@@ -282,20 +293,22 @@ class ProjectController extends Controller
             ProjectHoliday::create($holidaysData);
 
             // 手当
-            if($projectData['allowance_name'] != null && $projectData['allowance_retail_amount'] != null && $projectData['allowance_driver_amount'] != null){
-                // 必須項目か確認
-                if(isset($projectData['is_required'])){
-                    $is_required = 1;
-                }else{
-                    $is_required = 0;
+            foreach($projectData['allowance'] as $allowanceData){
+                if($allowanceData['allowance_name'] != null && $allowanceData['allowance_retail_amount'] != null && $allowanceData['allowance_driver_amount'] != null){
+                    // 必須項目か確認
+                    if(isset($allowanceData['is_required'])){
+                        $is_required = 1;
+                    }else{
+                        $is_required = 0;
+                    }
+                    ProjectAllowance::create([
+                        'project_id' => $project->id,
+                        'name' => $allowanceData['allowance_name'],
+                        'retail_amount' => $removeCommasAndCastToInt($allowanceData['allowance_retail_amount']),
+                        'driver_amount' => $removeCommasAndCastToInt($allowanceData['allowance_driver_amount']),
+                        'is_required' => $is_required,
+                    ]);
                 }
-                ProjectAllowance::create([
-                    'project_id' => $project->id,
-                    'name' => $projectData['allowance_name'],
-                    'retail_amount' => $removeCommasAndCastToInt($projectData['allowance_retail_amount']),
-                    'driver_amount' => $removeCommasAndCastToInt($projectData['allowance_driver_amount']),
-                    'is_required' => $is_required,
-                ]);
             }
 
             // 従業員別日給情報の保存
@@ -332,6 +345,13 @@ class ProjectController extends Controller
         $clientId = $project->client->id;
 
         $project->delete();
+
+        return redirect()->route('project.edit', ['id' => $clientId]);
+    }
+
+    public function allowanceDelete($allowanceId, $clientId)
+    {
+        ProjectAllowance::destroy($allowanceId);
 
         return redirect()->route('project.edit', ['id' => $clientId]);
     }

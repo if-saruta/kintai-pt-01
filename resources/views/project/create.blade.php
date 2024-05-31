@@ -52,7 +52,7 @@
                         </div>
                         <div class="project-list__body accordionContainer" id="projectsContainer">
                             {{-- 案件 --}}
-                            <div class="list-item acc-wrap project-info-wrap">
+                            <div class="list-item acc-wrap project-info-wrap" data-project-index='0'>
                                 <div class="list-item__inner">
                                     <!-- クリックする要素 -->
                                     <div class="list-item__head acc-title accordionBtn">
@@ -164,7 +164,7 @@
                                                 </div> --}}
                                                 <div class="input-item">
                                                     <label for="" class="label-txt">残業1時間あたりの価格</label>
-                                                    <input type="text" name="projects[0][overtime_hourly_wage]" class="c-input" placeholder="000">
+                                                    <input type="text" name="projects[0][overtime_hourly_wage]" class="c-input commaInput" placeholder="000">
                                                 </div>
                                             </div>
                                         </div>
@@ -172,27 +172,27 @@
                                         <div class="allowance">
                                             <div class="allowance__head">
                                                 <p class="input-head">手当</p>
-                                                {{-- <div class="plus-box allowanceAddBtn" id="allowanceAddBtn">
-                                                    <i class="fa-solid fa-plus allowanceAddIcon"></i>
-                                                </div> --}}
+                                                <div class="plus-box allowanceAddBtn" id="allowanceAddBtn" data-state="create">
+                                                    <i class="fa-solid fa-plus allowanceAddIcon" data-state="create"></i>
+                                                </div>
                                             </div>
                                             <div class="allowance__content" id="allowanceCt">
                                                 <div class="allowance__content__item">
                                                     <div class="input-wrap required">
                                                         <p class="">必須</p>
-                                                        <input type="checkbox" name="projects[0][is_required]" value="1">
+                                                        <input type="checkbox" name="projects[0][allowance][0][is_required]" value="1">
                                                     </div>
                                                     <div class="input-wrap">
                                                         <p class="">手当名</p>
-                                                        <input type="text" class="c-input" name="projects[0][allowance_name]" placeholder="リーダー手当">
+                                                        <input type="text" class="c-input" name="projects[0][allowance][0][allowance_name]" placeholder="リーダー手当">
                                                     </div>
                                                     <div class="input-wrap">
                                                         <p class="">手当上代</p>
-                                                        <input type="text" class="c-input commaInput" name="projects[0][allowance_retail_amount]" placeholder="1,000">
+                                                        <input type="text" class="c-input commaInput" name="projects[0][allowance][0][allowance_retail_amount]" placeholder="1,000">
                                                     </div>
                                                     <div class="input-wrap">
                                                         <p class="">手当ドライバー価格</p>
-                                                        <input type="text" class="c-input commaInput" name="projects[0][allowance_driver_amount]" placeholder="1,000">
+                                                        <input type="text" class="c-input commaInput" name="projects[0][allowance][0][allowance_driver_amount]" placeholder="1,000">
                                                     </div>
                                                 </div>
                                             </div>
@@ -303,6 +303,7 @@
                 var newProjectIndex = container.getElementsByClassName('project-info-wrap').length;
                 var newProject = document.createElement('div');
                 newProject.className = 'list-item acc-wrap project-info-wrap';
+                newProject.setAttribute('data-project-index', `${newProjectIndex}`);
                 newProject.innerHTML = `
                 <div class="list-item__inner">
                     <!-- クリックする要素 -->
@@ -423,29 +424,27 @@
                         <div class="allowance">
                             <div class="allowance__head">
                                 <p class="input-head">手当</p>
-                                {{--
-                                    <div class="plus-box allowanceAddBtn" id="allowanceAddBtn">
-                                        <i class="fa-solid fa-plus allowanceAddIcon"></i>
-                                    </div>
-                                    --}}
+                                <div class="plus-box allowanceAddBtn" id="allowanceAddBtn" data-state="create">
+                                    <i class="fa-solid fa-plus allowanceAddIcon" data-state="create"></i>
+                                </div>
                             </div>
                             <div class="allowance__content" id="allowanceCt">
                                 <div class="allowance__content__item">
                                     <div class="input-wrap required">
                                         <p class="">必須</p>
-                                        <input type="checkbox" name="projects[${newProjectIndex}][is_required]" value="1">
+                                        <input type="checkbox" name="projects[${newProjectIndex}][allowance][0][is_required]" value="1">
                                     </div>
                                     <div class="input-wrap">
                                         <p class="">手当名</p>
-                                        <input type="text" class="c-input" name="projects[${newProjectIndex}][allowance_name]" placeholder="リーダー手当">
+                                        <input type="text" class="c-input" name="projects[${newProjectIndex}][allowance][0][allowance_name]" placeholder="リーダー手当">
                                     </div>
                                     <div class="input-wrap">
                                         <p class="">手当上代</p>
-                                        <input type="text" class="c-input commaInput" name="projects[${newProjectIndex}][allowance_retail_amount]" placeholder="1,000">
+                                        <input type="text" class="c-input commaInput" name="projects[${newProjectIndex}][allowance][0][allowance_retail_amount]" placeholder="1,000">
                                     </div>
                                     <div class="input-wrap">
                                         <p class="">手当ドライバー価格</p>
-                                        <input type="text" class="c-input commaInput" name="projects[${newProjectIndex}][allowance_driver_amount]" placeholder="1,000">
+                                        <input type="text" class="c-input commaInput" name="projects[${newProjectIndex}][allowance][0][allowance_driver_amount]" placeholder="1,000">
                                     </div>
                                 </div>
                             </div>

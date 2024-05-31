@@ -180,7 +180,7 @@
             height: 11.1px;
         }
         .f-s-9{
-            font-size: 9px;
+            font-size: 8px;
         }
         .f-s-7{
             font-size: 8px;

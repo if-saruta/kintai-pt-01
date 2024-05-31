@@ -409,15 +409,10 @@
                                                                 <td class="w-amount overtimeRow"><input type="text" value="{{ floatval($spv->overtime_fee) }}" name="overtime_fee[{{$spv->id}}]" data-shift-pv-id="{{ $spv->id }}" data-over-time-type="{{ $spv->overtime_type }}" class="commaInput overtimeOpenTarget" readonly></td>
                                                                 {{-- 手当 --}}
                                                                 <td class="w-amount allowance-area allowanceRow">
-                                                                    <input type="text" value="{{ number_format($spv->total_allowance) }}" name="allowance[{{$spv->id}}]" class="allowance-input commaInput">
-                                                                    {{-- @if ($spv->project)
-                                                                        @foreach ($allowanceProject as $value)
-                                                                            @if ($value->project_id == $spv->project->id)
-                                                                                <input hidden class="allowanceName" type="text" value="{{$value->allowanceName}}">
-                                                                                <input hidden class="amount" type="text" value="{{$value->amount}}">
-                                                                            @endif
-                                                                        @endforeach
-                                                                    @endif --}}
+                                                                    @php
+                                                                        $totalAllowanceAmount = $spv->shiftAllowance()->sum('driver_amount');
+                                                                    @endphp
+                                                                    <input type="text" value="{{ number_format($totalAllowanceAmount) }}" name="allowance[{{$spv->id}}]" class="allowance-input commaInput" data-shift-pv-id="{{ $spv->id }}" data-project-id="{{ $spv->project_id }}" readonly>
                                                                 </td>
                                                                 {{-- 高速代 --}}
                                                                 <td class="w-amount expresswayRow"><input type="text" value="{{ number_format($spv->expressway_fee) }}" name="expressway_fee[{{$spv->id}}]" class="commaInput"></td>
@@ -634,17 +629,10 @@
                                                                 <td class="w-amount overtimeRow"><input type="text" value="{{ floatval($spv->overtime_fee) }}" name="overtime_fee[{{$spv->id}}]" data-shift-pv-id="{{ $spv->id }}" data-over-time-type="{{ $spv->overtime_type }}" class="commaInput overtimeOpenTarget" readonly></td>
                                                                 {{-- 手当 --}}
                                                                 <td class="w-amount allowance-area allowanceRow">
-                                                                    <input type="text" value="{{ number_format($spv->total_allowance) }}" name="allowance[{{$spv->id}}]" class="allowance-input commaInput">
-                                                                    {{-- @if ($spv->project)
-                                                                        @foreach ($allowanceProject as $value)
-                                                                            @if ($value->project_id == $spv->project->id)
-                                                                            <input hidden class="allowanceName" type="text"
-                                                                                value="{{$value->allowanceName}}">
-                                                                            <input hidden class="amount" type="text"
-                                                                                value="{{$value->amount}}">
-                                                                            @endif
-                                                                        @endforeach
-                                                                    @endif --}}
+                                                                    @php
+                                                                        $totalAllowanceAmount = $spv->shiftAllowance()->sum('driver_amount');
+                                                                    @endphp
+                                                                    <input type="text" value="{{ number_format($totalAllowanceAmount) }}" name="allowance[{{$spv->id}}]" class="allowance-input commaInput" data-shift-pv-id="{{ $spv->id }}" data-project-id="{{ $spv->project_id }}" readonly>
                                                                 </td>
                                                                 {{-- 高速代 --}}
                                                                 <td class="w-amount expresswayRow"><input type="text" value="{{ number_format($spv->expressway_fee) }}" name="expressway_fee[{{$spv->id}}]" class="commaInput"></td>
@@ -823,6 +811,7 @@
                                                         <tr class="info-table-row">
                                                             <th><input type="text" name="allowanceName[]" value="{{ $allowanceName }}"></th>
                                                             <td><input type="text" name="allowanceAmount[]" value="{{ number_format($allowanceData['amount']) }}" class="commaInput"><div class="row-delete-btn delete-btn-target"><i class="fa-solid fa-minus delete-btn-target"></i></div></td>
+                                                            <input hidden type="text" name="allowanceUnit[]" value="{{ $allowanceData['unit'] }}">
                                                             <input hidden type="text" name="allowanceCount[]" value="{{ $allowanceData['count'] }}">
                                                         </tr>
                                                         @endforeach
@@ -1047,34 +1036,77 @@
 
     @if ($shifts !== null && !$shifts->isEmpty())
     {{-- 手当モーダル --}}
-    <div class="allowance-modal-wrap" id="allowance-modal">
-        <span class="allowance-modal-wrap__bg allowanceModalBg"></span>
+    <div class="allowance-modal-wrap" id="allowanceModal">
+        <span class="allowance-modal-wrap__bg modalClose"></span>
+        <div class="allowance-modal-wrap__succsess-buner" id="succsessBunner">
+            <p class="">正常に処理されました</p>
+        </div>
+        <div class="allowance-modal-wrap__error-buner" id="errorBunner">
+            <p class="">正常に処理されませんでした</p>
+        </div>
         <div class="allowance-modal-wrap__modal">
             <div class="allowance-modal-wrap__modal__inner">
-                <div class="radio-area">
-                    <div class="radio-area__item">
-                        <input name="swichAllowance" class="allowanceRadio" type="radio" id="allowanceS"
-                            checked>
-                        <label for="allowanceS">手当選択</label>
+                <div class="allowance-wrap">
+                    <div class="registered-allownce" id="registerdWrap">
+                        <p class="title">登録済み手当</p>
+                        <div class="registered-allownce__list__add-btn" id="allowanceCreateBtn">新規追加</div>
+                        <div class="registered-allownce__list" id="allowanceList">
+
+                        </div>
+                        <div class="btn-box">
+                            <div class="btn --back modalClose">
+                                <p class="">戻る</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="radio-area__item">
-                        <input name="swichAllowance" class="allowanceRadio" type="radio" id="allowance">
-                        <label for="allowance">手当入力</label>
-                    </div>
-                </div>
-                <div class="input-area">
-                    <select name="" id="allowanceSelect" class="c-select radioRalation">
-                        <option value="0">選択してください</option>
-                    </select>
-                    <input type="text" id="allowanceInput" class="c-input radioRalation"
-                        placeholder="金額を入力">
-                </div>
-                <div class="btn-box">
-                    <div class="allowance-modal-btn modalClose">
-                        <p class="">選択</p>
-                    </div>
-                    <div class="btn --back modalClose">
-                        <p class="">戻る</p>
+                    <div class="add-allowance" id="createWrap">
+                        <p class="title">手当新規登録</p>
+                        <div class="add-allowance__switch-area">
+                            <label for="">
+                                <input type="radio" name="switch-allowance" value="registered" class="switchAllowance" checked>
+                                既存手当
+                            </label>
+                            <label for="">
+                                <input type="radio" name="switch-allowance" value="new" class="switchAllowance">
+                                新規手当
+                            </label>
+                        </div>
+                        <form action="" id="updateAllowanceForm" method="POST">
+                            @csrf
+                            <input hidden type="text" class="shiftPvId" name="id">
+                            <div class="select-box" id="selectBox">
+
+                            </div>
+                        </form>
+                        <form action="" class="create-allowance" id="createAllowanceForm" method="POST">
+                            @csrf
+                            <input hidden type="text" class="shiftPvId" name="id">
+                            <input hidden type="text" class="projectId" name="project_id">
+                            <div class="create-allowance__item">
+                                <p class="">必須</p>
+                                <input type="checkbox" value="1" name="is_required">
+                            </div>
+                            <div class="create-allowance__item">
+                                <p class="">手当名</p>
+                                <input type="text" class="c-input" name="name" placeholder="○○手当">
+                            </div>
+                            <div class="create-allowance__item">
+                                <p class="">手当上代</p>
+                                <input type="text" class="c-input commaInput" name="retail_amount" placeholder="1,000">
+                            </div>
+                            <div class="create-allowance__item">
+                                <p class="">手当ドライバー価格</p>
+                                <input type="text" class="c-input commaInput" name="driver_amount" placeholder="1,000">
+                            </div>
+                        </form>
+                        <div class="btn-box">
+                            <div class="c-save-btn allowance-save-btn saveBtn">
+                                <p class="">登録</p>
+                            </div>
+                            <div class="btn --back prevBtn">
+                                <p class="">戻る</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

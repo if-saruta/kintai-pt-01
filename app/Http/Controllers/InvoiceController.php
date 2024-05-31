@@ -12,6 +12,7 @@ use App\Models\Employee;
 use App\Models\Project;
 use App\Models\ProjectHoliday;
 use App\Models\ProjectEmployeePayment;
+use App\Models\ProjectAllowance;
 use App\Models\Shift;
 use App\Models\ShiftProjectVehicle;
 use App\Models\Vehicle;
@@ -312,6 +313,80 @@ class InvoiceController extends Controller
             'month' => $request->month
         ]);
     }
+
+    public function allowanceCreate(Request $request)
+    {
+        // カンマを排除する処理
+        $request->merge([
+            'retail_amount' => str_replace(',', '', $request->input('retail_amount')),
+            'driver_amount' => str_replace(',', '', $request->input('driver_amount')),
+        ]);
+
+        // バリデーション
+        $request->validate([
+            'project_id' => 'required|exists:projects,id',
+            'is_required' => 'boolean',
+            'name' => 'required|string|max:255',
+            'retail_amount' => 'required|numeric|min:0',
+            'driver_amount' => 'required|numeric|min:0',
+        ]);
+        // 手当の作成
+        $allowance = projectAllowance::create($request->except('id'));
+
+        // シフトを取得
+        $shiftPvId = $request->id;
+        $shiftMiddle = ShiftProjectVehicle::find($shiftPvId);
+        // 取得したシフトに作成したい手当を登録
+        $shiftMiddle->shiftAllowance()->attach($allowance->id);
+
+        // 手当の合計を再計算
+        $totalAllowanceAmount = $shiftMiddle->shiftAllowance()->sum('driver_amount');
+        $shiftMiddle->total_allowance = $totalAllowanceAmount;
+
+        $shiftMiddle->save();
+
+        // JSON形式で登録結果を返す
+        return response()->json($totalAllowanceAmount, 201);
+
+    }
+
+    public function allowanceUpdate(Request $request)
+    {
+        $shiftPvId = $request->id;
+        $shiftMiddle = ShiftProjectVehicle::find($shiftPvId);
+
+        $allowanceId = $request->input('allowanceId');
+        if (!$shiftMiddle->shiftAllowance()->where('project_allowance_id', $allowanceId)->exists()) {
+            // 存在しない場合にのみ追加
+            $shiftMiddle->shiftAllowance()->attach($allowanceId);
+
+            if(!empty($allowanceId)){
+                $totalAllowanceAmount = $shiftMiddle->shiftAllowance()->sum('driver_amount');
+
+                $shiftMiddle->total_allowance = $totalAllowanceAmount;
+
+                $shiftMiddle->save();
+            }
+        }
+        // JSON形式で登録結果を返す
+        return response()->json('ok', 201);
+    }
+
+    public function allowanceDelete($allowanceId, $shiftPvId)
+    {
+        $shiftMiddle = ShiftProjectVehicle::find($shiftPvId);
+
+        $shiftMiddle->shiftAllowance()->detach($allowanceId);
+
+        $totalAllowanceAmount = $shiftMiddle->shiftAllowance()->sum('driver_amount');
+
+        $shiftMiddle->total_allowance = $totalAllowanceAmount;
+
+        $shiftMiddle->save();
+
+        return response()->json($totalAllowanceAmount, 201);
+    }
+
 
     public function driverCalendarPDF(Request $request)
     {
@@ -708,9 +783,11 @@ class InvoiceController extends Controller
             if($spv->project){
                 // 手当計算
                 if($spv->shiftAllowance){
-                    foreach($spv->project->allowances as $allowance){
+                    $allowances = $spv->shiftAllowance()->get();
+                    foreach($allowances as $allowance){
                         if(!isset($allowanceArray[$allowance->name])){
                             $allowanceArray[$allowance->name]['amount'] = $allowance->driver_amount;
+                            $allowanceArray[$allowance->name]['unit'] = $allowance->driver_amount;
                             $allowanceArray[$allowance->name]['count'] = 1;
                         }else{
                             $allowanceArray[$allowance->name]['amount'] += $allowance->driver_amount;
@@ -729,6 +806,7 @@ class InvoiceController extends Controller
                         $totalOverTime += round($calc);
                     }
                 }
+
             }
         }
 

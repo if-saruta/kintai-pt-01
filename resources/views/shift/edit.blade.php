@@ -329,10 +329,10 @@
                                                                 }
                                                             }
                                                         }
-                                                        if($spv->shiftAllowance){
-                                                            $check = 'allowance-flag';
-                                                        }
                                                     }
+                                                }
+                                                if(in_array($spv->id, $allownaceShiftId)){
+                                                    $check = 'allowance-flag';
                                                 }
                                                 if($spv->project->is_suspended == 1){
                                                     $red = 'red';
@@ -448,28 +448,28 @@
 
                         {{-- データ表示 --}}
                         @if ($spv->project)
-                            @php
-                                $red = '';
-                                $check = '';
-                                foreach ($spv->project->allowances as $allowance) {
-                                    if($allowance->is_required == 1){
-                                        foreach($missingRequiredAllowancesByDate as $date => $allowanceData){
-                                            foreach($allowanceData as $name){
-                                                if($shift->date == $date && $allowance->name == $name){
-                                                    $red = 'red';
-                                                    $check = '';
-                                                }
+                        @php
+                            $red = '';
+                            $check = '';
+                            foreach ($spv->project->allowances as $allowance) {
+                                if($allowance->is_required == 1){
+                                    foreach($missingRequiredAllowancesByDate as $date => $allowanceData){
+                                        foreach($allowanceData as $name){
+                                            if($shift->date == $date && $allowance->name == $name){
+                                                $red = 'red';
+                                                $check = '';
                                             }
-                                        }
-                                        if($spv->shiftAllowance){
-                                            $check = 'allowance-flag';
                                         }
                                     }
                                 }
-                                if($spv->project->is_suspended == 1){
-                                    $red = 'red';
-                                }
-                            @endphp
+                            }
+                            if(in_array($spv->id, $allownaceShiftId)){
+                                $check = 'allowance-flag';
+                            }
+                            if($spv->project->is_suspended == 1){
+                                $red = 'red';
+                            }
+                        @endphp
                         @if ($spv->initial_project_name)
                             <p class="table-cell__item__row setHightElem {{ $check }}">{{$spv->initial_project_name}}</p>
                         @else
@@ -651,10 +651,10 @@
                                                 }
                                             }
                                         }
-                                        if($spv->shiftAllowance){
-                                            $check = 'allowance-flag';
-                                        }
                                     }
+                                }
+                                if(in_array($spv->id, $allownaceShiftId)){
+                                    $check = 'allowance-flag';
                                 }
                                 if($spv->project->is_suspended == 1){
                                     $red = 'red';
@@ -776,10 +776,10 @@
                                         }
                                     }
                                 }
-                                if($spv->shiftAllowance){
-                                    $check = 'allowance-flag';
-                                }
                             }
+                        }
+                        if(in_array($spv->id, $allownaceShiftId)){
+                            $check = 'allowance-flag';
                         }
                         if($spv->project->is_suspended == 1){
                             $red = 'red';
@@ -880,7 +880,7 @@
 
     {{-- モーダル --}}
     <div class="shift-edit-modal" id="shiftModal">
-        <span class="shift-edit-modal__bg modalClose" onclick='return confirm("入力したデータは失われます。")'></span>
+        <span class="shift-edit-modal__bg modalClose"></span>
         <div class="shift-edit-modal__white-board">
             {{-- シフト情報 --}}
             <div class="name-block">
@@ -1014,7 +1014,7 @@
                         onclick='return confirm("本当に削除しますか?")'>
                         この案件を削除する
                     </button>
-                    <div class="btn --back modalClose" onclick='return confirm("入力したデータは失われます。")'>
+                    <div class="btn --back modalClose">
                         戻る
                     </div>
                 </div>
@@ -1024,7 +1024,7 @@
 
     {{-- 新規作成用モーダル --}}
     <div class="shift-edit-modal shift-create-modal" id="createShiftModal">
-        <span class="shift-edit-modal__bg createCloseModal" onclick='return confirm("入力したデータは失われます。")'></span>
+        <span class="shift-edit-modal__bg createCloseModal"></span>
         <div class="shift-edit-modal__white-board">
             {{-- シフト情報 --}}
             <div class="name-block">
@@ -1167,7 +1167,7 @@
                     <button class="btn --save" type="submit" name="action" value="save">
                         入力内容で案件を登録
                     </button>
-                    <div class="btn --back createCloseModal" onclick='return confirm("入力したデータは失われます。")'>
+                    <div class="btn --back createCloseModal" >
                         戻る
                     </div>
                 </div>
@@ -1282,14 +1282,9 @@ var missingRequiredAllowancesByDate = @json($missingRequiredAllowancesByDate);
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
-<script>
-    // document.addEventListener('DOMContentLoaded', () => {
-    //     $('.projectSelect').select2();
-    //     $('.projectSelect').on('change', function (e) {
+<!-- Select2日本語化 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/i18n/ja.js"></script>
 
-    //     })
-    // });
-</script>
 
 </x-app-layout>
 

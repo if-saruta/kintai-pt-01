@@ -118,6 +118,10 @@
                         <input hidden name="endOfWeek" value="{{ $endOfWeek }}" type="text">
                         {{-- 案件のhegiht --}}
                         <input hidden name="projectHeight" value="" id="projectHeight" type="text">
+                        {{-- 絞り込み --}}
+                        @foreach ($narrowEmployeeId as $empployeeId)
+                            <input hidden type="text" name="narrowIds[]" value="{{ $empployeeId }}">
+                        @endforeach
                         {{-- シフトの種類 --}}
                         <input hidden name="shiftType" value="employeePrice" type="text">
                         <button class="calendar-download-btn">ダウンロード</button>

@@ -58,9 +58,9 @@
                             </div>
                         </div>
                         <div class="project-list__body accordionContainer" id="projectsContainer">
-                            @foreach ( $projects as $project )
+                            @foreach ( $projects as $index => $project )
                             {{-- 案件 --}}
-                            <div class="list-item acc-wrap project-info-wrap">
+                            <div class="list-item acc-wrap project-info-wrap" data-project-id={{ $project->id }}>
                                 <div class="list-item__inner">
                                     <!-- クリックする要素 -->
                                     <div class="list-item__head acc-title accordionBtn">
@@ -73,9 +73,9 @@
                                             <a href="{{ route('project.info', ['id' => $project->id]) }}" class="project-info-link projectInfoLink">
                                                 案件表
                                             </a>
-                                            <a href="{{ route('project.fixedShift', ['id' => $project->id]) }}" class="project-info-link projectInfoLink">
+                                            {{-- <a href="{{ route('project.fixedShift', ['id' => $project->id]) }}" class="project-info-link projectInfoLink">
                                                 固定シフト
-                                            </a>
+                                            </a> --}}
                                             <i class="fa-solid fa-angle-up angle"></i>
                                         </div>
                                     </div>
@@ -177,7 +177,7 @@
                                                 </div> --}}
                                                 <div class="input-item">
                                                     <label for="" class="label-txt">残業1時間あたりの価格</label>
-                                                    <input type="text" name="editProjects[{{$project->id}}][overtime_hourly_wage]" class="c-input" value="{{$project->overtime_hourly_wage}}">
+                                                    <input type="text" name="editProjects[{{$project->id}}][overtime_hourly_wage]" class="c-input commaInput" value="{{$project->overtime_hourly_wage}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -185,9 +185,9 @@
                                         <div class="allowance">
                                             <div class="allowance__head">
                                                 <p class="input-head">手当</p>
-                                                {{-- <div class="plus-box allowanceAddBtn" id="allowanceAddBtn">
-                                                    <i class="fa-solid fa-plus allowanceAddIcon"></i>
-                                                </div> --}}
+                                                <div class="plus-box allowanceAddBtn" id="allowanceAddBtn" data-state="edit">
+                                                    <i class="fa-solid fa-plus allowanceAddIcon" data-state="edit"></i>
+                                                </div>
                                             </div>
                                             <div class="allowance__content" id="allowanceCt">
                                                 @foreach ($project->allowances as $allowance)
@@ -208,6 +208,9 @@
                                                             <p class="">手当ドライバー価格</p>
                                                             <input type="text" class="c-input commaInput" name="editProjects[{{$project->id}}][allowances][{{ $allowance->id }}][allowance_driver_amount]" value="{{ number_format($allowance->driver_amount) }}" placeholder="1,000">
                                                         </div>
+                                                        <a href="{{ route('project.allowanceDelete', ['allowanceId' => $allowance->id, 'clientId' => $project->client_id]) }}" class="--delete-box" onclick="return confirm('本当に削除しますか？');">
+                                                            <i class="fa-solid fa-minus minus-icon"></i>
+                                                        </a>
                                                     </div>
                                                 @endforeach
                                                 @if ($project->allowances->count() == 0)
@@ -251,13 +254,13 @@
                                                                 @if ($employee->employment_status == '正社員')
                                                                     @foreach ( $project->payments as $record )
                                                                         @if ($record->employee_id == $employee->id)
-                                                                        <div class="item">
-                                                                            <p class="">{{$employee->name}}</p>
-                                                                            <input type="text" name="editProjects[{{$project->id}}][employeePayments][{{$employee->id}}]" class="c-input commaInput" value="{{$record->amount}}">
-                                                                        </div>
-                                                                        @php
-                                                                            $isEmployee = true;
-                                                                        @endphp
+                                                                            <div class="item">
+                                                                                <p class="">{{$employee->name}}</p>
+                                                                                <input type="text" name="editProjects[{{$project->id}}][employeePayments][{{$employee->id}}]" class="c-input commaInput" value="{{$record->amount}}">
+                                                                            </div>
+                                                                            @php
+                                                                                $isEmployee = true;
+                                                                            @endphp
                                                                         @endif
                                                                     @endforeach
                                                                 @endif
@@ -346,6 +349,7 @@
             var newProjectIndex = container.getElementsByClassName('project-info-wrap').length;
             var newProject = document.createElement('div');
             newProject.className = 'list-item acc-wrap project-info-wrap';
+            newProject.setAttribute('data-project-index', `${newProjectIndex}`);
             newProject.innerHTML = `
             <div class="list-item__inner">
                 <!-- クリックする要素 -->
@@ -468,29 +472,27 @@
                         <div class="allowance">
                             <div class="allowance__head">
                                 <p class="input-head">手当</p>
-                                {{--
-                                    <div class="plus-box allowanceAddBtn" id="allowanceAddBtn">
-                                        <i class="fa-solid fa-plus allowanceAddIcon"></i>
-                                    </div>
-                                    --}}
+                                <div class="plus-box allowanceAddBtn" id="allowanceAddBtn" data-state="create">
+                                    <i class="fa-solid fa-plus allowanceAddIcon" data-state="create"></i>
+                                </div>
                             </div>
                             <div class="allowance__content" id="allowanceCt">
                                 <div class="allowance__content__item">
                                     <div class="input-wrap required">
                                         <p class="">必須</p>
-                                        <input type="checkbox" name="projects[${newProjectIndex}][is_required]" value="1">
+                                        <input type="checkbox" name="projects[${newProjectIndex}][allowance][0][is_required]" value="1">
                                     </div>
                                     <div class="input-wrap">
                                         <p class="">手当名</p>
-                                        <input type="text" class="c-input" name="projects[${newProjectIndex}][allowance_name]" placeholder="リーダー手当">
+                                        <input type="text" class="c-input" name="projects[${newProjectIndex}][allowance][0][allowance_name]" placeholder="リーダー手当">
                                     </div>
                                     <div class="input-wrap">
                                         <p class="">手当上代</p>
-                                        <input type="text" class="c-input commaInput" name="projects[${newProjectIndex}][allowance_retail_amount]" placeholder="1,000">
+                                        <input type="text" class="c-input commaInput" name="projects[${newProjectIndex}][allowance][0][allowance_retail_amount]" placeholder="1,000">
                                     </div>
                                     <div class="input-wrap">
                                         <p class="">手当ドライバー価格</p>
-                                        <input type="text" class="c-input commaInput" name="projects[${newProjectIndex}][allowance_driver_amount]" placeholder="1,000">
+                                        <input type="text" class="c-input commaInput" name="projects[${newProjectIndex}][allowance][0][allowance_driver_amount]" placeholder="1,000">
                                     </div>
                                 </div>
                             </div>

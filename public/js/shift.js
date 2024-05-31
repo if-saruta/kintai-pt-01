@@ -108,9 +108,12 @@ window.addEventListener('DOMContentLoaded', () => {
             // モーダルを閉じる
             for(let i = 0; i < closeElem.length; i++){
                 closeElem[i].addEventListener('click', () => {
-                    modal.style.display = 'none';
-                    returnInitialState();
-                    commmaActive();
+                    const confirmation = confirm('入力したデータは失われます。');
+                    if(confirmation){
+                        modal.style.display = 'none';
+                        returnInitialState();
+                        commmaActive();
+                    }
                 })
             }
 
@@ -309,7 +312,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         let newDiv = document.createElement('div');
                         let checked = null;
                         allowance.shift_allowance.forEach(shiftAllowance => {
-                            if(shiftAllowance['shift_project_vehicle_id'] == shiftPvId){
+                            if(shiftAllowance['id'] == shiftPvId){
                                 checked = 'checked';
                             }
                         });
@@ -351,13 +354,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
             // 初期状態に戻す
             const returnInitialState = () => {
-                const projectSelect = document.getElementById('projectSelect');
+                const projectSelect = modal.querySelector('.select2-container');
                 const vehicleSelect = document.getElementById('vehicleSelect');
                 const projectRadio = document.querySelectorAll('.projectRadio');
                 const vehicleRadio = document.querySelectorAll('.vehicleRadio');
 
-                projectSelect.options[0].selected = true;
-                vehicleSelect.options[0].selected = true;
+                // projectSelect.options[0].selected = true;
+                // vehicleSelect.options[0].selected = true;
                 projectRadio[0].checked = true;
                 vehicleRadio[0].checked = true;
 
@@ -615,7 +618,7 @@ window.addEventListener('DOMContentLoaded', () => {
         // モーダルが閉じた時にすべてのデータを初期値にする
         const CreateReturnInitialState = () => {
             const projectInput = document.getElementById('createProjectInput');
-            const projectSelect = document.getElementById('createProjectSelect');
+            const projectSelect = modal.querySelector('.select2-container');
             const vehicleInput = document.getElementById('createVehicleInput');
             const vehicleSelect = document.getElementById('createVehicleSelect');
             const retailInput = document.getElementById('createRetailInput');
@@ -624,8 +627,8 @@ window.addEventListener('DOMContentLoaded', () => {
             const projectRadio = document.querySelectorAll('.createProjectRadio');
             const vehicleRadio = document.querySelectorAll('.createVehicleRadio');
 
-            projectSelect.options[0].selected = true;
-            vehicleSelect.options[0].selected = true;
+            // projectSelect.options[0].selected = true;
+            // vehicleSelect.options[0].selected = true;
             projectRadio[0].checked = true;
             vehicleRadio[0].checked = true;
 
@@ -672,8 +675,11 @@ window.addEventListener('DOMContentLoaded', () => {
         // 閉じる
         for(let i = 0; i < closeElem.length; i++){
             closeElem[i].addEventListener('click', () => {
-                modal.style.display = "none";
-                CreateReturnInitialState();
+                const confirmation = confirm('入力したデータは失われます。');
+                if(confirmation){
+                    modal.style.display = "none";
+                    CreateReturnInitialState();
+                }
             })
         }
 

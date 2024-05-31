@@ -254,7 +254,7 @@
                                                 <td class="top-table-data w-344"><input type="text" name="salaryProject[]" value="{{ $allowanceData['name'] }}" class="input table-input changeElement"></td>
                                                 <td class="top-table-data w-70"><input type="text" name="salaryEtc[]" class="input table-input changeElement etcElement"></td>
                                                 <td class="top-table-data w-70"><input type="text" name="salaryCount[]" value="{{ $allowanceData['count'] }}"  class="input table-input changeElement salaryNum"></td>
-                                                <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{ number_format($allowanceData['amount']) }}" class="input table-input amount changeElement salaryUnit commaInput"></td>
+                                                <td class="top-table-data w-70"><input type="text" name="salaryUntil[]" value="{{ number_format($allowanceData['unit']) }}" class="input table-input amount changeElement salaryUnit commaInput"></td>
                                                 <td class="top-table-data w-100"><input type="text" name="salaryAmount[]" value="{{ number_format($allowanceData['amount']) }}" class="input table-input amount changeElement salaryAmount commaInput"></td>
                                             </tr>
                                         @endforeach

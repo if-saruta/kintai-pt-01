@@ -165,11 +165,13 @@ class PdfputController extends Controller
         $startOfWeek = $request->startOfWeek;
         $endOfWeek = $request->endOfWeek;
         $projectHeight = $request->projectHeight;
+        $narrowIds = $request->input('narrowIds', []);
 
         // 登録従業員シフト抽出
         $shifts = Shift::with('employee', 'projectsVehicles.project', 'projectsVehicles.vehicle')
         ->whereBetween('date', [$startOfWeek, $endOfWeek])
         ->whereNotNull('employee_id')
+        ->whereIn('employee_id', $narrowIds)
         ->get();
         $shiftDataByEmployee = $shifts->groupBy(function ($shift) {
             return $shift->employee_id;

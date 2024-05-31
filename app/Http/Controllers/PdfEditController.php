@@ -35,6 +35,7 @@ class PdfEditController extends Controller
         $totalSalaryAmount = $removeCommasAndCastToInt($request->input('totalSalary.amount')); //給与合計
         $allowanceName = $request->input('allowanceName', []);
         $allowanceAmount = $request->input('allowanceAmount', []);
+        $allowanceUnit = $request->input('allowanceUnit', []);
         $allowanceCount = $request->input('allowanceCount', []);
         $taxName = $request->input('tax.name'); //消費税
         $taxAmount = $removeCommasAndCastToInt($request->input('tax.amount')); //消費税
@@ -51,6 +52,7 @@ class PdfEditController extends Controller
                 $allowanceArray[] = [
                     'name' => $name,
                     'amount' => $removeCommasAndCastToInt($allowanceAmount[$index]),
+                    'unit' => $allowanceUnit[$index],
                     'count' => $allowanceCount[$index]
                 ];
                 $totalAllowanceAmount += $removeCommasAndCastToInt($allowanceAmount[$index]);
@@ -124,7 +126,9 @@ class PdfEditController extends Controller
             $overtimeAmount = 0;
         }
         // 高速代他の計算
-        $etc = $expressWayAmount + $parkingAmount + $overtimeAmount;
+        $etc = $expressWayAmount + $parkingAmount;
+        // 外注費の計算
+        $totalSalaryAmount += $overtimeAmount;
 
         // 費用の計算
         $CostOtherTotal = 0;
@@ -363,7 +367,8 @@ class PdfEditController extends Controller
             $date = Carbon::parse($spv->shift->date);
             if($spv->project){
                 if($spv->shiftAllowance){
-                    foreach($spv->project->allowances as $allowance){
+                    $allowances = $spv->shiftAllowance()->get();
+                    foreach($allowances as $allowance){
                         if(!isset($allowanceArray[$allowance->name])){
                             $allowanceArray[$allowance->name] = [
                                 'dates' => '',

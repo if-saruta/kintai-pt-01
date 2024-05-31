@@ -20,6 +20,6 @@ class ProjectAllowance extends Model
 
     public function shiftAllowance()
     {
-        return $this->hasMany(ShiftProjectVehicleAllowance::class, 'project_allowance_id');
+        return $this->belongsToMany(ShiftProjectVehicle::class, 'shift_project_vehicle_allowances');
     }
 }
