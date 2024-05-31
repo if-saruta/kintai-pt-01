@@ -194,19 +194,19 @@
                                                     <div class="allowance__content__item">
                                                         <div class="input-wrap required">
                                                             <p class="">必須</p>
-                                                            <input type="checkbox" name="editProjects[{{$project->id}}][allowances][{{ $allowance->id }}][is_required]" value="1" @if($allowance->is_required == 1) checked @endif>
+                                                            <input type="checkbox" name="editProjects[{{$project->id}}][allowances][{{ $allowance->id }}][is_required]" value="1" @if($allowance->is_required == 1) checked @endif disabled='disabled'>
                                                         </div>
                                                         <div class="input-wrap">
                                                             <p class="">手当名</p>
-                                                            <input type="text" class="c-input" name="editProjects[{{$project->id}}][allowances][{{ $allowance->id }}][allowance_name]" value="{{ $allowance->name }}" placeholder="リーダー手当">
+                                                            <input type="text" class="c-input" name="editProjects[{{$project->id}}][allowances][{{ $allowance->id }}][allowance_name]" value="{{ $allowance->name }}" placeholder="リーダー手当" readonly>
                                                         </div>
                                                         <div class="input-wrap">
                                                             <p class="">手当上代</p>
-                                                            <input type="text" class="c-input commaInput" name="editProjects[{{$project->id}}][allowances][{{ $allowance->id }}][allowance_retail_amount]" value="{{ number_format($allowance->retail_amount) }}" placeholder="1,000">
+                                                            <input type="text" class="c-input commaInput" name="editProjects[{{$project->id}}][allowances][{{ $allowance->id }}][allowance_retail_amount]" value="{{ number_format($allowance->retail_amount) }}" placeholder="1,000" readonly>
                                                         </div>
                                                         <div class="input-wrap">
                                                             <p class="">手当ドライバー価格</p>
-                                                            <input type="text" class="c-input commaInput" name="editProjects[{{$project->id}}][allowances][{{ $allowance->id }}][allowance_driver_amount]" value="{{ number_format($allowance->driver_amount) }}" placeholder="1,000">
+                                                            <input type="text" class="c-input commaInput" name="editProjects[{{$project->id}}][allowances][{{ $allowance->id }}][allowance_driver_amount]" value="{{ number_format($allowance->driver_amount) }}" placeholder="1,000" readonly>
                                                         </div>
                                                         <a href="{{ route('project.allowanceDelete', ['allowanceId' => $allowance->id, 'clientId' => $project->client_id]) }}" class="--delete-box" onclick="return confirm('本当に削除しますか？');">
                                                             <i class="fa-solid fa-minus minus-icon"></i>
