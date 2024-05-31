@@ -217,19 +217,19 @@
                                                     <div class="allowance__content__item">
                                                         <div class="input-wrap required">
                                                             <p class="">必須</p>
-                                                            <input type="checkbox" name="editProjects[{{$project->id}}][is_required]" value="1">
+                                                            <input type="checkbox" name="editProjects[{{$project->id}}][allowance][0][is_required]" value="1">
                                                         </div>
                                                         <div class="input-wrap">
                                                             <p class="">手当名</p>
-                                                            <input type="text" class="c-input" name="editProjects[{{$project->id}}][allowance_name]" placeholder="リーダー手当">
+                                                            <input type="text" class="c-input" name="editProjects[{{$project->id}}][allowance][0][allowance_name]" placeholder="リーダー手当">
                                                         </div>
                                                         <div class="input-wrap">
                                                             <p class="">手当上代</p>
-                                                            <input type="text" class="c-input commaInput" name="editProjects[{{$project->id}}][allowance_retail_amount]" placeholder="1,000">
+                                                            <input type="text" class="c-input commaInput" name="editProjects[{{$project->id}}][allowance][0][allowance_retail_amount]" placeholder="1,000">
                                                         </div>
                                                         <div class="input-wrap">
                                                             <p class="">手当ドライバー価格</p>
-                                                            <input type="text" class="c-input commaInput" name="editProjects[{{$project->id}}][allowance_driver_amount]" placeholder="1,000">
+                                                            <input type="text" class="c-input commaInput" name="editProjects[{{$project->id}}][allowance][0][allowance_driver_amount]" placeholder="1,000">
                                                         </div>
                                                     </div>
                                                 @endif
