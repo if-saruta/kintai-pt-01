@@ -13,6 +13,7 @@ class ShiftProjectVehicle extends Model
     protected $fillable = [
         'shift_id',
         'project_id',
+        'custom_project_name',
         'unregistered_project',
         'initial_project_name',
         'vehicle_id',
@@ -28,6 +29,11 @@ class ShiftProjectVehicle extends Model
     public function shift()
     {
         return $this->belongsTo(Shift::class, 'shift_id');
+    }
+
+    public function relatedShiftProjectVehicle()
+    {
+        return $this->belongsTo(ShiftProjectVehicle::class, 'related_shift_project_vehicle_id');
     }
 
     public function project()

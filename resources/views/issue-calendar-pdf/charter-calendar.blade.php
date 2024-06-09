@@ -89,7 +89,9 @@
                         @endif
                     @endforeach
                 </td>
-                @if ($data['initial_project_name'] != null)
+                @if ($data['custom_project_name'] != null)
+                    <td class="project">{{$data['project']['name']}}{{ $data['custom_project_name'] }}</td>
+                @elseif ($data['initial_project_name'] != null)
                     <td class="project">{{ $data['initial_project_name'] }}</td>
                 @else
                     <td class="project">{{$data['project']['name']}}</td>

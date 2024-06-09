@@ -104,7 +104,7 @@
                                 </tr>
                                 @foreach ($projectData as $data)
                                 <tr>
-                                    <td class="table-item w-500"><input type="text" name="item[]" value="{{ $data['project_name'] }} ({{ $data['dates'] }})" class="input project-table-input changeElem project-edit-pdf-text-left"> <input checked type="checkbox" class="row-check-box"></td>
+                                    <td class="table-item w-500"><input type="text" name="item[]" value="{{ $data['project_name'] }} {{ $data['dates'] }}" class="input project-table-input changeElem project-edit-pdf-text-left"> <input checked type="checkbox" class="row-check-box"></td>
                                     <td class="table-data w-100"><input type="text" name="number[]" value="{{ $data['count'] }}" class="input project-table-input changeElem cntElem project-edit-pdf-text-right"></td>
                                     <td class="table-data w-100"><input type="text" name="until[]" value="{{ $data['unit_price'] }}" class="input project-table-input changeElem untilElem project-edit-pdf-text-right commaInput"></td>
                                     <td class="table-data w-110"><input type="text" name="amount[]" value="{{ $data['total_price'] }}" class="input project-table-input changeElem amountElem project-edit-pdf-text-right commaInput"></td>

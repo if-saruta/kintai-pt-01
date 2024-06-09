@@ -496,10 +496,12 @@
                                             {{-- 案件名 --}}
                                             <div class="item-cell">
                                                 @if ($spv->project)
-                                                    @if ($spv->initial_project_name)
-                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->initial_project_name }}</p>
+                                                    @if ($spv->custom_project_name)
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}<br>{!! nl2br(e($spv->custom_project_name)) !!}</p>
+                                                    @elseif ($spv->initial_project_name)
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->initial_project_name)) !!}</p>
                                                     @else
-                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->project->name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
                                                     <p class="" style="color: red; height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
@@ -540,10 +542,12 @@
                                             {{-- 案件名 --}}
                                             <div class="item-cell">
                                                 @if ($spv->project)
-                                                    @if ($spv->initial_project_name)
-                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->initial_project_name }}</p>
+                                                    @if ($spv->custom_project_name)
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}<br>{!! nl2br(e($spv->custom_project_name)) !!}</p>
+                                                    @elseif ($spv->initial_project_name)
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->initial_project_name)) !!}</p>
                                                     @else
-                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->project->name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
                                                     <p class="" style="color: red; height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
@@ -581,7 +585,8 @@
                 @endif
             @endforeach
 
-            {{-- 未登録従業員 --}}
+            @if ($narrowUnregisterEmployee == '1')
+                {{-- 未登録従業員 --}}
                 @foreach ($shiftDataByUnEmployee as $unEmployee => $shiftData)
                 @php
                     // 一周目だけ従業員を表示
@@ -643,10 +648,12 @@
                                             {{-- 案件名 --}}
                                             <div class="item-cell">
                                                 @if ($spv->project)
-                                                    @if ($spv->initial_project_name)
-                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->initial_project_name }}</p>
+                                                    @if ($spv->custom_project_name)
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}<br>{!! nl2br(e($spv->custom_project_name)) !!}</p>
+                                                    @elseif ($spv->initial_project_name)
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->initial_project_name)) !!}</p>
                                                     @else
-                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->project->name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
                                                     <p class="" style="color: red; height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
@@ -687,10 +694,12 @@
                                             {{-- 案件名 --}}
                                             <div class="item-cell">
                                                 @if ($spv->project)
-                                                    @if ($spv->initial_project_name)
-                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->initial_project_name }}</p>
+                                                    @if ($spv->custom_project_name)
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}<br>{!! nl2br(e($spv->custom_project_name)) !!}</p>
+                                                    @elseif ($spv->initial_project_name)
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->initial_project_name)) !!}</p>
                                                     @else
-                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->project->name }}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
                                                     <p class="" style="color: red; height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
@@ -726,7 +735,9 @@
                         @endforeach
                     </tr>
                 @endif
-            @endforeach
+                @endforeach
+            @endif
+
         </tbody>
     </table>
 

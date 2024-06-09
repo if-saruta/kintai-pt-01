@@ -67,6 +67,13 @@
                                     </div>
                                     <!-- 開閉する要素 -->
                                     <div class="list-item__content acc-content accordionCt">
+                                        {{-- カレンダー表示方法 --}}
+                                        <div class="display-name">
+                                            <label for="" class="input-head">カレンダー表示</label>
+                                            <div class="display-name__text-box">
+                                                <textarea name="projects[0][display_name]" id="" class="c-textarea" cols="30" rows="10"></textarea>
+                                            </div>
+                                        </div>
                                         {{-- チャーター --}}
                                         <div class="charter-box">
                                             <label for="charter" class="input-head">チャーター案件</label>
@@ -319,10 +326,17 @@
                     </div>
                     <!-- 開閉する要素 -->
                     <div class="list-item__content acc-content accordionCt">
+                        {{-- カレンダー表示方法 --}}
+                        <div class="display-name">
+                            <label for="" class="input-head">カレンダー表示</label>
+                            <div class="display-name__text-box">
+                                <textarea name="projects[${newProjectIndex}][display_name]" id="" class="c-textarea" cols="30" rows="10"></textarea>
+                            </div>
+                        </div>
                         {{-- チャーター --}}
                         <div class="charter-box">
                             <label for="charter" class="input-head">チャーター案件</label>
-                            <div class="toggle">
+                            <div class="toggle isCharter">
                                 <input type="checkbox" name="projects[${newProjectIndex}][is_charter]" class="toggle-input" value="1" id="charter${newProjectIndex}" />
                             </div>
                         </div>

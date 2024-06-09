@@ -12,23 +12,32 @@ window.addEventListener('load', () => {
         const isNavOpen = localStorage.getItem('isNavOpen') === 'true';
 
         // 初期表示時に状態を適用
-        const applyNavState = (isOpen) => {
-            navToggle.classList.toggle('open', isOpen);
-            navTexts.forEach(text => text.style.display = isOpen ? 'block' : 'none');
-            navItems.forEach(item => item.classList.toggle('close-nav-item', !isOpen));
-            nav.classList.toggle('nav-close', !isOpen);
-            logo.classList.toggle('nav-img-close', !isOpen);
-            main.classList.toggle('main-change-width', !isOpen);
-        };
+        if(navToggle != null){
 
-        applyNavState(isNavOpen);
+            const applyNavState = (isOpen) => {
+                navToggle.classList.toggle('open', isOpen);
+                navTexts.forEach(text => text.style.display = isOpen ? 'block' : 'none');
+                navItems.forEach(item => item.classList.toggle('close-nav-item', !isOpen));
+                nav.classList.toggle('nav-close', !isOpen);
+                logo.classList.toggle('nav-img-close', !isOpen);
+                main.classList.toggle('main-change-width', !isOpen);
+            };
 
-        navToggle.addEventListener('click', () => {
-            const isOpen = navToggle.classList.contains('open');
-            applyNavState(!isOpen);
-            // 状態をlocalStorageに保存
-            localStorage.setItem('isNavOpen', !isOpen);
-        });
+            applyNavState(isNavOpen);
+
+            navToggle.addEventListener('click', () => {
+                const isOpen = navToggle.classList.contains('open');
+                applyNavState(!isOpen);
+                // 状態をlocalStorageに保存
+                localStorage.setItem('isNavOpen', !isOpen);
+            });
+
+        }else{
+            nav.style.display = 'none';
+            nav.classList.add('nav-close');
+            logo.classList.add('nav-img-close');
+            main.classList.add('main-change-width');
+        }
     };
 
     toggleNav();

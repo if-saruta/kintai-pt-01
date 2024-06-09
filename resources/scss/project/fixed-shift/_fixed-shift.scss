@@ -7,8 +7,12 @@
     margin: 0 auto;
     margin-top: 3rem;
     .title{
+        margin-top: 3rem;
         font-size: 2rem;
         font-weight: $fw-bold;
+    }
+    .--show-title{
+        margin-top: 3rem;
     }
     .project-name{
         font-size: 1.8rem;
@@ -36,35 +40,93 @@
     .back-btn{
         margin-top: 3rem;
     }
+    &__scroll-y{
+        position: relative;
+        overflow-y: scroll;
+        height: 50rem;
+    }
+    .fixed-shift-list{
+        margin-top: 3rem;
+        td{
+            height: 5rem;
+            font-size: 1.6rem;
+            font-weight: $fw-bold;
+            text-align: center;
+            .link{
+                display: block;
+                width: 10rem;
+                transition: 0.3s;
+            }
+            .link:hover{
+                opacity: 0.5;
+            }
+            .show{
+                color: $cGreen;
+            }
+            .edit{
+                color: $cBlue;
+            }
+            .delete{
+                color: $cRed;
+            }
+        }
+        .employee{
+            min-width: 10rem;
+            text-align: start;
+        }
+    }
 
     .fixed-shift-create{
         margin-top: 3rem;
         display: flex;
         flex-direction: column;
         gap: 2rem;
-        .input-area{
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            &__title{
-                font-size: 1.4rem;
-                font-weight: $fw-bold;
-            }
-            &__check-box{
+        .error-message{
+            font-size: 1.4rem;
+            font-weight: $fw-bold;
+            color: red;
+            ul{
                 display: flex;
-                align-items: center;
-                gap: 2rem;
-                label{
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                    font-size: 1.2rem;
-                    font-weight: $fw-bold;
-                }
+                flex-direction: column;
+                gap: 1rem;
             }
         }
-        .--employee{
-            width: 15rem;
+        .input-area{
+            width: fit-content;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            .employee-select{
+                width: 15rem;
+            }
+            p{
+                font-size: 1.6rem;
+                font-weight: $fw-bold;
+                white-space: nowrap;
+            }
+        }
+        .flex-box{
+            width: fit-content;
+            display: flex;
+            gap: 3rem;
+        }
+        .fixed-shift-calendar{
+            width: 80rem;
+            td, th{
+                height: 5rem;
+                border: 1px solid black;
+                text-align: center;
+                vertical-align: middle;
+                font-size: 1.8rem;
+                font-weight: $fw-bold;
+                i{
+                    color: $cGreen;
+                }
+            }
+            .time_of_part{
+                height: 4rem;
+                font-size: 1.4rem;
+            }
         }
     }
 }

@@ -9,13 +9,7 @@ class FixedShift extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'project_id',
-        'employee_id',
-        'day',
-        'week',
-        'active_on_holidays',
-    ];
+    protected $fillable = ['project_id', 'employee_id', 'holiday_working'];
 
 
     public function project()
@@ -26,5 +20,10 @@ class FixedShift extends Model
     public function employee()
     {
         return $this->belongsTo(Employee::class);
+    }
+
+    public function fixedShiftDetails()
+    {
+        return $this->hasMany(FixedShiftDetail::class);
     }
 }

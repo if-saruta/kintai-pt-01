@@ -17,6 +17,7 @@
                     @foreach ($narrowEmployeeId as $EmployeeId)
                         <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
                     @endforeach
+                    <input hidden type="text" name="narrowUnregisterEmployee" name="narrowUnregisterEmployee" value="{{ $narrowUnregisterEmployee }}">
                     <button class="{{ request()->routeIs('shift.', 'shift.selectWeek') ? 'active' : '' }} link">
                         <span class="">全表示</span>
                     </button>
@@ -30,6 +31,7 @@
                     @foreach ($narrowEmployeeId as $EmployeeId)
                         <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
                     @endforeach
+                    <input hidden type="text" name="narrowUnregisterEmployee" name="narrowUnregisterEmployee" value="{{ $narrowUnregisterEmployee }}">
                     <button class="{{ request()->routeIs('shift.employeeShowShift*') ? 'active' : '' }} link">
                         <span class="">稼働表</span>
                     </button>
@@ -42,6 +44,7 @@
                     @foreach ($narrowEmployeeId as $EmployeeId)
                         <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
                     @endforeach
+                    <input hidden type="text" name="narrowUnregisterEmployee" name="narrowUnregisterEmployee" value="{{ $narrowUnregisterEmployee }}">
                     <button class="{{ request()->routeIs('shift.employeePriceShift*') ? 'active' : '' }} link">
                         @can('admin-higher')
                             <span class="">ドライバー価格</span>
@@ -59,6 +62,7 @@
                     @foreach ($narrowEmployeeId as $EmployeeId)
                         <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
                     @endforeach
+                    <input hidden type="text" name="narrowUnregisterEmployee" name="narrowUnregisterEmployee" value="{{ $narrowUnregisterEmployee }}">
                     <button class="{{ request()->routeIs('shift.projectPriceShift*') ? 'active' : '' }} link">
                         <span class="">上代閲覧用</span>
                     </button>
@@ -72,6 +76,7 @@
                     @foreach ($narrowEmployeeId as $EmployeeId)
                         <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
                     @endforeach
+                    <input hidden type="text" name="narrowUnregisterEmployee" name="narrowUnregisterEmployee" value="{{ $narrowUnregisterEmployee }}">
                     <button class="{{ request()->routeIs('shift.projectCount*') ? 'active' : '' }} link">
                         <span class="">案件数用</span>
                     </button>
@@ -87,6 +92,7 @@
                         @foreach ($narrowEmployeeId as $EmployeeId)
                             <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
                         @endforeach
+                        <input hidden type="text" name="narrowUnregisterEmployee" name="narrowUnregisterEmployee" value="{{ $narrowUnregisterEmployee }}">
                         <button class="{{ request()->routeIs('shift.edit*') ? 'active' : '' }} icon-block__button">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </button>
@@ -189,7 +195,7 @@
                                         @endif
                                     </th>
                                 @endforeach
-                                <th>合計</th>
+                                <th class="amount-th">合計</th>
                             </tr>
                         </thead>
                         <tbody class="shift-calendar-table__body">
@@ -223,7 +229,7 @@
                                                 @endif
                                             </td>
                                         @endforeach
-                                        <td class="--count-row__count">{{ $projectTotalCount != 0 ? $projectTotalCount : '' }}</td>
+                                        <td class="--count-row__count amount-td">{{ $projectTotalCount != 0 ? $projectTotalCount : '' }}</td>
                                     </tr>
                                     @endif
                                 @endforeach
@@ -256,7 +262,7 @@
                                             @endif
                                         </td>
                                     @endforeach
-                                    <td class="--count-f-s">{{ $unProjectTotalCount != 0 ? $unProjectTotalCount : '' }}</td>
+                                    <td class="--count-f-s amount-td">{{ $unProjectTotalCount != 0 ? $unProjectTotalCount : '' }}</td>
                                 </tr>
                             @endforeach
                             {{-- <tr class="shift-calendar-table__body__row --count-row --total-row-count">

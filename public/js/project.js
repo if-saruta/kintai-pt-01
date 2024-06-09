@@ -92,9 +92,12 @@ window.addEventListener('DOMContentLoaded', () => {
                     if(toggle.classList.contains('checked')){
                         retailInput.querySelector('.c-input').removeAttribute('required');
                         salaryInput.querySelector('.c-input').removeAttribute('required');
+                        salaryInput.classList.add('salary-not-input');
+                        // salaryInput.querySelector("input[type='text']").value = '';
                     }else{
                         retailInput.querySelector('.c-input').setAttribute('required', '');
                         salaryInput.querySelector('.c-input').setAttribute('required', '');
+                        salaryInput.classList.remove('salary-not-input');
                     }
                 }
             }
@@ -139,6 +142,22 @@ window.addEventListener('DOMContentLoaded', () => {
 
     })
 
+    // 読み込み時チャーター案件の場合、ドライバー価格を入力できないようにする
+    const isCheckCharter = () => {
+        const charters = document.querySelectorAll('.isCharter');
+
+        charters.forEach(charter => {
+            if(charter.classList.contains('checked')){
+                // 親要素を取得
+                const listItem = charter.closest('.list-item');
+                // 取得した親要素の上代・ドライバー価格のinputを取得
+                const salaryInput = listItem.querySelector('.salaryInput');
+
+                salaryInput.classList.add('salary-not-input');
+            }
+        });
+    }
+    isCheckCharter();
 
     //   従業員別給与切り替え
     const employeeSalaryChange = () => {
@@ -262,11 +281,11 @@ window.addEventListener('DOMContentLoaded', () => {
                             </div>
                             <div class="input-wrap">
                                 <p class="">手当上代</p>
-                                <input type="text" class="c-input" name="projects[${projectIndex}][allowance][${allowanceIndex}][allowance_retail_amount]" placeholder="1,000">
+                                <input type="text" class="c-input commaInput" name="projects[${projectIndex}][allowance][${allowanceIndex}][allowance_retail_amount]" placeholder="1,000">
                             </div>
                             <div class="input-wrap">
                                 <p class="">手当ドライバー</p>
-                                <input type="text" class="c-input" name="projects[${projectIndex}][allowance][${allowanceIndex}][allowance_driver_amount]" placeholder="1,000">
+                                <input type="text" class="c-input commaInput" name="projects[${projectIndex}][allowance][${allowanceIndex}][allowance_driver_amount]" placeholder="1,000">
                             </div>
                             <div class="delete-box deleteElem">
                                 <i class="fa-solid fa-minus minus-icon deleteElem"></i>
@@ -291,11 +310,11 @@ window.addEventListener('DOMContentLoaded', () => {
                             </div>
                             <div class="input-wrap">
                                 <p class="">手当上代</p>
-                                <input type="text" class="c-input" name="editProjects[${projectId}][allowance][${allowanceIndex}][allowance_retail_amount]" placeholder="1,000">
+                                <input type="text" class="c-input commaInput" name="editProjects[${projectId}][allowance][${allowanceIndex}][allowance_retail_amount]" placeholder="1,000">
                             </div>
                             <div class="input-wrap">
                                 <p class="">手当ドライバー</p>
-                                <input type="text" class="c-input" name="editProjects[${projectId}][allowance][${allowanceIndex}][allowance_driver_amount]" placeholder="1,000">
+                                <input type="text" class="c-input commaInput" name="editProjects[${projectId}][allowance][${allowanceIndex}][allowance_driver_amount]" placeholder="1,000">
                             </div>
                             <div class="delete-box deleteElem">
                                 <i class="fa-solid fa-minus minus-icon deleteElem"></i>

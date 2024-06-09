@@ -16,6 +16,7 @@
                         @foreach ($narrowEmployeeId as $EmployeeId)
                             <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
                         @endforeach
+                        <input hidden type="text" name="narrowUnregisterEmployee" name="narrowUnregisterEmployee" value="{{ $narrowUnregisterEmployee }}">
                         <button class="{{ request()->routeIs('shift.', 'shift.selectWeek') ? 'active' : '' }} link">
                             <span class="">全表示</span>
                         </button>
@@ -29,6 +30,7 @@
                         @foreach ($narrowEmployeeId as $EmployeeId)
                             <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
                         @endforeach
+                        <input hidden type="text" name="narrowUnregisterEmployee" name="narrowUnregisterEmployee" value="{{ $narrowUnregisterEmployee }}">
                     <button class="{{ request()->routeIs('shift.employeeShowShift*') ? 'active' : '' }} link">
                         <span class="">稼働表</span>
                     </button>
@@ -42,6 +44,7 @@
                         @foreach ($narrowEmployeeId as $EmployeeId)
                             <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
                         @endforeach
+                        <input hidden type="text" name="narrowUnregisterEmployee" name="narrowUnregisterEmployee" value="{{ $narrowUnregisterEmployee }}">
                     <button class="{{ request()->routeIs('shift.employeePriceShift*') ? 'active' : '' }} link">
                         @can('admin-higher')
                             <span class="">ドライバー価格</span>
@@ -60,6 +63,7 @@
                         @foreach ($narrowEmployeeId as $EmployeeId)
                             <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
                         @endforeach
+                        <input hidden type="text" name="narrowUnregisterEmployee" name="narrowUnregisterEmployee" value="{{ $narrowUnregisterEmployee }}">
                     <button class="{{ request()->routeIs('shift.projectPriceShift*') ? 'active' : '' }} link">
                         <span class="">上代閲覧用</span>
                     </button>
@@ -74,6 +78,7 @@
                         @foreach ($narrowEmployeeId as $EmployeeId)
                             <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
                         @endforeach
+                        <input hidden type="text" name="narrowUnregisterEmployee" name="narrowUnregisterEmployee" value="{{ $narrowUnregisterEmployee }}">
                     <button class="{{ request()->routeIs('shift.projectCount') ? 'active' : '' }} link">
                         <span class="">案件数用</span>
                     </button>
@@ -90,6 +95,7 @@
                             @foreach ($narrowEmployeeId as $EmployeeId)
                             <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
                         @endforeach
+                        <input hidden type="text" name="narrowUnregisterEmployee" name="narrowUnregisterEmployee" value="{{ $narrowUnregisterEmployee }}">
                         <button class="{{ request()->routeIs('shift.edit*') ? 'active' : '' }} icon-block__button">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </button>
@@ -136,6 +142,7 @@
                         @foreach ($narrowEmployeeId as $empployeeId)
                             <input hidden type="text" name="narrowIds[]" value="{{ $empployeeId }}">
                         @endforeach
+                        <input hidden type="text" name="narrowUnregisterEmployee" name="narrowUnregisterEmployee" value="{{ $narrowUnregisterEmployee }}">
                         {{-- シフトの種類 --}}
                         <input hidden name="shiftType" value="all" type="text">
                         <button class="calendar-download-btn">ダウンロード</button>
@@ -153,6 +160,7 @@
                         @foreach ($narrowEmployeeId as $EmployeeId)
                             <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
                         @endforeach
+                        <input hidden type="text" name="narrowUnregisterEmployee" name="narrowUnregisterEmployee" value="{{ $narrowUnregisterEmployee }}">
                         <button type="submit" class="">
                             <i class="fa-solid fa-angle-left date-angle"></i>
                         </button>
@@ -187,6 +195,7 @@
                         @foreach ($narrowEmployeeId as $EmployeeId)
                             <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
                         @endforeach
+                        <input hidden type="text" name="narrowUnregisterEmployee" name="narrowUnregisterEmployee" value="{{ $narrowUnregisterEmployee }}">
                         <button type="submit" class="">
                             <i class="fa-solid fa-angle-right date-angle"></i>
                         </button>
@@ -343,10 +352,12 @@
                                                                             $red = 'red';
                                                                         }
                                                                     @endphp
-                                                                    @if ($spv->initial_project_name)
-                                                                        <p class="table-cell__item__row setHightElem {{ $check }}">{{$spv->initial_project_name}}</p>
+                                                                    @if ($spv->custom_project_name)
+                                                                        <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}<br>{!! nl2br(e($spv->custom_project_name)) !!}</p>
+                                                                    @elseif ($spv->initial_project_name)
+                                                                        <p class="table-cell__item__row setHightElem {{ $check }}">{!! nl2br(e($spv->initial_project_name)) !!}</p>
                                                                     @else
-                                                                        <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{{$spv->project->name}}</p>
+                                                                        <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}</p>
                                                                     @endif
                                                                 @elseif($spv->unregistered_project)
                                                                     <p class="table-cell__item__row setHightElem" style="color: black;">
@@ -420,10 +431,12 @@
                                                                             $red = 'red';
                                                                         }
                                                                     @endphp
-                                                                    @if ($spv->initial_project_name)
-                                                                        <p class="table-cell__item__row setHightElem {{ $check }}">{{$spv->initial_project_name}}</p>
+                                                                    @if ($spv->custom_project_name)
+                                                                        <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}<br>{!! nl2br(e($spv->custom_project_name)) !!}</p>
+                                                                    @elseif ($spv->initial_project_name)
+                                                                        <p class="table-cell__item__row setHightElem {{ $check }}">{!! nl2br(e($spv->initial_project_name)) !!}</p>
                                                                     @else
-                                                                        <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{{$spv->project->name}}</p>
+                                                                        <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}</p>
                                                                     @endif
                                                                 @elseif($spv->unregistered_project)
                                                                     <p class="table-cell__item__row setHightElem" style="color: black;">{{$spv->unregistered_project}}</p>
@@ -473,6 +486,7 @@
                                     @endif
                                 @endforeach
 
+                                @if ($narrowUnregisterEmployee == '1')
                                 {{-- 未登録従業員表示 --}}
                                 @foreach ( $shiftDataByUnEmployee as $unEmployee => $shiftData )
                                     @php
@@ -552,10 +566,12 @@
                                                                             $red = 'red';
                                                                         }
                                                                     @endphp
-                                                                    @if ($spv->initial_project_name)
-                                                                        <p class="table-cell__item__row setHightElem {{ $check }}">{{$spv->initial_project_name}}</p>
+                                                                    @if ($spv->custom_project_name)
+                                                                        <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}<br>{!! nl2br(e($spv->custom_project_name)) !!}</p>
+                                                                    @elseif ($spv->initial_project_name)
+                                                                        <p class="table-cell__item__row setHightElem {{ $check }}">{!! nl2br(e($spv->initial_project_name)) !!}</p>
                                                                     @else
-                                                                        <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{{$spv->project->name}}</p>
+                                                                        <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}</p>
                                                                     @endif
                                                                 @elseif($spv->unregistered_project)
                                                                     <p class="table-cell__item__row setHightElem" style="color: black;">{{$spv->unregistered_project}}</p>
@@ -628,10 +644,12 @@
                                                                             $red = 'red';
                                                                         }
                                                                     @endphp
-                                                                    @if ($spv->initial_project_name)
-                                                                        <p class="table-cell__item__row setHightElem {{ $check }}">{{$spv->initial_project_name}}</p>
+                                                                    @if ($spv->custom_project_name)
+                                                                        <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}<br>{!! nl2br(e($spv->custom_project_name)) !!}</p>
+                                                                    @elseif ($spv->initial_project_name)
+                                                                        <p class="table-cell__item__row setHightElem {{ $check }}">{!! nl2br(e($spv->initial_project_name)) !!}</p>
                                                                     @else
-                                                                        <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{{$spv->project->name}}</p>
+                                                                        <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}</p>
                                                                     @endif
                                                                 @elseif($spv->unregistered_project)
                                                                     <p class="table-cell__item__row setHightElem" style="color: black;">{{$spv->unregistered_project}}</p>
@@ -680,6 +698,7 @@
                                         </tr>
                                     @endif
                                 @endforeach
+                                @endif
 
                             </tbody>
                         </table>
@@ -713,6 +732,12 @@
                                     {{ $employeeData->name }}
                                 </label>
                             @endforeach
+                            @if ($shiftDataByUnEmployee->isNotEmpty())
+                                <label for="">
+                                    <input type="checkbox" name="narrowUnregisterEmployee" @if($narrowUnregisterEmployee == '1') checked @endif value="1" class="employeeCheckBox">
+                                    未登録
+                                </label>
+                            @endif
                         </div>
                         <div class="btn-area">
                             <button class="c-save-btn btn">絞り込む</button>

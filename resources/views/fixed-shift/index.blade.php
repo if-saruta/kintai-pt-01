@@ -9,14 +9,22 @@
 
         <div class="main__white-board --client-white-board">
             <div class="fixed-shift-wrap">
-                <p class="title">固定シフト</p>
+                <a href="{{ route('project.edit', ['id' => $project->client_id]) }}" class="c-back-btn back-btn">戻る</a>
+                <p class="title">固定シフト : 一覧</p>
                 <p class="project-name">案件名 : {{ $project->name }}</p>
                 <a href="{{ route('project.fixedShiftCreate', ['id' => $id]) }}" class="create-fixed-shift-btn">新規作成</a>
 
-                <div class="fixed-shift-list">
-                    @foreach ($fixedShifts as $shift)
-
-                    @endforeach
+                <div class="fixed-shift-wrap__scroll-y">
+                    <table class="fixed-shift-list">
+                        @foreach ($fixedShifts as $fixedShift)
+                        <tr>
+                            <td class="employee">{{$fixedShift->employee->name}}</td>
+                            <td><a href="{{ route('project.fixedShiftShow', ['id' => $fixedShift->id]) }}" class="link show">詳細</a></td>
+                            <td><a href="{{ route('project.fixedShiftEdit', ['id' => $fixedShift->id]) }}" class="link edit">編集</a></td>
+                            <td><a href="{{ route('project.fixedShiftDelete', ['id' => $fixedShift->id]) }}" class="link delete" onclick='return confirm("本当に削除しますか?")'>削除</a></td>
+                        </tr>
+                        @endforeach
+                    </table>
                 </div>
             </div>
         </div>

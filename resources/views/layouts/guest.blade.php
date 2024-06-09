@@ -14,9 +14,12 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        {{-- @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.js']) --}}
     </head>
     <style>
         .login-logo-area{
+            width: fit-content;
+            margin: 0 auto;
             display: flex;
             align-items: center;
             gap: 3rem;
@@ -29,22 +32,65 @@
             font-size: 35px;
             font-weight: bold;
         }
+        @media (max-width: 639px){
+            .login-container{
+                position: relative;
+                width: 100vw!important;
+                height: 100vh!important;
+            }
+            .login-wrap{
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                width: calc(100vw * calc(580/640))!important;
+            }
+            .login-input-area{
+                width: 100%!important;
+                box-sizing: border-box;
+                padding: 1rem 1rem;
+            }
+            .input-box{
+                width: 100%;
+            }
+            .input-box input{
+                width: 100%!important;
+                box-sizing: border-box;
+            }
+        }
+        @media (max-width:520px){
+            .login-logo-area{
+                gap: 1rem;
+            }
+            .login-logo-area img{
+                width: calc(100vw * calc(150/375));
+                max-width: 150px;
+            }
+            .app-name{
+                font-size: 25px;
+            }
+            .logo-hgl{
+                font-size: 25px;
+            }
+        }
     </style>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900 login-container">
 
-            <div class="login-logo-area">
-                <img class="" src="{{ asset('img/logo.png') }}" alt="">
-                <p class="app-name">matthew</p>
-            </div>
-            {{-- <div class="login-logo-area">
-                <p class="logo-hgl">H.G.L</p>
-                <p class="app-name">matthew</p>
-            </div> --}}
+            <div class="login-wrap">
+                <div class="login-logo-area">
+                    <img class="" src="{{ asset('img/logo.png') }}" alt="">
+                    <p class="app-name">matthew</p>
+                </div>
+                {{-- <div class="login-logo-area">
+                    <p class="logo-hgl">H.G.L</p>
+                    <p class="app-name">matthew</p>
+                </div> --}}
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
-                <div class="">
-                    {{ $slot }}
+                <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg login-input-area">
+                    <div class="">
+                        {{ $slot }}
+                    </div>
                 </div>
             </div>
         </div>

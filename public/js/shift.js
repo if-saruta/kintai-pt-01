@@ -99,6 +99,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         }
                         fetchAllowance(firstProjectId);
                         fetchAmount(firstProjectId, employeeId);
+                        fetchProject(firstProjectId);
                     }
                     if(employee){
                         fetchEmployeeId = employee.value;
@@ -155,6 +156,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 }else{
                     setPart.innerHTML = '午後の案件';
                 }
+                modal.querySelector('.customName').textContent = target.querySelector('.editCustomProjectName').textContent;
 
                 // 取得した案件をchecked
                 for(let i = 0; i < projectSelect.options.length; i++){
@@ -271,6 +273,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }
 
             // 案件に基づく情報を表示
+            let projectId = null;
             $('.editProjectSelect').select2();
             $('.editProjectSelect').on('change', function (e) {
                 // プログラムによる変更の場合は何もしない
@@ -278,10 +281,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 // 選択されたデータを取得
                 var data = $(this).select2('data');
-                let projectId = data[0]['id'];
+                projectId = data[0]['id'];
 
                 if(projectId != ''){
                     fetchAllowance(projectId);
+                    fetchProject(projectId)
                 }
                 if(projectId != '' && fetchEmployeeId != ''){
                     fetchAmount(projectId, fetchEmployeeId);
@@ -352,6 +356,223 @@ window.addEventListener('DOMContentLoaded', () => {
             }
 
 
+            // チャーター
+            const form = document.getElementById('shiftEditForm');
+            const charterWrap = modal.querySelector('#charterWrap');
+            let charterSwitch = modal.querySelectorAll('.charterSwitch');
+            let charterCreate = modal.querySelector('.charterCreate');
+            let charterSelect = modal.querySelector('.charterSelect');
+            let datePicker = modal.querySelector('.datepicker');
+            let charterEmployeeSelect = modal.querySelector('.charterEmployee');
+            let charterVehicleSelect = modal.querySelector('.charterVehicle');
+            let charterSalary = modal.querySelector('.charterSalary');
+            let charterTimeOfPart = modal.querySelectorAll('.timeOfPart');
+            let searchBtn = modal.querySelector('.searchBtn');
+            const searchShiftList = modal.querySelector('.searchShiftList');
+            const relatedShift = modal.querySelector('.relatedShift');
+            let relatedShiftDate = modal.querySelector('.relatedShiftDate');
+            let relatedShiftEmployee = modal.querySelector('.relatedShiftEmployee');
+            let relatedShiftVehicle = modal.querySelector('.relatedShiftVehicle');
+            let relatedShiftAmount = modal.querySelector('.relatedShiftAmount');
+            const relatedRadio = modal.querySelector('.relatedRaio');
+
+            // 削除ボタンが押された場合は、必須を解除する
+            const deleteBtn = modal.querySelector('.editDeleteBtn');
+            deleteBtn.addEventListener('click', function(event) {
+                if (confirm("本当に削除しますか?")) {
+                    // 必須属性を解除
+                    datePicker.required = false;
+                    charterEmployeeSelect.required = false;
+                } else {
+                    // フォーム送信を中止
+                    event.preventDefault();
+                }
+            });
+
+            // 案件データを取得
+            function fetchProject(projectId) {
+                fetch(`/fetch-project/${projectId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => response.json())
+                .then(project => { //取得したデータを表示
+                    // 取得したデータがない場合
+                    if (!project) return;
+                    isCharter = project['is_charter']
+                    charterRelationActive(isCharter);
+                })
+                .catch(error => console.error('Error:', error));
+            }
+
+            // シフト検索
+            let date = modal.querySelector('.searchDate');
+            function searchHandler() {
+                let date = modal.querySelector('.searchDate').value;
+                searchShift(date);
+            }
+            // シフトの検索
+            const searchShift = (date) => {
+                // リセット
+                searchShiftList.innerHTML = '';
+                if(date != ''){
+                    fetch(`/search-shift/${date}/${projectId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(error => { throw new Error(error.error); });
+                        }
+                        return response.json();
+                    })
+                    .then(shiftProjectVehicles => { //取得したデータを表示
+                        // シフトがない場合
+                        if(!shiftProjectVehicles || shiftProjectVehicles.length == 0){
+                            searchShiftList.textContent = '検索条件のシフトはありません';
+                            return;
+                        }
+                        // セレクトを作成
+                        let newSelect = document.createElement('select');
+                        newSelect.className = 'c-select charterProjectSelect';
+                        newSelect.name = 'charter[shiftPvId]';
+                        // オプションを作成
+                        shiftProjectVehicles.forEach(shiftProjectVehicle => {
+                            let newOption = document.createElement('option');
+                            let timeOfPart = '';
+                            if(shiftProjectVehicle['time_of_part' == 0]){
+                                timeOfPart = '午前';
+                            }else{
+                                timeOfPart = '午後';
+                            }
+                            newOption.textContent = `${shiftProjectVehicle['shift']['date']} ${timeOfPart} ${shiftProjectVehicle['shift']['employee']['name']}`;
+                            newOption.value = shiftProjectVehicle['id'];
+                            // セレクトにオプションを追加
+                            newSelect.appendChild(newOption);
+                        });
+                        // 親要素にセレクトを追加
+                        searchShiftList.appendChild(newSelect);
+                    })
+                    .catch(error => console.error('Error:', error.message));
+                }else{
+                    searchShiftList.textContent = '日付を選択してください';
+                }
+            }
+            // 紐づくシフトがあるか確認
+            function fetchShift () {
+                fetch(`/fetch-shiftPv/${shiftPvId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => response.json())
+                .then(shiftProjectVehicle => { //取得したデータを表示
+                    if(shiftProjectVehicle['related_shift_project_vehicle_id'] != null){
+                        relatedShiftInfo(shiftProjectVehicle);
+                    }
+                })
+                .catch(error => console.error('Error:', error.message));
+            }
+            // formの送信の制御
+            const editSaveBtn = modal.querySelector('.editSaveBtn');
+            editSaveBtn.addEventListener('click', function(event) {
+                if(isCharter == 1){
+                    const select = modal.querySelector('.charterProjectSelect');
+                    if(charterSelect.classList.contains('open')){
+                        if(select == null){
+                            event.preventDefault();
+                        }
+                    }
+                }
+            })
+            const charterRelationActive = (isCharter) => {
+                if(isCharter == 1){
+                    modal.classList.add('create-add-charter-active');
+                    charterWrap.style.display = 'flex';
+
+                    fetchShift()
+                    // 必須を付与
+                    datePicker.required = true;
+                    charterEmployeeSelect.required = true;
+                    // 新規か既存かの表示の切り替え
+                    charterSwitch.forEach(radio => {
+                        radio.addEventListener('click', () => {
+                            if(radio.value == 0){
+                                charterCreate.style.display = 'flex';
+                                charterSelect.style.display = 'none';
+                                charterSelect.classList.remove('open');
+                                relatedShift.style.display = 'none';
+                                // 必須を付与
+                                datePicker.required = true;
+                                charterEmployeeSelect.required = true;
+                            }else if(radio.value == 1){
+                                charterCreate.style.display = 'none';
+                                charterSelect.style.display = 'flex';
+                                charterSelect.classList.add('open');
+                                relatedShift.style.display = 'none';
+                                // 必須を解除
+                                datePicker.required = false;
+                                charterEmployeeSelect.required = false;
+                            }else if(radio.value == 2){
+                                charterCreate.style.display = 'none';
+                                charterSelect.style.display = 'none';
+                                charterSelect.classList.remove('open');
+                                relatedShift.style.display = 'none';
+                                // 必須を解除
+                                datePicker.required = false;
+                                charterEmployeeSelect.required = false;
+                            }else{
+                                relatedShiftView()
+                            }
+                        })
+                    });
+
+                    searchBtn.addEventListener('click', searchHandler);
+                }else{
+                    modal.classList.remove('create-add-charter-active');
+                    charterWrap.style.display = 'none';
+                    // 必須を解除
+                    datePicker.required = false;
+                    charterEmployeeSelect.required = false;
+                }
+            }
+            // 表示画面の設定
+            function relatedShiftView(){
+                charterCreate.style.display = 'none';
+                charterSelect.style.display = 'none';
+                charterSelect.classList.remove('open');
+                relatedShift.style.display = 'flex';
+                relatedRadio.style.display = 'block';
+                // 必須を解除
+                datePicker.required = false;
+                charterEmployeeSelect.required = false;
+                // ラジオボタンを登録済みにセット
+                charterSwitch[3].checked = true;
+            }
+            // 紐づいてるシフトの情報を表示
+            const relatedShiftInfo = (shiftProjectVehicle) => {
+                relatedShiftView();
+                let date = shiftProjectVehicle['related_shift_project_vehicle']['shift']['date'];
+                let timeOfPart = shiftProjectVehicle['related_shift_project_vehicle']['time_of_part'] == 0 ? '午前' : '午後'
+                let employeeName = shiftProjectVehicle['related_shift_project_vehicle']['shift']['employee']['name'];
+                let vehicle = shiftProjectVehicle['related_shift_project_vehicle']['vehicle'] ? shiftProjectVehicle['related_shift_project_vehicle']['vehicle']['number'] : '未設定';
+                let driverAmount = shiftProjectVehicle['related_shift_project_vehicle']['driver_price'] ?? '未設定';
+
+                relatedShiftDate.textContent = `${date} : ${timeOfPart}`;
+                relatedShiftEmployee.textContent = `${employeeName}`;
+                relatedShiftVehicle.textContent = `${vehicle}`;
+                relatedShiftAmount.textContent = `${driverAmount.toLocaleString()}`;
+            }
+
+
             // 初期状態に戻す
             const returnInitialState = () => {
                 const projectSelect = modal.querySelector('.select2-container');
@@ -371,6 +592,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 projectSelect.style.display = 'block';
                 vehicleInput.style.display = 'none';
                 vehicleSelect.style.display = 'block';
+                modal.querySelector('.customName').textContent = '';
 
                 $('.editProjectSelect').val(null).trigger('change');
 
@@ -381,6 +603,27 @@ window.addEventListener('DOMContentLoaded', () => {
                 modal.classList.remove('create-add-allowance-active');
                 allowanceCt.innerHTML = '';
                 editAllowanceWrap.classList.remove('add-allowance');
+
+                // チャーター
+                modal.classList.remove('create-add-charter-active');
+                datePicker.required = true;
+                datePicker.value = '';
+                charterEmployeeSelect.required = true;
+                charterEmployeeSelect.selectedIndex = 0;
+                charterVehicleSelect.selectedIndex = 0;
+                charterTimeOfPart[0].checked = true;
+                charterTimeOfPart[1].checked = false;
+                charterSalary.value = '';
+                charterWrap.style.display = 'none';
+                searchShiftList.innerHTML = '';
+                relatedShift.style.display = 'none';
+                charterSwitch[0].checked = true;
+                relatedRadio.style.display = 'none';
+                date.value = '';
+                charterCreate.style.display = 'flex';
+                charterSelect.style.display = 'none';
+                searchBtn.removeEventListener('click', searchHandler);
+                modal.querySelector('.ralatedCustomName').value = '';
             }
         }
 
@@ -404,6 +647,8 @@ window.addEventListener('DOMContentLoaded', () => {
         let setRetail = document.getElementById('createRetailInput');
         let setSalary = document.getElementById('createSalaryInput');
         let employeeId = null;
+        let isCharter = null;
+        const form = document.getElementById('shiftCreateForm');
 
         // モダールに値をセット
         const setValue = (target) => {
@@ -431,16 +676,18 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        let projectId = null;
         // 上代・給与を自動設定
         $('.createProjectSelect').select2();
         $('.createProjectSelect').on('change', function (e) {
             var data = $(this).select2('data');
-            let projectId = data[0]['id'];
+            projectId = data[0]['id'];
             if(projectId != '' && employeeId != ''){
                 fetchAmount(projectId, employeeId);
             }
             if(projectId != ''){
                 projectViewActive(projectId);
+                fetchProject(projectId)
             }
         })
 
@@ -458,6 +705,24 @@ window.addEventListener('DOMContentLoaded', () => {
                 if (!project) return;
                 setRetail.value = inputCommma(String(project['retail']));
                 setSalary.value = inputCommma(String(project['driver']));
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        // 案件データを取得
+        function fetchProject(projectId) {
+            fetch(`/fetch-project/${projectId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(project => { //取得したデータを表示
+                // 取得したデータがない場合
+                if (!project) return;
+                isCharter = project['is_charter']
+                charterRelationActive(isCharter);
             })
             .catch(error => console.error('Error:', error));
         }
@@ -521,6 +786,19 @@ window.addEventListener('DOMContentLoaded', () => {
         const allowanceCt = modal.querySelector('#allowanceCt');
         const createProjectSelect = document.getElementById('createProjectSelect');
 
+        // チャーター
+        const charterWrap = modal.querySelector('#charterWrap');
+        let charterSwitch = modal.querySelectorAll('.charterSwitch');
+        let charterCreate = modal.querySelector('.charterCreate');
+        let charterSelect = modal.querySelector('.charterSelect');
+        let datePicker = modal.querySelector('.datepicker');
+        let charterEmployeeSelect = modal.querySelector('.charterEmployee');
+        let charterVehicleSelect = modal.querySelector('.charterVehicle');
+        let charterSalary = modal.querySelector('.charterSalary');
+        let charterTimeOfPart = modal.querySelectorAll('.timeOfPart');
+        let searchBtn = modal.querySelector('.searchBtn');
+        const searchShiftList = modal.querySelector('.searchShiftList');
+
         // クライアントの挙動を制御
         const clientViewActive = (projectRadio) => {
             // 既存・新規で表示の切り替え
@@ -536,6 +814,9 @@ window.addEventListener('DOMContentLoaded', () => {
                 if(modal.classList.contains('create-add-allowance-active')){
                     allowanceParent.classList.add('add-allowance');
                 }
+                if(modal.classList.contains('create-add-charter-active')){
+                    charterWrap.style.display = 'flex';
+                }
             }else{
                 createClientWrap.classList.add('add-client');
                 modal.classList.add('create-add-client-active');
@@ -543,6 +824,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 // 手当が表示されていた場合非表示に変更
                 allowanceParent.classList.remove('add-allowance');
+                charterWrap.style.display = 'none';
             }
 
             for(let i = 0; i < clientSwitch.length; i++){
@@ -573,12 +855,12 @@ window.addEventListener('DOMContentLoaded', () => {
             allowanceCt.innerHTML = '';
 
             if(projectId != ''){
-                fetchProject(projectId);
+                fetchProjectAllowance(projectId);
             }
 
 
             // 取得したIDをもとにAjax通信でデータを取得
-            function fetchProject(id){
+            function fetchProjectAllowance(id){
                 fetch(`/fetch-data/${id}`, {
                     method: 'GET',
                     headers: {
@@ -613,6 +895,122 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        /**
+         * チャーター
+         */
+        // シフト検索
+        let date = modal.querySelector('.searchDate');
+        function searchHandler() {
+            let date = modal.querySelector('.searchDate').value;
+            searchShift(date);
+        }
+        // シフトの検索
+        const searchShift = (date) => {
+            // リセット
+            searchShiftList.innerHTML = '';
+            if(date != ''){
+                fetch(`/search-shift/${date}/${projectId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(error => { throw new Error(error.error); });
+                    }
+                    return response.json();
+                })
+                .then(shiftProjectVehicles => { //取得したデータを表示
+                    // シフトがない場合
+                    if(!shiftProjectVehicles || shiftProjectVehicles.length == 0){
+                        searchShiftList.textContent = '検索条件のシフトはありません';
+                        return;
+                    }
+                    // セレクトを作成
+                    let newSelect = document.createElement('select');
+                    newSelect.className = 'c-select charterProjectSelect';
+                    newSelect.name = 'charter[shiftPvId]';
+                    // オプションを作成
+                    shiftProjectVehicles.forEach(shiftProjectVehicle => {
+                        let newOption = document.createElement('option');
+                        let timeOfPart = '';
+                        if(shiftProjectVehicle['time_of_part' == 0]){
+                            timeOfPart = '午前';
+                        }else{
+                            timeOfPart = '午後';
+                        }
+                        newOption.textContent = `${shiftProjectVehicle['shift']['date']} ${timeOfPart} ${shiftProjectVehicle['shift']['employee']['name']}`;
+                        newOption.value = shiftProjectVehicle['id'];
+                        // セレクトにオプションを追加
+                        newSelect.appendChild(newOption);
+                    });
+                    // 親要素にセレクトを追加
+                    searchShiftList.appendChild(newSelect);
+                })
+                .catch(error => console.error('Error:', error.message));
+            }else{
+                searchShiftList.textContent = '日付を選択してください';
+            }
+        }
+        // formの送信の制御
+        form.addEventListener('submit', function(event) {
+            if(isCharter == 1){
+                const select = modal.querySelector('.charterProjectSelect');
+                if(charterSelect.classList.contains('open')){
+                    if(select == null){
+                        event.preventDefault();
+                    }
+                }
+            }
+        })
+        const charterRelationActive = (isCharter) => {
+            if(isCharter == 1){
+                modal.classList.add('create-add-charter-active');
+                charterWrap.style.display = 'flex';
+
+                // 必須を付与
+                datePicker.required = true;
+                charterEmployeeSelect.required = true;
+                // 新規か既存か未定の表示の切り替え
+                charterSwitch.forEach(radio => {
+                    radio.addEventListener('click', () => {
+                        if(radio.value == 0){
+                            charterCreate.style.display = 'flex';
+                            charterSelect.style.display = 'none';
+                            charterSelect.classList.remove('open');
+                            // 必須を付与
+                            datePicker.required = true;
+                            charterEmployeeSelect.required = true;
+                        }else if(radio.value == 1){
+                            charterCreate.style.display = 'none';
+                            charterSelect.style.display = 'flex';
+                            charterSelect.classList.add('open');
+                            // 必須を解除
+                            datePicker.required = false;
+                            charterEmployeeSelect.required = false;
+                        }else{
+                            charterCreate.style.display = 'none';
+                            charterSelect.style.display = 'none';
+                            charterSelect.classList.remove('open');
+                            // 必須を解除
+                            datePicker.required = false;
+                            charterEmployeeSelect.required = false;
+                        }
+                    })
+                });
+
+                searchBtn.addEventListener('click', searchHandler);
+            }else{
+                modal.classList.remove('create-add-charter-active');
+                charterWrap.style.display = 'none';
+                // 必須を解除
+                datePicker.required = false;
+                charterEmployeeSelect.required = false;
+            }
+        }
+
 
 
         // モーダルが閉じた時にすべてのデータを初期値にする
@@ -640,6 +1038,7 @@ window.addEventListener('DOMContentLoaded', () => {
             vehicleSelect.style.display = 'block';
             retailInput.value = '';
             salaryInput.value = '';
+            modal.querySelector('.customName').value = '';
 
             $('.createProjectSelect').val(null).trigger('change');
 
@@ -658,6 +1057,25 @@ window.addEventListener('DOMContentLoaded', () => {
             allowanceCt.innerHTML = '';
             modal.classList.remove('create-add-allowance-active');
             allowanceParent.classList.remove('add-allowance');
+
+            // チャーター
+            modal.classList.remove('create-add-charter-active');
+            datePicker.required = true;
+            datePicker.value = '';
+            charterEmployeeSelect.required = true;
+            charterEmployeeSelect.selectedIndex = 0;
+            charterVehicleSelect.selectedIndex = 0;
+            charterTimeOfPart[0].checked = true;
+            charterTimeOfPart[1].checked = false;
+            charterSalary.value = '';
+            charterWrap.style.display = 'none';
+            searchShiftList.innerHTML = '';
+            charterSwitch[0].checked = true;
+            date.value = '';
+            charterCreate.style.display = 'flex';
+            charterSelect.style.display = 'none';
+            searchBtn.removeEventListener('click', searchHandler);
+            modal.querySelector('.ralatedCustomName').value = '';
         }
         // 開ける
         for(let i = 0; i < targetElem.length; i++){
@@ -813,34 +1231,36 @@ window.addEventListener('DOMContentLoaded', () => {
         let companyKindCount = 0;
         const companyHeightArray = [];
 
-        for(let i = 0; i < companyInfo.length; i++){
-            // 会社の種類を格納
-            if(!companyKind.includes(companyInfo[i].getAttribute('data-company-name'))){
-                companyKind[companyKindCount] = companyInfo[i].getAttribute('data-company-name');
-                // 会社の種類の分だけ初期値設定
-                companyHeightArray[companyKindCount] = 0;
-                //index番号付与
-                companyKindCount++;
-            }
-        }
-        // 会社ごとの高さを取得
-        for(let i = 0; i < companyKind.length; i++){
-            for(let j = 0; j < companyInfo.length; j++){
-                if(companyKind[i] == companyInfo[j].getAttribute('data-company-name')){
-                    companyHeightArray[i] += companyInfo[j].closest('.getRow').offsetHeight - 0.5;
+        if(companyView != null){
+            for(let i = 0; i < companyInfo.length; i++){
+                // 会社の種類を格納
+                if(!companyKind.includes(companyInfo[i].getAttribute('data-company-name'))){
+                    companyKind[companyKindCount] = companyInfo[i].getAttribute('data-company-name');
+                    // 会社の種類の分だけ初期値設定
+                    companyHeightArray[companyKindCount] = 0;
+                    //index番号付与
+                    companyKindCount++;
                 }
             }
-        }
+            // 会社ごとの高さを取得
+            for(let i = 0; i < companyKind.length; i++){
+                for(let j = 0; j < companyInfo.length; j++){
+                    if(companyKind[i] == companyInfo[j].getAttribute('data-company-name')){
+                        companyHeightArray[i] += companyInfo[j].closest('.getRow').offsetHeight - 0.5;
+                    }
+                }
+            }
 
-        for(let i = 0; i < companyHeightArray.length; i++){
-            // divを作成
-            let newElem = document.createElement('div');
-            let txtElem = document.createElement('p');
-            newElem.classList.add('company-view__item');
-            newElem.style.height = companyHeightArray[i] + 'px';
-            txtElem.textContent = companyKind[i];
-            newElem.appendChild(txtElem);
-            companyView.appendChild(newElem);
+            for(let i = 0; i < companyHeightArray.length; i++){
+                // divを作成
+                let newElem = document.createElement('div');
+                let txtElem = document.createElement('p');
+                newElem.classList.add('company-view__item');
+                newElem.style.height = companyHeightArray[i] + 'px';
+                txtElem.textContent = companyKind[i];
+                newElem.appendChild(txtElem);
+                companyView.appendChild(newElem);
+            }
         }
 
 
@@ -898,43 +1318,45 @@ window.addEventListener('DOMContentLoaded', () => {
         const bulkChangeEmployeeCheckBox = document.querySelector('.bulkChangeEmployeeCheckBox');
         const employeeCheckBox = document.querySelectorAll('.employeeCheckBox');
 
-        // 一つでもチェックがついていなければ一括チェックボックスのチェックを外す
-        const bulkCheckBoxFalseActive = (checkBox) => {
-            if(!checkBox.checked){
-                bulkChangeEmployeeCheckBox.checked = false;
+        if(bulkChangeEmployeeCheckBox != null){
+            // 一つでもチェックがついていなければ一括チェックボックスのチェックを外す
+            const bulkCheckBoxFalseActive = (checkBox) => {
+                if(!checkBox.checked){
+                    bulkChangeEmployeeCheckBox.checked = false;
+                }
             }
-        }
-        for(let i = 0; i < employeeCheckBox.length; i++){
-            // 初期読み込み時
-            bulkCheckBoxFalseActive(employeeCheckBox[i])
-
-            // 従業員チェックボックスがクリック時
-            employeeCheckBox[i].addEventListener('click', () => {
+            for(let i = 0; i < employeeCheckBox.length; i++){
+                // 初期読み込み時
                 bulkCheckBoxFalseActive(employeeCheckBox[i])
 
-                // 全てチェックがついていれば一括チェックボックスにもチェックを付与する
-                let isChecked = true;
-                for(let j = 0; j < employeeCheckBox.length; j++){
-                    if(!employeeCheckBox[j].checked){
-                        isChecked = false;
+                // 従業員チェックボックスがクリック時
+                employeeCheckBox[i].addEventListener('click', () => {
+                    bulkCheckBoxFalseActive(employeeCheckBox[i])
+
+                    // 全てチェックがついていれば一括チェックボックスにもチェックを付与する
+                    let isChecked = true;
+                    for(let j = 0; j < employeeCheckBox.length; j++){
+                        if(!employeeCheckBox[j].checked){
+                            isChecked = false;
+                        }
                     }
-                }
-                if(isChecked){
-                    bulkChangeEmployeeCheckBox.checked = true;
+                    if(isChecked){
+                        bulkChangeEmployeeCheckBox.checked = true;
+                    }
+                })
+            }
+
+            // 一括チェックボックスクリック時
+            bulkChangeEmployeeCheckBox.addEventListener('click', () => {
+                if(bulkChangeEmployeeCheckBox.checked){
+                    checkBoxCheckedActive();
                 }
             })
-        }
-
-        // 一括チェックボックスクリック時
-        bulkChangeEmployeeCheckBox.addEventListener('click', () => {
-            if(bulkChangeEmployeeCheckBox.checked){
-                checkBoxCheckedActive();
-            }
-        })
-        // 全てにチェックを入れる
-        const checkBoxCheckedActive = () => {
-            for(let i = 0; i < employeeCheckBox.length; i++){
-                employeeCheckBox[i].checked = true;
+            // 全てにチェックを入れる
+            const checkBoxCheckedActive = () => {
+                for(let i = 0; i < employeeCheckBox.length; i++){
+                    employeeCheckBox[i].checked = true;
+                }
             }
         }
     }

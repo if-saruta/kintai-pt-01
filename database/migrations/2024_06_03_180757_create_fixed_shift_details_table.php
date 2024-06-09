@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('fixed_shifts', function (Blueprint $table) {
+        Schema::create('fixed_shift_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id')->constrained()->onDelete('cascade');
-            $table->foreignId('employee_id')->constrained()->onDelete('cascade');
-            $table->boolean('holiday_working')->default(false); //祝日の稼働
+            $table->foreignId('fixed_shift_id')->constrained()->onDelete('cascade');
+            $table->integer('week_number'); // 1: 一週目
+            $table->integer('day_of_week'); // 0: 月曜日,,,6: 日曜日
+            $table->string('time_of_day'); // 0: am 1: pm
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('fixed_shifts');
+        Schema::dropIfExists('fixed_shift_details');
     }
 };

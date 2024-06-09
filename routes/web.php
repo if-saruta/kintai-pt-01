@@ -104,6 +104,11 @@ Route::middleware('can:admin-higher')->group(function () {
         // 固定シフト
         Route::get('/{id}/fixedShift', [FixedShiftController::class, 'index'])->name('fixedShift');
         Route::get('/{id}/fixedShift/create', [FixedShiftController::class, 'create'])->name('fixedShiftCreate');
+        Route::post('fixedShift/store', [FixedShiftController::class, 'store'])->name('fixedShiftStore');
+        Route::get('/{id}/fixedShift/show', [FixedShiftController::class, 'show'])->name('fixedShiftShow');
+        Route::get('/{id}/fixedShift/edit', [FixedShiftController::class, 'edit'])->name('fixedShiftEdit');
+        Route::post('fixedShift/update', [FixedShiftController::class, 'update'])->name('fixedShiftUpdate');
+        Route::get('/{id}/fixedShift/delete', [FixedShiftController::class, 'delete'])->name('fixedShiftDelete');
 
         Route::post('/csv', [ProjectController::class, 'csvImport'])->name('csv');
     });
@@ -146,6 +151,7 @@ Route::middleware('can:admin-higher')->group(function () {
 
     // API
     Route::get('/fetch-data/{id}', [ShiftController::class, 'fetchData']);
+    Route::get('/fetch-project/{id}', [ShiftController::class, 'fetchProject']);
     Route::get('/fetch-employee-data/{id}', [ShiftController::class, 'fetchEmployeeData']);
     Route::post('/store-memo', [ShiftController::class, 'storeMemo']);
     Route::get('/fetch-project-data/{id}', [ShiftController::class, 'fetchProjectData']);
@@ -153,6 +159,9 @@ Route::middleware('can:admin-higher')->group(function () {
     Route::post('/create-allowance', [InvoiceController::class, 'allowanceCreate']);
     Route::post('/allowance-update', [InvoiceController::class, 'allowanceUpdate']);
     Route::get('/allowance-delete/{allowanceId}/{shiftPvId}', [InvoiceController::class, 'allowanceDelete']);
+    Route::post('/allowance-update', [InvoiceController::class, 'allowanceUpdate']);
+    Route::get('/search-shift/{date}/{projectId}', [ShiftController::class, 'searchShift']);
+    Route::get('/fetch-shiftPv/{id}', [ShiftController::class, 'fetchShiftPv']);
 
     Route::prefix('csv-issue')->name('csv-issue.')->group(function () {
         Route::get('/', [CsvIssueController::class, 'index'])->name('');
@@ -336,6 +345,8 @@ Route::middleware('can:driver-higher')->group(function () {
         Route::get('/employeeShowShift', [ShiftController::class, 'selectWeek'])->name('employeeShowShift');
         Route::post('/employeeShowShift', [ShiftController::class, 'selectWeek'])->name('employeeShowShift');
         Route::post('/employeeShowShift/selectWeek', [ShiftController::class, 'selectWeek'])->name('employeeShowShiftSelectWeek');
+
+        Route::post('/allViewPdf', [PdfputController::class, 'allViewDownloadPdf'])->name('allViewPdf');
 
     });
 });

@@ -31,6 +31,23 @@ window.addEventListener('load', () => {
         }
         formSubmit();
 
+        // 事務手数料の料金の連動
+        const amountLinkage = () => {
+            const amountLinkage = document.querySelectorAll('.amountLinkage');
+
+            amountLinkage.forEach(input => {
+                input.addEventListener('change', () => {
+                    const value = input.value;
+                    amountLinkage.forEach(otherInput => {
+                        if(otherInput !== input){
+                            otherInput.value = value;
+                        }
+                    })
+                })
+            })
+        }
+        amountLinkage();
+
         const commmaActive = () => {
             const inputElem = document.querySelectorAll('.commaInput');
             for(let i = 0; i < inputElem.length; i++){

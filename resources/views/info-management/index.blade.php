@@ -98,7 +98,7 @@
                         <div class="flex-box">
                             <div class="info-list-wrap__list-item__input-box">
                                 <p class="value-txt c-p-head w-fee-input under-line">@if($info != null) {{ $info->admin_fee_switch }} @endif</p>
-                                <p class="c-p-head">円以下の場合</p>
+                                <p class="c-p-head">円未満の場合</p>
                             </div>
                             <div class="info-list-wrap__list-item__input-box">
                                 <p class="value-txt c-p-head w-fee-input under-line">@if($info != null) {{ $info->min_admin_fee }} @endif</p>

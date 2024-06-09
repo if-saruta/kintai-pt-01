@@ -235,39 +235,71 @@ class PdfEditController extends Controller
             foreach($getCompanies as $company){
                 if($spv->shift->employee){
                     if($spv->shift->employee->company->id == $company->id){
-                        $projectName = $spv->project->name; // プロジェクト名
-                        $date = Carbon::parse($spv->shift->date); // シフトの日付
-                        $retailPrice = $spv->retail_price; // 上代単価
-                        $key = $projectName . '|' . round($retailPrice); // プロジェクト名と上代単価をキーとして結合
+                        if($spv->project->is_charter == 0){
+                            $projectName = $spv->project->name; // プロジェクト名
+                            $date = Carbon::parse($spv->shift->date); // シフトの日付
+                            $retailPrice = $spv->retail_price; // 上代単価
+                            $key = $projectName . '|' . round($retailPrice); // プロジェクト名と上代単価をキーとして結合
 
-                        if (!isset($projectData[$key])) {
-                            $projectData[$key] = [
-                                'project_name' => $projectName,
-                                'dates' => '',
-                                'count' => 0,
-                                'unit_price' => round($retailPrice),
-                                'total_price' => 0
-                            ];
-                        }
-
-                        // 引取が含まれるか、またはcharter_project_nameが存在しない場合の条件をチェック
-                        $containsHikitori = $spv->charter_project_name && str_contains($spv->charter_project_name, '引取');
-                        // 日付を文字列として追加
-                        if($containsHikitori || !$spv->charter_project_name){
-                            $formattedDate = $date->format('j'); // 日付のみ
-                            if (empty($projectData[$key]['dates'])) {
-                                $formattedDate = $date->format('n/j'); // 最初の日付は月/日
+                            if (!isset($projectData[$key])) {
+                                $projectData[$key] = [
+                                    'project_name' => $projectName,
+                                    'dates' => '',
+                                    'count' => 0,
+                                    'unit_price' => round($retailPrice),
+                                    'total_price' => 0
+                                ];
                             }
-                            if (!str_contains($projectData[$key]['dates'], $formattedDate)) {
-                                $projectData[$key]['dates'] .= (empty($projectData[$key]['dates']) ? '' : ',') . $formattedDate;
+
+                            // 引取が含まれるか、またはcharter_project_nameが存在しない場合の条件をチェック
+                            $containsHikitori = $spv->charter_project_name && str_contains($spv->charter_project_name, '引取');
+                            // 日付を文字列として追加
+                            if($containsHikitori || !$spv->charter_project_name){
+                                $formattedDate = $date->format('j'); // 日付のみ
+                                if (empty($projectData[$key]['dates'])) {
+                                    $formattedDate = $date->format('n/j'); // 最初の日付は月/日
+                                }
+                                if (!str_contains($projectData[$key]['dates'], $formattedDate)) {
+                                    $projectData[$key]['dates'] .= (empty($projectData[$key]['dates']) ? '' : ',') . $formattedDate;
+                                }
+                            }
+
+                            // 案件数と上代の合計を更新
+                            $projectData[$key]['count']++;
+                            $projectData[$key]['total_price'] += $retailPrice;
+
+                            $total_retail += $retailPrice;
+                        }else{
+                            if($spv->relatedShiftProjectVehicle){
+                                $date = Carbon::parse($spv->shift->date); // シフトの日付
+                                $relatedDate = Carbon::parse($spv->relatedShiftProjectVehicle->shift->date);
+                                // 納品日が引取の月の翌月以降の場合
+                                if($date < $relatedDate) continue;
+
+                                $projectName = $spv->project->name; // プロジェクト名
+                                $retailPrice = $spv->retail_price; // 上代単価
+                                $key = $projectName . '|' . round($retailPrice); // プロジェクト名と上代単価をキーとして結合
+
+                                if (!isset($projectData[$key])) {
+                                    $projectData[$key] = [
+                                        'project_name' => $projectName,
+                                        'dates' => '',
+                                        'count' => 0,
+                                        'unit_price' => round($retailPrice),
+                                        'total_price' => 0
+                                    ];
+                                }
+                                if($date > $relatedDate){
+                                    $joinDates = "({$relatedDate->format('n/j')} ,{$date->format('n/j')})";
+                                }else{
+                                    $joinDates = "({$date->format('n/j')} ,{$relatedDate->format('n/j')})";
+                                }
+                                $projectData[$key]['dates'] .= $joinDates;
+                                $projectData[$key]['count']++;
+                                $projectData[$key]['total_price'] += $retailPrice;
+                                $total_retail += $retailPrice;
                             }
                         }
-
-                        // 案件数と上代の合計を更新
-                        $projectData[$key]['count']++;
-                        $projectData[$key]['total_price'] += $retailPrice;
-
-                        $total_retail += $retailPrice;
                     }
                 }
             }

@@ -11,7 +11,7 @@ class Project extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['client_id','name', 'is_charter', 'payment_type', 'retail_price', 'driver_price','estimated_overtime_hours','overtime_hourly_wage', 'registration_location', 'is_suspended'];
+    protected $fillable = ['client_id','name', 'display_name', 'is_charter', 'payment_type', 'retail_price', 'driver_price','estimated_overtime_hours','overtime_hourly_wage', 'registration_location', 'is_suspended'];
 
     public function payments()
     {

@@ -37,99 +37,101 @@
             </div>
 
             <!-- Navigation Links -->
-            <div class="nav-block">
-                @can('admin-higher')
-                    <a href="{{ route('shift.') }}" class="{{ request()->routeIs('shift.*') ? 'active' : '' }} nav-item">
+            @can('user-higher')
+                <div class="nav-block">
+                    @can('admin-higher')
+                        <a href="{{ route('shift.') }}" class="{{ request()->routeIs('shift.*') ? 'active' : '' }} nav-item">
+                            <div class="icon-wrap">
+                                <i class="fa-solid fa-house"></i>
+                            </div>
+                            <span class="nav-item__txt navTxt">{{ __('ダッシュボード') }}</span>
+                        </a>
+                    @elseif('user-higher')
+                        <a href="{{ route('shift.employeeShowShift') }}" class="{{ request()->routeIs('shift.*') ? 'active' : '' }} nav-item">
+                            <div class="icon-wrap">
+                                <i class="fa-solid fa-house"></i>
+                            </div>
+                            <span class="nav-item__txt navTxt">{{ __('ダッシュボード') }}</span>
+                        </a>
+                    @endcan
+                    @can('user-higher')
+                    <a href="{{ route('invoice.driverShift') }}" class="{{ request()->routeIs('invoice.*') ? 'active' : '' }} nav-item">
                         <div class="icon-wrap">
-                            <i class="fa-solid fa-house"></i>
+                            <i class="fa-solid fa-file-invoice"></i>
                         </div>
-                        <span class="nav-item__txt navTxt">{{ __('ダッシュボード') }}</span>
+                        <span class="nav-item__txt navTxt">{{ __('請求書') }}</span>
                     </a>
-                @elseif('user-higher')
-                    <a href="{{ route('shift.employeeShowShift') }}" class="{{ request()->routeIs('shift.*') ? 'active' : '' }} nav-item">
+                    @endcan
+                    @can('admin-higher')
+                        <a href="{{ route('project.') }}"
+                            class="{{ request()->routeIs('project.*') ? 'active' : '' }} nav-item">
+                            <div class="icon-wrap">
+                                <i class="fa-regular fa-file"></i>
+                            </div>
+                            <span class="nav-item__txt navTxt">{{ __('クライアント管理') }}</span>
+                        </a>
+                    @endcan
+                    @can('user-higher')
+                        <a href="{{ route('employee.') }}" class="{{ request()->routeIs('employee.*') ? 'active' : '' }} nav-item">
+                            <div class="icon-wrap">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <span class="nav-item__txt navTxt">{{ __('ドライバー管理') }}</span>
+                        </a>
+                    @endcan
+                    @can('admin-higher')
+                    <a href="{{ route('company.') }}"
+                        class="{{ request()->routeIs('company.*') ? 'active' : '' }} nav-item">
                         <div class="icon-wrap">
-                            <i class="fa-solid fa-house"></i>
+                            <i class="fa-solid fa-building"></i>
                         </div>
-                        <span class="nav-item__txt navTxt">{{ __('ダッシュボード') }}</span>
+                        <span class="nav-item__txt navTxt">{{ __('所属先') }}</span>
                     </a>
-                @endcan
-                @can('user-higher')
-                <a href="{{ route('invoice.driverShift') }}" class="{{ request()->routeIs('invoice.*') ? 'active' : '' }} nav-item">
-                    <div class="icon-wrap">
-                        <i class="fa-solid fa-file-invoice"></i>
-                    </div>
-                    <span class="nav-item__txt navTxt">{{ __('請求書') }}</span>
-                </a>
-                @endcan
-                @can('admin-higher')
-                    <a href="{{ route('project.') }}"
-                        class="{{ request()->routeIs('project.*') ? 'active' : '' }} nav-item">
+                    @endcan
+                    @can('admin-higher')
+                        <a href="{{ route('vehicle.') }}"
+                            class="{{ request()->routeIs('vehicle.*') ? 'active' : '' }} nav-item">
+                            <div class="icon-wrap">
+                                <i class="fa-solid fa-car"></i>
+                            </div>
+                            <span class="nav-item__txt navTxt">{{ __('車両') }}</span>
+                        </a>
+                    @endcan
+                    @can('admin-higher')
+                    <a href="{{ route('info-management.') }}"
+                        class="{{ request()->routeIs('info-management.*') ? 'active' : '' }} nav-item">
                         <div class="icon-wrap">
-                            <i class="fa-regular fa-file"></i>
+                            <i class="fa-solid fa-info"></i>
                         </div>
-                        <span class="nav-item__txt navTxt">{{ __('クライアント管理') }}</span>
+                        <span class="nav-item__txt navTxt">{{ __('情報管理') }}</span>
                     </a>
-                @endcan
-                @can('user-higher')
-                    <a href="{{ route('employee.') }}" class="{{ request()->routeIs('employee.*') ? 'active' : '' }} nav-item">
+                    @endcan
+                    @can('admin-higher')
+                    <a href="{{ route('definitive.') }}"
+                        class="{{ request()->routeIs('definitive.*') ? 'active' : '' }} nav-item">
                         <div class="icon-wrap">
-                            <i class="fa-solid fa-user"></i>
+                            <i class="fa-solid fa-file-pdf"></i>
                         </div>
-                        <span class="nav-item__txt navTxt">{{ __('ドライバー管理') }}</span>
+                        <span class="nav-item__txt navTxt">{{ __('稼働表確定版') }}</span>
                     </a>
-                @endcan
-                @can('admin-higher')
-                <a href="{{ route('company.') }}"
-                    class="{{ request()->routeIs('company.*') ? 'active' : '' }} nav-item">
-                    <div class="icon-wrap">
-                        <i class="fa-solid fa-building"></i>
-                    </div>
-                    <span class="nav-item__txt navTxt">{{ __('所属先') }}</span>
-                </a>
-                @endcan
-                @can('admin-higher')
-                    <a href="{{ route('vehicle.') }}"
-                        class="{{ request()->routeIs('vehicle.*') ? 'active' : '' }} nav-item">
+                    @endcan
+                    @can('admin-higher')
+                    <a href="{{ route('profile.edit') }}"
+                        class="{{ request()->routeIs('profile.*') ? 'active' : '' }} nav-item">
                         <div class="icon-wrap">
-                            <i class="fa-solid fa-car"></i>
+                            <i class="fa-solid fa-gear"></i>
                         </div>
-                        <span class="nav-item__txt navTxt">{{ __('車両') }}</span>
+                        <span class="nav-item__txt navTxt">{{ __('アカウント設定') }}</span>
                     </a>
-                @endcan
-                @can('admin-higher')
-                <a href="{{ route('info-management.') }}"
-                    class="{{ request()->routeIs('info-management.*') ? 'active' : '' }} nav-item">
-                    <div class="icon-wrap">
-                        <i class="fa-solid fa-info"></i>
+                    @endcan
+                    <div class="nav-item --close-nav-item open" id="navToggle">
+                        <div class="icon-wrap">
+                            <i class="fa-solid fa-caret-left"></i>
+                        </div>
+                        <span class="nav-item__txt --close-nav-item__txt navTxt">メニューを閉じる</span>
                     </div>
-                    <span class="nav-item__txt navTxt">{{ __('情報管理') }}</span>
-                </a>
-                @endcan
-                @can('admin-higher')
-                <a href="{{ route('definitive.') }}"
-                    class="{{ request()->routeIs('definitive.*') ? 'active' : '' }} nav-item">
-                    <div class="icon-wrap">
-                        <i class="fa-solid fa-file-pdf"></i>
-                    </div>
-                    <span class="nav-item__txt navTxt">{{ __('稼働表確定版') }}</span>
-                </a>
-                @endcan
-                @can('admin-higher')
-                <a href="{{ route('profile.edit') }}"
-                    class="{{ request()->routeIs('profile.*') ? 'active' : '' }} nav-item">
-                    <div class="icon-wrap">
-                        <i class="fa-solid fa-gear"></i>
-                    </div>
-                    <span class="nav-item__txt navTxt">{{ __('アカウント設定') }}</span>
-                </a>
-                @endcan
-                <div class="nav-item --close-nav-item open" id="navToggle">
-                    <div class="icon-wrap">
-                        <i class="fa-solid fa-caret-left"></i>
-                    </div>
-                    <span class="nav-item__txt --close-nav-item__txt navTxt">メニューを閉じる</span>
                 </div>
-            </div>
+            @endcan
         </div>
 
         <!-- Settings Dropdown -->

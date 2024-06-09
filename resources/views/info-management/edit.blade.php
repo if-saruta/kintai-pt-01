@@ -88,18 +88,25 @@
                         </div>
                         <div class="info-list-wrap__list-item">
                             <p class="c-p-head">事務手数料</p>
-                            <div class="flex-box">
+                            <div class="flex-box flex-center">
                                 <div class="info-list-wrap__list-item__input-box">
-                                    <input type="text" class="c-input w-fee-input commaInput" name="min_admin_fee" @if($info != null) value="{{ $info->min_admin_fee }}" @endif placeholder="1,000" required>
+                                    <input type="text" class="c-input w-fee-input amountLinkage commaInput" name="admin_fee_switch" @if($info != null) value="{{ $info->admin_fee_switch }}" @endif placeholder="1,000" required>
                                     <p class="c-p-head">円</p>
-                                </div>
-                                <div class="info-list-wrap__list-item__input-box flex-center">
-                                    <p class="c-p-head">＞</p>
-                                    <input type="text" class="c-input w-fee-input commaInput" name="admin_fee_switch" @if($info != null) value="{{ $info->admin_fee_switch }}" @endif placeholder="1,000" required>
-                                    <p class="c-p-head">＜</p>
+                                    <p class="c-p-head">以上</p>
                                 </div>
                                 <div class="info-list-wrap__list-item__input-box">
                                     <input type="text" class="c-input w-fee-input commaInput" name="max_admin_fee" @if($info != null) value="{{ $info->max_admin_fee }}" @endif placeholder="1,000" required>
+                                    <p class="c-p-head">円</p>
+                                </div>
+                            </div>
+                            <div class="flex-box flex-center">
+                                <div class="info-list-wrap__list-item__input-box">
+                                    <input type="text" class="c-input w-fee-input amountLinkage commaInput" name="admin_fee_switch" @if($info != null) value="{{ $info->admin_fee_switch }}" @endif placeholder="1,000" required>
+                                    <p class="c-p-head">円</p>
+                                    <p class="c-p-head">未満</p>
+                                </div>
+                                <div class="info-list-wrap__list-item__input-box">
+                                    <input type="text" class="c-input w-fee-input commaInput" name="min_admin_fee" @if($info != null) value="{{ $info->min_admin_fee }}" @endif placeholder="1,000" required>
                                     <p class="c-p-head">円</p>
                                 </div>
                             </div>

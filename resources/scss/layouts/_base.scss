@@ -75,6 +75,9 @@ body::-webkit-scrollbar{
         height: math.div(710,800) * 100vh;
         border-radius: 10px;
         background-color: white;
+        // @include mq(lg){
+        //     height: 71rem;
+        // }
     }
     .--profile{
         margin-top: 4rem;
@@ -91,6 +94,13 @@ body::-webkit-scrollbar{
 .main-change-width{
     width: math.div(1235.2,1280) * 100vw;
     margin-left: math.div(44.8,1280) * 100vw;
+    @include mq(lg){
+        width: math.div(940,960) * 100vw;
+        margin-left: 1rem;
+    }
+    @include mq(sm){
+        width: math.div(355,375) * 100vw;
+    }
 }
 .home{
     position: absolute;

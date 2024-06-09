@@ -177,7 +177,9 @@
                                                         {{-- <p class="">{{$data['shift']['date']}}</p> --}}
                                                     </div>
                                                     <div class="data__row__clm --project projectNameBox register">
-                                                        @if ($data['initial_project_name'] != null)
+                                                        @if ($data['custom_project_name'] != null)
+                                                            <input type="text" value="{{$data['project']['name']}}{{$data['custom_project_name']}}" class="input charter-input" @if($data['project']['is_suspended'] == 1) style="color: red;" @endif readonly>
+                                                        @elseif ($data['initial_project_name'] != null)
                                                             <input type="text" value="{{$data['initial_project_name']}}" class="input charter-input" @if($data['project']['is_suspended'] == 1) style="color: red;" @endif readonly>
                                                         @else
                                                             <input type="text" value="{{$data['project']['name']}}" class="input charter-input" @if($data['project']['is_suspended'] == 1) style="color: red;" @endif readonly>
