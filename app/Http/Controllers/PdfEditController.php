@@ -101,7 +101,6 @@ class PdfEditController extends Controller
             }
         }
 
-
         $employeeId = $request->employeeId;
 
         $getYear = $request->year;
@@ -228,7 +227,6 @@ class PdfEditController extends Controller
                 return $query->whereIn('id', $companyIds);
             })->get();
 
-
         $total_retail = 0;
         $projectData = [];
         foreach ($ShiftProjectVehicles as $spv) {
@@ -236,6 +234,7 @@ class PdfEditController extends Controller
                 if($spv->shift->employee){
                     if($spv->shift->employee->company->id == $company->id){
                         if($spv->project->is_charter == 0){
+
                             $projectName = $spv->project->name; // プロジェクト名
                             $date = Carbon::parse($spv->shift->date); // シフトの日付
                             $retailPrice = $spv->retail_price; // 上代単価
@@ -275,7 +274,6 @@ class PdfEditController extends Controller
                                 $relatedDate = Carbon::parse($spv->relatedShiftProjectVehicle->shift->date);
                                 // 納品日が引取の月の翌月以降の場合
                                 if($date < $relatedDate) continue;
-
                                 $projectName = $spv->project->name; // プロジェクト名
                                 $retailPrice = $spv->retail_price; // 上代単価
                                 $key = $projectName . '|' . round($retailPrice); // プロジェクト名と上代単価をキーとして結合
