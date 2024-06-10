@@ -323,7 +323,7 @@
                             <p class="w-number">Number</p>
                             <p class="w-name">Company Name</p>
                         </div>
-                        <button class="add-btn" id="addBtn">
+                        <button class="add-btn company-add-btn" id="addBtn">
                             <div class="add-btn__inner">
                                 <i class="fa-solid fa-circle-plus"></i>
                                 <p class="">追加</p>

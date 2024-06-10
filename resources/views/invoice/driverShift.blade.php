@@ -1133,7 +1133,7 @@
                     <select name="" id="vehicleSelect" class="c-select vehicleRadioRalation">
                         <option value="">選択してください</option>
                         @foreach ($vehicles as $vehicle)
-                        <option value="{{$vehicle->number}}">{{$vehicle->number}}</option>
+                            <option value="{{$vehicle->number}}">{{$vehicle->number}}</option>
                         @endforeach
                     </select>
                     <input type="text" id="vehicleInput"

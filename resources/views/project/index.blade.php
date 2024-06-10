@@ -206,7 +206,7 @@
                         <div class="info-wrap__register-list__head__row">
                             <p class="">Client Name</p>
                         </div>
-                        <a href="{{route('project.create')}}" class="add-btn" >
+                        <a href="{{route('project.create')}}" class="add-btn project-add-btn" >
                             <div class="add-btn__inner">
                                 <i class="fa-solid fa-circle-plus"></i>
                                 <p class="">追加</p>

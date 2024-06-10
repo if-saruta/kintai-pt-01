@@ -276,6 +276,9 @@ class PdfEditController extends Controller
                                 if($date < $relatedDate) continue;
                                 $projectName = $spv->project->name; // プロジェクト名
                                 $retailPrice = $spv->retail_price; // 上代単価
+                                if($retailPrice == 0 || $retailPrice == null){
+                                    $retailPrice = $spv->relatedShiftProjectVehicle->retail_price;
+                                }
                                 $key = $projectName . '|' . round($retailPrice); // プロジェクト名と上代単価をキーとして結合
 
                                 if (!isset($projectData[$key])) {
@@ -288,6 +291,8 @@ class PdfEditController extends Controller
                                     ];
                                 }
                                 if($date > $relatedDate){
+                                    $joinDates = "({$relatedDate->format('n/j')} ,{$date->format('n/j')})";
+                                }elseif($date == $relatedDate){
                                     $joinDates = "({$relatedDate->format('n/j')} ,{$date->format('n/j')})";
                                 }else{
                                     $joinDates = "({$date->format('n/j')} ,{$relatedDate->format('n/j')})";

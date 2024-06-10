@@ -223,6 +223,9 @@
                                 @endforeach
                             </tr>
                         </thead>
+                        @php
+                            $skipShiftPvId = [];
+                        @endphp
                         <tbody class="shift-calendar-table__body">
                             @foreach ( $shiftDataByEmployee as $employeeId => $shiftData )
                                 @php
@@ -331,7 +334,25 @@
                                                                 {{number_format($spv->retail_price)}}
                                                             @endif
                                                             @php
-                                                                $weekly_total_retail += $spv->retail_price;
+                                                                if(!in_array($spv->id, $skipShiftPvId)){
+                                                                    if($spv->project){
+                                                                        if($spv->project->is_charter == 0){
+                                                                            $weekly_total_retail += $spv->retail_price;
+                                                                        }else{
+                                                                            if($spv->relatedShiftProjectVehicle){
+                                                                                $relatedDate = $spv->relatedShiftProjectVehicle->shift->date;
+                                                                                if($relatedDate < $spv->shift->date){
+                                                                                    $weekly_total_retail += $spv->retail_price;
+                                                                                }else if($relatedDate == $spv->shift->date){
+                                                                                    $skipShiftPvId = $spv->relatedShiftProjectVehicle->id;
+                                                                                    $weekly_total_retail += $spv->retail_price;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }else{
+                                                                        $weekly_total_retail += $spv->retail_price;
+                                                                    }
+                                                                }
                                                             @endphp
                                                         </p>
                                                     </div>
@@ -392,7 +413,25 @@
                                                                 {{number_format($spv->retail_price)}}
                                                             @endif
                                                             @php
-                                                                $weekly_total_retail += $spv->retail_price;
+                                                                if(!in_array($spv->id, $skipShiftPvId)){
+                                                                    if($spv->project){
+                                                                        if($spv->project->is_charter == 0){
+                                                                            $weekly_total_retail += $spv->retail_price;
+                                                                        }else{
+                                                                            if($spv->relatedShiftProjectVehicle){
+                                                                                $relatedDate = $spv->relatedShiftProjectVehicle->shift->date;
+                                                                                if($relatedDate < $spv->shift->date){
+                                                                                    $weekly_total_retail += $spv->retail_price;
+                                                                                }else if($relatedDate == $spv->shift->date){
+                                                                                    $skipShiftPvId = $spv->relatedShiftProjectVehicle->id;
+                                                                                    $weekly_total_retail += $spv->retail_price;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }else{
+                                                                        $weekly_total_retail += $spv->retail_price;
+                                                                    }
+                                                                }
                                                             @endphp
                                                         </p>
                                                     </div>
@@ -521,7 +560,25 @@
                                                                 {{number_format($spv->retail_price)}}
                                                             @endif
                                                             @php
-                                                                $weekly_total_retail += $spv->retail_price;
+                                                                if(!in_array($spv->id, $skipShiftPvId)){
+                                                                    if($spv->project){
+                                                                        if($spv->project->is_charter == 0){
+                                                                            $weekly_total_retail += $spv->retail_price;
+                                                                        }else{
+                                                                            if($spv->relatedShiftProjectVehicle){
+                                                                                $relatedDate = $spv->relatedShiftProjectVehicle->shift->date;
+                                                                                if($relatedDate < $spv->shift->date){
+                                                                                    $weekly_total_retail += $spv->retail_price;
+                                                                                }else if($relatedDate == $spv->shift->date){
+                                                                                    $skipShiftPvId = $spv->relatedShiftProjectVehicle->id;
+                                                                                    $weekly_total_retail += $spv->retail_price;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }else{
+                                                                        $weekly_total_retail += $spv->retail_price;
+                                                                    }
+                                                                }
                                                             @endphp
                                                         </p>
                                                     </div>
@@ -582,7 +639,25 @@
                                                                 {{number_format($spv->retail_price)}}
                                                             @endif
                                                             @php
-                                                                $weekly_total_retail += $spv->retail_price;
+                                                                if(!in_array($spv->id, $skipShiftPvId)){
+                                                                    if($spv->project){
+                                                                        if($spv->project->is_charter == 0){
+                                                                            $weekly_total_retail += $spv->retail_price;
+                                                                        }else{
+                                                                            if($spv->relatedShiftProjectVehicle){
+                                                                                $relatedDate = $spv->relatedShiftProjectVehicle->shift->date;
+                                                                                if($relatedDate < $spv->shift->date){
+                                                                                    $weekly_total_retail += $spv->retail_price;
+                                                                                }else if($relatedDate == $spv->shift->date){
+                                                                                    $skipShiftPvId = $spv->relatedShiftProjectVehicle->id;
+                                                                                    $weekly_total_retail += $spv->retail_price;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }else{
+                                                                        $weekly_total_retail += $spv->retail_price;
+                                                                    }
+                                                                }
                                                             @endphp
                                                         </p>
                                                     </div>

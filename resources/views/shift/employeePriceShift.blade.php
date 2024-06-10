@@ -316,7 +316,7 @@
                                                             @if ($spv->custom_project_name)
                                                                 <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}<br>{!! nl2br(e($spv->custom_project_name)) !!}</p>
                                                             @elseif ($spv->initial_project_name)
-                                                                <p class="table-cell__item__row setHightElem {{ $check }}">{!! nl2br(e($spv->initial_project_name)) !!}</p>
+                                                            <p class="table-cell__item__row setHightElem {{ $check }}">{!! nl2br(e($spv->initial_project_name)) !!}</p>
                                                             @else
                                                                 <p class="table-cell__item__row setHightElem {{ $check }}" style="@if($red != '') background-color: red; @endif @if($spv->project->name == '休み') color: red; @endif">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}</p>
                                                             @endif

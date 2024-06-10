@@ -294,7 +294,7 @@
                     background-color: #B0B5BE;
                     &__row{
                         display: flex;
-                        gap: 11.3rem;
+                        gap: 4rem;
                         padding: 1.6rem 0;
                         margin-left: 3.2rem;
                         font-size: 1rem;
@@ -303,6 +303,7 @@
                         color: white;
                         p{
                             text-align: center;
+                            max-width: 26rem;
                         }
                     }
                     .--client-head-row{
@@ -342,6 +343,12 @@
                             }
                         }
                     }
+                    .company-add-btn{
+                        right: 1rem;
+                    }
+                    .project-add-btn{
+                        right: 1rem;
+                    }
                     .disabled::after{
                         content: "";
                         position: absolute;
@@ -364,7 +371,8 @@
                     &__row{
                         position: relative;
                         display: flex;
-                        gap: 11.5rem;
+                        align-items: center;
+                        gap: 5rem;
                         padding: 1.6rem 0;
                         border-bottom: 1px solid #B9B9B9;
                         font-size: 1.2rem;
@@ -381,6 +389,7 @@
                             font-size: 1.4rem;
                             min-width: 12rem;
                             text-align: center;
+                            max-width: 26rem;
                         }
                         .edit-btn{
                             display: none;
@@ -388,7 +397,7 @@
                             z-index: 10;
                             top: 50%;
                             transform: translateY(-50%);
-                            right: 3rem;
+                            right: 1rem;
                             width: 8rem;
                             background-color: white;
                             &__inner{

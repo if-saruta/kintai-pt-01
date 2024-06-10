@@ -47,7 +47,7 @@ class InvoiceController extends Controller
         $getYear = $request->year;
         $getMonth = $request->month;
 
-        $getDate = $request->createMontDate;
+        $getDate = $request->createDate;
         $employeeId = $request->employeeId;
         $shiftPvId = $request->shiftPvId;
         $dayOfPart = $request->dayOfPart;
@@ -88,9 +88,25 @@ class InvoiceController extends Controller
         if($shiftPvId != null){
              $shiftPv = ShiftProjectVehicle::find($shiftPvId);
              if ($request->input('action') == 'update') {
-                // 更新処理
-                if($shiftPv){
+                if($shiftPv->project->is_charter == 0){
+                    // 更新処理
+                    if($shiftPv){
+                        $valuesByPvShift = [
+                            'project_id' => $projectId,
+                            'unregistered_project' => null,
+                            'vehicle_id' => $vehicleId,
+                            'unregistered_vehicle' => null,
+                            'retail_price' => $retailPrice,
+                            'driver_price' => $salaryPrice,
+                            'vehicle_rental_type' => $findEmployee->vehicle_rental_type,
+                            'rental_vehicle_id' => $findEmployee->vehicle_id,
+                        ];
+                        $shiftPv->update($valuesByPvShift);
+                    }
+                }else{ //チャーターの場合
+                    $shiftPv->delete();
                     $valuesByPvShift = [
+                        'shift_id' => $shift->id,
                         'project_id' => $projectId,
                         'unregistered_project' => null,
                         'vehicle_id' => $vehicleId,
@@ -99,9 +115,9 @@ class InvoiceController extends Controller
                         'driver_price' => $salaryPrice,
                         'vehicle_rental_type' => $findEmployee->vehicle_rental_type,
                         'rental_vehicle_id' => $findEmployee->vehicle_id,
-                     ];
-                    $shiftPv->update($valuesByPvShift);
-                 }
+                    ];
+                    ShiftProjectVehicle::create($valuesByPvShift);
+                }
             } elseif ($request->input('action') == 'delete') {
                 // 削除処理
                 $shiftPv->delete();

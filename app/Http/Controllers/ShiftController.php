@@ -675,7 +675,9 @@ class ShiftController extends Controller
             if($request->createProjectRadio == 0){
                 $project = Project::find($request->projectSelect);
                 if($project->is_charter == 1){
+
                     if($relationShift['switch'] == 0){
+                        $this->createWeekShift($relationShift['date']);
                         $shift = Shift::updateOrCreate(
                             ['date' => $relationShift['date'], 'employee_id' => $relationShift['employee']],
                             ['date' => $relationShift['date'], 'employee_id' => $relationShift['employee']]
@@ -711,7 +713,6 @@ class ShiftController extends Controller
 
     public function weekStore(Request $request)
     {
-
         $startOfWeek = Carbon::parse($request->input('startOfWeek'));
         $endOfWeek = Carbon::parse($request->input('endOfWeek'));
 
@@ -887,6 +888,7 @@ class ShiftController extends Controller
                             $project = Project::find($request->projectSelect);
                             if($project->is_charter == 1){
                                 if($relationShift['switch'] == 0){
+                                    $this->createWeekShift($relationShift['date']);
                                     $shift = Shift::updateOrCreate(
                                         ['date' => $relationShift['date'], 'employee_id' => $relationShift['employee']],
                                         ['date' => $relationShift['date'], 'employee_id' => $relationShift['employee']]
@@ -1014,6 +1016,37 @@ class ShiftController extends Controller
             'page' => 'page06',
             'narrowEmployeeId' => $request->input('narrowEmployeeId', [])
         ]);
+    }
+
+    public function createWeekShift($dateArg)
+    {
+        // 特定の日付を取得
+        $date = Carbon::parse($dateArg);
+
+        // 週の始まり（月曜日）と終わり（日曜日）を取得
+        $startOfWeek = $date->copy()->startOfWeek();
+        $endOfWeek = $date->copy()->endOfWeek();
+
+        // その週のシフトが存在するか確認
+        $shifts = Shift::whereBetween('date', [$startOfWeek, $endOfWeek])->get();
+
+        if($shifts->isEmpty()){
+            $weekDates = [];
+            for ($date = $startOfWeek; $date->lte($endOfWeek); $date->addDay()) {
+                $weekDates[] = $date->toDateString();
+            }
+
+            // $weekDatesには、週の始まりから終わりまでの日付が入っています
+            $employees = Employee::all();
+            foreach ($weekDates as $day) {
+                foreach($employees as $employee){
+                    Shift::updateOrCreate(
+                        ['date' => $day, 'employee_id' => $employee->id],
+                        ['date' => $day, 'employee_id' => $employee->id],
+                    );
+                }
+            }
+        }
     }
 
     public function bulkReflection(Request $request)
@@ -1391,85 +1424,6 @@ class ShiftController extends Controller
                                     }
                                 }
                             }
-                            // 午後シフト情報登録
-                            // if ($index == 1) {
-                            //     foreach ($data as $dataIndex => $record) {
-                            //         foreach ($record as $recordIndex => $recordData) {
-                            //             if (!$recordData == "") {
-                            //                 if ($recordIndex == 0) {
-                            //                     $projects = Project::all();
-                            //                     $isProjectCheck = false;
-                            //                     $projectIdTmp = null;
-                            //                     foreach ($projects as $project) {
-                            //                         $projectName = '';
-                            //                         $projectName = $this->removeSpaces($project->name);
-                            //                         [$tmpProjectName, $initialProjectName] = $this->isCharterOrCsCheck($recordData);
-                            //                         if ($tmpProjectName === $projectName) {
-                            //                             $projectIdTmp = $project->id;
-
-                            //                             // 従業員の詳細のデータを取得
-                            //                             $employeeInfo = $this->getEmployeeInfo($employeeIdTmp, $projectIdTmp);
-
-                            //                             $middleShift = ShiftProjectVehicle::create([
-                            //                                 'shift_id' => $shift->id,
-                            //                                 'project_id' => $project->id,
-                            //                                 'initial_project_name' => $initialProjectName,
-                            //                                 'retail_price' => $employeeInfo[0],
-                            //                                 'driver_price' => $employeeInfo[1],
-                            //                                 // 'total_allowance' => $employeeInfo[2],
-                            //                                 'vehicle_rental_type' => $employeeInfo[2],
-                            //                                 'rental_vehicle_id' => $employeeInfo[3],
-                            //                                 'time_of_day' => 1,
-                            //                             ]);
-                            //                             $isProjectCheck = true;
-                            //                             break;
-                            //                         }
-                            //                     }
-                            //                     if (!$isProjectCheck) {
-                            //                         // 従業員の詳細のデータを取得
-                            //                         $employeeInfo = $this->getEmployeeInfo($employeeIdTmp, $projectIdTmp);
-
-                            //                         $middleShift = ShiftProjectVehicle::create([
-                            //                             'shift_id' => $shift->id,
-                            //                             'unregistered_project' => $recordData,
-                            //                             'retail_price' => $employeeInfo[0],
-                            //                             'driver_price' => $employeeInfo[1],
-                            //                             // 'total_allowance' => $employeeInfo[2],
-                            //                             'vehicle_rental_type' => $employeeInfo[2],
-                            //                             'rental_vehicle_id' => $employeeInfo[3],
-                            //                             'time_of_day' => 1,
-                            //                         ]);
-                            //                     }
-                            //                 }
-                            //                 if ($recordIndex == 1) {
-                            //                     $vehicles = Vehicle::all();
-                            //                     $isVehicleCheck = false;
-                            //                     foreach ($vehicles as $vehicle) {
-                            //                         $vehicleNumber = $this->cleanString($vehicle->number);
-                            //                         // if($employeeIdTmp == 6 && $date == '2024/3/6'){
-                            //                         //     // dd($date);
-                            //                         //     dd($date.$recordData);
-                            //                         // }
-                            //                         if ($recordData === $vehicleNumber) {
-                            //                             $middleShift->vehicle_id = $vehicle->id;
-                            //                             $middleShift->save();
-                            //                             $isVehicleCheck = true;
-                            //                             break;
-                            //                         }
-                            //                     }
-                            //                     if (!$isVehicleCheck) {
-                            //                         $middleShift->unregistered_vehicle = $recordData;
-                            //                         $middleShift->save();
-                            //                     }
-                            //                         // if($employeeIdTmp == 6 && $date == '2024/3/6'){
-                            //                         //     // dd($date);
-                            //                         //     // dd($date.$recordData.'ID'.$middleShift->id);
-                            //                         // }
-                            //                 }
-                            //             }
-                            //         }
-                            //     }
-                            // }
                         }
                     }
                 }
