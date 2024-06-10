@@ -377,14 +377,13 @@ class EmployeeController extends Controller
     {
         // バリデーションを追加
         $request->validate([
-            'employee_id' => 'required|integer|exists:employees,id', // 既存の従業員IDであることを確認
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $request->employee_id . ',employee_id',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $request->id,
             'password' => 'required|string|min:8|confirmed',
         ]);
 
         User::updateOrCreate(
-            ['employee_id' => $request->employee_id],
+            ['id' => $request->id],
             ['name' => $request->name, 'email' => $request->email, 'password' => Hash::make($request->password), 'employee_id' => $request->employee_id, 'role' => 3]
         );
 

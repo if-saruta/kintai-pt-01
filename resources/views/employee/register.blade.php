@@ -8,20 +8,21 @@
     <main class="main">
         <div class="main__white-board --employee-white-board">
             <a href="{{ route('employee.') }}" class="c-back-btn register-back-btn">戻る</a>
-            @if ($errors->any())
-                <div>
-                    <ul>
+
+            <div class="register-wrap">
+                <p class="title">ログイン情報</p>
+                @if ($errors->any())
+                    <ul class="error-list">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
-                </div>
-            @endif
-
-            <div class="register-wrap">
-                <p class="title">ログイン情報</p>
+                @endif
                 <form action="{{ route('employee.registerStore') }}" method="POST">
                     @csrf
+                    @if ($user)
+                        <input hidden type="text" name="id" value="{{ $user->id }}">
+                    @endif
                     <input hidden name="employee_id" value="{{ $employee->id }}" type="text">
                     <input hidden type="text" class="c-input" name="name" value="{{ $employee->name }}">
                     <div class="register-list">
