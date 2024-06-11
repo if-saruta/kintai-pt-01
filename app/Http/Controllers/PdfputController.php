@@ -173,8 +173,12 @@ class PdfputController extends Controller
         ->whereNotNull('employee_id')
         ->whereIn('employee_id', $narrowIds)
         ->get();
+
         // employee_idでソート
         $sortedShifts = $shifts->sortBy('employee_id');
+        $sortedShifts = $sortedShifts->sortBy(function($shift) {
+            return $shift->employee->company_id;
+        });
         $shiftDataByEmployee = $sortedShifts->groupBy(function ($shift) {
             return $shift->employee_id;
         });

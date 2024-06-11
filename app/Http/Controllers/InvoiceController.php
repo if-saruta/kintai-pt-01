@@ -1244,7 +1244,7 @@ class InvoiceController extends Controller
         $getYear = $request->year;
         $getMonth = $request->month;
         return redirect()->route('invoice.findCharterShift')->with([
-            'year' => $getyear,
+            'year' => $getYear,
             'month' => $getMonth
         ]);
     }

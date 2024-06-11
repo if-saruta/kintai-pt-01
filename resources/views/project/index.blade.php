@@ -203,7 +203,7 @@
                         @endforeach
                     </div>
                     <div class="info-wrap__register-list__head --foot">
-                        <div class="info-wrap__register-list__head__row">
+                        <div class="info-wrap__register-list__head__row --client-head-row">
                             <p class="">Client Name</p>
                         </div>
                         <a href="{{route('project.create')}}" class="add-btn project-add-btn" >
