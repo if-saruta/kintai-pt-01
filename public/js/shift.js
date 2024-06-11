@@ -197,6 +197,8 @@ window.addEventListener('DOMContentLoaded', () => {
                             projectSelect.style.display = "block"
                         }else{
                             projectInput.style.display = "block";
+                            datePicker.required = false;
+                            charterEmployeeSelect.required = false;
                         }
                     })
                 }
@@ -753,6 +755,10 @@ window.addEventListener('DOMContentLoaded', () => {
                         createRetailInput.value = '';
                         createSalaryInput.value = '';
                         clientViewActive(projectRadio[i]);
+                        datePicker.required = false;
+                        charterEmployeeSelect.required = false;
+                        modal.classList.remove('create-add-charter-active');
+                        charterWrap.style.display = 'none';
                     }
                 })
             }
