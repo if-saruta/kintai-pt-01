@@ -270,20 +270,20 @@ class PdfputController extends Controller
             }elseif($shift_type == 'definitive'){
                 // シフト確定版
                 // その月の第何週目かを計算
-                $weekOfMonth = $date->weekOfMonth;
-                $title = "{$startOfWeekCarbon->format('n')}月第{$weekOfMonth}週目稼働表確定版";
+                $weekOfMonth = $this->getWeekOfMonth($date);
+                $title = "{$endOfWeekCarbon->format('n')}月第{$weekOfMonth}週目稼働表確定版";
 
                 // PDFを生成
                 $pdf = PDF::loadView('shift-calendar-pdf.employeeShowShift', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projectHeight', 'title', 'narrowUnregisterEmployee'))->setPaper('a4', 'landscape');
 
                 // 保存するパスを年と月で指定
-                $path = "shift-calendar/{$date->format('Y')}/{$startOfWeekCarbon->format('n')}";
+                $path = "shift-calendar/{$date->format('Y')}/{$endOfWeekCarbon->format('n')}";
 
                 // ディレクトリが存在するか確認し、なければ作成
                 Storage::disk('public')->makeDirectory($path);
 
                 // ファイルの名前を指定
-                $fileName = "{$date->format('Y')}年{$startOfWeekCarbon->format('n')}月第{$weekOfMonth}週目稼働表確定版.pdf";
+                $fileName = "{$date->format('Y')}年{$endOfWeekCarbon->format('n')}月第{$weekOfMonth}週目稼働表確定版.pdf";
 
                 $pdfContent = $pdf->output();
                 // PDFをpublicディスクに保存
@@ -309,7 +309,7 @@ class PdfputController extends Controller
                 // その月の第何週目かを計算
                 $weekOfMonth = $date->weekOfMonth;
 
-                $title = "{$startOfWeekCarbon->format('n')}月第{$weekOfMonth}週目稼働予定表";
+                $title = "{$endOfWeekCarbon->format('n')}月第{$weekOfMonth}週目稼働予定表";
 
                 // ログインドライバーだけ表示
                 $shifts = Shift::with('employee', 'projectsVehicles.project', 'projectsVehicles.vehicle')
@@ -324,7 +324,7 @@ class PdfputController extends Controller
                 $narrowUnregisterEmployee = '0';
 
                 $pdf = PDF::loadView('shift-calendar-pdf.employeeShowShift', compact('shiftDataByEmployee', 'shiftDataByUnEmployee', 'convertedDates', 'holidays', 'projectHeight', 'title', 'narrowUnregisterEmployee'))->setPaper('a4', 'landscape');
-                $fileName = "{$date->format('Y')}年{$startOfWeekCarbon->format('n')}月第{$weekOfMonth}週目稼働表確定版.pdf";
+                $fileName = "{$date->format('Y')}年{$endOfWeekCarbon->format('n')}月第{$weekOfMonth}週目稼働表確定版.pdf";
         }
 
         return $pdf->download($fileName);
@@ -336,6 +336,29 @@ class PdfputController extends Controller
         $holidays = Yasumi::create('Japan', $year, 'ja_JP');
 
         return $holidays;
+    }
+
+    public function getWeekOfMonth($date)
+    {
+        // 日付をCarbonインスタンスに変換
+        $carbonDate = Carbon::parse($date);
+        // dd($carbonDate);
+
+        // その日の週の日曜日の日付を取得
+        $endOfWeek = $carbonDate->copy()->endOfWeek(Carbon::SUNDAY);
+
+        // 週が月をまたぐ場合は次の月の第1週目とする
+        if ($endOfWeek->month != $carbonDate->month) {
+            return 1; // 次の月の第1週目
+        }
+
+        // その月の最初の日
+        $firstDayOfMonth = $carbonDate->copy()->startOfMonth();
+
+        // その月の最初の日からその日の週の月曜日までの週数を数える
+        $weekOfMonth = $carbonDate->copy()->startOfWeek(Carbon::MONDAY)->diffInWeeks($firstDayOfMonth->startOfWeek(Carbon::MONDAY)) + 1;
+
+        return $weekOfMonth;
     }
 
 

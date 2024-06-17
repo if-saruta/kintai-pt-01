@@ -296,30 +296,33 @@
                                     @if ($spv->time_of_day == 0)
                                     <div class="table-cell__item hover-item targetShift">
                                         {{-- 隠しデータ --}}
-                                        <input hidden type="text" value="{{$spv->id}}" name="" class="shiftId">
-                                        <input hidden type="text" value="{{$findYear}}" class="findYear">
-                                        <input hidden type="text" value="{{$findMonth}}" class="findMonth">
-                                        <input hidden type="text" value="{{$findDate}}" class="findDate">
-                                        <input hidden type="text" value="0" class="timeOfPart">
-                                        @if ($spv->project)
-                                            <input hidden type="text" value="{{$spv->project->name}}" name="" class="projectName">
-                                            <input hidden type="text" value="{{ $spv->project->id }}" class="editProjectId">
-                                        @else
-                                            <input hidden type="text" value="{{$spv->unregistered_project}}" name="" class="projectName">
-                                        @endif
-                                        <textarea hidden type="text" class="editCustomProjectName" value="">{{ $spv->custom_project_name }}</textarea>
-                                        @if ($spv->vehicle)
-                                            <input hidden type="text" value="{{$spv->vehicle->number}}" name="" class="vehicleNumber">
-                                        @else
-                                            <input hidden type="text" value="{{$spv->unregistered_vehicle}}" name="" class="vehicleNumber">
-                                        @endif
-                                            <input hidden type="text" value="{{$spv->retail_price}}" name="" class="retailPrice">
-                                            <input hidden type="text" value="{{$spv->driver_price}}" name="" class="salaryPrice">
-                                        @if ($shift->employee)
-                                            <input hidden type="text" value="{{$shift->employee->name}}" class="employeeName">
-                                            <input hidden type="text" value="{{ $shift->employee->id }}" class="employeeId">
-                                        @endif
-                                        <input hidden type="text" value="" name="">
+                                        <input hidden type="text" class="shiftValues"
+                                            data-shift-id="{{ $spv->id }}"
+                                            data-year="{{ $findYear }}"
+                                            data-month="{{ $findMonth }}"
+                                            data-date="{{ $findDate }}"
+                                            data-time-of-part="0"
+                                            @if ($shift->employee)
+                                                data-employee-id="{{ $shift->employee_id }}"
+                                                data-employee-name="{{ $shift->employee->name }}"
+                                            @else
+                                                data-employee-name="{{ $shift->unregistered_employee }}"
+                                            @endif
+                                            @if ($spv->project)
+                                                data-project-name="{{ $spv->project->name }}"
+                                                data-project-id="{{ $spv->project->id }}"
+                                            @else
+                                                data-project-name="{{ $spv->unregistered_project }}"
+                                            @endif
+                                            @if ($spv->vehicle)
+                                                data-vehicle-number="{{ $spv->vehicle->number }}"
+                                            @else
+                                                data-vehicle-number="{{ $spv->unregistered_vehicle }}"
+                                            @endif
+                                            data-retail="{{ $spv->retail_price }}"
+                                            data-salary="{{ $spv->driver_price }}"
+                                        >
+                                        <textarea hidden name="" id="" cols="30" rows="10" class="customProjectName">{{ $spv->custom_project_name }}</textarea>
 
                                         {{-- データ表示 --}}
                                         @if ($spv->project)
@@ -399,20 +402,19 @@
                                             <button class="create-project__button">
                                                 新規作成
                                             </button>
-                                            <input hidden value="{{$shift->id}}" class="createShiftId" type="text">
-                                            <input hidden type="text" value="{{ $shift->employee_id }}" class="createEmployeeId">
-                                            <input hidden type="text" value="{{$findYear}}" class="createFindYear">
-                                            <input hidden type="text" value="{{$findMonth}}" class="createFindMonth">
-                                            <input hidden type="text" value="{{$findDate}}" class="createFindDate">
-                                            <input hidden type="text" value="0" class="createTimeOfPart">
-                                            @if ($shift->employee)
-                                            <input hidden type="text" value="{{$shift->employee->name}}"
-                                                data-employee-id="{{ $shift->employee->id }}"
-                                                class="createEmployeeName">
-                                            @else
-                                            <input hidden type="text" value="{{$shift->unregistered_employee}}"
-                                                class="createEmployeeName">
-                                            @endif
+                                            <input hidden type="text" class="shiftValues"
+                                                data-shift-id="{{ $shift->id }}"
+                                                data-year="{{ $findYear }}"
+                                                data-month="{{ $findMonth }}"
+                                                data-date="{{ $findDate }}"
+                                                data-time-of-part="0"
+                                                @if ($shift->employee)
+                                                data-employee-id="{{ $shift->employee_id }}"
+                                                data-employee-name="{{ $shift->employee->name }}"
+                                                @else
+                                                data-employee-name="{{ $shift->unregistered_employee }}"
+                                                @endif
+                                            >
                                         </div>
                                         @php
                                         $is_check = false;
@@ -431,30 +433,33 @@
                     @if ($spv->time_of_day == 1)
                     <div class="table-cell__item hover-item targetShift">
                         {{-- 隠しデータ --}}
-                        <input hidden type="text" value="{{$spv->id}}" name="" class="shiftId">
-                        <input hidden type="text" value="{{$findYear}}" class="findYear">
-                        <input hidden type="text" value="{{$findMonth}}" class="findMonth">
-                        <input hidden type="text" value="{{$findDate}}" class="findDate">
-                        <input hidden type="text" value="1" class="timeOfPart">
-                        @if ($spv->project)
-                            <input hidden type="text" value="{{$spv->project->name}}" name="" class="projectName">
-                            <input hidden type="text" value="{{ $spv->project->id }}" class="editProjectId">
-                        @else
-                            <input hidden type="text" value="{{$spv->unregistered_project}}" name="" class="projectName">
-                        @endif
-                        <textarea hidden type="text" class="editCustomProjectName" value="">{{ $spv->custom_project_name }}</textarea>
-                        @if ($spv->vehicle)
-                            <input hidden type="text" value="{{$spv->vehicle->number}}" name="" class="vehicleNumber">
-                        @else
-                            <input hidden type="text" value="{{$spv->unregistered_vehicle}}" name="" class="vehicleNumber">
-                        @endif
-                            <input hidden type="text" value="{{$spv->retail_price}}" name="" class="retailPrice">
-                            <input hidden type="text" value="{{$spv->driver_price}}" name="" class="salaryPrice">
-                        @if ($shift->employee)
-                            <input hidden type="text" value="{{$shift->employee->name}}" class="employeeName">
-                            <input hidden type="text" value="{{ $shift->employee->id }}" class="employeeId">
-                        @endif
-                        <input hidden type="text" value="" name="">
+                        <input hidden type="text" class="shiftValues"
+                            data-shift-id="{{ $spv->id }}"
+                            data-year="{{ $findYear }}"
+                            data-month="{{ $findMonth }}"
+                            data-date="{{ $findDate }}"
+                            data-time-of-part="1"
+                            @if ($shift->employee)
+                                data-employee-id="{{ $shift->employee_id }}"
+                                data-employee-name="{{ $shift->employee->name }}"
+                            @else
+                                data-employee-name="{{ $shift->unregistered_employee }}"
+                            @endif
+                            @if ($spv->project)
+                                data-project-name="{{ $spv->project->name }}"
+                                data-project-id="{{ $spv->project->id }}"
+                            @else
+                                data-project-name="{{ $spv->unregistered_project }}"
+                            @endif
+                            @if ($spv->vehicle)
+                                data-vehicle-number="{{ $spv->vehicle->number }}"
+                            @else
+                                data-vehicle-number="{{ $spv->unregistered_vehicle }}"
+                            @endif
+                            data-retail="{{ $spv->retail_price }}"
+                            data-salary="{{ $spv->driver_price }}"
+                        >
+                        <textarea hidden name="" id="" cols="30" rows="10" class="customProjectName">{{ $spv->custom_project_name }}</textarea>
 
                         {{-- データ表示 --}}
                         @if ($spv->project)
@@ -532,19 +537,19 @@
                             <button class="create-project__button">
                                 新規作成
                             </button>
-                            <input hidden value="{{$shift->id}}" class="createShiftId" type="text">
-                            <input hidden type="text" value="{{ $shift->employee_id }}" class="createEmployeeId">
-                            <input hidden type="text" value="{{$findYear}}" class="createFindYear">
-                            <input hidden type="text" value="{{$findMonth}}" class="createFindMonth">
-                            <input hidden type="text" value="{{$findDate}}" class="createFindDate">
-                            <input hidden type="text" value="1" class="createTimeOfPart">
-                            @if ($shift->employee)
-                            <input hidden type="text" value="{{$shift->employee->name}}"
-                                data-employee-id="{{ $shift->employee->id }}" class="createEmployeeName">
-                            @else
-                            <input hidden type="text" value="{{$shift->unregistered_employee}}"
-                                class="createEmployeeName">
-                            @endif
+                            <input hidden type="text" class="shiftValues"
+                                data-shift-id="{{ $shift->id }}"
+                                data-year="{{ $findYear }}"
+                                data-month="{{ $findMonth }}"
+                                data-date="{{ $findDate }}"
+                                data-time-of-part="1"
+                                @if ($shift->employee)
+                                data-employee-id="{{ $shift->employee_id }}"
+                                data-employee-name="{{ $shift->employee->name }}"
+                                @else
+                                data-employee-name="{{ $shift->unregistered_employee }}"
+                                @endif
+                            >
                         </div>
                         @php
                         $is_check = false;
@@ -630,31 +635,33 @@
                                     @if ($spv->time_of_day == 0)
                                         <div class="table-cell__item hover-item targetShift">
                                             {{-- 隠しデータ --}}
-                                            <input hidden type="text" value="{{$spv->id}}" name="" class="shiftId">
-                                            <input hidden type="text" value="{{$findYear}}" class="findYear">
-                                            <input hidden type="text" value="{{$findMonth}}" class="findMonth">
-                                            <input hidden type="text" value="{{$findDate}}" class="findDate">
-                                            <input hidden type="text" value="0" class="timeOfPart">
-                                            @if ($spv->project)
-                                                <input hidden type="text" value="{{$spv->project->name}}" name="" class="projectName">
-                                                <input hidden type="text" value="{{ $spv->project->id }}" class="editProjectId">
-                                            @else
-                                                <input hidden type="text" value="{{$spv->unregistered_project}}" name="" class="projectName">
-                                            @endif
-                                            <textarea hidden type="text" class="editCustomProjectName" value="">{{ $spv->custom_project_name }}</textarea>
-                                            @if ($spv->vehicle)
-                                                <input hidden type="text" value="{{$spv->vehicle->number}}" name="" class="vehicleNumber">
-                                            @else
-                                                <input hidden type="text" value="{{$spv->unregistered_vehicle}}" name="" class="vehicleNumber">
-                                            @endif
-                                                <input hidden type="text" value="{{$spv->retail_price}}" name="" class="retailPrice">
-                                                <input hidden type="text" value="{{$spv->driver_price}}" name="" class="salaryPrice">
-                                            @if ($shift->employee)
-                                                <input hidden type="text" value="{{$shift->employee->name}}" class="employeeName">
-                                            @else
-                                                <input hidden type="text" value="{{$shift->unregistered_employee}}" class="employeeName">
-                                            @endif
-                                            <input hidden type="text" value="" name="">
+                                            <input hidden type="text" class="shiftValues"
+                                                data-shift-id="{{ $spv->id }}"
+                                                data-year="{{ $findYear }}"
+                                                data-month="{{ $findMonth }}"
+                                                data-date="{{ $findDate }}"
+                                                data-time-of-part="0"
+                                                @if ($shift->employee)
+                                                    data-employee-id="{{ $shift->employee_id }}"
+                                                    data-employee-name="{{ $shift->employee->name }}"
+                                                @else
+                                                    data-employee-name="{{ $shift->unregistered_employee }}"
+                                                @endif
+                                                @if ($spv->project)
+                                                    data-project-name="{{ $spv->project->name }}"
+                                                    data-project-id="{{ $spv->project->id }}"
+                                                @else
+                                                    data-project-name="{{ $spv->unregistered_project }}"
+                                                @endif
+                                                @if ($spv->vehicle)
+                                                    data-vehicle-number="{{ $spv->vehicle->number }}"
+                                                @else
+                                                    data-vehicle-number="{{ $spv->unregistered_vehicle }}"
+                                                @endif
+                                                data-retail="{{ $spv->retail_price }}"
+                                                data-salary="{{ $spv->driver_price }}"
+                                            >
+                                            <textarea hidden name="" id="" cols="30" rows="10" class="customProjectName">{{ $spv->custom_project_name }}</textarea>
 
                                             {{-- データ表示 --}}
                                             @if ($spv->project)
@@ -727,19 +734,19 @@
                                             <button class="create-project__button">
                                                 新規作成
                                             </button>
-                                            <input hidden value="{{$shift->id}}" class="createShiftId" type="text">
-                                            <input hidden type="text" value="{{ $shift->employee_id }}" class="createEmployeeId">
-                                            <input hidden type="text" value="{{$findYear}}" class="createFindYear">
-                                            <input hidden type="text" value="{{$findMonth}}" class="createFindMonth">
-                                            <input hidden type="text" value="{{$findDate}}" class="createFindDate">
-                                            <input hidden type="text" value="0" class="createTimeOfPart">
-                                            @if ($shift->employee)
-                                            <input hidden type="text" value="{{$shift->employee->name}}"
-                                                data-employee-id="{{ $shift->employee->id }}" class="createEmployeeName">
-                                            @else
-                                            <input hidden type="text" value="{{$shift->unregistered_employee}}"
-                                                class="createEmployeeName">
-                                            @endif
+                                            <input hidden type="text" class="shiftValues"
+                                                data-shift-id="{{ $shift->id }}"
+                                                data-year="{{ $findYear }}"
+                                                data-month="{{ $findMonth }}"
+                                                data-date="{{ $findDate }}"
+                                                data-time-of-part="0"
+                                                @if ($shift->employee)
+                                                data-employee-id="{{ $shift->employee_id }}"
+                                                data-employee-name="{{ $shift->employee->name }}"
+                                                @else
+                                                data-employee-name="{{ $shift->unregistered_employee }}"
+                                                @endif
+                                            >
                                         </div>
                                         @php
                                             $is_check = false;
@@ -758,31 +765,33 @@
                                     @if ($spv->time_of_day == 1)
                                         <div class="table-cell__item hover-item targetShift">
                                             {{-- 隠しデータ --}}
-                                            <input hidden type="text" value="{{$spv->id}}" name="" class="shiftId">
-                                            <input hidden type="text" value="{{$findYear}}" class="findYear">
-                                            <input hidden type="text" value="{{$findMonth}}" class="findMonth">
-                                            <input hidden type="text" value="{{$findDate}}" class="findDate">
-                                            <input hidden type="text" value="1" class="timeOfPart">
-                                            @if ($spv->project)
-                                                <input hidden type="text" value="{{$spv->project->name}}" name="" class="projectName">
-                                                <input hidden type="text" value="{{ $spv->project->id }}" class="editProjectId">
-                                            @else
-                                                <input hidden type="text" value="{{$spv->unregistered_project}}" name="" class="projectName">
-                                            @endif
-                                            <textarea hidden type="text" class="editCustomProjectName" value="">{{ $spv->custom_project_name }}</textarea>
-                                            @if ($spv->vehicle)
-                                                <input hidden type="text" value="{{$spv->vehicle->number}}" name="" class="vehicleNumber">
-                                            @else
-                                                <input hidden type="text" value="{{$spv->unregistered_vehicle}}" name="" class="vehicleNumber">
-                                            @endif
-                                                <input hidden type="text" value="{{$spv->retail_price}}" name="" class="retailPrice">
-                                                <input hidden type="text" value="{{$spv->driver_price}}" name="" class="salaryPrice">
-                                            @if ($shift->employee)
-                                                <input hidden type="text" value="{{$shift->employee->name}}" class="employeeName">
-                                            @else
-                                                <input hidden type="text" value="{{$shift->unregistered_employee}}" class="employeeName">
-                                            @endif
-                                            <input hidden type="text" value="" name="">
+                                            <input hidden type="text" class="shiftValues"
+                                                data-shift-id="{{ $spv->id }}"
+                                                data-year="{{ $findYear }}"
+                                                data-month="{{ $findMonth }}"
+                                                data-date="{{ $findDate }}"
+                                                data-time-of-part="1"
+                                                @if ($shift->employee)
+                                                    data-employee-id="{{ $shift->employee_id }}"
+                                                    data-employee-name="{{ $shift->employee->name }}"
+                                                @else
+                                                    data-employee-name="{{ $shift->unregistered_employee }}"
+                                                @endif
+                                                @if ($spv->project)
+                                                    data-project-name="{{ $spv->project->name }}"
+                                                    data-project-id="{{ $spv->project->id }}"
+                                                @else
+                                                    data-project-name="{{ $spv->unregistered_project }}"
+                                                @endif
+                                                @if ($spv->vehicle)
+                                                    data-vehicle-number="{{ $spv->vehicle->number }}"
+                                                @else
+                                                    data-vehicle-number="{{ $spv->unregistered_vehicle }}"
+                                                @endif
+                                                data-retail="{{ $spv->retail_price }}"
+                                                data-salary="{{ $spv->driver_price }}"
+                                            >
+                                            <textarea hidden name="" id="" cols="30" rows="10" class="customProjectName">{{ $spv->custom_project_name }}</textarea>
 
                                             {{-- データ表示 --}}
                                             @if ($spv->project)
@@ -856,7 +865,20 @@
                                             <button class="create-project__button">
                                                 新規作成
                                             </button>
-                                            <input hidden value="{{$shift->id}}" class="createShiftId" type="text">
+                                            <input hidden type="text" class="shiftValues"
+                                                data-shift-id="{{ $shift->id }}"
+                                                data-year="{{ $findYear }}"
+                                                data-month="{{ $findMonth }}"
+                                                data-date="{{ $findDate }}"
+                                                data-time-of-part="1"
+                                                @if ($shift->employee)
+                                                data-employee-id="{{ $shift->employee_id }}"
+                                                data-employee-name="{{ $shift->employee->name }}"
+                                                @else
+                                                data-employee-name="{{ $shift->unregistered_employee }}"
+                                                @endif
+                                            >
+                                            {{-- <input hidden value="{{$shift->id}}" class="createShiftId" type="text">
                                             <input hidden type="text" value="{{ $shift->employee_id }}" class="createEmployeeId">
                                             <input hidden type="text" value="{{$findYear}}" class="createFindYear">
                                             <input hidden type="text" value="{{$findMonth}}" class="createFindMonth">
@@ -867,7 +889,7 @@
                                                 data-employee-id="{{ $shift->employee->id }}" class="createEmployeeName">
                                             @else
                                             <input hidden type="text" value="{{$shift->unregistered_employee}}" class="createEmployeeName">
-                                            @endif
+                                            @endif --}}
                                         </div>
                                         @php
                                             $is_check = false;
@@ -904,28 +926,37 @@
 
     </main>
 
-    {{-- シフト編集 --}}
-    <div class="shift-edit-modal" id="shiftModal">
-        <span class="shift-edit-modal__bg modalClose"></span>
+    {{-- 新規作成用モーダル --}}
+    <div class="shift-edit-modal shift-create-modal" id="createShiftModal">
+        <span class="shift-edit-modal__bg closeModal"></span>
         <div class="shift-edit-modal__white-board">
             {{-- シフト情報 --}}
             <div class="name-block">
-                <p id="setEmployeeName">佐藤太郎</p>
+                <p class="createEmployee">佐藤太郎</p>
             </div>
             <div class="title">
-                <p class="">案件編集</p>
+                <p class="">案件作成</p>
             </div>
             <div class="date-block">
-                <p class="date-block__year"><span class="setYear">2024</span><span class="txt">年</span></p>
-                <p class="date-block__month"><span class="setMonth">02</span><span class="txt">月</span><span
-                        class="setDate">19</span><span class="txt">日</span></p>
-                <p class="date-block__part setPart">午後の案件</p>
+                <p class="date-block__year"><span class="createYear">2024</span><span class="txt">年</span></p>
+                <p class="date-block__month"><span class="createMonth">02</span><span class="txt">月</span><span
+                        class="createDay">19</span><span class="txt">日</span></p>
+                <p class="date-block__part createSetTxtPart">午後の案件</p>
             </div>
+            <select hidden name="" id="paymentSelect">
+                @foreach ($payments as $payment)
+                <option data-payment-project-id="{{ $payment->project_id }}"
+                    data-payment-employee-id="{{ $payment->employee_id }}">{{ $payment->amount }}</option>
+                @endforeach
+            </select>
             {{-- フォームエリア --}}
-            <form action="{{route('shift.update')}}" method="POST" class="form-block" id="shiftEditForm">
+            <form action="{{route('shift.store')}}" method="POST" class="form-block form" id="">
                 @csrf
+                <input hidden name="witch" value="page06" type="text">
+                <input hidden type="text" name="date" value="{{$startOfWeek}}">
                 <input hidden value="{{$startOfWeek}}" name="startOfWeek" type="text">
-                <input hidden type="text" id="setShiftId" name="setId">
+                <input hidden type="text" class="createSetId" name="setId">
+                <input hidden type="text" class="createSetPart" name="part">
                 @foreach ($narrowEmployeeId as $EmployeeId)
                     <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
                 @endforeach
@@ -936,15 +967,253 @@
                             <p class="item-title">案件</p>
                             <div class="check-area">
                                 <div class="check-area__item">
-                                    <input checked type="radio" value="0" class="projectRadio" id="02" name="projectRadio">
+                                    <input checked type="radio" value="0" class="projectRadio"
+                                        id="createProjectRadio01" name="createProjectRadio">
+                                    <label for="createProjectRadio01">既存案件</label>
+                                </div>
+                                <div class="check-area__item">
+                                    <input type="radio" value="1" class="projectRadio" id="createProjectRadio02"
+                                        name="createProjectRadio">
+                                    <label for="createProjectRadio02">新規案件</label>
+                                </div>
+                                <div class="check-area__item">
+                                    <input type="radio" value="2" class="projectRadio" id="createProjectRadio03"
+                                        name="createProjectRadio">
+                                    <label for="createProjectRadio03">新規チャーター案件</label>
+                                </div>
+                            </div>
+                            <input name="projectInput" type="text" class="c-input modal-input projectInput" id="projectInput" placeholder="案件名">
+                            <select name="projectSelect" id="createProjectSelect" class="c-select modal-select createProjectSelect">
+                                <option value="">選択してください</option>
+                                @foreach ($projects as $project)
+                                <option value="{{$project->id}}" data-retail-amount="{{ $project->retail_price }}" data-driver-amount="{{ $project->driver_price }}">{{$project->name}}</option>
+                                @endforeach
+                            </select>
+                            <div class="custom-name">
+                                <p class="">追加案件名</p>
+                                <textarea name="project_custom_name" id="" class="c-textarea customName" cols="30" rows="10"></textarea>
+                            </div>
+                        </div>
+                        {{-- 車両 --}}
+                        <div class="form-block__item">
+                            <p class="item-title">ナンバー</p>
+                            <div class="check-area">
+                                <div class="check-area__item">
+                                    <input checked type="radio" value="0" class="vehicleRadio"
+                                        id="createProjectRadio03" name="createVehicleRadio">
+                                    <label for="createProjectRadio03">既存車両</label>
+                                </div>
+                                <div class="check-area__item">
+                                    <input type="radio" value="1" class="vehicleRadio" id="createProjectRadio04"
+                                        name="createVehicleRadio">
+                                    <label for="createProjectRadio04">新規車両</label>
+                                </div>
+                            </div>
+                            <input type="text" class="c-input modal-input vehicleInput" id="" name="vehicleInput"
+                                placeholder="ナンバー">
+                            <select name="vehicleSelect" id="" class="c-select modal-select vehicleSelect">
+                                <option value="">選択してください</option>
+                                @foreach ($vehicles as $vehicle)
+                                <option value="{{$vehicle->id}}">{{$vehicle->number}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        {{-- 上代 --}}
+                        <div class="form-block__item">
+                            <p class="item-title">上代</p>
+                            <input type="text" class="c-input commaInput retailInput" id="" name="retailInput"
+                                placeholder="1,000">
+                        </div>
+                        {{-- 給与 --}}
+                        <div class="form-block__item">
+                            <p class="item-title">ドライバー価格</p>
+                            <input type="text" class="c-input commaInput salaryInput" name="salaryInput"
+                                placeholder="1,000">
+                        </div>
+                    </div>
+                    <div class="active-input-area">
+                        {{-- クライアント --}}
+                        <div class="client-area createClientWrap" id="">
+                            <div class="client-area__head add-client__head">
+                                <p class="">クライアント</p>
+                                <div class="check-area">
+                                    <div class="check-area__item">
+                                        <input checked type="radio" name="clientSwitch" id="clientSwitch01" value="0" class="clientSwitchRadio">
+                                        <label for="clientSwitch01">既存クライアント</label>
+                                    </div>
+                                    <div class="check-area__item">
+                                        <input type="radio"  name="clientSwitch" id="clientSwitch02" value="1" class="clientSwitchRadio">
+                                        <label for="clientSwitch02">新規クライアント</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="client-area-input-area">
+                                <div class="client-area__existing-input clientExistingArea" id="">
+                                    <select name="clientExistingId" id="" class="c-select clientSelect">
+                                        <option value="">選択してください</option>
+                                        @foreach ($clients as $client)
+                                            <option value="{{ $client->id }}">{{ $client->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="client-area__create-input clientCreateArea" id="">
+                                    <div class="form-block__item">
+                                        <p class="item-title">クライアント名</p>
+                                        <input type="text" name="clientName" class="c-input clientInput" placeholder="株式会社⚪︎⚪︎">
+                                    </div>
+                                    <div class="form-block__item">
+                                        <p class="item-title">クライアント名(PDF使用時)</p>
+                                        <input type="text" name="clientPdfName" class="c-input clientInput" placeholder="株式会社⚪︎⚪︎">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{-- 手当 --}}
+                        <div class="allowance-area createAllowanceWrap" id="">
+                            <p class="allowance-area__head">手当</p>
+                            <div class="allowance-area__check-box-area" id="allowanceCt">
+
+                            </div>
+                        </div>
+                        {{-- チャーター納品 --}}
+                        <div class="charter-relation-area" id="charterWrap">
+                            <p class="charter-relation-area__head">紐づけるシフト</p>
+                            <div class="charter-switch">
+                                <label for="">
+                                    <input checked type="radio" class="charterSwitch" name="charter[switch]" value="0">
+                                    新規作成
+                                </label>
+                                <label for="">
+                                    <input type="radio" class="charterSwitch" name="charter[switch]" value="1">
+                                    既存選択
+                                </label>
+                                <label for="">
+                                    <input type="radio" class="charterSwitch" name="charter[switch]" value="2">
+                                    未定
+                                </label>
+                            </div>
+                            {{-- 新規作成 --}}
+                            <div class="charter-create charterCreate">
+                                <div class="date01">
+                                    <label for="" class="date01__label">
+                                        <input type="date" id="date" name="charter[date]" class="datepicker__input datepicker">
+                                    </label>
+                                </div>
+                                <div class="active-area part-radio">
+                                    <p class="">午前・午後</p>
+                                    <div class="radio-area">
+                                        <label for="">
+                                            <input checked type="radio" name="charter[time_of_part]" class="timeOfPart" value="0">
+                                            午前
+                                        </label>
+                                        <label for="">
+                                            <input type="radio" name="charter[time_of_part]" class="timeOfPart" value="1">
+                                            午後
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="custom-name">
+                                    <p class="">追加案件名</p>
+                                    <textarea name="charter[project_custom_name]" id="" class="c-textarea ralatedCustomName" cols="30" rows="10"></textarea>
+                                </div>
+                                <div class="active-area employee-select">
+                                    <p class="">従業員</p>
+                                    <select name="charter[employee]" id="" class="c-select charterEmployee">
+                                        <option value="">選択してください</option>
+                                        @foreach ($employees as $employee)
+                                            <option value="{{ $employee->id }}">{{ $employee->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="active-area vehicle-select">
+                                    <p class="">車両</p>
+                                    <select name="charter[vehicle]" id="" class="c-select charterVehicle">
+                                        <option value="">選択してください</option>
+                                        @foreach ($vehicles as $vehicle)
+                                        <option value="{{$vehicle->id}}">{{$vehicle->number}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="active-area slary-input">
+                                    <p class="">ドライバー価格</p>
+                                    <input type="text" name="charter[salary]" class="c-input charterSalary commaInput" placeholder="1,000">
+                                </div>
+                            </div>
+                            {{-- 既存選択 --}}
+                            <div class="charter-select charterSelect">
+                                <div class="search-shift">
+                                    <div class="date01">
+                                        <label for="" class="date01__label">
+                                            <input type="date" id="date" name="search_shift" class="datepicker__input datepicker searchDate">
+                                        </label>
+                                    </div>
+                                    <div class="search-btn searchBtn">検索</div>
+                                </div>
+                                <div class="search-shift-list searchShiftList"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{-- ボタン --}}
+                <div class="form-block__btn-area">
+                    <button class="btn --save saveBtn" type="submit" name="action" value="save">
+                        入力内容で案件を登録
+                    </button>
+                    <div class="btn --back closeModal" >
+                        戻る
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- シフト編集 --}}
+    <div class="shift-edit-modal" id="editShiftModal">
+        <span class="shift-edit-modal__bg closeModal"></span>
+        <div class="shift-edit-modal__white-board">
+            {{-- シフト情報 --}}
+            <div class="name-block">
+                <p class="createEmployee">佐藤太郎</p>
+            </div>
+            <div class="title">
+                <p class="">案件編集</p>
+            </div>
+            <div class="date-block">
+                <p class="date-block__year"><span class="createYear">2024</span><span class="txt">年</span></p>
+                <p class="date-block__month"><span class="createMonth">02</span><span class="txt">月</span><span
+                        class="createDay">19</span><span class="txt">日</span></p>
+                <p class="date-block__part createSetPart">午後の案件</p>
+            </div>
+            {{-- フォームエリア --}}
+            <form action="{{route('shift.update')}}" method="POST" class="form-block form">
+                @csrf
+                <input hidden name="witch" value="page06" type="text">
+                <input hidden type="text" name="date" value="{{$startOfWeek}}">
+                <input hidden value="{{$startOfWeek}}" name="startOfWeek" type="text">
+                <input hidden type="text" class="createSetId" name="setId">
+                @foreach ($narrowEmployeeId as $EmployeeId)
+                    <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
+                @endforeach
+                <div class="all-input-area">
+                    <div class="form-block__input-area">
+                        {{-- プロジェクト --}}
+                        <div class="form-block__item">
+                            <p class="item-title">案件</p>
+                            <div class="check-area">
+                                <div class="check-area__item">
+                                    <input checked type="radio" value="0" class="projectRadio" id="02" name="createProjectRadio">
                                     <label for="02">既存案件</label>
                                 </div>
                                 <div class="check-area__item">
-                                    <input type="radio" value="1" class="projectRadio" id="01" name="projectRadio">
+                                    <input type="radio" value="1" class="projectRadio" id="01" name="createProjectRadio">
                                     <label for="01">新規案件</label>
                                 </div>
+                                <div class="check-area__item">
+                                    <input type="radio" value="2" class="projectRadio" id="createProjectRadio03" name="createProjectRadio">
+                                    <label for="createProjectRadio03">新規チャーター案件</label>
+                                </div>
                             </div>
-                            <input name="projectInput" type="text" class="c-input modal-input" id="projectInput">
+                            <input name="projectInput" type="text" class="c-input modal-input projectInput">
                             <select name="projectSelect" id="projectSelect" class="c-select modal-select projectSelect editProjectSelect">
                                 <option value="">選択してください</option>
                                 @foreach ($projects as $project)
@@ -969,8 +1238,8 @@
                                     <label for="04">新規車両</label>
                                 </div>
                             </div>
-                            <input type="text" class="c-input modal-input" id="vehicleInput" name="vehicleInput">
-                            <select name="vehicleSelect" id="vehicleSelect" class="c-select modal-select">
+                            <input type="text" class="c-input modal-input vehicleInput" name="vehicleInput">
+                            <select name="vehicleSelect" class="c-select modal-select vehicleSelect">
                                 <option value="">選択してください</option>
                                 @foreach ($vehicles as $vehicle)
                                 <option value="{{$vehicle->id}}">{{$vehicle->number}}</option>
@@ -980,18 +1249,18 @@
                         {{-- 上代 --}}
                         <div class="form-block__item">
                             <p class="item-title">上代</p>
-                            <input type="text" class="c-input commaInput" id="retailInput" name="retailInput" placeholder="1,000">
+                            <input type="text" class="c-input commaInput retailInput" name="retailInput" placeholder="1,000">
                         </div>
                         {{-- 給与 --}}
                         <div class="form-block__item">
                             <p class="item-title">ドライバー価格</p>
-                            <input type="text" class="c-input commaInput" id="salaryInput" name="salaryInput"
+                            <input type="text" class="c-input commaInput salaryInput" name="salaryInput"
                                 placeholder="1,000">
                         </div>
                     </div>
                     <div class="active-input-area">
                         {{-- クライアント --}}
-                        <div class="client-area" id="editClientWrap">
+                        <div class="client-area createClientWrap">
                             <div class="client-area__head add-client__head">
                                 <p class="">クライアント</p>
                                 <div class="check-area">
@@ -1006,7 +1275,7 @@
                                 </div>
                             </div>
                             <div class="client-area-input-area">
-                                <div class="client-area__existing-input" id="editclientExistingArea">
+                                <div class="client-area__existing-input clientExistingArea">
                                     <select name="clientExistingId" id="" class="c-select clientSelect">
                                         <option value="">選択してください</option>
                                         @foreach ($clients as $client)
@@ -1014,7 +1283,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="client-area__create-input" id="editclientCreateArea">
+                                <div class="client-area__create-input clientCreateArea">
                                     <div class="form-block__item">
                                         <p class="item-title">クライアント名</p>
                                         <input type="text" name="clientName" class="c-input clientInput" placeholder="株式会社⚪︎⚪︎">
@@ -1027,7 +1296,7 @@
                             </div>
                         </div>
                         {{-- 手当 --}}
-                        <div class="allowance-area" id="editAllowanceWrap">
+                        <div class="allowance-area createAllowanceWrap">
                             <p class="allowance-area__head">手当</p>
                             <div class="allowance-area__check-box-area" id="allowanceCt">
 
@@ -1036,6 +1305,7 @@
                         {{-- チャーター納品 --}}
                         <div class="charter-relation-area" id="charterWrap">
                             <p class="charter-relation-area__head">紐づけるシフト</p>
+                            {{-- チャーターラジオ --}}
                             <div class="charter-switch">
                                 <label for="">
                                     <input checked type="radio" class="charterSwitch" name="charter[switch]" value="0">
@@ -1143,7 +1413,7 @@
                     <button class="btn --delete editDeleteBtn" type="submit" name="action" value="delete">
                         この案件を削除する
                     </button>
-                    <div class="btn --back modalClose">
+                    <div class="btn --back closeModal">
                         戻る
                     </div>
                 </div>
@@ -1151,239 +1421,6 @@
         </div>
     </div>
 
-    {{-- 新規作成用モーダル --}}
-    <div class="shift-edit-modal shift-create-modal" id="createShiftModal">
-        <span class="shift-edit-modal__bg createCloseModal"></span>
-        <div class="shift-edit-modal__white-board">
-            {{-- シフト情報 --}}
-            <div class="name-block">
-                <p id="createEmployee">佐藤太郎</p>
-            </div>
-            <div class="title">
-                <p class="">案件作成</p>
-            </div>
-            <div class="date-block">
-                <p class="date-block__year"><span id="createYear">2024</span><span class="txt">年</span></p>
-                <p class="date-block__month"><span id="createMonth">02</span><span class="txt">月</span><span
-                        id="createDay">19</span><span class="txt">日</span></p>
-                <p class="date-block__part" id="createSetTxtPart">午後の案件</p>
-            </div>
-            <select hidden name="" id="paymentSelect">
-                @foreach ($payments as $payment)
-                <option data-payment-project-id="{{ $payment->project_id }}"
-                    data-payment-employee-id="{{ $payment->employee_id }}">{{ $payment->amount }}</option>
-                @endforeach
-            </select>
-            {{-- フォームエリア --}}
-            <form action="{{route('shift.store')}}" method="POST" class="form-block" id="shiftCreateForm">
-                @csrf
-                <input hidden value="{{$startOfWeek}}" name="startOfWeek" type="text">
-                <input hidden type="text" id="createSetId" name="setId">
-                <input hidden type="text" id="createSetPart" name="part">
-                @foreach ($narrowEmployeeId as $EmployeeId)
-                    <input hidden type="text" name="narrowEmployeeId[]" value="{{ $EmployeeId }}">
-                @endforeach
-                <div class="all-input-area">
-                    <div class="form-block__input-area">
-                        {{-- プロジェクト --}}
-                        <div class="form-block__item">
-                            <p class="item-title">案件</p>
-                            <div class="check-area">
-                                <div class="check-area__item">
-                                    <input checked type="radio" value="0" class="createProjectRadio"
-                                        id="createProjectRadio01" name="createProjectRadio">
-                                    <label for="createProjectRadio01">既存案件</label>
-                                </div>
-                                <div class="check-area__item">
-                                    <input type="radio" value="1" class="createProjectRadio" id="createProjectRadio02"
-                                        name="createProjectRadio">
-                                    <label for="createProjectRadio02">新規案件</label>
-                                </div>
-                            </div>
-                            <input name="projectInput" type="text" class="c-input modal-input" id="createProjectInput" placeholder="案件名">
-                            <select name="projectSelect" id="createProjectSelect" class="c-select modal-select createProjectSelect">
-                                <option value="">選択してください</option>
-                                @foreach ($projects as $project)
-                                <option value="{{$project->id}}" data-retail-amount="{{ $project->retail_price }}" data-driver-amount="{{ $project->driver_price }}">{{$project->name}}</option>
-                                @endforeach
-                            </select>
-                            <div class="custom-name">
-                                <p class="">追加案件名</p>
-                                <textarea name="project_custom_name" id="" class="c-textarea customName" cols="30" rows="10"></textarea>
-                            </div>
-                        </div>
-                        {{-- 車両 --}}
-                        <div class="form-block__item">
-                            <p class="item-title">ナンバー</p>
-                            <div class="check-area">
-                                <div class="check-area__item">
-                                    <input checked type="radio" value="0" class="createVehicleRadio"
-                                        id="createProjectRadio03" name="createVehicleRadio">
-                                    <label for="createProjectRadio03">既存車両</label>
-                                </div>
-                                <div class="check-area__item">
-                                    <input type="radio" value="1" class="createVehicleRadio" id="createProjectRadio04"
-                                        name="createVehicleRadio">
-                                    <label for="createProjectRadio04">新規車両</label>
-                                </div>
-                            </div>
-                            <input type="text" class="c-input modal-input" id="createVehicleInput" name="vehicleInput"
-                                placeholder="ナンバー">
-                            <select name="vehicleSelect" id="createVehicleSelect" class="c-select modal-select">
-                                <option value="">選択してください</option>
-                                @foreach ($vehicles as $vehicle)
-                                <option value="{{$vehicle->id}}">{{$vehicle->number}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        {{-- 上代 --}}
-                        <div class="form-block__item">
-                            <p class="item-title">上代</p>
-                            <input type="text" class="c-input commaInput" id="createRetailInput" name="retailInput"
-                                placeholder="1,000">
-                        </div>
-                        {{-- 給与 --}}
-                        <div class="form-block__item">
-                            <p class="item-title">ドライバー価格</p>
-                            <input type="text" class="c-input commaInput" id="createSalaryInput" name="salaryInput"
-                                placeholder="1,000">
-                        </div>
-                    </div>
-                    <div class="active-input-area">
-                        {{-- クライアント --}}
-                        <div class="client-area" id="createClientWrap">
-                            <div class="client-area__head add-client__head">
-                                <p class="">クライアント</p>
-                                <div class="check-area">
-                                    <div class="check-area__item">
-                                        <input checked type="radio" name="clientSwitch" id="clientSwitch01" value="0" class="clientSwitchRadio">
-                                        <label for="clientSwitch01">既存クライアント</label>
-                                    </div>
-                                    <div class="check-area__item">
-                                        <input type="radio"  name="clientSwitch" id="clientSwitch02" value="1" class="clientSwitchRadio">
-                                        <label for="clientSwitch02">新規クライアント</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="client-area-input-area">
-                                <div class="client-area__existing-input" id="clientExistingArea">
-                                    <select name="clientExistingId" id="" class="c-select clientSelect">
-                                        <option value="">選択してください</option>
-                                        @foreach ($clients as $client)
-                                            <option value="{{ $client->id }}">{{ $client->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="client-area__create-input" id="clientCreateArea">
-                                    <div class="form-block__item">
-                                        <p class="item-title">クライアント名</p>
-                                        <input type="text" name="clientName" class="c-input clientInput" placeholder="株式会社⚪︎⚪︎">
-                                    </div>
-                                    <div class="form-block__item">
-                                        <p class="item-title">クライアント名(PDF使用時)</p>
-                                        <input type="text" name="clientPdfName" class="c-input clientInput" placeholder="株式会社⚪︎⚪︎">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {{-- 手当 --}}
-                        <div class="allowance-area" id="createAllowanceWrap">
-                            <p class="allowance-area__head">手当</p>
-                            <div class="allowance-area__check-box-area" id="allowanceCt">
-
-                            </div>
-                        </div>
-                        {{-- チャーター納品 --}}
-                        <div class="charter-relation-area" id="charterWrap">
-                            <p class="charter-relation-area__head">紐づけるシフト</p>
-                            <div class="charter-switch">
-                                <label for="">
-                                    <input checked type="radio" class="charterSwitch" name="charter[switch]" value="0">
-                                    新規作成
-                                </label>
-                                <label for="">
-                                    <input type="radio" class="charterSwitch" name="charter[switch]" value="1">
-                                    既存選択
-                                </label>
-                                <label for="">
-                                    <input type="radio" class="charterSwitch" name="charter[switch]" value="2">
-                                    未定
-                                </label>
-                            </div>
-                            {{-- 新規作成 --}}
-                            <div class="charter-create charterCreate">
-                                <div class="date01">
-                                    <label for="" class="date01__label">
-                                        <input type="date" id="date" name="charter[date]" class="datepicker__input datepicker">
-                                    </label>
-                                </div>
-                                <div class="active-area part-radio">
-                                    <p class="">午前・午後</p>
-                                    <div class="radio-area">
-                                        <label for="">
-                                            <input checked type="radio" name="charter[time_of_part]" class="timeOfPart" value="0">
-                                            午前
-                                        </label>
-                                        <label for="">
-                                            <input type="radio" name="charter[time_of_part]" class="timeOfPart" value="1">
-                                            午後
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="custom-name">
-                                    <p class="">追加案件名</p>
-                                    <textarea name="charter[project_custom_name]" id="" class="c-textarea ralatedCustomName" cols="30" rows="10"></textarea>
-                                </div>
-                                <div class="active-area employee-select">
-                                    <p class="">従業員</p>
-                                    <select name="charter[employee]" id="" class="c-select charterEmployee">
-                                        <option value="">選択してください</option>
-                                        @foreach ($employees as $employee)
-                                            <option value="{{ $employee->id }}">{{ $employee->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="active-area vehicle-select">
-                                    <p class="">車両</p>
-                                    <select name="charter[vehicle]" id="" class="c-select charterVehicle">
-                                        <option value="">選択してください</option>
-                                        @foreach ($vehicles as $vehicle)
-                                        <option value="{{$vehicle->id}}">{{$vehicle->number}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="active-area slary-input">
-                                    <p class="">ドライバー価格</p>
-                                    <input type="text" name="charter[salary]" class="c-input charterSalary commaInput" placeholder="1,000">
-                                </div>
-                            </div>
-                            {{-- 既存選択 --}}
-                            <div class="charter-select charterSelect">
-                                <div class="search-shift">
-                                    <div class="date01">
-                                        <label for="" class="date01__label">
-                                            <input type="date" id="date" name="search_shift" class="datepicker__input datepicker searchDate">
-                                        </label>
-                                    </div>
-                                    <div class="search-btn searchBtn">検索</div>
-                                </div>
-                                <div class="search-shift-list searchShiftList"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {{-- ボタン --}}
-                <div class="form-block__btn-area">
-                    <button class="btn --save" type="submit" name="action" value="save">
-                        入力内容で案件を登録
-                    </button>
-                    <div class="btn --back createCloseModal" >
-                        戻る
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
 
     {{-- 設定モーダル --}}
     <div class="shift-setting-modal" id="settingModal">

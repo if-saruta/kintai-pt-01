@@ -229,8 +229,7 @@ class ShiftController extends Controller
         $allownaceShiftId = ShiftProjectVehicle::has('shiftAllowance')->pluck('id')->toArray();
 
         // その月の第何週目かを計算
-        $date = new Carbon($startOfWeek);
-        $weekOfMonth = $date->weekOfMonth;
+        $weekOfMonth = $this->getWeekOfMonth($startOfWeek);
 
         $user = auth()->user();
         if($user->role == 1){
@@ -366,12 +365,12 @@ class ShiftController extends Controller
         $payments = ProjectEmployeePayment::whereNotNull('amount')->get();
 
         $page = $request->input('witch') ?? session('page');
+        // dd($page);
 
         $user = auth()->user();
 
         // その月の第何週目かを計算
-        $date = new Carbon($startOfWeek);
-        $weekOfMonth = $date->weekOfMonth;
+        $weekOfMonth = $this->getWeekOfMonth($startOfWeek);
 
         if($user->role <= 1){
             if ($page) {
@@ -448,6 +447,8 @@ class ShiftController extends Controller
 
                     return view('shift.edit', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'clients', 'projects', 'vehicles', 'employees', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates','holidays', 'MultipleDailyUsesVehiclesArray', 'employeeList', 'narrowEmployeeId', 'narrowUnregisterEmployee', 'missingRequiredAllowancesByDate', 'allownaceShiftId'));
                 }
+            }else{
+                
             }
         }elseif($user->role <= 2){
             if ($page == 'page02') {
@@ -503,6 +504,29 @@ class ShiftController extends Controller
             return view('shift.employeeShowShift', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'MultipleDailyUsesVehiclesArray', 'employeeList', 'narrowEmployeeId', 'narrowUnregisterEmployee', 'missingRequiredAllowancesByDate', 'weekOfMonth', 'allownaceShiftId'));
         }
         return view('shift.index', compact('shiftDataByEmployee', 'sortedShiftDataByEmployee', 'shiftDataByUnEmployee', 'payments', 'startOfWeek', 'endOfWeek', 'monday', 'sunday', 'convertedDates', 'holidays', 'MultipleDailyUsesVehiclesArray', 'employeeList', 'narrowEmployeeId', 'narrowUnregisterEmployee', 'missingRequiredAllowancesByDate', 'weekOfMonth', 'allownaceShiftId'));
+    }
+
+    public function getWeekOfMonth($date)
+    {
+        // 日付をCarbonインスタンスに変換
+        $carbonDate = Carbon::parse($date);
+        // dd($carbonDate);
+
+        // その日の週の日曜日の日付を取得
+        $endOfWeek = $carbonDate->copy()->endOfWeek(Carbon::SUNDAY);
+
+        // 週が月をまたぐ場合は次の月の第1週目とする
+        if ($endOfWeek->month != $carbonDate->month) {
+            return 1; // 次の月の第1週目
+        }
+
+        // その月の最初の日
+        $firstDayOfMonth = $carbonDate->copy()->startOfMonth();
+
+        // その月の最初の日からその日の週の月曜日までの週数を数える
+        $weekOfMonth = $carbonDate->copy()->startOfWeek(Carbon::MONDAY)->diffInWeeks($firstDayOfMonth->startOfWeek(Carbon::MONDAY)) + 1;
+
+        return $weekOfMonth;
     }
 
     public function findMultipleDailyUsesVehicles($startOfWeek, $endOfWeek)
@@ -610,6 +634,7 @@ class ShiftController extends Controller
                     'client_id' => $request->clientExistingId,
                     'name' => $request->projectInput,
                     'payment_type' => 1,
+                    'is_charter' => $request->createProjectRadio == 1 ? 0 : 1,
                 ]);
             }else if($request->clientSwitch == 1){
                 $client = Client::create([
@@ -620,6 +645,7 @@ class ShiftController extends Controller
                     'client_id' => $client->id,
                     'name' => $request->projectInput,
                     'payment_type' => 1,
+                    'is_charter' => $request->createProjectRadio == 1 ? 0 : 1,
                 ]);
             }
             $shiftMiddle->project_id = $project->id;
@@ -681,10 +707,12 @@ class ShiftController extends Controller
         $relationShift = $request->input('charter', []);
         // 納品日が未定でなければ
         if($relationShift['switch'] != 2){
-            if($request->createProjectRadio == 0){
-                $project = Project::find($request->projectSelect);
+            // 既存案件から選択なら
+            if($request->createProjectRadio == 0 || $request->createProjectRadio == 2){
+                if($request->createProjectRadio == 0){
+                    $project = Project::find($request->projectSelect);
+                }
                 if($project->is_charter == 1){
-
                     if($relationShift['switch'] == 0){
                         $this->createWeekShift($relationShift['date']);
                         $shift = Shift::updateOrCreate(
@@ -742,7 +770,9 @@ class ShiftController extends Controller
                         if($employee->id == $fixedShift->employee_id){
                             foreach($fixedShift->fixedShiftDetails as $detail){
                                 // 週が条件と一致するか
-                                if($date->weekOfMonth == $detail->week_number){
+                                // その月の第何週目かを計算
+                                $weekOfMonth = $this->getWeekOfMonth($startOfWeek);
+                                if($weekOfMonth == $detail->week_number){
                                     // 曜日が条件と一致するか
                                     if($date->dayOfWeekIso == $detail->day_of_week + 1){
                                         // 祝日も稼働するか
@@ -801,217 +831,389 @@ class ShiftController extends Controller
         if ($request->input('action') == 'save') {
             // 紐づくシフトがあるか
             if($shiftMiddle->relatedShiftProjectVehicle()->exists()){
-                // 紐づくシフトが変更された場合
+                // 削除の条件
                 if($relationShift['switch'] == 0 || $relationShift['switch'] == 1 || $relationShift['switch'] == 2 || $selectedProjectId != $newPorjectId){
                     // シフトを削除
                     $shiftMiddle->delete();
 
-                    // 対象のシフト詳細を取得
+                    // 対象のシフトを作成
                     $shiftMiddle = ShiftProjectVehicle::create([
-                        'shift_id' => $shiftId
+                        'shift_id' => $shiftId,
+                        'time_of_part' => $part,
                     ]);
-
-                    // 「保存」ボタンがクリックされた時の処理
-                    if ($request->createProjectRadio == 0) {
-                        $shiftMiddle->project_id = $request->projectSelect;
-                        $shiftMiddle->unregistered_project = null;
-                        $shiftMiddle->custom_project_name = $request->project_custom_name;
-                    } else {
-                        if($request->clientSwitch == 0){
-                            $project = Project::create([
-                                'client_id' => $request->clientExistingId,
-                                'name' => $request->projectInput,
-                                'payment_type' => 1,
-                            ]);
-                        }else if($request->clientSwitch == 1){
-                            $client = Client::create([
-                                'name' => $request->clientName,
-                                'pdfName' => $request->clientPdfName,
-                            ]);
-                            $project = Project::create([
-                                'client_id' => $client->id,
-                                'name' => $request->projectInput,
-                                'payment_type' => 1,
-                            ]);
-                        }
-                        $shiftMiddle->project_id = $project->id;
-                        $shiftMiddle->custom_project_name = $request->project_custom_name;
-                        ProjectHoliday::create([
-                            'project_id' => $project->id
-                        ]);
-                        $employees = Employee::all();
-                        foreach($employees as $employee){
-                            ProjectEmployeePayment::create([
-                                'employee_id' => $employee->id,
-                                'project_id' => $project->id,
-                                'amount' => null,
-                            ]);
-                        }
-                    }
-
-                    if ($request->createVehicleRadio == 0) {
-                        $shiftMiddle->vehicle_id = $request->vehicleSelect;
-                        $shiftMiddle->unregistered_vehicle = null;
-                    } else {
-                        $shiftMiddle->unregistered_vehicle = $request->vehicleInput;
-                        // 未登録の方はnullを保存
-                        $shiftMiddle->vehicle_id = null;
-                    }
-
-                    if ($part == 0) {
-                        $shiftMiddle->time_of_day = 0;
-                    } else {
-                        $shiftMiddle->time_of_day = 1;
-                    }
-
-                    // 半角および全角カンマを除去し、intにキャストする関数
-                    $removeCommasAndCastToInt = function ($value) {
-                        $valueWithoutCommas = str_replace([',', '，'], '', $value);
-                        return (int)$valueWithoutCommas; // 文字列を整数型にキャスト
-                    };
-
-                    $shiftMiddle->retail_price = $removeCommasAndCastToInt($request->retailInput);
-                    $shiftMiddle->driver_price = $removeCommasAndCastToInt($request->salaryInput);
-                    $shiftMiddle->save();
-
-                    $allowances = $request->input('allowance', []);
-                    if(!empty($allowances)){
-                        $allowanceTotal = 0;
-                        foreach($allowances as $id){
-                            ShiftProjectVehicleAllowance::create([
-                                'shift_project_vehicle_id' => $shiftMiddle->id,
-                                'project_allowance_id' => $id,
-                            ]);
-                            $allowance = ProjectAllowance::find($id);
-                            $allowanceTotal += $allowance->driver_amount;
-                        }
-                    }
-                    $shiftMiddle->total_allowance = $allowanceTotal ?? null;
-                    $shiftMiddle->save();
-
-                    // チャーター
-                    $relationShift = $request->input('charter', []);
-                    // 納品日が未定でなければ
-                    if($relationShift['switch'] != 2){
-                        if($request->createProjectRadio == 0){
-                            $project = Project::find($request->projectSelect);
-                            if($project->is_charter == 1){
-                                if($relationShift['switch'] == 0){
-                                    $this->createWeekShift($relationShift['date']);
-                                    $shift = Shift::updateOrCreate(
-                                        ['date' => $relationShift['date'], 'employee_id' => $relationShift['employee']],
-                                        ['date' => $relationShift['date'], 'employee_id' => $relationShift['employee']]
-                                    );
-
-                                    $shiftMiddle02 = ShiftProjectVehicle::create([
-                                        'shift_id' => $shift->id,
-                                        'project_id' => $project->id,
-                                        'custom_project_name' => $relationShift['project_custom_name'],
-                                        'vehicle_id' => $relationShift['vehicle'],
-                                        'driver_price' => $removeCommasAndCastToInt($relationShift['salary']),
-                                        'time_of_day' => $relationShift['time_of_part']
-                                    ]);
-                                }elseif($relationShift['switch'] == 1){
-                                    $shiftMiddle02 = ShiftProjectVehicle::find($relationShift['shiftPvId']);
-                                }
-                                // チャーターシフトの紐付け
-                                $shiftMiddle->related_shift_project_vehicle_id = $shiftMiddle02->id;
-                                $shiftMiddle02->related_shift_project_vehicle_id = $shiftMiddle->id;
-                                $shiftMiddle->save();
-                                $shiftMiddle02->save();
-                            }
-                        }
-                    }
-                }else{
-                    if ($request->vehicleRadio == 0) {
-                        $shiftMiddle->custom_project_name = $request->project_custom_name;
-                        $shiftMiddle->vehicle_id = $request->vehicleSelect;
-                        $shiftMiddle->unregistered_vehicle = null;
-                    } else {
-                        $shiftMiddle->unregistered_vehicle = $request->vehicleInput;
-                        // 未登録の方はnullを保存
-                        $shiftMiddle->vehicle_id = null;
-                    }
-                    // 半角および全角カンマを除去し、intにキャストする関数
-                    $removeCommasAndCastToInt = function ($value) {
-                        $valueWithoutCommas = str_replace([',', '，'], '', $value);
-                        return (int)$valueWithoutCommas; // 文字列を整数型にキャスト
-                    };
-
-                    $shiftMiddle->retail_price = $removeCommasAndCastToInt($request->retailInput);
-                    $shiftMiddle->driver_price = $removeCommasAndCastToInt($request->salaryInput);
-                    $shiftMiddle->save();
-                }
-            }else{ //通常の処理
-                // 「保存」ボタンがクリックされた時の処理
-                if ($request->projectRadio == 0) {
-                    $shiftMiddle->project_id = $request->projectSelect;
-                    $shiftMiddle->unregistered_project = null;
-                    $shiftMiddle->custom_project_name = $request->project_custom_name;
-                } else {
-                    if($request->clientSwitch == 0){
-                        $project = Project::create([
-                            'client_id' => $request->clientExistingId,
-                            'name' => $request->projectInput,
-                            'payment_type' => 1,
-                        ]);
-                    }else if($request->clientSwitch == 1){
-                        $client = Client::create([
-                            'name' => $request->clientName,
-                            'pdfName' => $request->clientPdfName,
-                        ]);
-                        $project = Project::create([
-                            'client_id' => $client->id,
-                            'name' => $request->projectInput,
-                            'payment_type' => 1,
-                        ]);
-                    }
-                    $shiftMiddle->project_id = $project->id;
-                    $shiftMiddle->custom_project_name = $request->project_custom_name;
-                    ProjectHoliday::create([
-                        'project_id' => $project->id
-                    ]);
-                    $employees = Employee::all();
-                    foreach($employees as $employee){
-                        ProjectEmployeePayment::create([
-                            'employee_id' => $employee->id,
-                            'project_id' => $project->id,
-                            'amount' => null,
-                        ]);
-                    }
-                }
-                if ($request->vehicleRadio == 0) {
-                    $shiftMiddle->vehicle_id = $request->vehicleSelect;
-                    $shiftMiddle->unregistered_vehicle = null;
-                } else {
-                    $shiftMiddle->unregistered_vehicle = $request->vehicleInput;
-                    // 未登録の方はnullを保存
-                    $shiftMiddle->vehicle_id = null;
-                }
-
-                // 半角および全角カンマを除去し、intにキャストする関数
-                $removeCommasAndCastToInt = function ($value) {
-                    $valueWithoutCommas = str_replace([',', '，'], '', $value);
-                    return (int)$valueWithoutCommas; // 文字列を整数型にキャスト
-                };
-
-                $shiftMiddle->retail_price = $removeCommasAndCastToInt($request->retailInput);
-                $shiftMiddle->driver_price = $removeCommasAndCastToInt($request->salaryInput);
-                $shiftMiddle->save();
-
-                // 手当を登録
-                $allowances = $request->input('allowance', []);
-                $shiftMiddle->shiftAllowance()->sync($allowances);
-                if(!empty($allowances)){
-                    $allowanceTotal = 0;
-                    foreach($allowances as $id){
-                        $allowance = ProjectAllowance::find($id);
-                        $allowanceTotal += $allowance->driver_amount;
-                    }
-                    $shiftMiddle->total_allowance = $allowanceTotal;
-                    $shiftMiddle->save();
                 }
             }
+
+            // 「保存」ボタンがクリックされた時の処理
+            if ($request->createProjectRadio == 0) {
+                $shiftMiddle->project_id = $request->projectSelect;
+                $shiftMiddle->unregistered_project = null;
+                $shiftMiddle->custom_project_name = $request->project_custom_name;
+            } else {
+                if($request->clientSwitch == 0){
+                    $project = Project::create([
+                        'client_id' => $request->clientExistingId,
+                        'name' => $request->projectInput,
+                        'payment_type' => 1,
+                        'is_charter' => $request->createProjectRadio == 1 ? 0 : 1,
+                    ]);
+                }else if($request->clientSwitch == 1){
+                    $client = Client::create([
+                        'name' => $request->clientName,
+                        'pdfName' => $request->clientPdfName,
+                    ]);
+                    $project = Project::create([
+                        'client_id' => $client->id,
+                        'name' => $request->projectInput,
+                        'payment_type' => 1,
+                        'is_charter' => $request->createProjectRadio == 1 ? 0 : 1,
+                    ]);
+                }
+                $shiftMiddle->project_id = $project->id;
+                $shiftMiddle->custom_project_name = $request->project_custom_name;
+                ProjectHoliday::create([
+                    'project_id' => $project->id
+                ]);
+                $employees = Employee::all();
+                foreach($employees as $employee){
+                    ProjectEmployeePayment::create([
+                        'employee_id' => $employee->id,
+                        'project_id' => $project->id,
+                        'amount' => null,
+                    ]);
+                }
+            }
+
+            if ($request->createVehicleRadio == 0) {
+                $shiftMiddle->vehicle_id = $request->vehicleSelect;
+                $shiftMiddle->unregistered_vehicle = null;
+            } else {
+                $shiftMiddle->unregistered_vehicle = $request->vehicleInput;
+                // 未登録の方はnullを保存
+                $shiftMiddle->vehicle_id = null;
+            }
+
+            // if ($request->part == 0) {
+            //     $shiftMiddle->time_of_day = 0;
+            // } else {
+            //     $shiftMiddle->time_of_day = 1;
+            // }
+
+            // 半角および全角カンマを除去し、intにキャストする関数
+            $removeCommasAndCastToInt = function ($value) {
+                $valueWithoutCommas = str_replace([',', '，'], '', $value);
+                return (int)$valueWithoutCommas; // 文字列を整数型にキャスト
+            };
+
+            $shiftMiddle->retail_price = $removeCommasAndCastToInt($request->retailInput);
+            $shiftMiddle->driver_price = $removeCommasAndCastToInt($request->salaryInput);
+            $shiftMiddle->save();
+
+            $allowances = $request->input('allowance', []);
+            if(!empty($allowances)){
+                $allowanceTotal = 0;
+                foreach($allowances as $id){
+                    ShiftProjectVehicleAllowance::create([
+                        'shift_project_vehicle_id' => $shiftMiddle->id,
+                        'project_allowance_id' => $id,
+                    ]);
+                    $allowance = ProjectAllowance::find($id);
+                    $allowanceTotal += $allowance->driver_amount;
+                }
+            }
+            $shiftMiddle->total_allowance = $allowanceTotal ?? null;
+            $shiftMiddle->save();
+
+            // チャーター
+            $relationShift = $request->input('charter', []);
+            // 納品日が未定でなければ
+            if($relationShift['switch'] != 2){
+                // 既存案件から選択なら
+                if($request->createProjectRadio == 0 || $request->createProjectRadio == 2){
+                    if($request->createProjectRadio == 0){
+                        $project = Project::find($request->projectSelect);
+                    }
+                    if($project->is_charter == 1){
+                        if($relationShift['switch'] == 0){
+                            $this->createWeekShift($relationShift['date']);
+                            $shift = Shift::updateOrCreate(
+                                ['date' => $relationShift['date'], 'employee_id' => $relationShift['employee']],
+                                ['date' => $relationShift['date'], 'employee_id' => $relationShift['employee']]
+                            );
+
+                            $shiftMiddle02 = ShiftProjectVehicle::create([
+                                'shift_id' => $shift->id,
+                                'project_id' => $project->id,
+                                'custom_project_name' => $relationShift['project_custom_name'],
+                                'vehicle_id' => $relationShift['vehicle'],
+                                'driver_price' => $removeCommasAndCastToInt($relationShift['salary']),
+                                'time_of_day' => $relationShift['time_of_part']
+                            ]);
+                        }elseif($relationShift['switch'] == 1){
+                            $shiftMiddle02 = ShiftProjectVehicle::find($relationShift['shiftPvId']);
+                        }
+                        // チャーターシフトの紐付け
+                        $shiftMiddle->related_shift_project_vehicle_id = $shiftMiddle02->id;
+                        $shiftMiddle02->related_shift_project_vehicle_id = $shiftMiddle->id;
+                        $shiftMiddle->save();
+                        $shiftMiddle02->save();
+                    }
+                }
+            }
+
+
+            // // 紐づくシフトがあるか
+            // if($shiftMiddle->relatedShiftProjectVehicle()->exists()){
+            //     // 紐づくシフトが変更された場合
+            //     if($relationShift['switch'] == 0 || $relationShift['switch'] == 1 || $relationShift['switch'] == 2 || $selectedProjectId != $newPorjectId){
+            //         // シフトを削除
+            //         $shiftMiddle->delete();
+
+                    // // 対象のシフト詳細を取得
+                    // $shiftMiddle = ShiftProjectVehicle::create([
+                    //     'shift_id' => $shiftId
+                    // ]);
+
+            //         // 「保存」ボタンがクリックされた時の処理
+            //         if ($request->createProjectRadio == 0) {
+            //             $shiftMiddle->project_id = $request->projectSelect;
+            //             $shiftMiddle->unregistered_project = null;
+            //             $shiftMiddle->custom_project_name = $request->project_custom_name;
+            //         } else {
+            //             if($request->clientSwitch == 0){
+            //                 $project = Project::create([
+            //                     'client_id' => $request->clientExistingId,
+            //                     'name' => $request->projectInput,
+            //                     'payment_type' => 1,
+            //                 ]);
+            //             }else if($request->clientSwitch == 1){
+            //                 $client = Client::create([
+            //                     'name' => $request->clientName,
+            //                     'pdfName' => $request->clientPdfName,
+            //                 ]);
+            //                 $project = Project::create([
+            //                     'client_id' => $client->id,
+            //                     'name' => $request->projectInput,
+            //                     'payment_type' => 1,
+            //                 ]);
+            //             }
+            //             $shiftMiddle->project_id = $project->id;
+            //             $shiftMiddle->custom_project_name = $request->project_custom_name;
+            //             ProjectHoliday::create([
+            //                 'project_id' => $project->id
+            //             ]);
+            //             $employees = Employee::all();
+            //             foreach($employees as $employee){
+            //                 ProjectEmployeePayment::create([
+            //                     'employee_id' => $employee->id,
+            //                     'project_id' => $project->id,
+            //                     'amount' => null,
+            //                 ]);
+            //             }
+            //         }
+
+            //         if ($request->createVehicleRadio == 0) {
+            //             $shiftMiddle->vehicle_id = $request->vehicleSelect;
+            //             $shiftMiddle->unregistered_vehicle = null;
+            //         } else {
+            //             $shiftMiddle->unregistered_vehicle = $request->vehicleInput;
+            //             // 未登録の方はnullを保存
+            //             $shiftMiddle->vehicle_id = null;
+            //         }
+
+            //         if ($part == 0) {
+            //             $shiftMiddle->time_of_day = 0;
+            //         } else {
+            //             $shiftMiddle->time_of_day = 1;
+            //         }
+
+            //         // 半角および全角カンマを除去し、intにキャストする関数
+            //         $removeCommasAndCastToInt = function ($value) {
+            //             $valueWithoutCommas = str_replace([',', '，'], '', $value);
+            //             return (int)$valueWithoutCommas; // 文字列を整数型にキャスト
+            //         };
+
+            //         $shiftMiddle->retail_price = $removeCommasAndCastToInt($request->retailInput);
+            //         $shiftMiddle->driver_price = $removeCommasAndCastToInt($request->salaryInput);
+            //         $shiftMiddle->save();
+
+            //         $allowances = $request->input('allowance', []);
+            //         if(!empty($allowances)){
+            //             $allowanceTotal = 0;
+            //             foreach($allowances as $id){
+            //                 ShiftProjectVehicleAllowance::create([
+            //                     'shift_project_vehicle_id' => $shiftMiddle->id,
+            //                     'project_allowance_id' => $id,
+            //                 ]);
+            //                 $allowance = ProjectAllowance::find($id);
+            //                 $allowanceTotal += $allowance->driver_amount;
+            //             }
+            //         }
+            //         $shiftMiddle->total_allowance = $allowanceTotal ?? null;
+            //         $shiftMiddle->save();
+
+            //         // チャーター
+            //         $relationShift = $request->input('charter', []);
+            //         // 納品日が未定でなければ
+            //         if($relationShift['switch'] != 2){
+            //             if($request->createProjectRadio == 0){
+            //                 $project = Project::find($request->projectSelect);
+            //                 if($project->is_charter == 1){
+            //                     if($relationShift['switch'] == 0){
+            //                         $this->createWeekShift($relationShift['date']);
+            //                         $shift = Shift::updateOrCreate(
+            //                             ['date' => $relationShift['date'], 'employee_id' => $relationShift['employee']],
+            //                             ['date' => $relationShift['date'], 'employee_id' => $relationShift['employee']]
+            //                         );
+
+            //                         $shiftMiddle02 = ShiftProjectVehicle::create([
+            //                             'shift_id' => $shift->id,
+            //                             'project_id' => $project->id,
+            //                             'custom_project_name' => $relationShift['project_custom_name'],
+            //                             'vehicle_id' => $relationShift['vehicle'],
+            //                             'driver_price' => $removeCommasAndCastToInt($relationShift['salary']),
+            //                             'time_of_day' => $relationShift['time_of_part']
+            //                         ]);
+            //                     }elseif($relationShift['switch'] == 1){
+            //                         $shiftMiddle02 = ShiftProjectVehicle::find($relationShift['shiftPvId']);
+            //                     }
+            //                     // チャーターシフトの紐付け
+            //                     $shiftMiddle->related_shift_project_vehicle_id = $shiftMiddle02->id;
+            //                     $shiftMiddle02->related_shift_project_vehicle_id = $shiftMiddle->id;
+            //                     $shiftMiddle->save();
+            //                     $shiftMiddle02->save();
+            //                 }
+            //             }
+            //         }
+            //     }else{
+            //         if ($request->vehicleRadio == 0) {
+            //             $shiftMiddle->custom_project_name = $request->project_custom_name;
+            //             $shiftMiddle->vehicle_id = $request->vehicleSelect;
+            //             $shiftMiddle->unregistered_vehicle = null;
+            //         } else {
+            //             $shiftMiddle->unregistered_vehicle = $request->vehicleInput;
+            //             // 未登録の方はnullを保存
+            //             $shiftMiddle->vehicle_id = null;
+            //         }
+            //         // 半角および全角カンマを除去し、intにキャストする関数
+            //         $removeCommasAndCastToInt = function ($value) {
+            //             $valueWithoutCommas = str_replace([',', '，'], '', $value);
+            //             return (int)$valueWithoutCommas; // 文字列を整数型にキャスト
+            //         };
+
+            //         $shiftMiddle->retail_price = $removeCommasAndCastToInt($request->retailInput);
+            //         $shiftMiddle->driver_price = $removeCommasAndCastToInt($request->salaryInput);
+            //         $shiftMiddle->save();
+            //     }
+            // }else{ //通常の処理
+            //     // 「保存」ボタンがクリックされた時の処理
+            //     if ($request->projectRadio == 0) {
+            //         $shiftMiddle->project_id = $request->projectSelect;
+            //         $shiftMiddle->unregistered_project = null;
+            //         $shiftMiddle->custom_project_name = $request->project_custom_name;
+            //     } else {
+            //         if($request->clientSwitch == 0){
+            //             $project = Project::create([
+            //                 'client_id' => $request->clientExistingId,
+            //                 'name' => $request->projectInput,
+            //                 'payment_type' => 1,
+            //                 'is_charter' => $request->createProjectRadio == 1 ? 0 : 1,
+            //             ]);
+            //         }else if($request->clientSwitch == 1){
+            //             $client = Client::create([
+            //                 'name' => $request->clientName,
+            //                 'pdfName' => $request->clientPdfName,
+            //             ]);
+            //             $project = Project::create([
+            //                 'client_id' => $client->id,
+            //                 'name' => $request->projectInput,
+            //                 'payment_type' => 1,
+            //                 'is_charter' => $request->createProjectRadio == 1 ? 0 : 1,
+            //             ]);
+            //         }
+            //         $shiftMiddle->project_id = $project->id;
+            //         $shiftMiddle->custom_project_name = $request->project_custom_name;
+            //         ProjectHoliday::create([
+            //             'project_id' => $project->id
+            //         ]);
+            //         $employees = Employee::all();
+            //         foreach($employees as $employee){
+            //             ProjectEmployeePayment::create([
+            //                 'employee_id' => $employee->id,
+            //                 'project_id' => $project->id,
+            //                 'amount' => null,
+            //             ]);
+            //         }
+            //     }
+            //     if ($request->vehicleRadio == 0) {
+            //         $shiftMiddle->vehicle_id = $request->vehicleSelect;
+            //         $shiftMiddle->unregistered_vehicle = null;
+            //     } else {
+            //         $shiftMiddle->unregistered_vehicle = $request->vehicleInput;
+            //         // 未登録の方はnullを保存
+            //         $shiftMiddle->vehicle_id = null;
+            //     }
+
+            //     // 半角および全角カンマを除去し、intにキャストする関数
+            //     $removeCommasAndCastToInt = function ($value) {
+            //         $valueWithoutCommas = str_replace([',', '，'], '', $value);
+            //         return (int)$valueWithoutCommas; // 文字列を整数型にキャスト
+            //     };
+
+            //     $shiftMiddle->retail_price = $removeCommasAndCastToInt($request->retailInput);
+            //     $shiftMiddle->driver_price = $removeCommasAndCastToInt($request->salaryInput);
+            //     $shiftMiddle->save();
+
+            //     // 手当を登録
+            //     $allowances = $request->input('allowance', []);
+            //     $shiftMiddle->shiftAllowance()->sync($allowances);
+            //     if(!empty($allowances)){
+            //         $allowanceTotal = 0;
+            //         foreach($allowances as $id){
+            //             $allowance = ProjectAllowance::find($id);
+            //             $allowanceTotal += $allowance->driver_amount;
+            //         }
+            //         $shiftMiddle->total_allowance = $allowanceTotal;
+            //         $shiftMiddle->save();
+            //     }
+
+            //     // チャーター
+            //     $relationShift = $request->input('charter', []);
+            //     // 納品日が未定でなければ
+            //     if($relationShift['switch'] != 2){
+            //         // 既存案件から選択なら
+            //         if($request->createProjectRadio == 0 || $request->createProjectRadio == 2){
+            //             if($request->createProjectRadio == 0){
+            //                 $project = Project::find($request->projectSelect);
+            //             }
+            //             if($project->is_charter == 1){
+            //                 if($relationShift['switch'] == 0){
+            //                     $this->createWeekShift($relationShift['date']);
+            //                     $shift = Shift::updateOrCreate(
+            //                         ['date' => $relationShift['date'], 'employee_id' => $relationShift['employee']],
+            //                         ['date' => $relationShift['date'], 'employee_id' => $relationShift['employee']]
+            //                     );
+
+            //                     $shiftMiddle02 = ShiftProjectVehicle::create([
+            //                         'shift_id' => $shift->id,
+            //                         'project_id' => $project->id,
+            //                         'custom_project_name' => $relationShift['project_custom_name'],
+            //                         'vehicle_id' => $relationShift['vehicle'],
+            //                         'driver_price' => $removeCommasAndCastToInt($relationShift['salary']),
+            //                         'time_of_day' => $relationShift['time_of_part']
+            //                     ]);
+            //                 }elseif($relationShift['switch'] == 1){
+            //                     $shiftMiddle02 = ShiftProjectVehicle::find($relationShift['shiftPvId']);
+            //                 }
+            //                 // チャーターシフトの紐付け
+            //                 $shiftMiddle->related_shift_project_vehicle_id = $shiftMiddle02->id;
+            //                 $shiftMiddle02->related_shift_project_vehicle_id = $shiftMiddle->id;
+            //                 $shiftMiddle->save();
+            //                 $shiftMiddle02->save();
+            //             }
+            //         }
+            //     }
+            // }
 
         } elseif ($request->input('action') == 'delete') {
             // 「削除」ボタンがクリックされた時の処理
@@ -1363,10 +1565,8 @@ class ShiftController extends Controller
                                             foreach ($projects as $project) {
                                                 $projectName = ''; //登録されている案件名を格納する変数
                                                 $projectName = $this->removeSpaces($project->name); //案件名のスペースを除去
-
-                                                // tmpProjectNameには、【】が除去された案件名・charterProjectNameは【】が含まれていれば【】が含まれた案件名、そうでなければNULL
-                                                [$tmpProjectName, $initialProjectName] = $this->isCharterOrCsCheck($recordData);
-                                                if ($tmpProjectName === $projectName) {
+                                                // 最初は括弧等を含めた状態で判定
+                                                if($recordData === $projectName){
                                                     $projectIdTmp = $project->id;
 
                                                     // 従業員の詳細のデータを取得
@@ -1385,6 +1585,29 @@ class ShiftController extends Controller
                                                     ]);
                                                     $isProjectCheck = true;
                                                     break;
+                                                }else{
+                                                    // tmpProjectNameには、【】が除去された案件名・charterProjectNameは【】が含まれていれば【】が含まれた案件名、そうでなければNULL
+                                                    [$tmpProjectName, $initialProjectName] = $this->isCharterOrCsCheck($recordData);
+                                                    if ($tmpProjectName === $projectName) {
+                                                        $projectIdTmp = $project->id;
+
+                                                        // 従業員の詳細のデータを取得
+                                                        $employeeInfo = $this->getEmployeeInfo($employeeIdTmp, $projectIdTmp);
+
+                                                        $middleShift = ShiftProjectVehicle::create([
+                                                            'shift_id' => $shift->id,
+                                                            'project_id' => $project->id,
+                                                            'initial_project_name' => $initialProjectName,
+                                                            'retail_price' => $employeeInfo[0],
+                                                            'driver_price' => $employeeInfo[1],
+                                                            // 'total_allowance' => $employeeInfo[2],
+                                                            'vehicle_rental_type' => $employeeInfo[2],
+                                                            'rental_vehicle_id' => $employeeInfo[3],
+                                                            // 'time_of_day' => 0,
+                                                        ]);
+                                                        $isProjectCheck = true;
+                                                        break;
+                                                    }
                                                 }
                                             }
                                             if (!$isProjectCheck) {

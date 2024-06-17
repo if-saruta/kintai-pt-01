@@ -399,11 +399,11 @@
                 @foreach ( $convertedDates as $date )
                     <th colspan="2" class="date-clm txt-position-center">
                         @if ($holidays->isHoliday($date))
-                            <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
+                            <p class="" style="color: black;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                         @elseif ($date->isSaturday())
                             <p class="" style="color: rgb(0, 123, 255);">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                         @elseif($date->isSunday())
-                            <p class="" style="color: red;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
+                            <p class="" style="color: black;">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                         @else
                             <p class="">{{$date->format('j')}}日({{ $date->isoFormat('ddd') }})</p>
                         @endif
@@ -489,10 +489,10 @@
                                                     @elseif ($spv->initial_project_name)
                                                         <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->initial_project_name)) !!}</p>
                                                     @else
-                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px; @if($spv->project->name == '休み') color: red; @endif">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
-                                                    <p class="" style="color: red; height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
+                                                    <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
                                                 @else
                                                     <p class="" style="height: {{ $projectHeight / 2 }}px;"></p>
                                                 @endif
@@ -503,7 +503,7 @@
                                                     <p class="">No.{{ $spv->vehicle->number }}</p>
                                                 @elseif($spv->unregistered_vehicle)
                                                     @if ($spv->unregistered_vehicle != '自車')
-                                                        <p class="" style="color:red;">No.{{ $spv->unregistered_vehicle }}</p>
+                                                        <p class="" style="">No.{{ $spv->unregistered_vehicle }}</p>
                                                     @else
                                                         <p class="">No.{{ $spv->unregistered_vehicle }}</p>
                                                     @endif
@@ -553,10 +553,10 @@
                                                     @elseif ($spv->initial_project_name)
                                                         <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->initial_project_name)) !!}</p>
                                                     @else
-                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px; @if($spv->project->name == '休み') color: red; @endif">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
-                                                    <p class="" style="color: red; height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
+                                                    <p class="" style="height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
                                                 @else
                                                     <p class="" style="height: {{ $projectHeight / 2 }}px;"></p>
                                                 @endif
@@ -567,7 +567,7 @@
                                                     <p class="">No.{{ $spv->vehicle->number }}</p>
                                                 @elseif($spv->unregistered_vehicle)
                                                     @if ($spv->unregistered_vehicle != '自車')
-                                                        <p class="" style="color:red;">No.{{ $spv->unregistered_vehicle }}</p>
+                                                        <p class="" style="">No.{{ $spv->unregistered_vehicle }}</p>
                                                     @else
                                                         <p class="">No.{{ $spv->unregistered_vehicle }}</p>
                                                     @endif
@@ -677,10 +677,10 @@
                                                     @elseif ($spv->initial_project_name)
                                                         <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->initial_project_name)) !!}</p>
                                                     @else
-                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px; @if($spv->project->name == '休み') color: red; @endif">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
-                                                    <p class="" style="color: red; height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
+                                                    <p class="" style="color: black; height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
                                                 @else
                                                     <p class="" style="height: {{ $projectHeight / 2 }}px;"></p>
                                                 @endif
@@ -691,7 +691,7 @@
                                                     <p class="">No.{{ $spv->vehicle->number }}</p>
                                                 @elseif($spv->unregistered_vehicle)
                                                     @if ($spv->unregistered_vehicle != '自車')
-                                                        <p class="" style="color:red;">No.{{ $spv->unregistered_vehicle }}</p>
+                                                        <p class="">No.{{ $spv->unregistered_vehicle }}</p>
                                                     @else
                                                         <p class="">No.{{ $spv->unregistered_vehicle }}</p>
                                                     @endif
@@ -741,10 +741,10 @@
                                                     @elseif ($spv->initial_project_name)
                                                         <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->initial_project_name)) !!}</p>
                                                     @else
-                                                        <p class="" style="height: {{ $projectHeight / 2 }}px;">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}</p>
+                                                        <p class="" style="height: {{ $projectHeight / 2 }}px; @if($spv->project->name == '休み') color: red; @endif">{!! nl2br(e($spv->project->display_name ?? $spv->project->name)) !!}</p>
                                                     @endif
                                                 @elseif($spv->unregistered_project)
-                                                    <p class="" style="color: red; height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
+                                                    <p class="" style="color: black; height: {{ $projectHeight / 2 }}px;">{{ $spv->unregistered_project }}</p>
                                                 @else
                                                     <p class="" style="height: {{ $projectHeight / 2 }}px;"></p>
                                                 @endif
@@ -755,7 +755,7 @@
                                                     <p class="">No.{{ $spv->vehicle->number }}</p>
                                                 @elseif($spv->unregistered_vehicle)
                                                     @if ($spv->unregistered_vehicle != '自車')
-                                                        <p class="" style="color:red;">No.{{ $spv->unregistered_vehicle }}</p>
+                                                        <p class="">No.{{ $spv->unregistered_vehicle }}</p>
                                                     @else
                                                         <p class="">No.{{ $spv->unregistered_vehicle }}</p>
                                                     @endif

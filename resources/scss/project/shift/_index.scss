@@ -640,12 +640,12 @@
                                 .vehicle-row{
                                     min-height: 4.2rem;
                                 }
-                                &__row:nth-child(3){
-                                    background-color: rgba(255, 0, 0, 0.087);
-                                }
-                                &__row:nth-child(4){
-                                    background-color: rgba(0, 0, 255, 0.087);
-                                }
+                                // &__row:nth-child(3){
+                                //     background-color: rgba(255, 0, 0, 0.087);
+                                // }
+                                // &__row:nth-child(4){
+                                //     background-color: rgba(0, 0, 255, 0.087);
+                                // }
                                 &__row:last-child{
                                     border-bottom: 1px solid $cBlack;
                                 }
@@ -1072,7 +1072,7 @@
                 max-height: math.div(500,800) * 100vh;
                 display: flex;
                 flex-direction: column;
-                flex-wrap: wrap;
+                // flex-wrap: wrap;
                 gap: 3rem;
             }
             .custom-name{

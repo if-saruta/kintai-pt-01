@@ -157,7 +157,7 @@
                         </button>
                     </form>
                     <div class="shift-calendar__date__show">
-                        <p class="week-of-month">{{$monday->format('Y')}}年{{$monday->format('n')}}月第{{ $weekOfMonth }}週目 稼働表</p>
+                        <p class="week-of-month">{{$sunday->format('Y')}}年{{$sunday->format('n')}}月第{{ $weekOfMonth }}週目 稼働表</p>
                         {{-- <div class="date">
                             <div class="date__txt">
                                 <p class="fs-14">{{$monday->format('Y')}}<span class="fs-10">年</span></p>

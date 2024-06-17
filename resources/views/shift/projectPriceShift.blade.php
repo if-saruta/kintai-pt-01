@@ -149,7 +149,7 @@
                         </button>
                     </form>
                     <div class="shift-calendar__date__show">
-                        <p class="week-of-month">{{$monday->format('Y')}}年{{$monday->format('n')}}月第{{ $weekOfMonth }}週目 上代閲覧用</p>
+                        <p class="week-of-month">{{$sunday->format('Y')}}年{{$sunday->format('n')}}月第{{ $weekOfMonth }}週目 上代閲覧用</p>
                     </div>
                     <form action="{{route('shift.projectPriceShiftSelectWeek')}}" method="POST">
                         @csrf

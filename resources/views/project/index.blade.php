@@ -194,9 +194,11 @@
                                 </div>
                                 <div class="dataHasClientName" data-client-name="{{$client->name}}"></div>
                                 @foreach ($client->projects as $project)
-                                <div class="dataHasProjectName"
-                                    data-project-name='{{$project->name}}'>
-                                </div>
+                                    @if($project->registration_location != 2)
+                                        <div class="dataHasProjectName"
+                                            data-project-name='{{$project->name}}'>
+                                        </div>
+                                    @endif
                                 @endforeach
                             </a>
                         </div>

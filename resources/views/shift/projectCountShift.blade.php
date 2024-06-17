@@ -141,7 +141,7 @@
                         </button>
                     </form>
                     <div class="shift-calendar__date__show">
-                        <p class="week-of-month">{{$monday->format('Y')}}年{{$monday->format('n')}}月第{{ $weekOfMonth }}週目 案件数用</p>
+                        <p class="week-of-month">{{$sunday->format('Y')}}年{{$sunday->format('n')}}月第{{ $weekOfMonth }}週目 案件数用</p>
                     </div>
                     <form action="{{route('shift.projectCountSelectWeek')}}" method="POST">
                         @csrf

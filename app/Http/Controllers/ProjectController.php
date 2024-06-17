@@ -21,7 +21,7 @@ class ProjectController extends Controller
     public function index()
     {
         // client_idが1以外のプロジェクトを取得
-        $projects = Project::where('client_id', '!=', 1)->get();
+        $projects = Project::where('client_id', '!=', 1)->where('registration_location', 1)->get();
 
         // idが1以外のクライアントを取得
         $clients = Client::where('id', '!=', 1)->get();
@@ -136,7 +136,7 @@ class ProjectController extends Controller
     public function edit($id)
     {
         $client = Client::find($id);
-        $projects = Project::where('client_id', $id)->get();
+        $projects = Project::where('client_id', $id)->where('registration_location', 1)->get();
         $projectHolidays = ProjectHoliday::where('project_id', $id)->first();
         $employees = Employee::all();
         $payments = ProjectEmployeePayment::where('project_id', $id)->get();

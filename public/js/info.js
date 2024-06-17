@@ -218,7 +218,6 @@ window.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
-
     }
     editViewActive();
 

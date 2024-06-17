@@ -166,7 +166,7 @@
                         </button>
                     </form>
                     <div class="shift-calendar__date__show">
-                        <p class="week-of-month">{{$monday->format('Y')}}年{{$monday->format('n')}}月第{{ $weekOfMonth }}週目 全表示</p>
+                        <p class="week-of-month">{{$sunday->format('Y')}}年{{$sunday->format('n')}}月第{{ $weekOfMonth }}週目 全表示</p>
                         {{-- <div class="date">
                             <div class="date__txt">
                                 <p class="fs-14">{{$monday->format('Y')}}<span class="fs-10">年</span></p>
@@ -379,12 +379,12 @@
                                                                 @else
                                                                     <p class="table-cell__item__row"></p>
                                                                 @endif
-                                                                <p class="table-cell__item__row">
+                                                                <p class="table-cell__item__row --retail-back-ground-color">
                                                                     @if ($spv->retail_price)
                                                                         {{number_format($spv->retail_price)}}
                                                                     @endif
                                                                 </p>
-                                                                <p class="table-cell__item__row">
+                                                                <p class="table-cell__item__row --driver-back-ground-color">
                                                                     @if ($spv->driver_price)
                                                                         {{number_format($spv->driver_price)}}
                                                                     @endif
@@ -457,12 +457,12 @@
                                                                 @else
                                                                     <p class="table-cell__item__row"></p>
                                                                 @endif
-                                                                <p class="table-cell__item__row">
+                                                                <p class="table-cell__item__row --retail-back-ground-color">
                                                                     @if ($spv->retail_price)
                                                                     {{number_format($spv->retail_price)}}
                                                                     @endif
                                                                 </p>
-                                                                <p class="table-cell__item__row">
+                                                                <p class="table-cell__item__row --driver-back-ground-color">
                                                                     @if ($spv->driver_price)
                                                                     {{number_format($spv->driver_price)}}
                                                                     @endif
@@ -592,12 +592,12 @@
                                                                 @else
                                                                     <p class="table-cell__item__row"></p>
                                                                 @endif
-                                                                <p class="table-cell__item__row">
+                                                                <p class="table-cell__item__row --retail-back-ground-color">
                                                                     @if ($spv->retail_price)
                                                                         {{number_format($spv->retail_price)}}
                                                                     @endif
                                                                 </p>
-                                                                <p class="table-cell__item__row">
+                                                                <p class="table-cell__item__row --driver-back-ground-color">
                                                                     @if ($spv->driver_price)
                                                                         {{number_format($spv->driver_price)}}
                                                                     @endif
@@ -670,12 +670,12 @@
                                                                 @else
                                                                     <p class="table-cell__item__row"></p>
                                                                 @endif
-                                                                <p class="table-cell__item__row">
+                                                                <p class="table-cell__item__row --retail-back-ground-color">
                                                                     @if ($spv->retail_price)
                                                                     {{number_format($spv->retail_price)}}
                                                                     @endif
                                                                 </p>
-                                                                <p class="table-cell__item__row">
+                                                                <p class="table-cell__item__row --driver-back-ground-color">
                                                                     @if ($spv->driver_price)
                                                                     {{number_format($spv->driver_price)}}
                                                                     @endif
