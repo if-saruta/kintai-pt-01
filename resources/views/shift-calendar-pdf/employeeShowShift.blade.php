@@ -515,7 +515,7 @@
                                                     <p class="">No.{{ $spv->vehicle->number }}</p>
                                                 @elseif($spv->unregistered_vehicle)
                                                     @if ($spv->unregistered_vehicle != '自車')
-                                                        <p class="" style="color:red;">No.{{ $spv->unregistered_vehicle }}</p>
+                                                        <p class="">No.{{ $spv->unregistered_vehicle }}</p>
                                                     @else
                                                         <p class="">No.{{ $spv->unregistered_vehicle }}</p>
                                                     @endif
@@ -561,7 +561,7 @@
                                                     <p class="">No.{{ $spv->vehicle->number }}</p>
                                                 @elseif($spv->unregistered_vehicle)
                                                     @if ($spv->unregistered_vehicle != '自車')
-                                                        <p class="" style="color:red;">No.{{ $spv->unregistered_vehicle }}</p>
+                                                        <p class="">No.{{ $spv->unregistered_vehicle }}</p>
                                                     @else
                                                         <p class="">No.{{ $spv->unregistered_vehicle }}</p>
                                                     @endif
@@ -667,7 +667,7 @@
                                                     <p class="">No.{{ $spv->vehicle->number }}</p>
                                                 @elseif($spv->unregistered_vehicle)
                                                     @if ($spv->unregistered_vehicle != '自車')
-                                                        <p class="" style="color:red;">No.{{ $spv->unregistered_vehicle }}</p>
+                                                        <p class="">No.{{ $spv->unregistered_vehicle }}</p>
                                                     @else
                                                         <p class="">No.{{ $spv->unregistered_vehicle }}</p>
                                                     @endif
@@ -713,7 +713,7 @@
                                                     <p class="">No.{{ $spv->vehicle->number }}</p>
                                                 @elseif($spv->unregistered_vehicle)
                                                     @if ($spv->unregistered_vehicle != '自車')
-                                                        <p class="" style="color:red;">No.{{ $spv->unregistered_vehicle }}</p>
+                                                        <p class="">No.{{ $spv->unregistered_vehicle }}</p>
                                                     @else
                                                         <p class="">No.{{ $spv->unregistered_vehicle }}</p>
                                                     @endif
